@@ -1,0 +1,131 @@
+types:
+
+  nodes:
+
+  - id: &dellr550
+    model: Dell PowerEdge R550
+    height: 2u
+    width: full
+    specs: https://www.delltechnologies.com/asset/en-us/products/servers/technical-support/dellemc-poweredge-r550-spec-sheet.pdf
+    cpus:
+      sockets: 2
+      model: Intel Xeon Silver 4316
+      specs: https://www.intel.com/content/www/us/en/products/sku/215270/intel-xeon-silver-4316-processor-30m-cache-2-30-ghz/specifications.html
+      cores: 20
+    ram:
+      dimm: 4
+      size: 32GB
+    storage:
+    - type: ssd
+      size: 960GB
+    netifs:
+    - type: ethernet
+      bandwith: 1Gb
+    - type: ethernet
+      bandwith: 1Gb
+
+  - id: &sm610u
+    model: SuperMicro Ultra SYS-610U-TNR
+    height: 1u
+    width: full
+    specs: https://www.supermicro.com/en/products/system/ultra/1u/sys-610u-tnr
+    cpus:
+      sockets: 2
+      model: Intel Xeon Gold 6338
+      specs: https://ark.intel.com/content/www/us/en/ark/products/212285/intel-xeon-gold-6338-processor-48m-cache-2-00-ghz.html
+      cores: 20
+    ram:
+      dimm: 16
+      size: 16GB
+    netifs:
+    - type: ethernet
+      bandwidth: 10Gb
+    - type: ethernet
+      bandwidth: 10Gb
+  - id: &sm220bt
+    model: SuperMicro A+ Server 2124BT-HTR
+    height: 1u
+    width: 1/2
+    specs: https://www.supermicro.com/en/aplus/system/2u/2124/as-2124bt-htr.cfm
+    cpus:
+      sockets: 2
+      model: AMD EPYC 7573X
+      specs: https://www.amd.com/en/products/cpu/amd-epyc-7573x
+      cores: 32
+    ram:
+      dimm: 8
+      size: 32GB
+    storage:
+    - type: nvme
+      model: Samsung 980 Pro
+      size: 256GB
+    netifs:
+    - type: ethernet
+      bandwidth: 10Gb
+
+  - id: &hpesyn480
+    model: HPE Synergy 480 Gen10 Compute Module
+    height: 5u
+    width: 1/7
+    specs: https://www.hpe.com/psnow/doc/PSN1010025863USEN.pdf
+    cpus:
+      sockets: 2
+      id: Intel Xeon Scalable 6148
+      specs: https://www.intel.com/content/www/us/en/products/sku/120489/intel-xeon-gold-6148-processor-27-5m-cache-2-40-ghz/specifications.html
+      cores: 20
+    ram:
+      dimm: 4
+      size: 32GB
+    storage:
+    - type: nvme
+      model: Intel Optane
+      size: 256GB
+    netifs:
+    - type: ethernet
+      bandwidth: 10Gb
+
+  racks:
+
+  - id: &standard
+    height: 1867mm
+    width: 600mm
+    depth: 914mm
+    slots: 42u
+
+datacenters:
+- name: &paris
+  rooms:
+  - name: &noisy
+    dimensions:
+      width: 25m
+      depth: 42m
+    rows:
+    - name: &R1
+      position:
+        width: 4m
+        depth: 4m
+      racks:
+      - names: R1-A[1-2]
+        slot: 0
+
+groups:
+- name: mercury
+  description: Mercury HPC cluster
+  datacenter: *paris
+  room: *noisy
+  racks:
+    - name: R1-A1
+      tags: [compute]
+      equipments:
+      - names: mecn[0001-0040]
+        node: *sm220bt
+        slot: 0
+      - names: mecn[0041-0060]
+        node: *sm610u
+        slot: 12
+    - name: R1-A2
+      equipments:
+      - names: mesrv[0001-0004]
+        node: *dellr550
+        slot: 8
+        tags: [servers]
