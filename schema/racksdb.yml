@@ -1,0 +1,85 @@
+_version: 0.0.1
+
+_content:
+  types: :Types
+  datacenters: list[:Datacenter]
+  groups: list[:Group]
+
+_objects:
+  Types:
+    nodes: list[:NodeType]
+    racks: list[:RackType]
+  NodeType:
+    id: str
+    model: str
+    height: ~rack_height
+    width: ~rack_width
+    specs: optional str
+    cpus: :NodeTypeCpu
+    ram: :NodeTypeRam
+    storage: optional list[:NodeTypeStorage]
+    netifs: optional list[:NodeTypeNetif]
+  NodeTypeCpu:
+    sockets: int
+    model: str
+    cores: int
+    specs: optional str
+  NodeTypeRam:
+    dimm: int
+    size: ~bytes
+  NodeTypeStorage:
+    type: ~storage_type
+    size: ~bytes
+  NodeTypeNetif:
+    type: ~netif_type
+    bandwidth: ~bytes
+  RackType:
+    id: str
+    height: ~dimension
+    width: ~dimension
+    depth: ~dimension
+    slots: ~rack_height
+  Datacenter:
+    name: str
+    rooms: list[:DatacenterRoom]
+  DatacenterRoom:
+    name: str
+    dimensions: :DatacenterRoomDimensions
+    rows: optional list[:DatacenterRoomRow]
+  DatacenterRoomDimensions:
+    width: ~dimension
+    height: ~dimension
+  DatacenterRoomRow:
+    name: str
+    position: :DatacenterRoomPosition
+    racks: list[:DatacenterRoomRack]  
+  DatacenterRoomPosition:
+    width: ~dimension
+    depth: ~dimension
+  DatacenterRoomRack:
+    names: range[str]
+    slot: int
+  Group:
+    name: str
+    description: str
+    datacenter: $Datacenter.name
+    room: $DatacenterRoom.name
+    racks: list[:GroupRack]
+    tags: optional list[str]
+  GroupRack:
+    name: $DatacenterRoomRack.name
+    equipments: list[:GroupRackEquipment]
+    tags: optional list[str]
+  GroupRackEquipment:
+    name: range[str]
+    node: optional $NodeType.id
+    slot: int
+    tags: optional list[str]
+
+_types:
+  rack_height: '\d+u'
+  rack_width: 'full|\d+(/\d+)?u'
+  bytes: '\d+(.\d+)?(TB|Tb|GB|MB|Gb|Mb)'
+  storage_type: 'ssd|disk|nvme'
+  netif_type: 'ethernet|infiniband'
+  dimension: \d+(.\d+)?(mm|cm|m)
