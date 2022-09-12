@@ -51,12 +51,16 @@ class SchemaDefinedType(SchemaGenericValueType):
 
 
 class SchemaObject(SchemaGenericValueType):
+    def __init__(self, name, items):
+        self.name = name
+        self.items = items
+
     def __str__(self):
-        return self.__class__.__name__
+        return f"Schema{self.name}"
 
     def dump(self, indent):
-        for attribute, value in vars(self).items():
-            print(f"{' '*indent}{attribute}: {value}")
+        for item in self.items:
+            print(f"{' '*indent}{item.name}: {item.type}")
 
 
 class SchemaContainerList(SchemaGenericValueType):
@@ -116,9 +120,7 @@ class Schema:
 
         self.objects = {}
 
-        self.content = []
-        for key, spec in db['_content'].items():
-            self.content.append(self.item_spec(key, spec))
+        self.content = self.parse_obj('_content', db['_content'])
 
     def item_spec(self, name, spec):
         # check optional
@@ -176,9 +178,10 @@ class Schema:
         return obj
 
     def parse_obj(self, object_id, objdef):
-        obj = type(f"SchemaObject{object_id}", (SchemaObject,), dict())()
+        items = []
         for key, spec in objdef.items():
-            setattr(obj, key, self.item_spec(key, spec))
+            items.append(self.item_spec(key, spec))
+        obj = SchemaObject(object_id, items)
         return obj
 
     def find_defined_type(self, custom):
@@ -198,8 +201,7 @@ class Schema:
             print(f"  {name}:")
             obj.dump(indent=4)
         print("_content:")
-        for item in self.content:
-            print(f"  {item.name}: {item}")
+        self.content.dump(indent=2)
 
     @classmethod
     def load(cls, path):
