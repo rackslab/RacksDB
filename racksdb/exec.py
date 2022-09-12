@@ -19,14 +19,13 @@
 
 import argparse
 import yaml
+import sys
 
 from .version import __version__
 from .types import RacksDBTypes
 from .types.node import RacksDBNodeType
-
-
-class RacksDBFormatError(Exception):
-    pass
+from .errors import RacksDBFormatError, RacksDBSchemaError
+from .schema import Schema
 
 
 class RacksDBExec:
@@ -51,6 +50,13 @@ class RacksDBExec:
             action='store_true',
             help="Enable debug mode",
         )
+
+        parser.add_argument(
+            '-s',
+            '--schema',
+            help="Schema to load",
+            required=True,
+        )
         parser.add_argument(
             '-b',
             '--db',
@@ -67,11 +73,13 @@ class RacksDBExec:
     def _run(self):
 
         try:
-            self.db_load()
-        except RacksDBFormatError as err:
-            print(f"Error while loading DB: {err}")
-
-        print(self.types.nodes)
+            schema = Schema.load(self.args.schema)
+            # self.db_load()
+        except RacksDBSchemaError as err:
+            print(f"Error while loading schema: {err}")
+            sys.exit(1)
+        # print(self.types.nodes)
+        schema.dump()
 
     def db_load(self):
         with open(self.args.db) as fh:
