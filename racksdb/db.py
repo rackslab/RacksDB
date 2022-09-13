@@ -138,9 +138,11 @@ class GenericDB:
                 f"{self._prefix}Expandable{schema_object.name}",
                 (DBExpandableObject,),
                 dict(),
-            )
+            )()
         else:
-            obj = type(f"{self._prefix}{schema_object.name}", (DBObject,), dict())
+            obj = type(
+                f"{self._prefix}{schema_object.name}", (DBObject,), dict()
+            )()
         for token, value in _value.items():
             attribute_item = schema_object.item(token)
             if attribute_item is None:
