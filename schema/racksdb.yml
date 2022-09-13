@@ -58,7 +58,7 @@ _objects:
     width: ~dimension
     depth: ~dimension
   DatacenterRoomRack:
-    names: range[str]
+    name: expandable
     slot: int
   Group:
     name: str
@@ -72,7 +72,7 @@ _objects:
     equipments: list[:GroupRackEquipment]
     tags: optional list[str]
   GroupRackEquipment:
-    name: range[str]
+    name: expandable
     node: optional $NodeType.id
     slot: int
     tags: optional list[str]

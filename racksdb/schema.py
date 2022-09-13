@@ -77,12 +77,9 @@ class SchemaContainerList(SchemaGenericValueType):
         return f"list[{self.content}]"
 
 
-class SchemaContainerRange(SchemaGenericValueType):
-    def __init__(self, content):
-        self.content = content
-
+class SchemaExpandable(SchemaGenericValueType):
     def __str__(self):
-        return f"range[{self.content}]"
+        return f"expandable"
 
 
 class SchemaReference(SchemaGenericValueType):
@@ -113,7 +110,6 @@ class Schema:
     pattern_type_custom = re.compile(r"~(\w+)")
     pattern_type_ref = re.compile(r"\$(\w+)\.(\w+)")
     pattern_type_list = re.compile(r"list\[(.+)\]")
-    pattern_type_range = re.compile(r"range\[(.+)\]")
 
     def __init__(self, db):
         self.db = db
@@ -145,17 +141,14 @@ class Schema:
             return SchemaNativeType(int)
         elif spec == 'float':
             return SchemaNativeType(float)
+        elif spec == 'expandable':
+            return SchemaExpandable()
         else:
             # list
             match = self.pattern_type_list.match(spec)
             if match is not None:
                 content = self.value_type(match.group(1))
                 return SchemaContainerList(content)
-            # range
-            match = self.pattern_type_range.match(spec)
-            if match is not None:
-                content = self.value_type(match.group(1))
-                return SchemaContainerRange(content)
             # obj
             match = self.pattern_type_obj.match(spec)
             if match is not None:
