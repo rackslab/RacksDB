@@ -38,7 +38,22 @@ from .schema import (
 
 
 class DBObject:
-    pass
+    def dump(self, indent):
+        for attribute, value in vars(self).items():
+            if isinstance(value, list):
+                print(f"{' '*indent}{attribute}:")
+                for item in value:
+                    if isinstance(item, DBObject):
+                        print(f"{' '*indent}-")
+                        item.dump(indent + 2)
+                    else:
+                        print(f"{' '*indent}- {item}")
+
+            elif isinstance(value, DBObject):
+                print(f"{' '*indent}{attribute}:")
+                value.dump(indent + 2)
+            else:
+                print(f"{' '*indent}{attribute}: {value}")
 
 
 class DBExpandableObject(DBObject):
@@ -61,7 +76,7 @@ class DBObjectRangeId:
         return start + value
 
 
-class GenericDB:
+class GenericDB(DBObject):
     def __init__(self, prefix, content, schema):
         self._prefix = prefix
         self._schema = schema
@@ -212,9 +227,9 @@ class GenericDB:
         return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(value)
 
     def dump(self):
+
         print("DB:")
-        for key, value in vars(self).items():
-            print(f"  {key}: {value}")
+        super().dump(indent=2)
 
     def find_objects(self, object_type):
         return self._indexes[object_type.name]
