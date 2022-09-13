@@ -26,6 +26,7 @@ from .types import RacksDBTypes
 from .types.node import RacksDBNodeType
 from .errors import RacksDBFormatError, RacksDBSchemaError
 from .schema import Schema
+from .db import GenericDB
 
 
 class RacksDBExec:
@@ -74,29 +75,15 @@ class RacksDBExec:
 
         try:
             schema = Schema.load(self.args.schema)
-            # self.db_load()
         except RacksDBSchemaError as err:
             print(f"Error while loading schema: {err}")
             sys.exit(1)
-        # print(self.types.nodes)
         schema.dump()
 
-    def db_load(self):
-        with open(self.args.db) as fh:
-            try:
-                db = yaml.safe_load(fh)
-                self.load_types(db)
-            except yaml.composer.ComposerError as err:
-                raise RacksDBFormatError(err)
+        try:
+            db = GenericDB.load('RacksDB', self.args.db, schema)
+        except RacksDBFormatError as err:
+            print(f"Error while loading db: {err}")
+            sys.exit(1)
 
-    def load_types(self, db):
-        if not 'types' in db:
-            return
-        self.load_types_nodes(db['types'])
-
-    def load_types_nodes(self, types):
-        if not 'nodes' in types:
-            return
-        for node in types['nodes']:
-            print(f"Loading node type {node['id']}")
-            self.types.nodes.append(RacksDBNodeType.load(node))
+        db.dump()

@@ -30,7 +30,7 @@ setup(name='RacksDB',
       license='GPLv3+',
       url='https://github.com/rackslab/racksdb',
       platforms=['GNU/Linux'],
-      install_requires=['PyYAML'],
+      install_requires=['PyYAML', 'ClusterShell'],
       entry_points = {
           'console_scripts': [
               'racksdb=racksdb.exec:RacksDBExec.run',
