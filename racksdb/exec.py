@@ -22,8 +22,6 @@ import yaml
 import sys
 
 from .version import __version__
-from .types import RacksDBTypes
-from .types.node import RacksDBNodeType
 from .errors import RacksDBFormatError, RacksDBSchemaError
 from .schema import Schema
 from .db import GenericDB
@@ -66,9 +64,6 @@ class RacksDBExec:
         )
 
         self.args = parser.parse_args()
-
-        self.types = RacksDBTypes()
-
         self._run()
 
     def _run(self):
