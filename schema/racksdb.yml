@@ -53,13 +53,13 @@ _objects:
   DatacenterRoomRow:
     name: str
     position: :DatacenterRoomPosition
-    racks: list[:DatacenterRoomRack]  
+    racks: list[:DatacenterRoomRack]
   DatacenterRoomPosition:
     width: ~dimension
     depth: ~dimension
   DatacenterRoomRack:
     name: expandable
-    slot: int
+    slot: rangeid
   Group:
     name: str
     description: str
@@ -74,7 +74,7 @@ _objects:
   GroupRackEquipment:
     name: expandable
     node: optional $NodeType.id
-    slot: int
+    slot: rangeid
     tags: optional list[str]
 
 _types:

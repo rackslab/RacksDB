@@ -69,6 +69,11 @@ class SchemaObject(SchemaGenericValueType):
         return None
 
 
+class SchemaExpandableObject(SchemaObject):
+    def __str__(self):
+        return f"Schema{self.name}+"
+
+
 class SchemaContainerList(SchemaGenericValueType):
     def __init__(self, content):
         self.content = content
@@ -80,6 +85,11 @@ class SchemaContainerList(SchemaGenericValueType):
 class SchemaExpandable(SchemaGenericValueType):
     def __str__(self):
         return f"expandable"
+
+
+class SchemaRangeId(SchemaGenericValueType):
+    def __str__(self):
+        return f"rangeid"
 
 
 class SchemaReference(SchemaGenericValueType):
@@ -143,6 +153,8 @@ class Schema:
             return SchemaNativeType(float)
         elif spec == 'expandable':
             return SchemaExpandable()
+        elif spec == 'rangeid':
+            return SchemaRangeId()
         else:
             # list
             match = self.pattern_type_list.match(spec)
@@ -178,9 +190,20 @@ class Schema:
 
     def parse_obj(self, object_id, objdef):
         items = []
+        expandable = False
         for key, spec in objdef.items():
-            items.append(self.item_spec(key, spec))
-        obj = SchemaObject(object_id, items)
+            item = self.item_spec(key, spec)
+            if isinstance(item.type, SchemaExpandableObject):
+                raise RacksDBSchemaError(
+                    f"expandable object {item.type} must be in a list, it cannot be member of object such as {object_id}"
+                )
+            if isinstance(item.type, SchemaExpandable):
+                expandable = True
+            items.append(item)
+        if expandable:
+            obj = SchemaExpandableObject(object_id, items)
+        else:
+            obj = SchemaObject(object_id, items)
         return obj
 
     def find_defined_type(self, custom):
