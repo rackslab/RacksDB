@@ -20,9 +20,9 @@ types:
       size: 960GB
     netifs:
     - type: ethernet
-      bandwith: 1Gb
+      bandwidth: 1Gb
     - type: ethernet
-      bandwith: 1Gb
+      bandwidth: 1Gb
 
   - id: &sm610u
     model: SuperMicro Ultra SYS-610U-TNR
@@ -70,7 +70,7 @@ types:
     specs: https://www.hpe.com/psnow/doc/PSN1010025863USEN.pdf
     cpus:
       sockets: 2
-      id: Intel Xeon Scalable 6148
+      model: Intel Xeon Scalable 6148
       specs: https://www.intel.com/content/www/us/en/products/sku/120489/intel-xeon-gold-6148-processor-27-5m-cache-2-40-ghz/specifications.html
       cores: 20
     ram:
