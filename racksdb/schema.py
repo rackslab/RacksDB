@@ -53,7 +53,7 @@ class SchemaDefinedType(SchemaGenericValueType):
 class SchemaObject(SchemaGenericValueType):
     def __init__(self, name, items):
         self.name = name
-        self.items = items
+        self.items = items  # list of SchemaItemSpec
 
     def __str__(self):
         return f"Schema{self.name}"
@@ -61,6 +61,12 @@ class SchemaObject(SchemaGenericValueType):
     def dump(self, indent):
         for item in self.items:
             print(f"{' '*indent}{item.name}: {item.type}")
+
+    def item(self, name):
+        for item in self.items:
+            if item.name == name:
+                return item
+        return None
 
 
 class SchemaContainerList(SchemaGenericValueType):
