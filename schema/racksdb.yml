@@ -76,11 +76,3 @@ _objects:
     node: optional $NodeType.id
     slot: rangeid
     tags: optional list[str]
-
-_types:
-  rack_height: '\d+u'
-  rack_width: 'full|\d+(/\d+)?u'
-  bytes: '\d+(.\d+)?(TB|Tb|GB|MB|Gb|Mb)'
-  storage_type: 'ssd|disk|nvme'
-  netif_type: 'ethernet|infiniband'
-  dimension: \d+(.\d+)?(mm|cm|m)

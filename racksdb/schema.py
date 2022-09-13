@@ -18,10 +18,44 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 import re
-
+import importlib
+import pkgutil
 import yaml
 
 from .errors import RacksDBSchemaError
+
+
+class SchemaDefinedTypeLoader:
+    def __init__(self, path):
+        self.path = path
+
+    @property
+    def content(self):
+        results = {}
+        base_module = importlib.import_module(self.path)
+        print(f"-> Searching module in {base_module.__path__}")
+        for importer, modname, _ in pkgutil.iter_modules(base_module.__path__):
+            print(f"-> Loading module {modname}/{importer}")
+            module = importlib.import_module(f"{self.path}.{modname}")
+            class_suffix = modname.replace('_', ' ').title().replace(' ', '')
+            class_name = f"SchemaDefinedType{class_suffix}"
+            print(f"-> Loading class {class_name}")
+            results[modname] = getattr(module, class_name)()
+        return results
+
+
+class SchemaFileLoader:
+    def __init__(self, path):
+        self.path = path
+
+    @property
+    def content(self):
+        with open(self.path) as fh:
+            try:
+                result = yaml.safe_load(fh)
+            except yaml.composer.ComposerError as err:
+                raise RacksDBSchemaError(err)
+        return result
 
 
 class SchemaGenericValueType:
@@ -39,15 +73,6 @@ class SchemaNativeType(SchemaGenericValueType):
             return 'int'
         elif self.native is float:
             return 'float'
-
-
-class SchemaDefinedType(SchemaGenericValueType):
-    def __init__(self, name, regex):
-        self.name = name
-        self.regex = regex
-
-    def __str__(self):
-        return f"~{self.name}"
 
 
 class SchemaObject(SchemaGenericValueType):
@@ -121,18 +146,19 @@ class Schema:
     pattern_type_ref = re.compile(r"\$(\w+)\.(\w+)")
     pattern_type_list = re.compile(r"list\[(.+)\]")
 
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, schema_loader, types_loader):
+        self._schema = schema_loader.content
 
-        self.version = db['_version']
+        self.version = self._schema['_version']
 
-        self.types = {}
-        for key, spec in db['_types'].items():
-            self.types[key] = SchemaDefinedType(key, spec)
+        self.types = types_loader.content
+
+        #for key, spec in self._schema['_types'].items():
+        #    self.types[key] = SchemaDefinedType(key, spec)
 
         self.objects = {}
 
-        self.content = self.parse_obj('_content', db['_content'])
+        self.content = self.parse_obj('_content', self._schema['_content'])
 
     def item_spec(self, name, spec):
         # check optional
@@ -180,11 +206,11 @@ class Schema:
     def find_obj(self, object_id):
         if object_id in self.objects:
             return self.objects[object_id]
-        if object_id not in self.db['_objects']:
+        if object_id not in self._schema['_objects']:
             raise RacksDBSchemaError(
                 f"definition of object {object_id} not found"
             )
-        obj = self.parse_obj(object_id, self.db['_objects'][object_id])
+        obj = self.parse_obj(object_id, self._schema['_objects'][object_id])
         self.objects[object_id] = obj
         return obj
 
@@ -224,12 +250,3 @@ class Schema:
             obj.dump(indent=4)
         print("_content:")
         self.content.dump(indent=2)
-
-    @classmethod
-    def load(cls, path):
-        with open(path) as fh:
-            try:
-                db = yaml.safe_load(fh)
-            except yaml.composer.ComposerError as err:
-                raise RacksDBSchemaError(err)
-        return cls(db)

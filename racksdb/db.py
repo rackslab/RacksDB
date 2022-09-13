@@ -20,13 +20,14 @@
 import re
 from typing import Union
 
+
 import yaml
 from ClusterShell.NodeSet import NodeSet
 
 from .errors import RacksDBFormatError
+from .generic.definedtype import SchemaDefinedType
 from .schema import (
     SchemaNativeType,
-    SchemaDefinedType,
     SchemaContainerList,
     SchemaExpandable,
     SchemaRangeId,
@@ -109,13 +110,24 @@ class DBObjectRangeId:
         return self.start + value
 
 
+class DBFileLoader:
+    def __init__(self, path):
+        with open(path) as fh:
+            try:
+                self.content = yaml.safe_load(fh)
+            except yaml.composer.ComposerError as err:
+                raise RacksDBFormatError(err)
+
+
 class GenericDB(DBObject):
-    def __init__(self, prefix, content, schema):
+    def __init__(self, prefix, schema):
         super().__init__(self, schema)
         self._prefix = prefix
         self._indexes = {}  # objects indexes
-        for token, value in content.items():
-            schema_item = schema.content.item(token)
+
+    def load(self, loader):
+        for token, value in loader.content.items():
+            schema_item = self._schema.content.item(token)
             if schema_item is None:
                 raise RacksDBFormatError(
                     f"key {key} is not defined in schema {schema_object.name}"
@@ -266,12 +278,3 @@ class GenericDB(DBObject):
 
     def find_objects(self, object_type):
         return self._indexes[object_type.name]
-
-    @classmethod
-    def load(cls, prefix, path, schema):
-        with open(path) as fh:
-            try:
-                content = yaml.safe_load(fh)
-                return cls(prefix, content, schema)
-            except yaml.composer.ComposerError as err:
-                raise RacksDBFormatError(err)
