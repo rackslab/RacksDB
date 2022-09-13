@@ -38,17 +38,26 @@ from .schema import (
 
 
 class DBObject:
+    def __init__(self, db, schema):
+        self._db = db
+        self._schema = schema
+
     def dump(self, indent):
         for attribute, value in vars(self).items():
+            if attribute in ['_db']:
+                continue
             if isinstance(value, list):
                 print(f"{' '*indent}{attribute}:")
                 for item in value:
-                    if isinstance(item, DBObject):
+                    if isinstance(item, DBExpandableObject):
+                        for generated_obj in item.objects():
+                            print(f"{' '*indent}-")
+                            generated_obj.dump(indent + 2)
+                    elif isinstance(item, DBObject):
                         print(f"{' '*indent}-")
                         item.dump(indent + 2)
                     else:
                         print(f"{' '*indent}- {item}")
-
             elif isinstance(value, DBObject):
                 print(f"{' '*indent}{attribute}:")
                 value.dump(indent + 2)
@@ -57,7 +66,31 @@ class DBObject:
 
 
 class DBExpandableObject(DBObject):
-    pass
+    def objects(self):
+        result = []
+        stable_attributes = {}
+        range_attribute = None
+        rangeid_attributes = {}
+        for attribute, value in vars(self).items():
+            if isinstance(value, DBObjectRange):
+                range_attribute = (attribute, value)
+            elif isinstance(value, DBObjectRangeId):
+                rangeid_attributes[attribute] = value
+            else:
+                stable_attributes[attribute] = value
+
+        for index, value in enumerate(range_attribute[1].expanded()):
+            _attributes = stable_attributes.copy()
+            _attributes[range_attribute[0]] = value
+            for rangeid_name, rangeid_value in rangeid_attributes.items():
+                _attributes[rangeid_name] = rangeid_value.index(index)
+            obj = type(
+                f"{self._db._prefix}{self._schema.name}", (DBObject,), dict()
+            )(self._db, self._schema)
+            for attr_name, attr_value in _attributes.items():
+                setattr(obj, attr_name, attr_value)
+            result.append(obj)
+        return result
 
 
 class DBObjectRange:
@@ -73,13 +106,13 @@ class DBObjectRangeId:
         self.start = start
 
     def index(self, value):
-        return start + value
+        return self.start + value
 
 
 class GenericDB(DBObject):
     def __init__(self, prefix, content, schema):
+        super().__init__(self, schema)
         self._prefix = prefix
-        self._schema = schema
         self._indexes = {}  # objects indexes
         for token, value in content.items():
             schema_item = schema.content.item(token)
@@ -153,11 +186,11 @@ class GenericDB(DBObject):
                 f"{self._prefix}Expandable{schema_object.name}",
                 (DBExpandableObject,),
                 dict(),
-            )()
+            )(self, schema_object)
         else:
             obj = type(
                 f"{self._prefix}{schema_object.name}", (DBObject,), dict()
-            )()
+            )(self, schema_object)
         for token, value in _value.items():
             attribute_item = schema_object.item(token)
             if attribute_item is None:
