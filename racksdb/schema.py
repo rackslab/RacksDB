@@ -221,6 +221,11 @@ class Schema:
                     f"expandable object {item.type} must be in a list, it cannot be member of object such as {object_id}"
                 )
             if isinstance(item.type, SchemaExpandable):
+                # check expandable uniqueness
+                if expandable:
+                    raise RacksDBSchemaError(
+                        f"expandable object {object_id} cannot contain more than one expandable item"
+                    )
                 expandable = True
             items.append(item)
         if expandable:
