@@ -22,8 +22,8 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 class SchemaDefinedTypeStorageType(SchemaDefinedType):
 
-    regex = r"(ssd|disk|nvme)"
+    pattern = r"(ssd|disk|nvme)"
 
-    @classmethod
     def parse(self, value):
-        pass
+        self._match(value)  # just check it matches
+        return value

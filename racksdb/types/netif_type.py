@@ -22,8 +22,8 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 class SchemaDefinedTypeNetifType(SchemaDefinedType):
 
-    regex = r"(ethernet|infiniband)"
+    pattern = r"(ethernet|infiniband)"
 
-    @classmethod
     def parse(self, value):
-        pass
+        self._match(value)  # just check it matches
+        return value

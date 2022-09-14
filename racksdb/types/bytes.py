@@ -22,7 +22,22 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 class SchemaDefinedTypeBytes(SchemaDefinedType):
 
-    regex = r"\d+(.\d+)?(TB|Tb|GB|MB|Gb|Mb)"
+    pattern = r"(\d+(.\d+)?)(TB|Tb|GB|Gb|MB|Mb)"
 
     def parse(self, value):
-        pass
+        match = self._match(value)
+        quantity = float(match.group(1))
+        unit = match.group(3)
+        if unit == 'Mb':
+            quantity *= (10 ** 6) / 8
+        elif unit == 'MB':
+            quantity *= 1024 ** 2
+        elif unit == 'Gb':
+            quantity *= (10 ** 9) / 8
+        elif unit == 'GB':
+            quantity *= 1024 ** 3
+        elif unit == 'Tb':
+            quantity *= (10 ** 12) / 8
+        elif unit == 'TB':
+            quantity *= 1024 ** 4
+        return int(quantity)

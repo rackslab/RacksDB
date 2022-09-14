@@ -22,8 +22,14 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 class SchemaDefinedTypeDimension(SchemaDefinedType):
 
-    regex = r"\d+(.\d+)?(mm|cm|m)"
+    pattern = r"(\d+(.\d+)?)(mm|cm|m)"
 
-    @classmethod
     def parse(self, value):
-        pass
+        match = self._match(value)
+        size = float(match.group(1))
+        unit = match.group(3)
+        if unit == 'cm':
+            size *= 10
+        elif unit == 'm':
+            size *= 1000
+        return int(size)

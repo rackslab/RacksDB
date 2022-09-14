@@ -153,9 +153,6 @@ class Schema:
 
         self.types = types_loader.content
 
-        #for key, spec in self._schema['_types'].items():
-        #    self.types[key] = SchemaDefinedType(key, spec)
-
         self.objects = {}
 
         self.content = self.parse_obj('_content', self._schema['_content'])
@@ -243,7 +240,7 @@ class Schema:
     def dump(self):
         print("_types:")
         for name, defined_type in self.types.items():
-            print(f"  {name}: {defined_type.regex}")
+            print(f"  {name}: {defined_type.pattern}")
         print("_objects:")
         for name, obj in self.objects.items():
             print(f"  {name}:")

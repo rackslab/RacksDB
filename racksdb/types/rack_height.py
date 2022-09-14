@@ -22,8 +22,8 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 class SchemaDefinedTypeRackHeight(SchemaDefinedType):
 
-    regex = r"\d+u"
+    pattern = r"(\d)+u"
 
-    @classmethod
     def parse(self, value):
-        pass
+        match = self._match(value)
+        return int(match.group(1))

@@ -186,9 +186,8 @@ class GenericDB(DBObject):
             f"Unknow value {value} for token {token} for type {schema_type}"
         )
 
-    def load_defined_type(self, token, value, schema_item):
-        re.compile(schema_item.regex)
-        return None
+    def load_defined_type(self, token, value, schema_type):
+        return schema_type.parse(value)
 
     def load_object(self, _token, _value, schema_object):
         print(f"Loading object {_token} with {_value} ({schema_object})")

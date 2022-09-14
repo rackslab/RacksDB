@@ -22,8 +22,17 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 class SchemaDefinedTypeRackWidth(SchemaDefinedType):
 
-    regex = r"full|\d+(/\d+)?u"
+    pattern = r"full|(\d+)(/\d+)?"
 
-    @classmethod
     def parse(self, value):
-        pass
+        match = self._match(value)
+        if value == 'full':
+            return 1.0
+        else:
+            dividend = int(match.group(1))
+            divisor = match.group(2)
+            if divisor is not None:
+                divisor = float(divisor[1:])
+            else:
+                divisor = 1.0
+            return dividend / divisor
