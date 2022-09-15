@@ -22,9 +22,9 @@ import yaml
 import sys
 
 from .version import __version__
-from .errors import RacksDBFormatError, RacksDBSchemaError
-from .schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
-from .db import GenericDB, DBFileLoader
+from .generic.errors import DBFormatError, DBSchemaError
+from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
+from .generic.db import GenericDB, DBFileLoader
 
 
 class RacksDBExec:
@@ -73,7 +73,7 @@ class RacksDBExec:
                 SchemaFileLoader(self.args.schema),
                 SchemaDefinedTypeLoader('racksdb.types'),
             )
-        except RacksDBSchemaError as err:
+        except DBSchemaError as err:
             print(f"Error while loading schema: {err}")
             sys.exit(1)
         schema.dump()
@@ -82,7 +82,7 @@ class RacksDBExec:
             loader = DBFileLoader(self.args.db)
             db = GenericDB('RacksDB', schema)
             db.load(loader)
-        except RacksDBFormatError as err:
+        except DBFormatError as err:
             print(f"Error while loading db: {err}")
             sys.exit(1)
 

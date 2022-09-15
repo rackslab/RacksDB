@@ -19,7 +19,7 @@
 
 import re
 
-from ..errors import RacksDBFormatError
+from .errors import DBFormatError
 
 
 class SchemaDefinedType:
@@ -33,7 +33,7 @@ class SchemaDefinedType:
         regex = re.compile(self.pattern)
         match = regex.match(value)
         if match is None:
-            raise RacksDBFormatError(
+            raise DBFormatError(
                 f"Unable to match {self} pattern with value {value}"
             )
         return match

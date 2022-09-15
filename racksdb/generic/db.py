@@ -24,8 +24,8 @@ from typing import Union
 import yaml
 from ClusterShell.NodeSet import NodeSet
 
-from .errors import RacksDBFormatError
-from .generic.definedtype import SchemaDefinedType
+from .errors import DBFormatError
+from .definedtype import SchemaDefinedType
 from .schema import (
     SchemaNativeType,
     SchemaContainerList,
@@ -116,7 +116,7 @@ class DBFileLoader:
             try:
                 self.content = yaml.safe_load(fh)
             except yaml.composer.ComposerError as err:
-                raise RacksDBFormatError(err)
+                raise DBFormatError(err)
 
 
 class GenericDB(DBObject):
@@ -129,7 +129,7 @@ class GenericDB(DBObject):
         for token, value in loader.content.items():
             schema_item = self._schema.content.item(token)
             if schema_item is None:
-                raise RacksDBFormatError(
+                raise DBFormatError(
                     f"key {key} is not defined in schema {schema_object.name}"
                 )
             attribute = self.load_item(token, value, schema_item.type)
@@ -146,19 +146,19 @@ class GenericDB(DBObject):
         if isinstance(schema_type, SchemaNativeType):
             if schema_type.native is str:
                 if type(value) != str:
-                    RacksDBFormatError(
+                    DBFormatError(
                         f"token {token} of {schema_type} is not a valid str"
                     )
                 return value
             elif schema_type.native is int:
                 if type(value) != int:
-                    RacksDBFormatError(
+                    DBFormatError(
                         f"token {token} of {schema_type} is not a valid int"
                     )
                 return value
             elif schema_type.native is float:
                 if type(value) != float:
-                    RacksDBFormatError(
+                    DBFormatError(
                         f"token {token} of {schema_item} is not a valid float"
                     )
                 return value
@@ -166,13 +166,13 @@ class GenericDB(DBObject):
             return self.load_defined_type(token, value, schema_type)
         elif isinstance(schema_type, SchemaExpandable):
             if type(value) != str:
-                RacksDBFormatError(
+                DBFormatError(
                     f"token {token} of {schema_type} is not a valid expandable str"
                 )
             return self.load_expandable(token, value, schema_type)
         elif isinstance(schema_type, SchemaRangeId):
             if type(value) != int:
-                RacksDBFormatError(
+                DBFormatError(
                     f"token {token} of {schema_type} is not a valid rangeid integer"
                 )
             return self.load_rangeid(token, value, schema_type)
@@ -182,7 +182,7 @@ class GenericDB(DBObject):
             return self.load_object(token, value, schema_type)
         elif isinstance(schema_type, SchemaReference):
             return self.load_reference(token, value, schema_type)
-        raise RacksDBFormatError(
+        raise DBFormatError(
             f"Unknow value {value} for token {token} for type {schema_type}"
         )
 
@@ -209,15 +209,15 @@ class GenericDB(DBObject):
                 if token.endswith('[]'):
                     attribute_item = schema_object.item(token[:-2])
                     if attribute_item is None:
-                        raise RacksDBFormatError(
+                        raise DBFormatError(
                             f"token {token} is not defined in schema for object {schema_object}"
                         )
                     if not isinstance(attribute_item.type, SchemaExpandable):
-                        raise RacksDBFormatError(
+                        raise DBFormatError(
                             f"token {token} is not expandable in schema for object {schema_object}"
                         )
                 else:
-                    raise RacksDBFormatError(
+                    raise DBFormatError(
                         f"token {token} is not defined in schema for object {schema_object}"
                     )
             attribute = self.load_item(token, value, attribute_item)
@@ -228,7 +228,7 @@ class GenericDB(DBObject):
         # check all required items are properly defined in obj attributes
         for item in schema_object.items:
             if item.required and not hasattr(obj, item.name):
-                raise RacksDBFormatError(
+                raise DBFormatError(
                     f"token {item.name} is required in schema for object {schema_object}"
                 )
         # add object to db indexes
@@ -254,15 +254,13 @@ class GenericDB(DBObject):
                         return _obj
             elif attribute_value == value:
                 return _obj
-        raise RacksDBFormatError(
+        raise DBFormatError(
             f"Unable to find {token} reference with value {value}"
         )
 
     def load_list(self, token, value, schema_object):
         if type(value) != list:
-            raise RacksDBFormatError(
-                f"{schema_object.name}.{token} must be a list"
-            )
+            raise DBFormatError(f"{schema_object.name}.{token} must be a list")
         result = []
         for item in value:
             result.append(self.load_item(token, item, schema_object.content))

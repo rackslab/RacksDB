@@ -22,7 +22,7 @@ import importlib
 import pkgutil
 import yaml
 
-from .errors import RacksDBSchemaError
+from .errors import DBSchemaError
 
 
 class SchemaDefinedTypeLoader:
@@ -54,7 +54,7 @@ class SchemaFileLoader:
             try:
                 result = yaml.safe_load(fh)
             except yaml.composer.ComposerError as err:
-                raise RacksDBSchemaError(err)
+                raise DBSchemaError(err)
         return result
 
 
@@ -198,15 +198,13 @@ class Schema:
                 obj = self.find_obj(match.group(1))
                 attribute = match.group(2)
                 return SchemaReference(obj, attribute)
-        raise RacksDBSchemaError(f"unable to parse value type '{spec}'")
+        raise DBSchemaError(f"unable to parse value type '{spec}'")
 
     def find_obj(self, object_id):
         if object_id in self.objects:
             return self.objects[object_id]
         if object_id not in self._schema['_objects']:
-            raise RacksDBSchemaError(
-                f"definition of object {object_id} not found"
-            )
+            raise DBSchemaError(f"definition of object {object_id} not found")
         obj = self.parse_obj(object_id, self._schema['_objects'][object_id])
         self.objects[object_id] = obj
         return obj
@@ -217,13 +215,13 @@ class Schema:
         for key, spec in objdef.items():
             item = self.item_spec(key, spec)
             if isinstance(item.type, SchemaExpandableObject):
-                raise RacksDBSchemaError(
+                raise DBSchemaError(
                     f"expandable object {item.type} must be in a list, it cannot be member of object such as {object_id}"
                 )
             if isinstance(item.type, SchemaExpandable):
                 # check expandable uniqueness
                 if expandable:
-                    raise RacksDBSchemaError(
+                    raise DBSchemaError(
                         f"expandable object {object_id} cannot contain more than one expandable item"
                     )
                 expandable = True
@@ -238,7 +236,7 @@ class Schema:
         try:
             return self.types[custom]
         except KeyError:
-            raise RacksDBSchemaError(
+            raise DBSchemaError(
                 f"definition of defined type {custom} not found"
             )
 

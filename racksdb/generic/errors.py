@@ -18,9 +18,9 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 
-class RacksDBSchemaError(Exception):
+class DBSchemaError(Exception):
     pass
 
 
-class RacksDBFormatError(Exception):
+class DBFormatError(Exception):
     pass
