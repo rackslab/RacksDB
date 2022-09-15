@@ -225,6 +225,12 @@ class GenericDB(DBObject):
                 setattr(obj, token[:-2], attribute)
             else:
                 setattr(obj, token, attribute)
+        # check all required items are properly defined in obj attributes
+        for item in schema_object.items:
+            if item.required and not hasattr(obj, item.name):
+                raise RacksDBFormatError(
+                    f"token {item.name} is required in schema for object {schema_object}"
+                )
         # add object to db indexes
         if schema_object.name not in self._indexes:
             self._indexes[schema_object.name] = []
