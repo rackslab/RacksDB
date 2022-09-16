@@ -34,7 +34,6 @@ from .schema import (
     SchemaObject,
     SchemaExpandableObject,
     SchemaReference,
-    SchemaProperty,
 )
 
 
@@ -139,12 +138,8 @@ class GenericDB(DBObject):
         self,
         token,
         literal,
-        schema_arg: Union[SchemaProperty, SchemaNativeType],
+        schema_type: SchemaNativeType,
     ):
-        if isinstance(schema_arg, SchemaProperty):
-            schema_type = schema_arg.type
-        else:
-            schema_type = schema_arg
         print(f"Loading item {token} ({schema_type})")
         if isinstance(schema_type, SchemaNativeType):
             if schema_type.native is str:
@@ -240,7 +235,7 @@ class GenericDB(DBObject):
                     raise DBFormatError(
                         f"Property {token} is not defined in schema for object {schema_object}"
                     )
-            attribute = self.load_type(token, literal, token_property)
+            attribute = self.load_type(token, literal, token_property.type)
             if token.endswith('[]'):
                 setattr(obj, token[:-2], attribute)
             else:
