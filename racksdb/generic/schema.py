@@ -76,21 +76,21 @@ class SchemaNativeType(SchemaGenericValueType):
 
 
 class SchemaObject(SchemaGenericValueType):
-    def __init__(self, name, items):
+    def __init__(self, name, properties):
         self.name = name
-        self.items = items  # list of SchemaItemSpec
+        self.properties = properties  # list of SchemaProperty
 
     def __str__(self):
         return f"Schema{self.name}"
 
     def dump(self, indent):
-        for item in self.items:
-            print(f"{' '*indent}{item.name}: {item.type}")
+        for prop in self.properties:
+            print(f"{' '*indent}{prop.name}: {prop.type}")
 
-    def item(self, name):
-        for item in self.items:
-            if item.name == name:
-                return item
+    def prop(self, name):
+        for _prop in self.properties:
+            if _prop.name == name:
+                return _prop
         return None
 
 
@@ -126,7 +126,7 @@ class SchemaReference(SchemaGenericValueType):
         return f"${self.obj}.{self.attribute}"
 
 
-class SchemaItemSpec:
+class SchemaProperty:
     def __init__(self, name, required, value_type):
         self.name = name
         self.required = required
@@ -157,14 +157,14 @@ class Schema:
 
         self.content = self.parse_obj('_content', self._schema['_content'])
 
-    def item_spec(self, name, spec):
+    def prop_spec(self, name, spec):
         # check optional
         required = True
         if spec.startswith('optional '):
             required = False
             spec = spec[9:]  # remove optional key
 
-        return SchemaItemSpec(name, required, self.value_type(spec))
+        return SchemaProperty(name, required, self.value_type(spec))
 
     def value_type(self, spec):
         # parse native types
@@ -210,26 +210,26 @@ class Schema:
         return obj
 
     def parse_obj(self, object_id, objdef):
-        items = []
+        properties = []
         expandable = False
         for key, spec in objdef.items():
-            item = self.item_spec(key, spec)
-            if isinstance(item.type, SchemaExpandableObject):
+            prop = self.prop_spec(key, spec)
+            if isinstance(prop.type, SchemaExpandableObject):
                 raise DBSchemaError(
-                    f"expandable object {item.type} must be in a list, it cannot be member of object such as {object_id}"
+                    f"expandable object {prop.type} must be in a list, it cannot be member of object such as {object_id}"
                 )
-            if isinstance(item.type, SchemaExpandable):
+            if isinstance(prop.type, SchemaExpandable):
                 # check expandable uniqueness
                 if expandable:
                     raise DBSchemaError(
                         f"expandable object {object_id} cannot contain more than one expandable item"
                     )
                 expandable = True
-            items.append(item)
+            properties.append(prop)
         if expandable:
-            obj = SchemaExpandableObject(object_id, items)
+            obj = SchemaExpandableObject(object_id, properties)
         else:
-            obj = SchemaObject(object_id, items)
+            obj = SchemaObject(object_id, properties)
         return obj
 
     def find_defined_type(self, custom):

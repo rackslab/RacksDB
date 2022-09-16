@@ -34,7 +34,7 @@ from .schema import (
     SchemaObject,
     SchemaExpandableObject,
     SchemaReference,
-    SchemaItemSpec,
+    SchemaProperty,
 )
 
 
@@ -127,7 +127,7 @@ class GenericDB(DBObject):
 
     def load(self, loader):
         for token, value in loader.content.items():
-            schema_item = self._schema.content.item(token)
+            schema_item = self._schema.content.prop(token)
             if schema_item is None:
                 raise DBFormatError(
                     f"key {key} is not defined in schema {schema_object.name}"
@@ -136,9 +136,9 @@ class GenericDB(DBObject):
             setattr(self, token, attribute)
 
     def load_item(
-        self, token, value, schema_arg: Union[SchemaItemSpec, SchemaNativeType]
+        self, token, value, schema_arg: Union[SchemaProperty, SchemaNativeType]
     ):
-        if isinstance(schema_arg, SchemaItemSpec):
+        if isinstance(schema_arg, SchemaProperty):
             schema_type = schema_arg.type
         else:
             schema_type = schema_arg
@@ -203,33 +203,33 @@ class GenericDB(DBObject):
                 f"{self._prefix}{schema_object.name}", (DBObject,), dict()
             )(self, schema_object)
         for token, value in _value.items():
-            attribute_item = schema_object.item(token)
+            attribute_item = schema_object.prop(token)
             if attribute_item is None:
                 # try expandable
                 if token.endswith('[]'):
-                    attribute_item = schema_object.item(token[:-2])
+                    attribute_item = schema_object.prop(token[:-2])
                     if attribute_item is None:
                         raise DBFormatError(
-                            f"token {token} is not defined in schema for object {schema_object}"
+                            f"Property {token} is not defined in schema for object {schema_object}"
                         )
                     if not isinstance(attribute_item.type, SchemaExpandable):
                         raise DBFormatError(
-                            f"token {token} is not expandable in schema for object {schema_object}"
+                            f"Property {token} is not expandable in schema for object {schema_object}"
                         )
                 else:
                     raise DBFormatError(
-                        f"token {token} is not defined in schema for object {schema_object}"
+                        f"Property {token} is not defined in schema for object {schema_object}"
                     )
             attribute = self.load_item(token, value, attribute_item)
             if token.endswith('[]'):
                 setattr(obj, token[:-2], attribute)
             else:
                 setattr(obj, token, attribute)
-        # check all required items are properly defined in obj attributes
-        for item in schema_object.items:
-            if item.required and not hasattr(obj, item.name):
+        # check all required properties are properly defined in obj attributes
+        for prop in schema_object.properties:
+            if prop.required and not hasattr(obj, prop.name):
                 raise DBFormatError(
-                    f"token {item.name} is required in schema for object {schema_object}"
+                    f"Property {prop.name} is required in schema for object {schema_object}"
                 )
         # add object to db indexes
         if schema_object.name not in self._indexes:
