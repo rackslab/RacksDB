@@ -126,17 +126,20 @@ class GenericDB(DBObject):
         self._indexes = {}  # objects indexes
 
     def load(self, loader):
-        for token, value in loader.content.items():
+        for token, literal in loader.content.items():
             schema_item = self._schema.content.prop(token)
             if schema_item is None:
                 raise DBFormatError(
                     f"key {key} is not defined in schema {schema_object.name}"
                 )
-            attribute = self.load_item(token, value, schema_item.type)
+            attribute = self.load_item(token, literal, schema_item.type)
             setattr(self, token, attribute)
 
     def load_item(
-        self, token, value, schema_arg: Union[SchemaProperty, SchemaNativeType]
+        self,
+        token,
+        literal,
+        schema_arg: Union[SchemaProperty, SchemaNativeType],
     ):
         if isinstance(schema_arg, SchemaProperty):
             schema_type = schema_arg.type
@@ -145,52 +148,52 @@ class GenericDB(DBObject):
         print(f"Loading item {token} ({schema_type})")
         if isinstance(schema_type, SchemaNativeType):
             if schema_type.native is str:
-                if type(value) != str:
+                if type(literal) != str:
                     DBFormatError(
                         f"token {token} of {schema_type} is not a valid str"
                     )
-                return value
+                return literal
             elif schema_type.native is int:
-                if type(value) != int:
+                if type(literal) != int:
                     DBFormatError(
                         f"token {token} of {schema_type} is not a valid int"
                     )
-                return value
+                return literal
             elif schema_type.native is float:
-                if type(value) != float:
+                if type(literal) != float:
                     DBFormatError(
                         f"token {token} of {schema_item} is not a valid float"
                     )
-                return value
+                return literal
         elif isinstance(schema_type, SchemaDefinedType):
-            return self.load_defined_type(token, value, schema_type)
+            return self.load_defined_type(token, literal, schema_type)
         elif isinstance(schema_type, SchemaExpandable):
-            if type(value) != str:
+            if type(literal) != str:
                 DBFormatError(
                     f"token {token} of {schema_type} is not a valid expandable str"
                 )
-            return self.load_expandable(token, value, schema_type)
+            return self.load_expandable(token, literal, schema_type)
         elif isinstance(schema_type, SchemaRangeId):
-            if type(value) != int:
+            if type(literal) != int:
                 DBFormatError(
                     f"token {token} of {schema_type} is not a valid rangeid integer"
                 )
-            return self.load_rangeid(token, value, schema_type)
+            return self.load_rangeid(token, literal, schema_type)
         elif isinstance(schema_type, SchemaContainerList):
-            return self.load_list(token, value, schema_type)
+            return self.load_list(token, literal, schema_type)
         elif isinstance(schema_type, SchemaObject):
-            return self.load_object(token, value, schema_type)
+            return self.load_object(token, literal, schema_type)
         elif isinstance(schema_type, SchemaReference):
-            return self.load_reference(token, value, schema_type)
+            return self.load_reference(token, literal, schema_type)
         raise DBFormatError(
-            f"Unknow value {value} for token {token} for type {schema_type}"
+            f"Unknow literal {literal} for token {token} for type {schema_type}"
         )
 
-    def load_defined_type(self, token, value, schema_type):
-        return schema_type.parse(value)
+    def load_defined_type(self, token, literal, schema_type):
+        return schema_type.parse(literal)
 
-    def load_object(self, _token, _value, schema_object):
-        print(f"Loading object {_token} with {_value} ({schema_object})")
+    def load_object(self, _token, literal, schema_object):
+        print(f"Loading object {_token} with {literal} ({schema_object})")
         # is it expandable?
         if isinstance(schema_object, SchemaExpandableObject):
             obj = type(
@@ -202,7 +205,7 @@ class GenericDB(DBObject):
             obj = type(
                 f"{self._prefix}{schema_object.name}", (DBObject,), dict()
             )(self, schema_object)
-        for token, value in _value.items():
+        for token, value in literal.items():
             attribute_item = schema_object.prop(token)
             if attribute_item is None:
                 # try expandable
@@ -237,7 +240,7 @@ class GenericDB(DBObject):
         self._indexes[schema_object.name].append(obj)
         return obj
 
-    def load_reference(self, token, value, schema_type: SchemaReference):
+    def load_reference(self, token, literal, schema_type: SchemaReference):
         all_objs = self.find_objects(schema_type.obj)
         for _obj in all_objs:
             attribute_value = getattr(_obj, schema_type.attribute)
@@ -250,29 +253,31 @@ class GenericDB(DBObject):
                     print(
                         f"Attribute {attribute_value} is a range, looking for members"
                     )
-                    if value in attribute_value.expanded():
+                    if literal in attribute_value.expanded():
                         return _obj
-            elif attribute_value == value:
+            elif attribute_value == literal:
                 return _obj
         raise DBFormatError(
-            f"Unable to find {token} reference with value {value}"
+            f"Unable to find {token} reference with value {literal}"
         )
 
-    def load_list(self, token, value, schema_object):
-        if type(value) != list:
+    def load_list(self, token, literal, schema_object):
+        if type(literal) != list:
             raise DBFormatError(f"{schema_object.name}.{token} must be a list")
         result = []
-        for item in value:
+        for item in literal:
             result.append(self.load_item(token, item, schema_object.content))
         return result
 
-    def load_expandable(self, token, value, schema_type):
+    def load_expandable(self, token, literal, schema_type):
         return type(f"{self._prefix}ExpandableRange", (DBObjectRange,), dict())(
-            value
+            literal
         )
 
-    def load_rangeid(self, token, value, schema_type):
-        return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(value)
+    def load_rangeid(self, token, literal, schema_type):
+        return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(
+            literal
+        )
 
     def dump(self):
 
