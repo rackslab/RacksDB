@@ -132,10 +132,10 @@ class GenericDB(DBObject):
                 raise DBFormatError(
                     f"key {key} is not defined in schema {schema_object.name}"
                 )
-            attribute = self.load_item(token, literal, schema_item.type)
+            attribute = self.load_type(token, literal, schema_item.type)
             setattr(self, token, attribute)
 
-    def load_item(
+    def load_type(
         self,
         token,
         literal,
@@ -240,7 +240,7 @@ class GenericDB(DBObject):
                     raise DBFormatError(
                         f"Property {token} is not defined in schema for object {schema_object}"
                     )
-            attribute = self.load_item(token, literal, token_property)
+            attribute = self.load_type(token, literal, token_property)
             if token.endswith('[]'):
                 setattr(obj, token[:-2], attribute)
             else:
@@ -272,7 +272,7 @@ class GenericDB(DBObject):
             raise DBFormatError(f"{schema_object.name}.{token} must be a list")
         result = []
         for item in literal:
-            result.append(self.load_item(token, item, schema_object.content))
+            result.append(self.load_type(token, item, schema_object.content))
         return result
 
     def load_expandable(self, token, literal, schema_type):
