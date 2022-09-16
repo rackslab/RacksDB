@@ -161,19 +161,19 @@ class GenericDB(DBObject):
                     )
                 return literal
         elif isinstance(schema_type, SchemaDefinedType):
-            return self.load_defined_type(token, literal, schema_type)
+            return self.load_defined_type(literal, schema_type)
         elif isinstance(schema_type, SchemaExpandable):
             if type(literal) != str:
                 DBFormatError(
                     f"token {token} of {schema_type} is not a valid expandable str"
                 )
-            return self.load_expandable(token, literal, schema_type)
+            return self.load_expandable(literal)
         elif isinstance(schema_type, SchemaRangeId):
             if type(literal) != int:
                 DBFormatError(
                     f"token {token} of {schema_type} is not a valid rangeid integer"
                 )
-            return self.load_rangeid(token, literal, schema_type)
+            return self.load_rangeid(literal)
         elif isinstance(schema_type, SchemaContainerList):
             return self.load_list(token, literal, schema_type)
         elif isinstance(schema_type, SchemaObject):
@@ -184,10 +184,10 @@ class GenericDB(DBObject):
             f"Unknow literal {literal} for token {token} for type {schema_type}"
         )
 
-    def load_defined_type(self, token, literal, schema_type):
+    def load_defined_type(self, literal, schema_type: SchemaDefinedType):
         return schema_type.parse(literal)
 
-    def load_object(self, token, literal, schema_object):
+    def load_object(self, token, literal, schema_object: SchemaObject):
         print(f"Loading object {token} with {literal} ({schema_object})")
         # is it expandable?
         if isinstance(schema_object, SchemaExpandableObject):
@@ -216,7 +216,7 @@ class GenericDB(DBObject):
         self._indexes[schema_object.name].append(obj)
         return obj
 
-    def load_object_attributes(self, obj, content, schema_object):
+    def load_object_attributes(self, obj, content, schema_object: SchemaObject):
         for token, literal in content.items():
             token_property = schema_object.prop(token)
             if token_property is None:
@@ -262,7 +262,7 @@ class GenericDB(DBObject):
             f"Unable to find {token} reference with value {literal}"
         )
 
-    def load_list(self, token, literal, schema_object):
+    def load_list(self, token, literal, schema_object: SchemaContainerList):
         if type(literal) != list:
             raise DBFormatError(f"{schema_object.name}.{token} must be a list")
         result = []
@@ -270,12 +270,12 @@ class GenericDB(DBObject):
             result.append(self.load_type(token, item, schema_object.content))
         return result
 
-    def load_expandable(self, token, literal, schema_type):
+    def load_expandable(self, literal):
         return type(f"{self._prefix}ExpandableRange", (DBObjectRange,), dict())(
             literal
         )
 
-    def load_rangeid(self, token, literal, schema_type):
+    def load_rangeid(self, literal):
         return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(
             literal
         )
