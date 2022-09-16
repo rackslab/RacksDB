@@ -160,7 +160,10 @@ class Schema:
 
         self.objects = {}
 
-        self.content = self.parse_obj('_content', self._schema['_content'])
+        try:
+            self.content = self.parse_obj('_content', self._schema['_content'])
+        except KeyError:
+            raise DBSchemaError("Content must be defined in schema")
 
     def prop_spec(self, name, spec):
         # check optional

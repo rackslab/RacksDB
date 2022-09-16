@@ -22,6 +22,7 @@ import unittest
 from racksdb.generic.schema import Schema
 from racksdb.generic.errors import DBSchemaError
 
+
 class FakeSchemaLoader:
     def __init__(self, content):
         self.content = content
@@ -36,7 +37,17 @@ class TestSchema(unittest.TestCase):
     def test_empty_schema(self):
         schema_loader = FakeSchemaLoader({})
         types_loader = FakeTypesLoader([])
-        with self.assertRaisesRegex(DBSchemaError, 'Version must be defined in schema'):
+        with self.assertRaisesRegex(
+            DBSchemaError, 'Version must be defined in schema'
+        ):
+            Schema(schema_loader, types_loader)
+
+    def test_empty_content(self):
+        schema_loader = FakeSchemaLoader({'_version': '0'})
+        types_loader = FakeTypesLoader([])
+        with self.assertRaisesRegex(
+            DBSchemaError, 'Content must be defined in schema'
+        ):
             Schema(schema_loader, types_loader)
 
     def test_minimal_schema(self):
