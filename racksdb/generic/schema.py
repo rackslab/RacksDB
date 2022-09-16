@@ -152,8 +152,10 @@ class Schema:
     def __init__(self, schema_loader, types_loader):
         self._schema = schema_loader.content
 
-        self.version = self._schema['_version']
-
+        try:
+            self.version = self._schema['_version']
+        except KeyError:
+            raise DBSchemaError("Version must be defined in schema")
         self.types = types_loader.content
 
         self.objects = {}
