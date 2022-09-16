@@ -21,8 +21,11 @@ import re
 import importlib
 import pkgutil
 import yaml
+import logging
 
 from .errors import DBSchemaError
+
+logger = logging.getLogger(__name__)
 
 
 class SchemaDefinedTypeLoader:
@@ -33,13 +36,13 @@ class SchemaDefinedTypeLoader:
     def content(self):
         results = {}
         base_module = importlib.import_module(self.path)
-        print(f"-> Searching module in {base_module.__path__}")
+        logger.debug("Searching module in %s", base_module.__path__)
         for importer, modname, _ in pkgutil.iter_modules(base_module.__path__):
-            print(f"-> Loading module {modname}/{importer}")
+            logger.debug("Loading module %s/%s", modname, importer)
             module = importlib.import_module(f"{self.path}.{modname}")
             class_suffix = modname.replace('_', ' ').title().replace(' ', '')
             class_name = f"SchemaDefinedType{class_suffix}"
-            print(f"-> Loading class {class_name}")
+            logger.debug("Loading class %s", class_name)
             results[modname] = getattr(module, class_name)()
         return results
 

@@ -19,7 +19,7 @@
 
 import re
 from typing import Union
-
+import logging
 
 import yaml
 from ClusterShell.NodeSet import NodeSet
@@ -35,6 +35,8 @@ from .schema import (
     SchemaExpandableObject,
     SchemaReference,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class DBObject:
@@ -140,7 +142,7 @@ class GenericDB(DBObject):
         literal,
         schema_type: SchemaNativeType,
     ):
-        print(f"Loading item {token} ({schema_type})")
+        logger.debug("Loading type %s (%s)", token, schema_type)
         if isinstance(schema_type, SchemaNativeType):
             if schema_type.native is str:
                 if type(literal) != str:
@@ -188,7 +190,9 @@ class GenericDB(DBObject):
         return schema_type.parse(literal)
 
     def load_object(self, token, literal, schema_object: SchemaObject):
-        print(f"Loading object {token} with {literal} ({schema_object})")
+        logger.debug(
+            "Loading object %s with %s (%s)", token, literal, schema_object
+        )
         # is it expandable?
         if isinstance(schema_object, SchemaExpandableObject):
             obj = type(
@@ -247,12 +251,15 @@ class GenericDB(DBObject):
             attribute_value = getattr(_obj, schema_type.attribute)
 
             if isinstance(schema_type.obj, SchemaExpandableObject):
-                print(
-                    f"Object {schema_type.obj} is expandable, looking for attribute {attribute_value}"
+                logger.debug(
+                    "Object %s is expandable, looking for attribute %s",
+                    schema_type.obj,
+                    attribute_value,
                 )
                 if isinstance(attribute_value, DBObjectRange):
-                    print(
-                        f"Attribute {attribute_value} is a range, looking for members"
+                    logger.debug(
+                        "Attribute %s is a range, looking for members",
+                        attribute_value,
                     )
                     if literal in attribute_value.expanded():
                         return _obj

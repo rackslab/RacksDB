@@ -20,11 +20,14 @@
 import argparse
 import yaml
 import sys
+import logging
 
 from .version import __version__
 from .generic.errors import DBFormatError, DBSchemaError
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBFileLoader
+
+logger = logging.getLogger(__name__)
 
 
 class RacksDBExec:
@@ -74,7 +77,7 @@ class RacksDBExec:
                 SchemaDefinedTypeLoader('racksdb.types'),
             )
         except DBSchemaError as err:
-            print(f"Error while loading schema: {err}")
+            logger.error("Error while loading schema: %s", err)
             sys.exit(1)
         schema.dump()
 
@@ -83,7 +86,7 @@ class RacksDBExec:
             db = GenericDB('RacksDB', schema)
             db.load(loader)
         except DBFormatError as err:
-            print(f"Error while loading db: {err}")
+            logger.error("Error while loading db: %s", err)
             sys.exit(1)
 
         db.dump()
