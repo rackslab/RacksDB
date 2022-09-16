@@ -192,8 +192,8 @@ class GenericDB(DBObject):
     def load_defined_type(self, token, literal, schema_type):
         return schema_type.parse(literal)
 
-    def load_object(self, _token, literal, schema_object):
-        print(f"Loading object {_token} with {literal} ({schema_object})")
+    def load_object(self, token, literal, schema_object):
+        print(f"Loading object {token} with {literal} ({schema_object})")
         # is it expandable?
         if isinstance(schema_object, SchemaExpandableObject):
             obj = type(
@@ -205,29 +205,10 @@ class GenericDB(DBObject):
             obj = type(
                 f"{self._prefix}{schema_object.name}", (DBObject,), dict()
             )(self, schema_object)
-        for token, value in literal.items():
-            attribute_item = schema_object.prop(token)
-            if attribute_item is None:
-                # try expandable
-                if token.endswith('[]'):
-                    attribute_item = schema_object.prop(token[:-2])
-                    if attribute_item is None:
-                        raise DBFormatError(
-                            f"Property {token} is not defined in schema for object {schema_object}"
-                        )
-                    if not isinstance(attribute_item.type, SchemaExpandable):
-                        raise DBFormatError(
-                            f"Property {token} is not expandable in schema for object {schema_object}"
-                        )
-                else:
-                    raise DBFormatError(
-                        f"Property {token} is not defined in schema for object {schema_object}"
-                    )
-            attribute = self.load_item(token, value, attribute_item)
-            if token.endswith('[]'):
-                setattr(obj, token[:-2], attribute)
-            else:
-                setattr(obj, token, attribute)
+
+        # load object attributes
+        self.load_object_attributes(obj, literal, schema_object)
+
         # check all required properties are properly defined in obj attributes
         for prop in schema_object.properties:
             if prop.required and not hasattr(obj, prop.name):
@@ -239,6 +220,31 @@ class GenericDB(DBObject):
             self._indexes[schema_object.name] = []
         self._indexes[schema_object.name].append(obj)
         return obj
+
+    def load_object_attributes(self, obj, content, schema_object):
+        for token, literal in content.items():
+            token_property = schema_object.prop(token)
+            if token_property is None:
+                # try expandable
+                if token.endswith('[]'):
+                    token_property = schema_object.prop(token[:-2])
+                    if token_property is None:
+                        raise DBFormatError(
+                            f"Property {token} is not defined in schema for object {schema_object}"
+                        )
+                    if not isinstance(token_property.type, SchemaExpandable):
+                        raise DBFormatError(
+                            f"Property {token} is not expandable in schema for object {schema_object}"
+                        )
+                else:
+                    raise DBFormatError(
+                        f"Property {token} is not defined in schema for object {schema_object}"
+                    )
+            attribute = self.load_item(token, literal, token_property)
+            if token.endswith('[]'):
+                setattr(obj, token[:-2], attribute)
+            else:
+                setattr(obj, token, attribute)
 
     def load_reference(self, token, literal, schema_type: SchemaReference):
         all_objs = self.find_objects(schema_type.obj)
