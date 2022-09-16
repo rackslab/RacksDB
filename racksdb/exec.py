@@ -67,7 +67,24 @@ class RacksDBExec:
         )
 
         self.args = parser.parse_args()
+
+        self._setup_logger()
+
         self._run()
+
+    def _setup_logger(self):
+        if self.args.debug:
+            logging_level = logging.DEBUG
+        else:
+            logging_level = logging.INFO
+
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging_level)
+        handler = logging.StreamHandler()
+        handler.setLevel(logging_level)
+        formatter = logging.Formatter("[%(levelname)s] %(name)s: %(message)s")
+        handler.setFormatter(formatter)
+        root_logger.addHandler(handler)
 
     def _run(self):
 
