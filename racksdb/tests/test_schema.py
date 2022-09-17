@@ -87,3 +87,13 @@ class TestSchema(unittest.TestCase):
         self.assertEqual(schema.version, '1')
         self.assertEqual(len(schema.types), 1)
         self.assertEqual(len(schema.content.properties), 3)
+
+    def test_missing_objects(self):
+        schema_content = VALID_SCHEMA.copy()
+        del schema_content['_objects']
+        schema_loader = FakeSchemaLoader(schema_content)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        with self.assertRaisesRegex(
+            DBSchemaError, "Definition of object \w+ not found in schema"
+        ):
+            Schema(schema_loader, types_loader)
