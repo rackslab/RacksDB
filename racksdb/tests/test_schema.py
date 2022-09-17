@@ -53,4 +53,7 @@ class TestSchema(unittest.TestCase):
     def test_minimal_schema(self):
         schema_loader = FakeSchemaLoader({'_version': '0', '_content': {}})
         types_loader = FakeTypesLoader([])
-        Schema(schema_loader, types_loader)
+        schema = Schema(schema_loader, types_loader)
+        self.assertEqual(schema.version, '0')
+        self.assertEqual(len(schema.types), 0)
+        self.assertEqual(len(schema.content.properties), 0)
