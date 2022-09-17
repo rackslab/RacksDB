@@ -211,8 +211,13 @@ class Schema:
     def find_obj(self, object_id):
         if object_id in self.objects:
             return self.objects[object_id]
-        if object_id not in self._schema['_objects']:
-            raise DBSchemaError(f"definition of object {object_id} not found")
+        if (
+            '_objects' not in self._schema
+            or object_id not in self._schema['_objects']
+        ):
+            raise DBSchemaError(
+                f"Definition of object {object_id} not found in schema"
+            )
         obj = self.parse_obj(object_id, self._schema['_objects'][object_id])
         self.objects[object_id] = obj
         return obj
