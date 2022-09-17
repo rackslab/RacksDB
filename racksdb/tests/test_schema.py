@@ -20,6 +20,7 @@
 import unittest
 
 from racksdb.generic.schema import Schema
+from racksdb.generic.definedtype import SchemaDefinedType
 from racksdb.generic.errors import DBSchemaError
 
 
@@ -33,10 +34,31 @@ class FakeTypesLoader:
         self.content = content
 
 
+VALID_SCHEMA = {
+    '_version': '1',
+    '_content': {
+        'apples': 'list[:Apple]',
+        'pear': ':Pear',
+        'bananas': 'optional list[:Banana]',
+    },
+    '_objects': {
+        'Apple': {
+            'color': 'str',
+            'weight': '~weight',
+            'variety': 'str',
+        },
+        'Pear': {'color': 'str', 'weight': '~weight', 'variety': 'str'},
+        'Banana': {'origin': 'str'},
+    },
+}
+
+VALID_DEFINED_TYPES = {'weight': SchemaDefinedType()}
+
+
 class TestSchema(unittest.TestCase):
     def test_empty_schema(self):
         schema_loader = FakeSchemaLoader({})
-        types_loader = FakeTypesLoader([])
+        types_loader = FakeTypesLoader({})
         with self.assertRaisesRegex(
             DBSchemaError, 'Version must be defined in schema'
         ):
@@ -44,7 +66,7 @@ class TestSchema(unittest.TestCase):
 
     def test_empty_content(self):
         schema_loader = FakeSchemaLoader({'_version': '0'})
-        types_loader = FakeTypesLoader([])
+        types_loader = FakeTypesLoader({})
         with self.assertRaisesRegex(
             DBSchemaError, 'Content must be defined in schema'
         ):
@@ -52,8 +74,16 @@ class TestSchema(unittest.TestCase):
 
     def test_minimal_schema(self):
         schema_loader = FakeSchemaLoader({'_version': '0', '_content': {}})
-        types_loader = FakeTypesLoader([])
+        types_loader = FakeTypesLoader({})
         schema = Schema(schema_loader, types_loader)
         self.assertEqual(schema.version, '0')
         self.assertEqual(len(schema.types), 0)
         self.assertEqual(len(schema.content.properties), 0)
+
+    def test_valid_schema(self):
+        schema_loader = FakeSchemaLoader(VALID_SCHEMA)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        schema = Schema(schema_loader, types_loader)
+        self.assertEqual(schema.version, '1')
+        self.assertEqual(len(schema.types), 1)
+        self.assertEqual(len(schema.content.properties), 3)
