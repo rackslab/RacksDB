@@ -206,7 +206,7 @@ class Schema:
                 obj = self.find_obj(match.group(1))
                 attribute = match.group(2)
                 return SchemaReference(obj, attribute)
-        raise DBSchemaError(f"unable to parse value type '{spec}'")
+        raise DBSchemaError(f"Unable to parse value type '{spec}'")
 
     def find_obj(self, object_id):
         if object_id in self.objects:
@@ -229,13 +229,15 @@ class Schema:
             prop = self.prop_spec(key, spec)
             if isinstance(prop.type, SchemaExpandableObject):
                 raise DBSchemaError(
-                    f"expandable object {prop.type} must be in a list, it cannot be member of object such as {object_id}"
+                    f"Expandable object {prop.type} must be in a list, it "
+                    f"cannot be member of object such as {object_id}"
                 )
             if isinstance(prop.type, SchemaExpandable):
                 # check expandable uniqueness
                 if expandable:
                     raise DBSchemaError(
-                        f"expandable object {object_id} cannot contain more than one expandable item"
+                        f"Expandable object {object_id} cannot contain more "
+                        "than one expandable item"
                     )
                 expandable = True
             properties.append(prop)
@@ -250,7 +252,7 @@ class Schema:
             return self.types[custom]
         except KeyError:
             raise DBSchemaError(
-                f"definition of defined type {custom} not found"
+                f"Definition of defined type {custom} not found"
             )
 
     def dump(self):
