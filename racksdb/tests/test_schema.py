@@ -109,3 +109,13 @@ class TestSchema(unittest.TestCase):
                 DBSchemaError, f"Definition of object {obj} not found in schema"
             ):
                 Schema(schema_loader, types_loader)
+
+    def test_missing_defined_type(self):
+        schema_loader = FakeSchemaLoader(VALID_SCHEMA)
+        defined_types = copy.deepcopy(VALID_DEFINED_TYPES)
+        del defined_types['weight']
+        types_loader = FakeTypesLoader(defined_types)
+        with self.assertRaisesRegex(
+            DBSchemaError, "Definition of defined type weight not found"
+        ):
+            Schema(schema_loader, types_loader)
