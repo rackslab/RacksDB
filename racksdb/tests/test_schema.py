@@ -18,6 +18,7 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 import unittest
+import copy
 
 from racksdb.generic.schema import Schema
 from racksdb.generic.definedtype import SchemaDefinedType
@@ -89,7 +90,7 @@ class TestSchema(unittest.TestCase):
         self.assertEqual(len(schema.content.properties), 3)
 
     def test_missing_objects(self):
-        schema_content = VALID_SCHEMA.copy()
+        schema_content = copy.deepcopy(VALID_SCHEMA)
         del schema_content['_objects']
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
@@ -97,3 +98,14 @@ class TestSchema(unittest.TestCase):
             DBSchemaError, "Definition of object \w+ not found in schema"
         ):
             Schema(schema_loader, types_loader)
+
+    def test_missing_object(self):
+        for obj in VALID_SCHEMA['_objects'].keys():
+            schema_content = copy.deepcopy(VALID_SCHEMA)
+            del schema_content['_objects'][obj]
+            schema_loader = FakeSchemaLoader(schema_content)
+            types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+            with self.assertRaisesRegex(
+                DBSchemaError, f"Definition of object {obj} not found in schema"
+            ):
+                Schema(schema_loader, types_loader)
