@@ -121,12 +121,12 @@ class SchemaRangeId(SchemaGenericValueType):
 
 
 class SchemaReference(SchemaGenericValueType):
-    def __init__(self, obj, attribute):
+    def __init__(self, obj, prop):
         self.obj = obj
-        self.attribute = attribute
+        self.prop = prop
 
     def __str__(self):
-        return f"${self.obj}.{self.attribute}"
+        return f"${self.obj}.{self.prop}"
 
 
 class SchemaProperty:

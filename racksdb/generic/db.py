@@ -228,13 +228,11 @@ class GenericDB(DBObject):
                     schema_type.obj,
                 )
                 for generated_object in _obj.objects():
-                    property_value = getattr(
-                        generated_object, schema_type.attribute
-                    )
+                    property_value = getattr(generated_object, schema_type.prop)
                     if property_value == literal:
                         return generated_object
             else:
-                property_value = getattr(_obj, schema_type.attribute)
+                property_value = getattr(_obj, schema_type.prop)
                 if property_value == literal:
                     return _obj
         raise DBFormatError(
