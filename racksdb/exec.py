@@ -26,6 +26,7 @@ from .version import __version__
 from .generic.errors import DBFormatError, DBSchemaError
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBFileLoader
+from .generic.dumper import DBDumper
 
 logger = logging.getLogger(__name__)
 
@@ -142,8 +143,8 @@ class RacksDBExec:
             for datacenter in self.db.datacenters:
                 print(datacenter.name)
                 return
-        for datacenter in self.db.datacenters:
-            datacenter.dump(indent=0)
+        dumper = DBDumper()
+        print(dumper.dump([datacenter for datacenter in self.db.datacenters]))
 
     def _run_groups(self):
         # print list of equipments groups
@@ -151,5 +152,5 @@ class RacksDBExec:
             for group in self.db.groups:
                 print(group.name)
                 return
-        for group in self.db.groups:
-            group.dump(indent=0)
+        dumper = DBDumper()
+        print(dumper.dump([group for group in self.db.groups]))

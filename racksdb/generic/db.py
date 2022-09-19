@@ -44,28 +44,6 @@ class DBObject:
         self._db = db
         self._schema = schema
 
-    def dump(self, indent):
-        for attribute, value in vars(self).items():
-            if attribute in ['_db']:
-                continue
-            if isinstance(value, list):
-                print(f"{' '*indent}{attribute}:")
-                for item in value:
-                    if isinstance(item, DBExpandableObject):
-                        for generated_obj in item.objects():
-                            print(f"{' '*indent}-")
-                            generated_obj.dump(indent + 2)
-                    elif isinstance(item, DBObject):
-                        print(f"{' '*indent}-")
-                        item.dump(indent + 2)
-                    else:
-                        print(f"{' '*indent}- {item}")
-            elif isinstance(value, DBObject):
-                print(f"{' '*indent}{attribute}:")
-                value.dump(indent + 2)
-            else:
-                print(f"{' '*indent}{attribute}: {value}")
-
 
 class DBExpandableObject(DBObject):
     def objects(self):
@@ -127,14 +105,9 @@ class GenericDB(DBObject):
         self._indexes = {}  # objects indexes
 
     def load(self, loader):
-        for token, literal in loader.content.items():
-            schema_item = self._schema.content.prop(token)
-            if schema_item is None:
-                raise DBFormatError(
-                    f"key {key} is not defined in schema {schema_object.name}"
-                )
-            attribute = self.load_type(token, literal, schema_item.type)
-            setattr(self, token, attribute)
+        obj = self.load_object('_root', loader.content, self._schema.content)
+        for key, value in vars(obj).items():
+            setattr(self, key, value)
 
     def load_type(
         self,
@@ -286,11 +259,6 @@ class GenericDB(DBObject):
         return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(
             literal
         )
-
-    def dump(self):
-
-        print("DB:")
-        super().dump(indent=2)
 
     def find_objects(self, object_type):
         return self._indexes[object_type.name]
