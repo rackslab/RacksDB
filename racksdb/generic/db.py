@@ -221,23 +221,22 @@ class GenericDB(DBObject):
     def load_reference(self, token, literal, schema_type: SchemaReference):
         all_objs = self.find_objects(schema_type.obj)
         for _obj in all_objs:
-            attribute_value = getattr(_obj, schema_type.attribute)
-
             if isinstance(schema_type.obj, SchemaExpandableObject):
                 logger.debug(
-                    "Object %s is expandable, looking for attribute %s",
+                    "Object %s is expandable, generating all objects to find "
+                    "exact reference",
                     schema_type.obj,
-                    attribute_value,
                 )
-                if isinstance(attribute_value, DBObjectRange):
-                    logger.debug(
-                        "Attribute %s is a range, looking for members",
-                        attribute_value,
+                for generated_object in _obj.objects():
+                    property_value = getattr(
+                        generated_object, schema_type.attribute
                     )
-                    if literal in attribute_value.expanded():
-                        return _obj
-            elif attribute_value == literal:
-                return _obj
+                    if property_value == literal:
+                        return generated_object
+            else:
+                property_value = getattr(_obj, schema_type.attribute)
+                if property_value == literal:
+                    return _obj
         raise DBFormatError(
             f"Unable to find {token} reference with value {literal}"
         )
