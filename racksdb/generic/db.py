@@ -80,6 +80,9 @@ class DBObjectRange:
     def expanded(self):
         return list(self.rangeset)
 
+    def __repr__(self):
+        return str(self.rangeset)
+
 
 class DBObjectRangeId:
     def __init__(self, start):
