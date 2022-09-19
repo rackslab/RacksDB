@@ -152,5 +152,10 @@ class RacksDBExec:
             for group in self.db.groups:
                 print(group.name)
                 return
-        dumper = DBDumper()
+        objects_map = {
+            'RacksDBDatacenter': 'name',
+            'RacksDBDatacenterRoom': 'name',
+            'RacksDBDatacenterRoomRack': 'name',
+        }
+        dumper = DBDumper(objects_map=objects_map)
         print(dumper.dump([group for group in self.db.groups]))
