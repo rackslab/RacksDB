@@ -73,6 +73,6 @@ _objects:
     tags: optional list[str]
   GroupRackNode:
     name: expandable
-    node: optional $NodeType.id
+    type: optional $NodeType.id
     slot: rangeid
     tags: optional list[str]
