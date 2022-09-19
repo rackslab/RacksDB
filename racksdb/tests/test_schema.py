@@ -119,3 +119,13 @@ class TestSchema(unittest.TestCase):
             DBSchemaError, "Definition of defined type weight not found"
         ):
             Schema(schema_loader, types_loader)
+
+    def test_invalid_type(self):
+        schema_content = copy.deepcopy(VALID_SCHEMA)
+        schema_content['_objects']['Apple']['color'] = 'fail'
+        schema_loader = FakeSchemaLoader(schema_content)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        with self.assertRaisesRegex(
+            DBSchemaError, "Unable to parse value type 'fail'"
+        ):
+            Schema(schema_loader, types_loader)
