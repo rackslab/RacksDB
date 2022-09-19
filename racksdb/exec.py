@@ -92,6 +92,12 @@ class RacksDBExec:
             help='Show groups full details',
             action='store_true',
         )
+        parser_groups.add_argument(
+            '--expand',
+            help='Expand equipments in groups',
+            action='store_true',
+        )
+
         parser_groups.set_defaults(func=self._run_groups)
 
         self.args = parser.parse_args()
@@ -157,5 +163,5 @@ class RacksDBExec:
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRack': 'name',
         }
-        dumper = DBDumper(objects_map=objects_map)
+        dumper = DBDumper(objects_map=objects_map, expand=self.args.expand)
         print(dumper.dump([group for group in self.db.groups]))
