@@ -23,8 +23,9 @@ from .db import DBObject, DBObjectRange, DBObjectRangeId
 
 
 class DBDumper:
-    def __init__(self):
+    def __init__(self, objects_map={}):
         self._setup()
+        self.objects_map = objects_map
 
     def _represent_dbobject(self, dumper, data):
 
@@ -42,6 +43,11 @@ class DBDumper:
             if item_key in ['_db', '_indexes', '_schema']:
                 continue
             node_key = dumper.represent_data(item_key)
+
+            if item_value.__class__.__name__ in self.objects_map.keys():
+                item_value = getattr(
+                    item_value, self.objects_map[item_value.__class__.__name__]
+                )
             node_value = dumper.represent_data(item_value)
 
             value.append((node_key, node_value))
