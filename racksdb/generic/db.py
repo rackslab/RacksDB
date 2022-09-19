@@ -266,5 +266,11 @@ class GenericDB(DBObject):
             literal
         )
 
-    def find_objects(self, object_type_name):
-        return self._indexes[object_type_name]
+    def find_objects(self, object_type_name, expand=False):
+        result = []
+        for obj in self._indexes[object_type_name]:
+            if expand and isinstance(obj, DBExpandableObject):
+                result += obj.objects()
+            else:
+                result.append(obj)
+        return result
