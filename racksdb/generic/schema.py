@@ -199,14 +199,7 @@ class Schema:
         # ref
         match = self.pattern_type_ref.match(spec)
         if match is not None:
-            obj = self.find_obj(match.group(1))
-            attribute = match.group(2)
-            # verify property is defined for object
-            if obj.prop(attribute) is None:
-                raise DBSchemaError(
-                    f"Reference {spec} to undefined {obj} object property"
-                )
-            return SchemaReference(obj, attribute)
+            return self.obj_reference(spec, match.group(1), match.group(2))
         raise DBSchemaError(f"Unable to parse value type '{spec}'")
 
     def find_obj(self, object_id):
@@ -255,6 +248,15 @@ class Schema:
             raise DBSchemaError(
                 f"Definition of defined type {defined} not found"
             )
+
+    def obj_reference(self, spec, object_id, object_prop):
+        obj = self.find_obj(object_id)
+        # verify property is defined for object
+        if obj.prop(object_prop) is None:
+            raise DBSchemaError(
+                f"Reference {spec} to undefined {obj} object property"
+            )
+        return SchemaReference(obj, object_prop)
 
     def dump(self):
         print("_types:")
