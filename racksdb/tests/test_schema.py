@@ -41,6 +41,7 @@ VALID_SCHEMA = {
         'apples': 'list[:Apple]',
         'pear': ':Pear',
         'bananas': 'optional list[:Banana]',
+        'stock': 'list[:AppleCrate]',
     },
     '_objects': {
         'Apple': {
@@ -50,6 +51,12 @@ VALID_SCHEMA = {
         },
         'Pear': {'color': 'str', 'weight': '~weight', 'variety': 'str'},
         'Banana': {'origin': 'str'},
+        'AppleCrate': {
+            'name': 'expandable',
+            'id': 'rangeid',
+            'variety': '$Apple.variety',
+            'quantity': 'int',
+        },
     },
 }
 
@@ -87,7 +94,7 @@ class TestSchema(unittest.TestCase):
         schema = Schema(schema_loader, types_loader)
         self.assertEqual(schema.version, '1')
         self.assertEqual(len(schema.types), 1)
-        self.assertEqual(len(schema.content.properties), 3)
+        self.assertEqual(len(schema.content.properties), 4)
 
     def test_missing_objects(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
@@ -127,5 +134,29 @@ class TestSchema(unittest.TestCase):
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
             DBSchemaError, "Unable to parse value type 'fail'"
+        ):
+            Schema(schema_loader, types_loader)
+
+    def test_expandable_not_in_list(self):
+        schema_content = copy.deepcopy(VALID_SCHEMA)
+        schema_content['_content']['stock'] = ':AppleCrate'
+        schema_loader = FakeSchemaLoader(schema_content)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        with self.assertRaisesRegex(
+            DBSchemaError,
+            "Expandable object SchemaAppleCrate\+ must be in a list, it cannot "
+            "be member of object such as _content",
+        ):
+            Schema(schema_loader, types_loader)
+
+    def test_expandable_double(self):
+        schema_content = copy.deepcopy(VALID_SCHEMA)
+        schema_content['_objects']['AppleCrate']['quantity'] = 'expandable'
+        schema_loader = FakeSchemaLoader(schema_content)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        with self.assertRaisesRegex(
+            DBSchemaError,
+            "Expandable object AppleCrate cannot contain more than one "
+            "expandable property",
         ):
             Schema(schema_loader, types_loader)
