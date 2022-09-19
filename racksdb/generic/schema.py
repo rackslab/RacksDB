@@ -176,13 +176,10 @@ class Schema:
 
     def value_type(self, spec):
         # parse native types
-        if spec == 'str':
-            return SchemaNativeType(str)
-        elif spec == 'int':
-            return SchemaNativeType(int)
-        elif spec == 'float':
-            return SchemaNativeType(float)
-        elif spec == 'expandable':
+        for native_type in (str, int, float):
+            if spec == native_type.__name__:
+                return SchemaNativeType(native_type)
+        if spec == 'expandable':
             return SchemaExpandable()
         elif spec == 'rangeid':
             return SchemaRangeId()
