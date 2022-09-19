@@ -160,3 +160,14 @@ class TestSchema(unittest.TestCase):
             "expandable property",
         ):
             Schema(schema_loader, types_loader)
+
+    def test_reference_undefined_object(self):
+        schema_content = copy.deepcopy(VALID_SCHEMA)
+        schema_content['_objects']['AppleCrate']['variety'] = '$Unkown.object'
+        schema_loader = FakeSchemaLoader(schema_content)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        with self.assertRaisesRegex(
+            DBSchemaError,
+            "Definition of object Unkown not found in schema",
+        ):
+            Schema(schema_loader, types_loader)
