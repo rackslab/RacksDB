@@ -69,6 +69,18 @@ class RacksDBExec:
             help='Action to perform with database', dest='action'
         )
 
+        # Parser for the datacenters command
+        parser_datacenters = subparsers.add_parser(
+            'datacenters', help='Get informations about datacenters'
+        )
+        parser_datacenters.add_argument(
+            '-d',
+            '--details',
+            help='Show datacenters full details',
+            action='store_true',
+        )
+        parser_datacenters.set_defaults(func=self._run_datacenters)
+
         # Parser for the groups command
         parser_groups = subparsers.add_parser(
             'groups', help='Get informations about equipments groups'
@@ -123,6 +135,15 @@ class RacksDBExec:
         except DBFormatError as err:
             logger.error("Error while loading db: %s", err)
             sys.exit(1)
+
+    def _run_datacenters(self):
+        # print list of datacenters
+        if not self.args.details:
+            for datacenter in self.db.datacenters:
+                print(datacenter.name)
+                return
+        for datacenter in self.db.datacenters:
+            datacenter.dump(indent=0)
 
     def _run_groups(self):
         # print list of equipments groups
