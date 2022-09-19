@@ -120,8 +120,12 @@ class RacksDBExec:
             action='store_true',
         )
         parser_nodes.add_argument(
+            '--group',
+            help='Filter nodes by group',
+        )
+        parser_nodes.add_argument(
             '--tag',
-            help='Filter nodes with tag',
+            help='Filter nodes by tag',
         )
         parser_nodes.set_defaults(func=self._run_nodes)
 
@@ -204,17 +208,25 @@ class RacksDBExec:
 
         all_nodes = self.db.find_objects('GroupRackNode', self.args.expand)
 
-        # filter nodes with tag
-        if self.args.tag is None:
-            selected_nodes = all_nodes
-        else:
-            selected_nodes = []
-            for node in all_nodes:
+        selected_nodes = all_nodes
+
+        # filter nodes by group
+        if self.args.group is not None:
+            selected_nodes = [
+                node for node in selected_nodes if self.args.group == node.group
+            ]
+
+        # filter nodes by tag
+        if self.args.tag is not None:
+            selected_nodes = [
+                node
+                for node in selected_nodes
                 if (
                     hasattr(node.rack, 'tags')
                     and self.args.tag in node.rack.tags
-                ) or (hasattr(node, 'tags') and self.args.tag in node.tags):
-                    selected_nodes.append(node)
+                )
+                or (hasattr(node, 'tags') and self.args.tag in node.tags)
+            ]
 
         if not self.args.details:
             for node in selected_nodes:
