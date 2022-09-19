@@ -65,12 +65,31 @@ class RacksDBExec:
             help="Database to load",
             required=True,
         )
+        subparsers = parser.add_subparsers(
+            help='Action to perform with database', dest='action'
+        )
+
+        # Parser for the groups command
+        parser_groups = subparsers.add_parser(
+            'groups', help='Get informations about equipments groups'
+        )
+        parser_groups.add_argument(
+            '-d',
+            '--details',
+            help='Show groups full details',
+            action='store_true',
+        )
+        parser_groups.set_defaults(func=self._run_groups)
 
         self.args = parser.parse_args()
 
         self._setup_logger()
 
-        self._run()
+        self.schema = None
+        self.db = None
+        self._load()
+
+        self.args.func()
 
     def _setup_logger(self):
         if self.args.debug:
@@ -86,24 +105,30 @@ class RacksDBExec:
         handler.setFormatter(formatter)
         root_logger.addHandler(handler)
 
-    def _run(self):
+    def _load(self):
 
         try:
-            schema = Schema(
+            self.schema = Schema(
                 SchemaFileLoader(self.args.schema),
                 SchemaDefinedTypeLoader('racksdb.types'),
             )
         except DBSchemaError as err:
             logger.error("Error while loading schema: %s", err)
             sys.exit(1)
-        schema.dump()
 
         try:
             loader = DBFileLoader(self.args.db)
-            db = GenericDB('RacksDB', schema)
-            db.load(loader)
+            self.db = GenericDB('RacksDB', self.schema)
+            self.db.load(loader)
         except DBFormatError as err:
             logger.error("Error while loading db: %s", err)
             sys.exit(1)
 
-        db.dump()
+    def _run_groups(self):
+        # print list of equipments groups
+        if not self.args.details:
+            for group in self.db.groups:
+                print(group.name)
+                return
+        for group in self.db.groups:
+            group.dump(indent=0)
