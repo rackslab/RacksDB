@@ -119,6 +119,10 @@ class RacksDBExec:
             help='Expand nodes',
             action='store_true',
         )
+        parser_nodes.add_argument(
+            '--tag',
+            help='Filter nodes with tag',
+        )
         parser_nodes.set_defaults(func=self._run_nodes)
 
         self.args = parser.parse_args()
@@ -196,13 +200,28 @@ class RacksDBExec:
                     node.group = group.name
                     node.datacenter = group.datacenter.name
                     node.room = group.room.name
-                    node.rack = rack.name
+                    node.rack = rack
 
-        nodes = self.db.find_objects('GroupRackNode', self.args.expand)
+        all_nodes = self.db.find_objects('GroupRackNode', self.args.expand)
+
+        # filter nodes with tag
+        if self.args.tag is None:
+            selected_nodes = all_nodes
+        else:
+            selected_nodes = []
+            for node in all_nodes:
+                if (
+                    hasattr(node.rack, 'tags')
+                    and self.args.tag in node.rack.tags
+                ) or (hasattr(node, 'tags') and self.args.tag in node.tags):
+                    selected_nodes.append(node)
+
         if not self.args.details:
-            for node in nodes:
+            for node in selected_nodes:
                 print(node.name)
             return
-        objects_map = {}
+        objects_map = {
+            'RacksDBGroupRack': 'name',
+        }
         dumper = DBDumper(objects_map=objects_map, expand=self.args.expand)
-        print(dumper.dump(nodes))
+        print(dumper.dump(selected_nodes))
