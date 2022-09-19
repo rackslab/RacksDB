@@ -205,6 +205,11 @@ class Schema:
             if match is not None:
                 obj = self.find_obj(match.group(1))
                 attribute = match.group(2)
+                # verify property is defined for object
+                if obj.prop(attribute) is None:
+                    raise DBSchemaError(
+                        f"Reference {spec} to undefined {obj} object property"
+                    )
                 return SchemaReference(obj, attribute)
         raise DBSchemaError(f"Unable to parse value type '{spec}'")
 
