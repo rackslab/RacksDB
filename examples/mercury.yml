@@ -116,7 +116,7 @@ groups:
   racks:
     - name: R1-A1
       tags: [compute]
-      equipments:
+      nodes:
       - name[]: mecn[0001-0040]
         node: sm220bt
         slot: 0
@@ -124,7 +124,7 @@ groups:
         node: sm610u
         slot: 12
     - name: R1-A2
-      equipments:
+      nodes:
       - name[]: mesrv[0001-0004]
         node: dellr550
         slot: 8
