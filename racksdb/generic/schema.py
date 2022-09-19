@@ -237,7 +237,7 @@ class Schema:
                 if expandable:
                     raise DBSchemaError(
                         f"Expandable object {object_id} cannot contain more "
-                        "than one expandable item"
+                        "than one expandable property"
                     )
                 expandable = True
             properties.append(prop)
