@@ -145,7 +145,7 @@ class SchemaProperty:
 class Schema:
 
     pattern_type_obj = re.compile(r":(\w+)")
-    pattern_type_custom = re.compile(r"~(\w+)")
+    pattern_type_defined = re.compile(r"~(\w+)")
     pattern_type_ref = re.compile(r"\$(\w+)\.(\w+)")
     pattern_type_list = re.compile(r"list\[(.+)\]")
 
@@ -192,8 +192,8 @@ class Schema:
         match = self.pattern_type_obj.match(spec)
         if match is not None:
             return self.find_obj(match.group(1))
-        # custom
-        match = self.pattern_type_custom.match(spec)
+        # defined
+        match = self.pattern_type_defined.match(spec)
         if match is not None:
             return self.find_defined_type(match.group(1))
         # ref
@@ -248,12 +248,12 @@ class Schema:
             obj = SchemaObject(object_id, properties)
         return obj
 
-    def find_defined_type(self, custom):
+    def find_defined_type(self, defined):
         try:
-            return self.types[custom]
+            return self.types[defined]
         except KeyError:
             raise DBSchemaError(
-                f"Definition of defined type {custom} not found"
+                f"Definition of defined type {defined} not found"
             )
 
     def dump(self):
