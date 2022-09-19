@@ -181,33 +181,32 @@ class Schema:
                 return SchemaNativeType(native_type)
         if spec == 'expandable':
             return SchemaExpandable()
-        elif spec == 'rangeid':
+        if spec == 'rangeid':
             return SchemaRangeId()
-        else:
-            # list
-            match = self.pattern_type_list.match(spec)
-            if match is not None:
-                content = self.value_type(match.group(1))
-                return SchemaContainerList(content)
-            # obj
-            match = self.pattern_type_obj.match(spec)
-            if match is not None:
-                return self.find_obj(match.group(1))
-            # custom
-            match = self.pattern_type_custom.match(spec)
-            if match is not None:
-                return self.find_defined_type(match.group(1))
-            # ref
-            match = self.pattern_type_ref.match(spec)
-            if match is not None:
-                obj = self.find_obj(match.group(1))
-                attribute = match.group(2)
-                # verify property is defined for object
-                if obj.prop(attribute) is None:
-                    raise DBSchemaError(
-                        f"Reference {spec} to undefined {obj} object property"
-                    )
-                return SchemaReference(obj, attribute)
+        # list
+        match = self.pattern_type_list.match(spec)
+        if match is not None:
+            content = self.value_type(match.group(1))
+            return SchemaContainerList(content)
+        # obj
+        match = self.pattern_type_obj.match(spec)
+        if match is not None:
+            return self.find_obj(match.group(1))
+        # custom
+        match = self.pattern_type_custom.match(spec)
+        if match is not None:
+            return self.find_defined_type(match.group(1))
+        # ref
+        match = self.pattern_type_ref.match(spec)
+        if match is not None:
+            obj = self.find_obj(match.group(1))
+            attribute = match.group(2)
+            # verify property is defined for object
+            if obj.prop(attribute) is None:
+                raise DBSchemaError(
+                    f"Reference {spec} to undefined {obj} object property"
+                )
+            return SchemaReference(obj, attribute)
         raise DBSchemaError(f"Unable to parse value type '{spec}'")
 
     def find_obj(self, object_id):
