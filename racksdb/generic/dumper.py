@@ -19,13 +19,29 @@
 
 import yaml
 
-from .db import DBObject, DBObjectRange, DBObjectRangeId
+from .db import DBObject, DBExpandableObject, DBObjectRange, DBObjectRangeId
 
 
 class DBDumper:
-    def __init__(self, objects_map={}):
-        self._setup()
+    def __init__(self, objects_map={}, expand=False):
         self.objects_map = objects_map
+        self.expand = expand
+        self._setup()
+
+    def _represent_list(self, dumper, data):
+
+        value = []
+        tag = u'tag:yaml.org,2002:seq'
+        for _object in data:
+            # if expandable object, add all generated objects to list
+            if isinstance(_object, DBExpandableObject):
+                for generated_object in _object.objects():
+                    value.append(
+                        self._represent_dbobject(dumper, generated_object)
+                    )
+            else:
+                value.append(dumper.represent_data(_object))
+        return yaml.SequenceNode(tag, value)
 
     def _represent_dbobject(self, dumper, data):
 
@@ -43,7 +59,6 @@ class DBDumper:
             if item_key in ['_db', '_indexes', '_schema']:
                 continue
             node_key = dumper.represent_data(item_key)
-
             if item_value.__class__.__name__ in self.objects_map.keys():
                 item_value = getattr(
                     item_value, self.objects_map[item_value.__class__.__name__]
@@ -63,6 +78,8 @@ class DBDumper:
     def _setup(self):
         # Disable objects aliasing with ids
         yaml.representer.ignore_aliases = lambda *data: True
+        if self.expand:
+            yaml.add_representer(list, self._represent_list)
         yaml.add_multi_representer(DBObject, self._represent_dbobject)
         yaml.add_multi_representer(DBObjectRange, self._represent_dbobjectrange)
         yaml.add_multi_representer(
