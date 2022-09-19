@@ -225,7 +225,7 @@ class GenericDB(DBObject):
                 setattr(obj, token, attribute)
 
     def load_reference(self, token, literal, schema_type: SchemaReference):
-        all_objs = self.find_objects(schema_type.obj)
+        all_objs = self.find_objects(schema_type.obj.name)
         for _obj in all_objs:
             if isinstance(schema_type.obj, SchemaExpandableObject):
                 logger.debug(
@@ -263,5 +263,5 @@ class GenericDB(DBObject):
             literal
         )
 
-    def find_objects(self, object_type):
-        return self._indexes[object_type.name]
+    def find_objects(self, object_type_name):
+        return self._indexes[object_type_name]
