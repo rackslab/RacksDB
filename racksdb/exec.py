@@ -80,6 +80,11 @@ class RacksDBExec:
             help='Show datacenters full details',
             action='store_true',
         )
+        parser_datacenters.add_argument(
+            '--expand',
+            help='Expand racks in rows',
+            action='store_true',
+        )
         parser_datacenters.set_defaults(func=self._run_datacenters)
 
         # Parser for the groups command
@@ -149,7 +154,7 @@ class RacksDBExec:
             for datacenter in self.db.datacenters:
                 print(datacenter.name)
                 return
-        dumper = DBDumper()
+        dumper = DBDumper(expand=self.args.expand)
         print(dumper.dump([datacenter for datacenter in self.db.datacenters]))
 
     def _run_groups(self):
