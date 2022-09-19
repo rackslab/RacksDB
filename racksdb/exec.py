@@ -102,8 +102,24 @@ class RacksDBExec:
             help='Expand equipments in groups',
             action='store_true',
         )
-
         parser_groups.set_defaults(func=self._run_groups)
+
+        # Parser for the nodes command
+        parser_nodes = subparsers.add_parser(
+            'nodes', help='Get informations about nodes'
+        )
+        parser_nodes.add_argument(
+            '-d',
+            '--details',
+            help='Show nodes full details',
+            action='store_true',
+        )
+        parser_nodes.add_argument(
+            '--expand',
+            help='Expand nodes',
+            action='store_true',
+        )
+        parser_nodes.set_defaults(func=self._run_nodes)
 
         self.args = parser.parse_args()
 
@@ -170,3 +186,14 @@ class RacksDBExec:
         }
         dumper = DBDumper(objects_map=objects_map, expand=self.args.expand)
         print(dumper.dump([group for group in self.db.groups]))
+
+    def _run_nodes(self):
+        # print list of nodes
+        nodes = self.db.find_objects('GroupRackNode')
+        if not self.args.details:
+            for node in nodes:
+                print(node.name)
+            return
+        objects_map = {}
+        dumper = DBDumper(objects_map=objects_map, expand=self.args.expand)
+        print(dumper.dump(nodes))
