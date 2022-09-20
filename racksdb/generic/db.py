@@ -18,7 +18,6 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 import re
-from typing import Union
 import logging
 
 import yaml
