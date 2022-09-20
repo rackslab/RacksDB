@@ -23,7 +23,8 @@ from .db import DBObject, DBExpandableObject, DBObjectRange, DBObjectRangeId
 
 
 class DBDumper:
-    def __init__(self, objects_map={}, expand=False):
+    def __init__(self, show_types=False, objects_map={}, expand=False):
+        self.show_types = show_types
         self.objects_map = objects_map
         self.expand = expand
         self._setup()
@@ -47,8 +48,11 @@ class DBDumper:
 
         # override to dump map with item in any types
         value = []
-        # tag = u'tag:yaml.org,2002:map'
-        tag = f"{data.__class__.__name__}"
+        if self.show_types:
+            tag = f"{data.__class__.__name__}"
+        else:
+            tag = u'tag:yaml.org,2002:map'  # YAML generic mapping type
+
         node = yaml.MappingNode(tag, value)
 
         if dumper.alias_key is not None:
