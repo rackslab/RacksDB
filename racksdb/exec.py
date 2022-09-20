@@ -120,6 +120,10 @@ class RacksDBExec:
             action='store_true',
         )
         parser_nodes.add_argument(
+            '--name',
+            help='Filter nodes by name',
+        )
+        parser_nodes.add_argument(
             '--group',
             help='Filter nodes by group',
         )
@@ -206,9 +210,20 @@ class RacksDBExec:
                     node.room = group.room.name
                     node.rack = rack
 
+        # When users search nodes by name, they expect the nodes being expanded
+        # to get one node out of a nodeset.
+        if self.args.name is not None:
+            self.args.expand = True
+
         all_nodes = self.db.find_objects('GroupRackNode', self.args.expand)
 
         selected_nodes = all_nodes
+
+        # filter nodes by name
+        if self.args.name is not None:
+            selected_nodes = [
+                node for node in selected_nodes if self.args.name == node.name
+            ]
 
         # filter nodes by group
         if self.args.group is not None:
