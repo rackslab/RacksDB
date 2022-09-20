@@ -81,6 +81,11 @@ class RacksDBExec:
             action='store_true',
         )
         parser_datacenters.add_argument(
+            '--with-objects-types',
+            help='Show object types in details',
+            action='store_true',
+        )
+        parser_datacenters.add_argument(
             '--expand',
             help='Expand racks in rows',
             action='store_true',
@@ -98,6 +103,11 @@ class RacksDBExec:
             action='store_true',
         )
         parser_groups.add_argument(
+            '--with-objects-types',
+            help='Show object types in details',
+            action='store_true',
+        )
+        parser_groups.add_argument(
             '--expand',
             help='Expand equipments in groups',
             action='store_true',
@@ -112,6 +122,11 @@ class RacksDBExec:
             '-d',
             '--details',
             help='Show nodes full details',
+            action='store_true',
+        )
+        parser_nodes.add_argument(
+            '--with-objects-types',
+            help='Show object types in details',
             action='store_true',
         )
         parser_nodes.add_argument(
@@ -182,7 +197,9 @@ class RacksDBExec:
             for datacenter in self.db.datacenters:
                 print(datacenter.name)
                 return
-        dumper = DBDumper(expand=self.args.expand)
+        dumper = DBDumper(
+            show_types=self.args.with_objects_types, expand=self.args.expand
+        )
         print(dumper.dump([datacenter for datacenter in self.db.datacenters]))
 
     def _run_groups(self):
@@ -196,7 +213,11 @@ class RacksDBExec:
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRack': 'name',
         }
-        dumper = DBDumper(objects_map=objects_map, expand=self.args.expand)
+        dumper = DBDumper(
+            show_types=self.args.with_objects_types,
+            objects_map=objects_map,
+            expand=self.args.expand,
+        )
         print(dumper.dump([group for group in self.db.groups]))
 
     def _run_nodes(self):
@@ -250,5 +271,9 @@ class RacksDBExec:
         objects_map = {
             'RacksDBGroupRack': 'name',
         }
-        dumper = DBDumper(objects_map=objects_map, expand=self.args.expand)
+        dumper = DBDumper(
+            show_types=self.args.with_objects_types,
+            objects_map=objects_map,
+            expand=self.args.expand,
+        )
         print(dumper.dump(selected_nodes))
