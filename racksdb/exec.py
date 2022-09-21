@@ -263,8 +263,7 @@ class RacksDBExec:
             ]
 
         if not self.args.details:
-            for node in selected_nodes:
-                print(node.name)
+            print('\n'.join([str(node.name) for node in selected_nodes]))
             return
         objects_map = {
             'RacksDBGroupRack': 'name',
