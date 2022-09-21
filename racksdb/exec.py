@@ -298,14 +298,36 @@ class RacksDBExec:
         print(dumper.dump(selected_nodes))
 
     def _run_racks(self):
+
+        # add back reference to datacenter/room/row on racks
+        for datacenter in self.db.datacenters:
+            for room in datacenter.rooms:
+                for row in room.rows:
+                    for rack in row.racks:
+                        rack.row = row
+                        rack.room = room
+                        rack.datacenter = datacenter
+
         selected_racks = self.db.find_objects(
             'DatacenterRoomRack', self.args.expand
         )
 
+        # add references to equipments
+        for rack in selected_racks:
+            for group in self.db.groups:
+                for entry in group.layout:
+                    if rack.name == entry.rack.name:
+                        rack.nodes = entry.nodes
+
         if not self.args.details:
             print('\n'.join([str(rack.name) for rack in selected_racks]))
             return
-        objects_map = {}
+        objects_map = {
+            'RacksDBDatacenter': 'name',
+            'RacksDBDatacenterRoom': 'name',
+            'RacksDBDatacenterRoomRow': 'name',
+            'RacksDBDatacenterRoomRack': 'name',
+        }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
