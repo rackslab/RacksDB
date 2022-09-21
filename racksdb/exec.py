@@ -327,6 +327,7 @@ class RacksDBExec:
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRow': 'name',
             'RacksDBDatacenterRoomRack': 'name',
+            'RacksDBNodeType': 'id',
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
