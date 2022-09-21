@@ -246,19 +246,19 @@ class RacksDBExec:
 
         # add back references on nodes
         for group in self.db.groups:
-            for rack in group.racks:
-                for node in rack.nodes:
+            for entry in group.layout:
+                for node in entry.nodes:
                     node.group = group.name
                     node.datacenter = group.datacenter.name
                     node.room = group.room.name
-                    node.rack = rack
+                    node.rack = entry.rack
 
         # When users search nodes by name, they expect the nodes being expanded
         # to get one node out of a nodeset.
         if self.args.name is not None:
             self.args.expand = True
 
-        selected_nodes = self.db.find_objects('GroupRackNode', self.args.expand)
+        selected_nodes = self.db.find_objects('Node', self.args.expand)
 
         # filter nodes by name
         if self.args.name is not None:

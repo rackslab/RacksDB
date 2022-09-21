@@ -113,8 +113,8 @@ groups:
   description: Mercury HPC cluster
   datacenter: paris
   room: noisy
-  racks:
-    - name: R1-A1
+  layout:
+    - rack: R1-A1
       tags: [compute]
       nodes:
       - name[]: mecn[0001-0040]
@@ -123,7 +123,7 @@ groups:
       - name[]: mecn[0041-0060]
         type: sm610u
         slot: 12
-    - name: R1-A2
+    - rack: R1-A2
       nodes:
       - name[]: mesrv[0001-0004]
         type: dellr550

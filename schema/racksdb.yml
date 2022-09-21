@@ -65,13 +65,13 @@ _objects:
     description: str
     datacenter: $Datacenter.name
     room: $DatacenterRoom.name
-    racks: list[:GroupRack]
+    layout: list[:GroupEntry]
     tags: optional list[str]
-  GroupRack:
-    name: $DatacenterRoomRack.name
-    nodes: list[:GroupRackNode]
+  GroupEntry:
+    rack: $DatacenterRoomRack.name
+    nodes: list[:Node]
     tags: optional list[str]
-  GroupRackNode:
+  Node:
     name: expandable
     type: optional $NodeType.id
     slot: rangeid
