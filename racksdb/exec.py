@@ -148,6 +148,28 @@ class RacksDBExec:
         )
         parser_nodes.set_defaults(func=self._run_nodes)
 
+        # Parser for the racks command
+        parser_racks = subparsers.add_parser(
+            'racks', help='Get informations about racks'
+        )
+        parser_racks.add_argument(
+            '-d',
+            '--details',
+            help='Show racks full details',
+            action='store_true',
+        )
+        parser_racks.add_argument(
+            '--with-objects-types',
+            help='Show object types in details',
+            action='store_true',
+        )
+        parser_racks.add_argument(
+            '--expand',
+            help='Expand racks',
+            action='store_true',
+        )
+        parser_racks.set_defaults(func=self._run_racks)
+
         self.args = parser.parse_args()
 
         self._setup_logger()
@@ -274,3 +296,19 @@ class RacksDBExec:
             expand=self.args.expand,
         )
         print(dumper.dump(selected_nodes))
+
+    def _run_racks(self):
+        selected_racks = self.db.find_objects(
+            'DatacenterRoomRack', self.args.expand
+        )
+
+        if not self.args.details:
+            print('\n'.join([str(rack.name) for rack in selected_racks]))
+            return
+        objects_map = {}
+        dumper = DBDumper(
+            show_types=self.args.with_objects_types,
+            objects_map=objects_map,
+            expand=self.args.expand,
+        )
+        print(dumper.dump(selected_racks))
