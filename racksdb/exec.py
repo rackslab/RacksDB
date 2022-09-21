@@ -236,9 +236,7 @@ class RacksDBExec:
         if self.args.name is not None:
             self.args.expand = True
 
-        all_nodes = self.db.find_objects('GroupRackNode', self.args.expand)
-
-        selected_nodes = all_nodes
+        selected_nodes = self.db.find_objects('GroupRackNode', self.args.expand)
 
         # filter nodes by name
         if self.args.name is not None:
