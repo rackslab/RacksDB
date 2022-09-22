@@ -216,9 +216,12 @@ class RacksDBExec:
     def _run_datacenters(self):
         # print list of datacenters
         if not self.args.details:
-            for datacenter in self.db.datacenters:
-                print(datacenter.name)
-                return
+            print(
+                '\n'.join(
+                    [datacenter.name for datacenter in self.db.datacenters]
+                )
+            )
+            return
         dumper = DBDumper(
             show_types=self.args.with_objects_types, expand=self.args.expand
         )
@@ -227,9 +230,15 @@ class RacksDBExec:
     def _run_infras(self):
         # print list of infrastructures
         if not self.args.details:
-            for infrastructure in self.db.infrastructures:
-                print(infrastructure.name)
-                return
+            print(
+                '\n'.join(
+                    [
+                        infrastructure.name
+                        for infrastructure in self.db.infrastructures
+                    ]
+                )
+            )
+            return
         objects_map = {
             'RacksDBDatacenter': 'name',
             'RacksDBDatacenterRoom': 'name',
