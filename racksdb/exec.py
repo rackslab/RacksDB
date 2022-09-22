@@ -92,27 +92,27 @@ class RacksDBExec:
         )
         parser_datacenters.set_defaults(func=self._run_datacenters)
 
-        # Parser for the groups command
-        parser_groups = subparsers.add_parser(
-            'groups', help='Get informations about equipments groups'
+        # Parser for the infrastructures command
+        parser_infras = subparsers.add_parser(
+            'infrastructures', help='Get informations about infrastructures'
         )
-        parser_groups.add_argument(
+        parser_infras.add_argument(
             '-d',
             '--details',
-            help='Show groups full details',
+            help='Show infrastructures full details',
             action='store_true',
         )
-        parser_groups.add_argument(
+        parser_infras.add_argument(
             '--with-objects-types',
             help='Show object types in details',
             action='store_true',
         )
-        parser_groups.add_argument(
+        parser_infras.add_argument(
             '--expand',
-            help='Expand equipments in groups',
+            help='Expand equipments in infrastructures',
             action='store_true',
         )
-        parser_groups.set_defaults(func=self._run_groups)
+        parser_infras.set_defaults(func=self._run_infras)
 
         # Parser for the nodes command
         parser_nodes = subparsers.add_parser(
@@ -139,8 +139,8 @@ class RacksDBExec:
             help='Filter nodes by name',
         )
         parser_nodes.add_argument(
-            '--group',
-            help='Filter nodes by group',
+            '--infrastructure',
+            help='Filter nodes by infrastructure',
         )
         parser_nodes.add_argument(
             '--tag',
@@ -224,11 +224,11 @@ class RacksDBExec:
         )
         print(dumper.dump([datacenter for datacenter in self.db.datacenters]))
 
-    def _run_groups(self):
-        # print list of equipments groups
+    def _run_infras(self):
+        # print list of infrastructures
         if not self.args.details:
-            for group in self.db.groups:
-                print(group.name)
+            for infrastructure in self.db.infrastructures:
+                print(infrastructure.name)
                 return
         objects_map = {
             'RacksDBDatacenter': 'name',
@@ -240,18 +240,22 @@ class RacksDBExec:
             objects_map=objects_map,
             expand=self.args.expand,
         )
-        print(dumper.dump([group for group in self.db.groups]))
+        print(
+            dumper.dump(
+                [infrastructure for infrastructure in self.db.infrastructures]
+            )
+        )
 
     def _run_nodes(self):
 
         # add back references on nodes
-        for group in self.db.groups:
-            for entry in group.layout:
-                for node in entry.nodes:
-                    node.group = group.name
-                    node.datacenter = group.datacenter.name
-                    node.room = group.room.name
-                    node.rack = entry.rack
+        for infrastructure in self.db.infrastructures:
+            for part in infrastructure.layout:
+                for node in part.nodes:
+                    node.infrastructure = infrastructure.name
+                    node.datacenter = infrastructure.datacenter.name
+                    node.room = infrastructure.room.name
+                    node.rack = part.rack
 
         # When users search nodes by name, they expect the nodes being expanded
         # to get one node out of a nodeset.
@@ -266,10 +270,12 @@ class RacksDBExec:
                 node for node in selected_nodes if self.args.name == node.name
             ]
 
-        # filter nodes by group
-        if self.args.group is not None:
+        # filter nodes by infrastructure
+        if self.args.infrastructure is not None:
             selected_nodes = [
-                node for node in selected_nodes if self.args.group == node.group
+                node
+                for node in selected_nodes
+                if self.args.infrastructure == node.infrastructure
             ]
 
         # filter nodes by tag
@@ -314,10 +320,10 @@ class RacksDBExec:
 
         # add references to equipments
         for rack in selected_racks:
-            for group in self.db.groups:
-                for entry in group.layout:
-                    if rack.name == entry.rack.name:
-                        rack.nodes = entry.nodes
+            for infrastructure in self.db.infrastructures:
+                for part in infrastructure.layout:
+                    if rack.name == part.rack.name:
+                        rack.nodes = part.nodes
 
         if not self.args.details:
             print('\n'.join([str(rack.name) for rack in selected_racks]))

@@ -3,7 +3,7 @@ _version: 0.0.1
 _content:
   types: :Types
   datacenters: list[:Datacenter]
-  groups: list[:Group]
+  infrastructures: list[:Infrastructure]
 
 _objects:
   Types:
@@ -60,14 +60,14 @@ _objects:
   DatacenterRoomRack:
     name: expandable
     slot: rangeid
-  Group:
+  Infrastructure:
     name: str
     description: str
     datacenter: $Datacenter.name
     room: $DatacenterRoom.name
-    layout: list[:GroupEntry]
+    layout: list[:InfrastructurePart]
     tags: optional list[str]
-  GroupEntry:
+  InfrastructurePart:
     rack: $DatacenterRoomRack.name
     nodes: list[:Node]
     tags: optional list[str]

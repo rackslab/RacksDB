@@ -108,7 +108,7 @@ datacenters:
       - name[]: R1-A[1-2]
         slot: 0
 
-groups:
+infrastructures:
 - name: mercury
   description: Mercury HPC cluster
   datacenter: paris
