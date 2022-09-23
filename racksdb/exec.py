@@ -229,7 +229,10 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types, expand=self.args.expand
         )
-        print(dumper.dump([datacenter for datacenter in self.db.datacenters]))
+        print(
+            dumper.dump([datacenter for datacenter in self.db.datacenters]),
+            end='',
+        )
 
     def _run_infras(self):
         # print list of infrastructures
@@ -256,7 +259,8 @@ class RacksDBExec:
         print(
             dumper.dump(
                 [infrastructure for infrastructure in self.db.infrastructures]
-            )
+            ),
+            end='',
         )
 
     def _run_nodes(self):
@@ -314,7 +318,7 @@ class RacksDBExec:
             objects_map=objects_map,
             expand=self.args.expand,
         )
-        print(dumper.dump(selected_nodes))
+        print(dumper.dump(selected_nodes), end='')
 
     def _run_racks(self):
 
@@ -367,4 +371,4 @@ class RacksDBExec:
             objects_map=objects_map,
             expand=self.args.expand,
         )
-        print(dumper.dump(selected_racks))
+        print(dumper.dump(selected_racks), end='')
