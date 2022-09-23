@@ -18,7 +18,6 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-import yaml
 import sys
 import logging
 
