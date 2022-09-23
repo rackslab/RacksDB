@@ -17,9 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
+import collections
+import logging
+
 import yaml
 
 from .db import DBObject, DBExpandableObject, DBObjectRange, DBObjectRangeId
+
+logger = logging.getLogger(__name__)
 
 
 class DBDumper:
@@ -28,6 +33,9 @@ class DBDumper:
         self.objects_map = objects_map
         self.expand = expand
         self._setup()
+        # refs to last represented objects, used to inform users in case of dump
+        # recursion loops
+        self._last_objs = collections.deque([], 8)
 
     def _represent_list(self, dumper, data):
 
@@ -46,6 +54,7 @@ class DBDumper:
 
     def _represent_dbobject(self, dumper, data):
 
+        self._last_objs.append(type(data).__name__)
         # override to dump map with item in any types
         value = []
         if self.show_types:
@@ -93,4 +102,12 @@ class DBDumper:
     def dump(self, data):
         noalias_dumper = yaml.dumper.Dumper
         noalias_dumper.ignore_aliases = lambda self, data: True
-        return yaml.dump(data, Dumper=noalias_dumper)
+        try:
+            return yaml.dump(data, Dumper=noalias_dumper)
+        except RecursionError:
+            logger.error(
+                "Recursion loop detected during dump, last represented objects:"
+                "\n→ %s",
+                "\n→ ".join(self._last_objs),
+            )
+            return ""
