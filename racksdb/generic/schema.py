@@ -79,12 +79,16 @@ class SchemaNativeType(SchemaGenericValueType):
 
 
 class SchemaObject(SchemaGenericValueType):
-    def __init__(self, name, properties):
+    def __init__(self, name):
         self.name = name
-        self.properties = properties  # list of SchemaProperty
+        self.properties = None  # list of SchemaProperty
+        self.expandable = False
 
     def __str__(self):
-        return f"Schema{self.name}"
+        if self.expandable:
+            return f"Schema{self.name}+"
+        else:
+            return f"Schema{self.name}"
 
     def dump(self, indent):
         for prop in self.properties:
@@ -95,11 +99,6 @@ class SchemaObject(SchemaGenericValueType):
             if _prop.name == name:
                 return _prop
         return None
-
-
-class SchemaExpandableObject(SchemaObject):
-    def __str__(self):
-        return f"Schema{self.name}+"
 
 
 class SchemaContainerList(SchemaGenericValueType):
@@ -129,6 +128,14 @@ class SchemaReference(SchemaGenericValueType):
         return f"${self.obj}.{self.prop}"
 
 
+class SchemaBackReference(SchemaGenericValueType):
+    def __init__(self, obj):
+        self.obj = obj
+
+    def __str__(self):
+        return f"^{self.obj}"
+
+
 class SchemaProperty:
     def __init__(self, name, required, value_type):
         self.name = name
@@ -147,6 +154,7 @@ class Schema:
     pattern_type_obj = re.compile(r":(\w+)")
     pattern_type_defined = re.compile(r"~(\w+)")
     pattern_type_ref = re.compile(r"\$(\w+)\.(\w+)")
+    pattern_type_backref = re.compile(r"\^(\w+)")
     pattern_type_list = re.compile(r"list\[(.+)\]")
 
     def __init__(self, schema_loader, types_loader):
@@ -200,6 +208,10 @@ class Schema:
         match = self.pattern_type_ref.match(spec)
         if match is not None:
             return self.obj_reference(spec, match.group(1), match.group(2))
+        # backref
+        match = self.pattern_type_backref.match(spec)
+        if match is not None:
+            return self.obj_back_reference(match.group(1))
         raise DBSchemaError(f"Unable to parse value type '{spec}'")
 
     def find_obj(self, object_id):
@@ -213,15 +225,22 @@ class Schema:
                 f"Definition of object {object_id} not found in schema"
             )
         obj = self.parse_obj(object_id, self._schema['_objects'][object_id])
-        self.objects[object_id] = obj
         return obj
 
     def parse_obj(self, object_id, objdef):
+        logger.debug("Loading class of %s", object_id)
         properties = []
         expandable = False
+
+        obj = SchemaObject(object_id)
+        # The new SchemaObject must be added soon in objects hash to avoid
+        # recursion loop in the following calls to prop_keys(), calling
+        # value_type() → find_obj() → parse_obj() with back references.
+        self.objects[object_id] = obj
+
         for key, spec in objdef.items():
             prop = self.prop_spec(key, spec)
-            if isinstance(prop.type, SchemaExpandableObject):
+            if isinstance(prop.type, SchemaObject) and prop.type.expandable:
                 raise DBSchemaError(
                     f"Expandable object {prop.type} must be in a list, it "
                     f"cannot be member of object such as {object_id}"
@@ -235,10 +254,8 @@ class Schema:
                     )
                 expandable = True
             properties.append(prop)
-        if expandable:
-            obj = SchemaExpandableObject(object_id, properties)
-        else:
-            obj = SchemaObject(object_id, properties)
+        obj.expandable = expandable
+        obj.properties = properties
         return obj
 
     def find_defined_type(self, defined):
@@ -257,6 +274,11 @@ class Schema:
                 f"Reference {spec} to undefined {obj} object property"
             )
         return SchemaReference(obj, object_prop)
+
+    def obj_back_reference(self, object_id):
+        logger.debug("Loading back reference to %s", object_id)
+        obj = self.find_obj(object_id)
+        return SchemaBackReference(obj)
 
     def dump(self):
         print("_types:")

@@ -31,8 +31,8 @@ from .schema import (
     SchemaExpandable,
     SchemaRangeId,
     SchemaObject,
-    SchemaExpandableObject,
     SchemaReference,
+    SchemaBackReference,
 )
 
 logger = logging.getLogger(__name__)
@@ -107,7 +107,9 @@ class GenericDB(DBObject):
         self._indexes = {}  # objects indexes
 
     def load(self, loader):
-        obj = self.load_object('_root', loader.content, self._schema.content)
+        obj = self.load_object(
+            '_root', loader.content, self._schema.content, None
+        )
         for key, value in vars(obj).items():
             setattr(self, key, value)
 
@@ -116,6 +118,7 @@ class GenericDB(DBObject):
         token,
         literal,
         schema_type: SchemaNativeType,
+        parent,
     ):
         logger.debug("Loading type %s (%s)", token, schema_type)
         if isinstance(schema_type, SchemaNativeType):
@@ -154,11 +157,16 @@ class GenericDB(DBObject):
                 )
             return self.load_rangeid(literal)
         elif isinstance(schema_type, SchemaContainerList):
-            return self.load_list(token, literal, schema_type)
+            return self.load_list(token, literal, schema_type, parent)
         elif isinstance(schema_type, SchemaObject):
-            return self.load_object(token, literal, schema_type)
+            return self.load_object(token, literal, schema_type, parent)
         elif isinstance(schema_type, SchemaReference):
             return self.load_reference(token, literal, schema_type)
+        elif isinstance(schema_type, SchemaBackReference):
+            raise DBFormatError(
+                f"Back reference {token} cannot be defined in database for "
+                f"object {schema_type}"
+            )
         raise DBFormatError(
             f"Unknow literal {literal} for token {token} for type {schema_type}"
         )
@@ -166,12 +174,14 @@ class GenericDB(DBObject):
     def load_defined_type(self, literal, schema_type: SchemaDefinedType):
         return schema_type.parse(literal)
 
-    def load_object(self, token, literal, schema_object: SchemaObject):
+    def load_object(
+        self, token, literal, schema_object: SchemaObject, parent: SchemaObject
+    ):
         logger.debug(
             "Loading object %s with %s (%s)", token, literal, schema_object
         )
         # is it expandable?
-        if isinstance(schema_object, SchemaExpandableObject):
+        if schema_object.expandable:
             obj = type(
                 f"{self._prefix}Expandable{schema_object.name}",
                 (DBExpandableObject,),
@@ -182,12 +192,18 @@ class GenericDB(DBObject):
                 f"{self._prefix}{schema_object.name}", (DBObject,), dict()
             )(self, schema_object)
 
+        obj._parent = parent
+
         # load object attributes
         self.load_object_attributes(obj, literal, schema_object)
 
         # check all required properties are properly defined in obj attributes
         for prop in schema_object.properties:
-            if prop.required and not hasattr(obj, prop.name):
+            if (
+                not isinstance(prop.type, SchemaBackReference)
+                and prop.required
+                and not hasattr(obj, prop.name)
+            ):
                 raise DBFormatError(
                     f"Property {prop.name} is required in schema for object "
                     f"{schema_object}"
@@ -220,16 +236,25 @@ class GenericDB(DBObject):
                         f"Property {token} is not defined in schema for object "
                         f"{schema_object}"
                     )
-            attribute = self.load_type(token, literal, token_property.type)
+            attribute = self.load_type(token, literal, token_property.type, obj)
             if token.endswith('[]'):
                 setattr(obj, token[:-2], attribute)
             else:
                 setattr(obj, token, attribute)
+        # Load back references
+        for prop in schema_object.properties:
+            if isinstance(prop.type, SchemaBackReference):
+                setattr(
+                    obj, prop.name, self.load_back_reference(obj, prop.type)
+                )
 
     def load_reference(self, token, literal, schema_type: SchemaReference):
         all_objs = self.find_objects(schema_type.obj.name)
+        logger.debug(
+            "Found objects for type %s: %s", schema_type.obj.name, all_objs
+        )
         for _obj in all_objs:
-            if isinstance(schema_type.obj, SchemaExpandableObject):
+            if schema_type.obj.expandable:
                 logger.debug(
                     "Object %s is expandable, generating all objects to find "
                     "exact reference",
@@ -247,12 +272,26 @@ class GenericDB(DBObject):
             f"Unable to find {token} reference with value {literal}"
         )
 
-    def load_list(self, token, literal, schema_object: SchemaContainerList):
+    def load_back_reference(self, parent, schema_type: SchemaBackReference):
+        logger.debug("Loading back reference of %s/%s", parent, schema_type)
+        while parent._schema is not schema_type.obj and parent is not None:
+            logger.debug(
+                "Back reference %s != %s", parent._schema, schema_type.obj
+            )
+            parent = parent._parent
+
+        return parent
+
+    def load_list(
+        self, token, literal, schema_object: SchemaContainerList, parent
+    ):
         if type(literal) != list:
             raise DBFormatError(f"{schema_object.name}.{token} must be a list")
         result = []
         for item in literal:
-            result.append(self.load_type(token, item, schema_object.content))
+            result.append(
+                self.load_type(token, item, schema_object.content, parent)
+            )
         return result
 
     def load_expandable(self, literal):
