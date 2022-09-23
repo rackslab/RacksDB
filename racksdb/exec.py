@@ -168,6 +168,11 @@ class RacksDBExec:
             help='Expand racks',
             action='store_true',
         )
+        parser_racks.add_argument(
+            '--name',
+            help='Filter racks by name',
+        )
+
         parser_racks.set_defaults(func=self._run_racks)
 
         self.args = parser.parse_args()
@@ -267,7 +272,7 @@ class RacksDBExec:
                     node.rack = part.rack
 
         # When users search nodes by name, they expect the nodes being expanded
-        # to get one node out of a nodeset.
+        # to get one node out of a range.
         if self.args.name is not None:
             self.args.expand = True
 
@@ -323,9 +328,20 @@ class RacksDBExec:
                         rack.room = room
                         rack.datacenter = datacenter
 
+        # When users search nodes by name, they expect the racks being expanded
+        # to get one rack out of a range.
+        if self.args.name is not None:
+            self.args.expand = True
+
         selected_racks = self.db.find_objects(
             'DatacenterRoomRack', self.args.expand
         )
+
+        # filter racks by name
+        if self.args.name is not None:
+            selected_racks = [
+                rack for rack in selected_racks if self.args.name == rack.name
+            ]
 
         # add references to equipments
         for rack in selected_racks:
