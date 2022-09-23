@@ -348,6 +348,8 @@ class RacksDBExec:
                 for part in infrastructure.layout:
                     if rack.name == part.rack.name:
                         rack.nodes = part.nodes
+                        for node in rack.nodes:
+                            node.infrastructure = infrastructure
 
         if not self.args.details:
             print('\n'.join([str(rack.name) for rack in selected_racks]))
@@ -358,6 +360,7 @@ class RacksDBExec:
             'RacksDBDatacenterRoomRow': 'name',
             'RacksDBDatacenterRoomRack': 'name',
             'RacksDBNodeType': 'id',
+            'RacksDBInfrastructure': 'name',
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
