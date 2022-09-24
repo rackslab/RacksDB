@@ -60,6 +60,9 @@ _objects:
   DatacenterRoomRack:
     name: expandable
     slot: rangeid
+    datacenter: ^Datacenter
+    room: ^DatacenterRoom
+    row: ^DatacenterRoomRow
   Infrastructure:
     name: str
     description: str
@@ -73,6 +76,8 @@ _objects:
     tags: optional list[str]
   Node:
     name: expandable
+    infrastructure: ^Infrastructure
+    rack: ^InfrastructurePart.rack
     type: optional $NodeType.id
     slot: rangeid
     tags: optional list[str]
