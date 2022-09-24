@@ -226,8 +226,16 @@ class RacksDBExec:
                 )
             )
             return
+        objects_map = {
+            'RacksDBDatacenter': 'name',
+            'RacksDBDatacenterRoom': 'name',
+            'RacksDBDatacenterRoomRow': 'name',
+            'RacksDBDatacenterRoomRack': 'name',
+        }
         dumper = DBDumper(
-            show_types=self.args.with_objects_types, expand=self.args.expand
+            show_types=self.args.with_objects_types,
+            objects_map=objects_map,
+            expand=self.args.expand,
         )
         print(
             dumper.dump([datacenter for datacenter in self.db.datacenters]),
@@ -250,6 +258,7 @@ class RacksDBExec:
             'RacksDBDatacenter': 'name',
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRack': 'name',
+            'RacksDBInfrastructure': 'name',
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
@@ -264,15 +273,6 @@ class RacksDBExec:
         )
 
     def _run_nodes(self):
-
-        # add back references on nodes
-        for infrastructure in self.db.infrastructures:
-            for part in infrastructure.layout:
-                for node in part.nodes:
-                    node.infrastructure = infrastructure.name
-                    node.datacenter = infrastructure.datacenter.name
-                    node.room = infrastructure.room.name
-                    node.rack = part.rack
 
         # When users search nodes by name, they expect the nodes being expanded
         # to get one node out of a range.
@@ -312,6 +312,10 @@ class RacksDBExec:
             return
         objects_map = {
             'RacksDBGroupRack': 'name',
+            'RacksDBDatacenter': 'name',
+            'RacksDBDatacenterRoom': 'name',
+            'RacksDBDatacenterRoomRow': 'name',
+            'RacksDBInfrastructure': 'name',
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
@@ -321,15 +325,6 @@ class RacksDBExec:
         print(dumper.dump(selected_nodes), end='')
 
     def _run_racks(self):
-
-        # add back reference to datacenter/room/row on racks
-        for datacenter in self.db.datacenters:
-            for room in datacenter.rooms:
-                for row in room.rows:
-                    for rack in row.racks:
-                        rack.row = row
-                        rack.room = room
-                        rack.datacenter = datacenter
 
         # When users search nodes by name, they expect the racks being expanded
         # to get one rack out of a range.
