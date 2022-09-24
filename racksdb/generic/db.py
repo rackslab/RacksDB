@@ -280,7 +280,12 @@ class GenericDB(DBObject):
             )
             parent = parent._parent
 
-        return parent
+        # If the SchemaBackReference has a property, return the reference to
+        # this object property, or return the reference to the whole object.
+        if schema_type.prop is not None:
+            return getattr(parent, schema_type.prop)
+        else:
+            return parent
 
     def load_list(
         self, token, literal, schema_object: SchemaContainerList, parent

@@ -129,11 +129,15 @@ class SchemaReference(SchemaGenericValueType):
 
 
 class SchemaBackReference(SchemaGenericValueType):
-    def __init__(self, obj):
+    def __init__(self, obj, prop):
         self.obj = obj
+        self.prop = prop
 
     def __str__(self):
-        return f"^{self.obj}"
+        result = f"^{self.obj}"
+        if self.prop is not None:
+            result += f".{self.prop}"
+        return result
 
 
 class SchemaProperty:
@@ -154,7 +158,7 @@ class Schema:
     pattern_type_obj = re.compile(r":(\w+)")
     pattern_type_defined = re.compile(r"~(\w+)")
     pattern_type_ref = re.compile(r"\$(\w+)\.(\w+)")
-    pattern_type_backref = re.compile(r"\^(\w+)")
+    pattern_type_backref = re.compile(r"\^(\w+)(\.(\w+))?")
     pattern_type_list = re.compile(r"list\[(.+)\]")
 
     def __init__(self, schema_loader, types_loader):
@@ -211,7 +215,7 @@ class Schema:
         # backref
         match = self.pattern_type_backref.match(spec)
         if match is not None:
-            return self.obj_back_reference(match.group(1))
+            return self.obj_back_reference(match.group(1), match.group(3))
         raise DBSchemaError(f"Unable to parse value type '{spec}'")
 
     def find_obj(self, object_id):
@@ -275,10 +279,10 @@ class Schema:
             )
         return SchemaReference(obj, object_prop)
 
-    def obj_back_reference(self, object_id):
+    def obj_back_reference(self, object_id, object_prop):
         logger.debug("Loading back reference to %s", object_id)
         obj = self.find_obj(object_id)
-        return SchemaBackReference(obj)
+        return SchemaBackReference(obj, object_prop)
 
     def dump(self):
         print("_types:")
