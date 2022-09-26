@@ -122,7 +122,7 @@ infrastructures:
         slot: 0
       - name[]: mecn[0041-0060]
         type: sm610u
-        slot: 12
+        slot: 22
     - rack: R1-A2
       nodes:
       - name[]: mesrv[0001-0004]
