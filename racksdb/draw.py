@@ -118,9 +118,16 @@ class InfrastructureDrawer:
         )
         self.ctx.stroke()
 
-        # write node name
-        self.ctx.move_to(x_node + 3, y_node + 15)
+        # Write node name, rotate the text if height > width
+        if node_height > node_width:
+            self.ctx.move_to(x_node + 2, y_node + 2)
+            self.ctx.save()
+            self.ctx.rotate(math.pi/2)
+        else:
+            self.ctx.move_to(x_node + 2, y_node + 15)
         self.ctx.show_text(node.name)
+        if node_height > node_width:
+            self.ctx.restore()
 
     def _draw_rack(self, row_index, rack):
         logger.debug("Drawing rack %s (%s)", rack.name, rack.slot)
