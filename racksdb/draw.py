@@ -90,7 +90,7 @@ class InfrastructureDrawer:
             + self.RACK_LABEL_OFFSET
             + self.RACK_OFFSET
             + self.RACK_ROW_HEIGHT * row_index
-            + (41 - node_height_slot) * self.RACK_U_HEIGHT
+            + (42 - node.type.height - node_height_slot) * self.RACK_U_HEIGHT
         )
 
         node_width = node.type.width * self.RACK_WIDTH
