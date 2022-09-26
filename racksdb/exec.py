@@ -26,6 +26,7 @@ from .generic.errors import DBFormatError, DBSchemaError
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBFileLoader
 from .generic.dumper import DBDumper
+from .draw import InfrastructureDrawer
 
 logger = logging.getLogger(__name__)
 
@@ -173,6 +174,14 @@ class RacksDBExec:
         )
 
         parser_racks.set_defaults(func=self._run_racks)
+
+        # Parser for the draw command
+        parser_draw = subparsers.add_parser('draw', help='Draw DB components')
+        parser_draw.add_argument(
+            '--infrastructure',
+            help='Draw an infrastructure',
+        )
+        parser_draw.set_defaults(func=self._run_draw)
 
         self.args = parser.parse_args()
 
@@ -367,3 +376,7 @@ class RacksDBExec:
             expand=self.args.expand,
         )
         print(dumper.dump(selected_racks), end='')
+
+    def _run_draw(self):
+        drawer = InfrastructureDrawer(self.db, self.args.infrastructure)
+        drawer.draw()

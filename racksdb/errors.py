@@ -17,22 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
-from setuptools import setup, find_packages
 
-# get __version__
-exec(open('racksdb/version.py').read())
-
-setup(name='RacksDB',
-      version=__version__,
-      packages=find_packages(),
-      author='Rémi Palancher',
-      author_email='remi@rackslab.io',
-      license='GPLv3+',
-      url='https://github.com/rackslab/racksdb',
-      platforms=['GNU/Linux'],
-      install_requires=['PyYAML', 'ClusterShell', 'pycairo'],
-      entry_points = {
-          'console_scripts': [
-              'racksdb=racksdb.exec:RacksDBExec.run',
-          ],
-      })
+class RacksDBError(Exception):
+    pass
