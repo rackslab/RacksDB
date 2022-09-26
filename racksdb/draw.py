@@ -28,6 +28,12 @@ from .errors import RacksDBError
 logger = logging.getLogger(__name__)
 
 
+class ImagePoint:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
 class InfrastructureDrawer:
 
     MARGIN_TOP = 30
@@ -37,7 +43,9 @@ class InfrastructureDrawer:
     MARGIN_LEFT = 30
     RACK_U_HEIGHT = 20
     RACK_HEIGHT = RACK_U_HEIGHT * 42
-    RACK_ROW_HEIGHT = RACK_HEIGHT + ROW_LABEL_OFFSET + RACK_LABEL_OFFSET + RACK_OFFSET
+    RACK_ROW_HEIGHT = (
+        RACK_HEIGHT + ROW_LABEL_OFFSET + RACK_LABEL_OFFSET + RACK_OFFSET
+    )
     RACK_FULL_WIDTH = 200  # including 2 panes
     RACK_PANE_WIDTH = 10
     RACK_WIDTH = RACK_FULL_WIDTH - 2 * RACK_PANE_WIDTH
@@ -56,12 +64,22 @@ class InfrastructureDrawer:
 
         self.ctx = None
 
-    def _draw_rack_node(self, row_index, rack, node, start_slot):
-        logger.debug(
-            "Drawing node %s in rack %s",
-            node.name,
-            rack.name,
+    def _rack_row_tl(self, row_index) -> ImagePoint:
+        return ImagePoint(
+            self.MARGIN_LEFT,
+            self.MARGIN_TOP
+            + self.ROW_LABEL_OFFSET
+            + self.RACK_ROW_HEIGHT * row_index,
         )
+
+    def _rack_tl(self, row_index, rack_slot) -> ImagePoint:
+        tl = self._rack_row_tl(row_index)
+        tl.x += (self.RACK_FULL_WIDTH + self.RACK_SPACING) * rack_slot
+        tl.y += self.RACK_LABEL_OFFSET + self.RACK_OFFSET
+        return tl
+
+    def _node_tl(self, row_index, rack_slot, node, start_slot) -> ImagePoint:
+        tl = self._rack_tl(row_index, rack_slot)
 
         node_height_slot = (
             start_slot
@@ -77,21 +95,22 @@ class InfrastructureDrawer:
             node_width_slot,
         )
 
-        # top left of node
-        x_node = (
-            self.MARGIN_LEFT
-            + (self.RACK_FULL_WIDTH + self.RACK_SPACING) * rack.slot
-            + self.RACK_PANE_WIDTH
+        tl.x += (
+            self.RACK_PANE_WIDTH
             + node_width_slot * node.type.width * self.RACK_WIDTH
         )
-        y_node = (
-            self.MARGIN_TOP
-            + self.ROW_LABEL_OFFSET
-            + self.RACK_LABEL_OFFSET
-            + self.RACK_OFFSET
-            + self.RACK_ROW_HEIGHT * row_index
-            + (42 - node.type.height - node_height_slot) * self.RACK_U_HEIGHT
+        tl.y += (42 - node.type.height - node_height_slot) * self.RACK_U_HEIGHT
+        return tl
+
+    def _draw_rack_node(self, row_index, rack, node, start_slot):
+        logger.debug(
+            "Drawing node %s in rack %s",
+            node.name,
+            rack.name,
         )
+
+        # top left of node
+        tl = self._node_tl(row_index, rack.slot, node, start_slot)
 
         node_width = node.type.width * self.RACK_WIDTH
         node_height = node.type.height * self.RACK_U_HEIGHT
@@ -100,8 +119,8 @@ class InfrastructureDrawer:
         self.ctx.set_source_rgb(0.6, 0.6, 0.6)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            x_node,
-            y_node,
+            tl.x,
+            tl.y,
             node_width,
             node_height,
         )
@@ -111,8 +130,8 @@ class InfrastructureDrawer:
         self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            x_node,
-            y_node,
+            tl.x,
+            tl.y,
             node_width,
             node_height,
         )
@@ -120,11 +139,11 @@ class InfrastructureDrawer:
 
         # Write node name, rotate the text if height > width
         if node_height > node_width:
-            self.ctx.move_to(x_node + 2, y_node + 2)
+            self.ctx.move_to(tl.x + 2, tl.y + 2)
             self.ctx.save()
-            self.ctx.rotate(math.pi/2)
+            self.ctx.rotate(math.pi / 2)
         else:
-            self.ctx.move_to(x_node + 2, y_node + 15)
+            self.ctx.move_to(tl.x + 2, tl.y + 15)
         self.ctx.show_text(node.name)
         if node_height > node_width:
             self.ctx.restore()
@@ -133,20 +152,10 @@ class InfrastructureDrawer:
         logger.debug("Drawing rack %s (%s)", rack.name, rack.slot)
 
         # top left of rack
-        x_rack = (
-            self.MARGIN_LEFT
-            + (self.RACK_FULL_WIDTH + self.RACK_SPACING) * rack.slot
-        )
-        y_rack = (
-            self.MARGIN_TOP
-            + self.ROW_LABEL_OFFSET
-            + self.RACK_LABEL_OFFSET
-            + self.RACK_OFFSET
-            + self.RACK_ROW_HEIGHT * row_index
-        )
+        tl = self._rack_tl(row_index, rack.slot)
 
         # write rack name
-        self.ctx.move_to(x_rack, y_rack-self.RACK_OFFSET)
+        self.ctx.move_to(tl.x, tl.y - self.RACK_OFFSET)
         self.ctx.set_source_rgb(0, 0, 0)  # black
         self.ctx.show_text(f"rack {rack.name}")
 
@@ -154,8 +163,8 @@ class InfrastructureDrawer:
         self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            x_rack,
-            y_rack,
+            tl.x,
+            tl.y,
             self.RACK_FULL_WIDTH,
             self.RACK_HEIGHT,
         )
@@ -164,14 +173,14 @@ class InfrastructureDrawer:
         # draw rack panes
         self.ctx.set_source_rgb(0, 0, 0)  # black
         self.ctx.rectangle(
-            x_rack,
-            y_rack,
+            tl.x,
+            tl.y,
             self.RACK_PANE_WIDTH,
             self.RACK_HEIGHT,
         )
         self.ctx.rectangle(
-            x_rack + self.RACK_FULL_WIDTH - self.RACK_PANE_WIDTH,
-            y_rack,
+            tl.x + self.RACK_FULL_WIDTH - self.RACK_PANE_WIDTH,
+            tl.y,
             self.RACK_PANE_WIDTH,
             self.RACK_HEIGHT,
         )
@@ -193,12 +202,7 @@ class InfrastructureDrawer:
 
         logger.debug("Drawing row %s", row.name)
 
-        x_rack_row = self.MARGIN_LEFT
-        y_rack_row = (
-            self.MARGIN_TOP
-            + self.ROW_LABEL_OFFSET
-            + self.RACK_ROW_HEIGHT * index
-        )
+        tl = self._rack_row_tl(index)
 
         # write row name
         self.ctx.set_source_rgb(0, 0, 0)  # black
@@ -206,7 +210,7 @@ class InfrastructureDrawer:
             "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
         )
         self.ctx.set_font_size(14)
-        self.ctx.move_to(x_rack_row, y_rack_row)
+        self.ctx.move_to(tl.x, tl.y)
         self.ctx.show_text(f"row {row.name}")
 
         # iterate over the racks to draw racks in row
