@@ -33,10 +33,11 @@ class InfrastructureDrawer:
     MARGIN_TOP = 30
     ROW_LABEL_OFFSET = 20
     RACK_LABEL_OFFSET = 20
+    RACK_OFFSET = 10
     MARGIN_LEFT = 30
     RACK_U_HEIGHT = 20
     RACK_HEIGHT = RACK_U_HEIGHT * 42
-    RACK_ROW_HEIGHT = 500
+    RACK_ROW_HEIGHT = RACK_HEIGHT + ROW_LABEL_OFFSET + RACK_LABEL_OFFSET + RACK_OFFSET
     RACK_FULL_WIDTH = 200  # including 2 panes
     RACK_PANE_WIDTH = 10
     RACK_WIDTH = RACK_FULL_WIDTH - 2 * RACK_PANE_WIDTH
@@ -53,10 +54,7 @@ class InfrastructureDrawer:
                 f"Unable to find infrastructure {infrastructure_name} in database"
             )
 
-        WIDTH, HEIGHT = 1024, 1024
-
-        self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
-        self.ctx = cairo.Context(self.surface)
+        self.ctx = None
 
     def _draw_rack_node(self, row_index, rack, node, start_slot):
         logger.debug(
@@ -90,6 +88,7 @@ class InfrastructureDrawer:
             self.MARGIN_TOP
             + self.ROW_LABEL_OFFSET
             + self.RACK_LABEL_OFFSET
+            + self.RACK_OFFSET
             + self.RACK_ROW_HEIGHT * row_index
             + (41 - node_height_slot) * self.RACK_U_HEIGHT
         )
@@ -134,11 +133,13 @@ class InfrastructureDrawer:
         y_rack = (
             self.MARGIN_TOP
             + self.ROW_LABEL_OFFSET
+            + self.RACK_LABEL_OFFSET
+            + self.RACK_OFFSET
             + self.RACK_ROW_HEIGHT * row_index
         )
 
         # write rack name
-        self.ctx.move_to(x_rack, y_rack)
+        self.ctx.move_to(x_rack, y_rack-self.RACK_OFFSET)
         self.ctx.set_source_rgb(0, 0, 0)  # black
         self.ctx.show_text(f"rack {rack.name}")
 
@@ -147,7 +148,7 @@ class InfrastructureDrawer:
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             x_rack,
-            y_rack + self.RACK_LABEL_OFFSET,
+            y_rack,
             self.RACK_FULL_WIDTH,
             self.RACK_HEIGHT,
         )
@@ -157,13 +158,13 @@ class InfrastructureDrawer:
         self.ctx.set_source_rgb(0, 0, 0)  # black
         self.ctx.rectangle(
             x_rack,
-            y_rack + self.RACK_LABEL_OFFSET,
+            y_rack,
             self.RACK_PANE_WIDTH,
             self.RACK_HEIGHT,
         )
         self.ctx.rectangle(
             x_rack + self.RACK_FULL_WIDTH - self.RACK_PANE_WIDTH,
-            y_rack + self.RACK_LABEL_OFFSET,
+            y_rack,
             self.RACK_PANE_WIDTH,
             self.RACK_HEIGHT,
         )
@@ -184,15 +185,21 @@ class InfrastructureDrawer:
     def _draw_rack_row(self, index, row, racks):
 
         logger.debug("Drawing row %s", row.name)
+
+        x_rack_row = self.MARGIN_LEFT
+        y_rack_row = (
+            self.MARGIN_TOP
+            + self.ROW_LABEL_OFFSET
+            + self.RACK_ROW_HEIGHT * index
+        )
+
         # write row name
         self.ctx.set_source_rgb(0, 0, 0)  # black
         self.ctx.select_font_face(
             "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
         )
         self.ctx.set_font_size(14)
-        self.ctx.move_to(
-            self.MARGIN_LEFT, self.MARGIN_TOP + self.RACK_ROW_HEIGHT * index
-        )
+        self.ctx.move_to(x_rack_row, y_rack_row)
         self.ctx.show_text(f"row {row.name}")
 
         # iterate over the racks to draw racks in row
@@ -200,22 +207,36 @@ class InfrastructureDrawer:
             if rack.row is row:
                 self._draw_rack(index, rack)
 
-    def _draw_infrastructure(self):
+    def _draw_infrastructure(self, rack_rows, racks):
+        for index, row in enumerate(rack_rows):
+            self._draw_rack_row(index, row, racks)
+
+    def draw(self):
+
         rack_rows = []
         racks = []
+
+        rack_max_slot = 0
 
         # get list of racks used by the infrastructure
         for part in self.infrastructure.layout:
             if part.rack not in racks:
                 racks.append(part.rack)
+                if part.rack.slot > rack_max_slot:
+                    rack_max_slot = part.rack.slot
             if part.rack.row not in rack_rows:
                 rack_rows.append(part.rack.row)
 
-        for index, row in enumerate(rack_rows):
-            self._draw_rack_row(index, row, racks)
+        surface_width = 2 * self.MARGIN_LEFT + (
+            self.RACK_FULL_WIDTH + self.RACK_SPACING
+        ) * (rack_max_slot + 1)
+        surface_height = 2 * self.MARGIN_TOP + len(rack_rows) * (
+            self.RACK_ROW_HEIGHT
+        )
+        surface = cairo.ImageSurface(
+            cairo.FORMAT_ARGB32, surface_width, surface_height
+        )
+        self.ctx = cairo.Context(surface)
 
-    def draw(self):
-        self._draw_infrastructure()
-        self.surface.write_to_png(
-            f"{self.infrastructure.name}.png"
-        )  # Output to PNG
+        self._draw_infrastructure(rack_rows, racks)
+        surface.write_to_png(f"{self.infrastructure.name}.png")  # Output to PNG
