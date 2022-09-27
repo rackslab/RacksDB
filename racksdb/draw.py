@@ -50,7 +50,7 @@ class InfrastructureDrawer:
     RACK_PANE_WIDTH = 10
     RACK_SPACING = 3  # space between racks
 
-    def __init__(self, db, infrastructure_name):
+    def __init__(self, db, infrastructure_name, output_format):
         self.db = db
         self.infrastructure = None
         for infrastructure in self.db.infrastructures:
@@ -60,7 +60,7 @@ class InfrastructureDrawer:
             raise RacksDBError(
                 f"Unable to find infrastructure {infrastructure_name} in database"
             )
-
+        self.output_format = output_format
         self.ctx = None
 
     def _rack_row_tl(self, row_index) -> ImagePoint:
@@ -263,10 +263,20 @@ class InfrastructureDrawer:
             )
             + int(total_row_max_heights * self.SCALE)
         )
-        surface = cairo.ImageSurface(
-            cairo.FORMAT_ARGB32, surface_width, surface_height
-        )
-        self.ctx = cairo.Context(surface)
+        if self.output_format == 'png':
+            surface = cairo.ImageSurface(
+                cairo.FORMAT_ARGB32, surface_width, surface_height
+            )
+        elif self.output_format == 'svg':
+            surface = cairo.SVGSurface(f"{self.infrastructure.name}.svg",
+                surface_width, surface_height
+            )
 
+        self.ctx = cairo.Context(surface)
         self._draw_infrastructure(rack_rows, racks)
-        surface.write_to_png(f"{self.infrastructure.name}.png")  # Output to PNG
+
+        if self.output_format == 'png':
+            surface.write_to_png(f"{self.infrastructure.name}.png")  # Output to PNG
+        elif self.output_format == 'svg':
+            surface.finish()
+            surface.flush()

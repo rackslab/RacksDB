@@ -181,6 +181,12 @@ class RacksDBExec:
             '--infrastructure',
             help='Draw an infrastructure',
         )
+        parser_draw.add_argument(
+            '--format',
+            help='Format of output image (default: %(default)s)',
+            choices=['png', 'svg'],
+            default='png',
+        )
         parser_draw.set_defaults(func=self._run_draw)
 
         self.args = parser.parse_args()
@@ -378,5 +384,7 @@ class RacksDBExec:
         print(dumper.dump(selected_racks), end='')
 
     def _run_draw(self):
-        drawer = InfrastructureDrawer(self.db, self.args.infrastructure)
+        drawer = InfrastructureDrawer(
+            self.db, self.args.infrastructure, self.args.format
+        )
         drawer.draw()
