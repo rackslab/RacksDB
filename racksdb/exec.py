@@ -26,7 +26,7 @@ from .generic.errors import DBFormatError, DBSchemaError
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBFileLoader
 from .generic.dumper import DBDumper
-from .draw import InfrastructureDrawer
+from .draw import InfrastructureDrawer, RoomDrawer
 
 logger = logging.getLogger(__name__)
 
@@ -178,8 +178,14 @@ class RacksDBExec:
         # Parser for the draw command
         parser_draw = subparsers.add_parser('draw', help='Draw DB components')
         parser_draw.add_argument(
-            '--infrastructure',
-            help='Draw an infrastructure',
+            'entity',
+            choices=['room', 'infrastructure'],
+            help='Entity to draw',
+        )
+        parser_draw.add_argument(
+            '--name',
+            help='Name of entity to draw',
+            required=True,
         )
         parser_draw.add_argument(
             '--format',
@@ -384,7 +390,10 @@ class RacksDBExec:
         print(dumper.dump(selected_racks), end='')
 
     def _run_draw(self):
-        drawer = InfrastructureDrawer(
-            self.db, self.args.infrastructure, self.args.format
-        )
+        if self.args.entity == 'infrastructure':
+            drawer = InfrastructureDrawer(
+                self.db, self.args.name, self.args.format
+            )
+        elif self.args.entity == 'room':
+            drawer = RoomDrawer(self.db, self.args.name, self.args.format)
         drawer.draw()
