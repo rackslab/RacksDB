@@ -108,6 +108,9 @@ class DBList:
             else:
                 yield item
 
+    def __getitem__(self, id):
+        return self.items[id]
+
 
 class DBFileLoader:
     def __init__(self, path):
