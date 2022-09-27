@@ -36,19 +36,18 @@ class ImagePoint:
 
 class InfrastructureDrawer:
 
+    SCALE = 0.40  # 1mm to pixel
     MARGIN_TOP = 30
     ROW_LABEL_OFFSET = 20
     RACK_LABEL_OFFSET = 20
     RACK_OFFSET = 10
     MARGIN_LEFT = 30
-    RACK_U_HEIGHT = 20
+    RACK_U_HEIGHT = 44.45 * SCALE
     RACK_HEIGHT = RACK_U_HEIGHT * 42
     RACK_ROW_HEIGHT = (
         RACK_HEIGHT + ROW_LABEL_OFFSET + RACK_LABEL_OFFSET + RACK_OFFSET
     )
-    RACK_FULL_WIDTH = 200  # including 2 panes
     RACK_PANE_WIDTH = 10
-    RACK_WIDTH = RACK_FULL_WIDTH - 2 * RACK_PANE_WIDTH
     RACK_SPACING = 3  # space between racks
 
     def __init__(self, db, infrastructure_name):
@@ -72,21 +71,27 @@ class InfrastructureDrawer:
             + self.RACK_ROW_HEIGHT * row_index,
         )
 
-    def _rack_tl(self, row_index, rack_slot) -> ImagePoint:
+    def _rack_tl(self, row_index, rack) -> ImagePoint:
         tl = self._rack_row_tl(row_index)
-        tl.x += (self.RACK_FULL_WIDTH + self.RACK_SPACING) * rack_slot
+
+        # Sum the width of all racks in row before the current rack
+        for row_rack in rack.row.racks:
+            if row_rack.slot < rack.slot:
+                tl.x += (
+                    int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
+                )
         tl.y += self.RACK_LABEL_OFFSET + self.RACK_OFFSET
         return tl
 
-    def _node_tl(self, row_index, rack_slot, node, start_slot) -> ImagePoint:
-        tl = self._rack_tl(row_index, rack_slot)
+    def _node_tl(self, row_index, rack, node) -> ImagePoint:
+        tl = self._rack_tl(row_index, rack)
 
         node_height_slot = (
-            start_slot
-            + math.floor((node.slot - start_slot) * node.type.width)
+            node._first.slot
+            + math.floor((node.slot - node._first.slot) * node.type.width)
             * node.type.height
         )
-        node_width_slot = (node.slot - start_slot) % (1 / node.type.width)
+        node_width_slot = (node.slot - node._first.slot) % (1 / node.type.width)
 
         logger.debug(
             "Node %s calculated slots → height: %d width: %d",
@@ -95,14 +100,13 @@ class InfrastructureDrawer:
             node_width_slot,
         )
 
-        tl.x += (
-            self.RACK_PANE_WIDTH
-            + node_width_slot * node.type.width * self.RACK_WIDTH
+        tl.x += self.RACK_PANE_WIDTH + node_width_slot * node.type.width * (
+            int(node.rack.type.width * self.SCALE) - 2 * self.RACK_PANE_WIDTH
         )
         tl.y += (42 - node.type.height - node_height_slot) * self.RACK_U_HEIGHT
         return tl
 
-    def _draw_rack_node(self, row_index, rack, node, start_slot):
+    def _draw_rack_node(self, row_index, rack, node):
         logger.debug(
             "Drawing node %s in rack %s",
             node.name,
@@ -110,10 +114,12 @@ class InfrastructureDrawer:
         )
 
         # top left of node
-        tl = self._node_tl(row_index, rack.slot, node, start_slot)
+        tl = self._node_tl(row_index, rack, node)
 
-        node_width = node.type.width * self.RACK_WIDTH
-        node_height = node.type.height * self.RACK_U_HEIGHT
+        node_width = node.type.width * (
+            int(node.rack.type.width * self.SCALE) - 2 * self.RACK_PANE_WIDTH
+        )
+        node_height = int(node.type.height * self.RACK_U_HEIGHT)
 
         # draw node background
         self.ctx.set_source_rgb(0.6, 0.6, 0.6)  # grey
@@ -152,7 +158,10 @@ class InfrastructureDrawer:
         logger.debug("Drawing rack %s (%s)", rack.name, rack.slot)
 
         # top left of rack
-        tl = self._rack_tl(row_index, rack.slot)
+        tl = self._rack_tl(row_index, rack)
+
+        rack_width = rack.type.width * self.SCALE
+        rack_height = rack.type.height * self.SCALE
 
         # write rack name
         self.ctx.move_to(tl.x, tl.y - self.RACK_OFFSET)
@@ -165,8 +174,8 @@ class InfrastructureDrawer:
         self.ctx.rectangle(
             tl.x,
             tl.y,
-            self.RACK_FULL_WIDTH,
-            self.RACK_HEIGHT,
+            rack_width,
+            rack_height,
         )
         self.ctx.stroke()
 
@@ -176,13 +185,13 @@ class InfrastructureDrawer:
             tl.x,
             tl.y,
             self.RACK_PANE_WIDTH,
-            self.RACK_HEIGHT,
+            rack_height,
         )
         self.ctx.rectangle(
-            tl.x + self.RACK_FULL_WIDTH - self.RACK_PANE_WIDTH,
+            tl.x + rack_width - self.RACK_PANE_WIDTH,
             tl.y,
             self.RACK_PANE_WIDTH,
-            self.RACK_HEIGHT,
+            rack_height,
         )
         self.ctx.fill()
 
@@ -190,13 +199,7 @@ class InfrastructureDrawer:
         for part in self.infrastructure.layout:
             if part.rack is rack:
                 for node in part.nodes:
-                    if isinstance(node, DBExpandableObject):
-                        for _node in node.objects():
-                            self._draw_rack_node(
-                                row_index, rack, _node, node.slot.start
-                            )
-                    else:
-                        self._draw_rack_node(row_index, rack, node, node.slot)
+                    self._draw_rack_node(row_index, rack, node)
 
     def _draw_rack_row(self, index, row, racks):
 
@@ -227,22 +230,38 @@ class InfrastructureDrawer:
         rack_rows = []
         racks = []
 
-        rack_max_slot = 0
-
-        # get list of racks used by the infrastructure
+        # Get list of racks and rows used by the infrastructure
         for part in self.infrastructure.layout:
             if part.rack not in racks:
                 racks.append(part.rack)
-                if part.rack.slot > rack_max_slot:
-                    rack_max_slot = part.rack.slot
             if part.rack.row not in rack_rows:
                 rack_rows.append(part.rack.row)
 
-        surface_width = 2 * self.MARGIN_LEFT + (
-            self.RACK_FULL_WIDTH + self.RACK_SPACING
-        ) * (rack_max_slot + 1)
-        surface_height = 2 * self.MARGIN_TOP + len(rack_rows) * (
-            self.RACK_ROW_HEIGHT
+        # Sum all rows maximum rack height to calculate image height
+        total_row_max_heights = 0
+        for rack_row in rack_rows:
+            row_max_height = 0
+            for rack in rack_row.racks:
+                row_max_height = max(row_max_height, rack.type.height)
+            total_row_max_heights += row_max_height
+
+        # Find the maximum rack x to calculate image width
+        total_racks_widths = 0
+        for rack in racks:
+            tl = self._rack_tl(0, rack)
+            x_tr = tl.x + int(rack.type.width * self.SCALE)
+            total_racks_widths = max(total_racks_widths, x_tr)
+
+        surface_width = total_racks_widths + self.MARGIN_LEFT
+        surface_height = (
+            2 * self.MARGIN_TOP
+            + len(rack_rows)
+            * (
+                self.ROW_LABEL_OFFSET
+                + self.RACK_LABEL_OFFSET
+                + self.RACK_OFFSET
+            )
+            + int(total_row_max_heights * self.SCALE)
         )
         surface = cairo.ImageSurface(
             cairo.FORMAT_ARGB32, surface_width, surface_height
