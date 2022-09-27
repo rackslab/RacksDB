@@ -26,7 +26,7 @@ from .generic.errors import DBFormatError, DBSchemaError
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBFileLoader
 from .generic.dumper import DBDumper
-from .draw import InfrastructureDrawer, RoomDrawer
+from .drawers import InfrastructureDrawer, RoomDrawer
 
 logger = logging.getLogger(__name__)
 
