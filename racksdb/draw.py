@@ -263,24 +263,23 @@ class InfrastructureDrawer:
             )
             + int(total_row_max_heights * self.SCALE)
         )
+
+        filename = f"{self.infrastructure.name}.{self.output_format}"
         if self.output_format == 'png':
             surface = cairo.ImageSurface(
                 cairo.FORMAT_ARGB32, surface_width, surface_height
             )
         elif self.output_format == 'svg':
-            surface = cairo.SVGSurface(f"{self.infrastructure.name}.svg",
-                surface_width, surface_height
-            )
+            surface = cairo.SVGSurface(filename, surface_width, surface_height)
         elif self.output_format == 'pdf':
-            surface = cairo.PDFSurface(f"{self.infrastructure.name}.pdf",
-                surface_width, surface_height
-            )
+            surface = cairo.PDFSurface(filename, surface_width, surface_height)
 
         self.ctx = cairo.Context(surface)
         self._draw_infrastructure(rack_rows, racks)
 
         if self.output_format == 'png':
-            surface.write_to_png(f"{self.infrastructure.name}.png")  # Output to PNG
+            surface.write_to_png(filename)
         elif self.output_format in ['svg', 'pdf']:
             surface.finish()
             surface.flush()
+        logger.info("Generated %s", filename)
