@@ -23,9 +23,8 @@ import logging
 
 from .version import __version__
 from .generic.errors import DBFormatError, DBSchemaError
-from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
-from .generic.db import GenericDB, DBFileLoader
 from .generic.dumper import DBDumper
+from .base import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
 
 logger = logging.getLogger(__name__)
@@ -199,9 +198,14 @@ class RacksDBExec:
 
         self._setup_logger()
 
-        self.schema = None
-        self.db = None
-        self._load()
+        try:
+            self.db = RacksDB.load(self.args.schema, self.args.db)
+        except DBSchemaError as err:
+            logger.error("Error while loading schema: %s", err)
+            sys.exit(1)
+        except DBFormatError as err:
+            logger.error("Error while loading db: %s", err)
+            sys.exit(1)
 
         self.args.func()
 
@@ -218,25 +222,6 @@ class RacksDBExec:
         formatter = logging.Formatter("[%(levelname)s] %(name)s: %(message)s")
         handler.setFormatter(formatter)
         root_logger.addHandler(handler)
-
-    def _load(self):
-
-        try:
-            self.schema = Schema(
-                SchemaFileLoader(self.args.schema),
-                SchemaDefinedTypeLoader('racksdb.types'),
-            )
-        except DBSchemaError as err:
-            logger.error("Error while loading schema: %s", err)
-            sys.exit(1)
-
-        try:
-            loader = DBFileLoader(self.args.db)
-            self.db = GenericDB('RacksDB', self.schema)
-            self.db.load(loader)
-        except DBFormatError as err:
-            logger.error("Error while loading db: %s", err)
-            sys.exit(1)
 
     def _run_datacenters(self):
         # print list of datacenters
