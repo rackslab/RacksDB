@@ -143,30 +143,14 @@ class GenericDB(DBObject):
     ):
         logger.debug("Loading type %s (%s)", token, schema_type)
         if isinstance(schema_type, SchemaNativeType):
-            if schema_type.native is str:
-                if type(literal) != str:
-                    raise BFormatError(
-                        f"token {token} of {schema_type} is not a valid str"
-                    )
-                return literal
-            elif schema_type.native is int:
-                if type(literal) != int:
-                    raise DBFormatError(
-                        f"token {token} of {schema_type} is not a valid int"
-                    )
-                return literal
-            elif schema_type.native is float:
-                if type(literal) != float:
-                    raise DBFormatError(
-                        f"token {token} of {schema_type} is not a valid float"
-                    )
-                return literal
-            elif schema_type.native is bool:
-                if type(literal) != bool:
-                    raise DBFormatError(
-                        f"token {token} of {schema_type} is not a valid bool"
-                    )
-                return literal
+            for native_type in [str, int, float, bool]:
+                if schema_type.native is native_type:
+                    if type(literal) != native_type:
+                        raise DBFormatError(
+                            f"{token} {literal} is not a valid "
+                            f"{native_type.__name__}"
+                        )
+                    return literal
         elif isinstance(schema_type, SchemaDefinedType):
             return self.load_defined_type(literal, schema_type)
         elif isinstance(schema_type, SchemaExpandable):
