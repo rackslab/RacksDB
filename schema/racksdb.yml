@@ -47,6 +47,7 @@ _objects:
     name: str
     dimensions: :DatacenterRoomDimensions
     rows: optional list[:DatacenterRoomRow]
+    datacenter: ^Datacenter
   DatacenterRoomDimensions:
     width: ~dimension
     depth: ~dimension
