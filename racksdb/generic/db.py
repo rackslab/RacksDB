@@ -221,8 +221,9 @@ class GenericDB(DBObject):
         # load object attributes
         self.load_object_attributes(obj, literal, schema_object)
 
-        # check all required properties are properly defined in obj attributes
         for prop in schema_object.properties:
+            # Check all required properties are properly defined in obj
+            # attributes.
             if (
                 not isinstance(prop.type, SchemaBackReference)
                 and prop.required
@@ -232,6 +233,17 @@ class GenericDB(DBObject):
                     f"Property {prop.name} is required in schema for object "
                     f"{schema_object}"
                 )
+            # Assign default value to optional properties when provided in
+            # schema.
+            if not hasattr(obj, prop.name) and prop.default is not None:
+                logger.debug(
+                    "Assigning object %s property %s default value %s",
+                    schema_object,
+                    prop.name,
+                    prop.default,
+                )
+                setattr(obj, prop.name, prop.default)
+
         # add object to db indexes
         if schema_object.name not in self._indexes:
             self._indexes[schema_object.name] = []
