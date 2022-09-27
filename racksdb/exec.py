@@ -184,7 +184,7 @@ class RacksDBExec:
         parser_draw.add_argument(
             '--format',
             help='Format of output image (default: %(default)s)',
-            choices=['png', 'svg'],
+            choices=['png', 'svg', 'pdf'],
             default='png',
         )
         parser_draw.set_defaults(func=self._run_draw)

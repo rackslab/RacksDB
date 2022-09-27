@@ -271,12 +271,16 @@ class InfrastructureDrawer:
             surface = cairo.SVGSurface(f"{self.infrastructure.name}.svg",
                 surface_width, surface_height
             )
+        elif self.output_format == 'pdf':
+            surface = cairo.PDFSurface(f"{self.infrastructure.name}.pdf",
+                surface_width, surface_height
+            )
 
         self.ctx = cairo.Context(surface)
         self._draw_infrastructure(rack_rows, racks)
 
         if self.output_format == 'png':
             surface.write_to_png(f"{self.infrastructure.name}.png")  # Output to PNG
-        elif self.output_format == 'svg':
+        elif self.output_format in ['svg', 'pdf']:
             surface.finish()
             surface.flush()
