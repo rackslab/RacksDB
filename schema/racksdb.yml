@@ -55,6 +55,7 @@ _objects:
     name: str
     position: :DatacenterRoomPosition
     racks: list[:DatacenterRoomRack]
+    reversed: default false bool
   DatacenterRoomPosition:
     width: ~dimension
     depth: ~dimension
