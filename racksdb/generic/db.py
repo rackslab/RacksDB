@@ -19,6 +19,7 @@
 
 import re
 import logging
+from typing import List
 
 import yaml
 from ClusterShell.NodeSet import NodeSet
@@ -89,6 +90,19 @@ class DBObjectRangeId:
 
     def index(self, value):
         return self.start + value
+
+
+class DBList:
+    def __init__(self, items: List):
+        self.items = items
+
+    def __iter__(self):
+        for item in self.items:
+            if isinstance(item, DBExpandableObject):
+                for expanded_item in item.objects():
+                    yield expanded_item
+            else:
+                yield item
 
 
 class DBFileLoader:
@@ -286,7 +300,7 @@ class GenericDB(DBObject):
             result.append(
                 self.load_type(token, item, schema_object.content, parent)
             )
-        return result
+        return DBList(result)
 
     def load_expandable(self, literal):
         return type(f"{self._prefix}ExpandableRange", (DBObjectRange,), dict())(

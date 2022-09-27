@@ -22,7 +22,7 @@ import logging
 
 import yaml
 
-from .db import DBObject, DBExpandableObject, DBObjectRange, DBObjectRangeId
+from .db import DBObject, DBObjectRange, DBObjectRangeId, DBList
 
 logger = logging.getLogger(__name__)
 
@@ -37,19 +37,20 @@ class DBDumper:
         # recursion loops
         self._last_objs = collections.deque([], 8)
 
-    def _represent_list(self, dumper, data):
+    def _represent_expanded_list(self, dumper, data):
 
         value = []
         tag = u'tag:yaml.org,2002:seq'
         for _object in data:
-            # if expandable object, add all generated objects to list
-            if isinstance(_object, DBExpandableObject):
-                for generated_object in _object.objects():
-                    value.append(
-                        self._represent_dbobject(dumper, generated_object)
-                    )
-            else:
-                value.append(dumper.represent_data(_object))
+            value.append(dumper.represent_data(_object))
+        return yaml.SequenceNode(tag, value)
+
+    def _represent_list(self, dumper, data):
+
+        value = []
+        tag = u'tag:yaml.org,2002:seq'
+        for _object in data.items:
+            value.append(dumper.represent_data(_object))
         return yaml.SequenceNode(tag, value)
 
     def _represent_dbobject(self, dumper, data):
@@ -92,7 +93,9 @@ class DBDumper:
         # Disable objects aliasing with ids
         yaml.representer.ignore_aliases = lambda *data: True
         if self.expand:
-            yaml.add_representer(list, self._represent_list)
+            yaml.add_representer(DBList, self._represent_expanded_list)
+        else:
+            yaml.add_representer(DBList, self._represent_list)
         yaml.add_multi_representer(DBObject, self._represent_dbobject)
         yaml.add_multi_representer(DBObjectRange, self._represent_dbobjectrange)
         yaml.add_multi_representer(
