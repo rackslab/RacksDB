@@ -70,7 +70,7 @@ class DBDumper:
 
         for item_key, item_value in vars(data).items():
             # skip special fields
-            if item_key in ['_db', '_indexes', '_schema', '_parent']:
+            if item_key in ['_db', '_indexes', '_schema', '_parent', '_first']:
                 continue
             node_key = dumper.represent_data(item_key)
             if item_value.__class__.__name__ in self.objects_map.keys():

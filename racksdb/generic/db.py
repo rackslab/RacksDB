@@ -59,6 +59,7 @@ class DBExpandableObject(DBObject):
             else:
                 stable_attributes[attribute] = value
 
+        first = None
         for index, value in enumerate(range_attribute[1].expanded()):
             _attributes = stable_attributes.copy()
             _attributes[range_attribute[0]] = value
@@ -70,6 +71,9 @@ class DBExpandableObject(DBObject):
             for attr_name, attr_value in _attributes.items():
                 setattr(obj, attr_name, attr_value)
             result.append(obj)
+            if first is None:
+                first = obj
+            setattr(obj, '_first', first)
         return result
 
 
