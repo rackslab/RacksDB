@@ -76,6 +76,8 @@ class SchemaNativeType(SchemaGenericValueType):
             return 'int'
         elif self.native is float:
             return 'float'
+        elif self.native is bool:
+            return 'bool'
 
 
 class SchemaObject(SchemaGenericValueType):
@@ -188,7 +190,7 @@ class Schema:
 
     def value_type(self, spec):
         # parse native types
-        for native_type in (str, int, float):
+        for native_type in (str, int, float, bool):
             if spec == native_type.__name__:
                 return SchemaNativeType(native_type)
         if spec == 'expandable':

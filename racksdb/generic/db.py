@@ -155,7 +155,13 @@ class GenericDB(DBObject):
             elif schema_type.native is float:
                 if type(literal) != float:
                     DBFormatError(
-                        f"token {token} of {schema_item} is not a valid float"
+                        f"token {token} of {schema_type} is not a valid float"
+                    )
+                return literal
+            elif schema_type.native is bool:
+                if type(literal) != bool:
+                    DBFormatError(
+                        f"token {token} of {schema_type} is not a valid bool"
                     )
                 return literal
         elif isinstance(schema_type, SchemaDefinedType):
