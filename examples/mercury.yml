@@ -106,6 +106,7 @@ datacenters:
         depth: 4m
       racks:
       - name[]: R1-A[1-2]
+        type: standard
         slot: 0
 
 infrastructures:

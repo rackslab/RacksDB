@@ -60,6 +60,7 @@ _objects:
   DatacenterRoomRack:
     name: expandable
     slot: rangeid
+    type: $RackType.id
     datacenter: ^Datacenter
     room: ^DatacenterRoom
     row: ^DatacenterRoomRow
