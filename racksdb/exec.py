@@ -298,7 +298,7 @@ class RacksDBExec:
             selected_nodes = [
                 node
                 for node in selected_nodes
-                if self.args.infrastructure == node.infrastructure
+                if self.args.infrastructure == node.infrastructure.name
             ]
 
         # filter nodes by tag
