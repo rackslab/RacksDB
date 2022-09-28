@@ -92,10 +92,6 @@ class SchemaObject(SchemaGenericValueType):
         else:
             return f"Schema{self.name}"
 
-    def dump(self, indent):
-        for prop in self.properties:
-            print(f"{' '*indent}{prop.name}: {prop.type}")
-
     def prop(self, name):
         for _prop in self.properties:
             if _prop.name == name:
@@ -298,14 +294,3 @@ class Schema:
         logger.debug("Loading back reference to %s", object_id)
         obj = self.find_obj(object_id)
         return SchemaBackReference(obj, object_prop)
-
-    def dump(self):
-        print("_types:")
-        for name, defined_type in self.types.items():
-            print(f"  {name}: {defined_type.pattern}")
-        print("_objects:")
-        for name, obj in self.objects.items():
-            print(f"  {name}:")
-            obj.dump(indent=4)
-        print("_content:")
-        self.content.dump(indent=2)

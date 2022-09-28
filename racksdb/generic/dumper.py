@@ -23,6 +23,8 @@ import logging
 import yaml
 
 from .db import DBObject, DBObjectRange, DBObjectRangeId, DBList
+from .schema import Schema, SchemaObject
+from .definedtype import SchemaDefinedType
 
 logger = logging.getLogger(__name__)
 
@@ -114,3 +116,45 @@ class DBDumper:
                 "\n→ ".join(self._last_objs),
             )
             return ""
+
+
+class SchemaDumper:
+    def __init__(self):
+        self._setup()
+
+    def _represent_schemaobject(self, dumper, data):
+        value = []
+        tag = u'tag:yaml.org,2002:map'  # YAML generic mapping type
+        node = yaml.MappingNode(tag, value)
+        for prop in data.properties:
+            value.append(
+                (
+                    dumper.represent_str(prop.name),
+                    dumper.represent_str(str(prop)),
+                )
+            )
+        return node
+
+    def _represent_schemadefinedtype(self, dumper, data):
+        tag = u'tag:yaml.org,2002:str'  # YAML generic string type
+        node = yaml.ScalarNode(tag, data.pattern)
+        return node
+
+    def _setup(self):
+        yaml.add_representer(SchemaObject, self._represent_schemaobject)
+        yaml.add_multi_representer(
+            SchemaDefinedType, self._represent_schemadefinedtype
+        )
+
+    def dump(self, schema):
+        noalias_dumper = yaml.dumper.Dumper
+        noalias_dumper.ignore_aliases = lambda self, data: True
+        # dump all Schema object content except _schema attribute
+        return yaml.dump(
+            {
+                key: value
+                for key, value in vars(schema).items()
+                if key != '_schema'
+            },
+            Dumper=noalias_dumper,
+        )
