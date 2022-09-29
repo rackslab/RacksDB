@@ -58,7 +58,6 @@ class DBDumper:
     def _represent_dbobject(self, dumper, data):
 
         self._last_objs.append(type(data).__name__)
-        # override to dump map with item in any types
         value = []
         if self.show_types:
             tag = f"{data.__class__.__name__}"
@@ -66,9 +65,6 @@ class DBDumper:
             tag = u'tag:yaml.org,2002:map'  # YAML generic mapping type
 
         node = yaml.MappingNode(tag, value)
-
-        if dumper.alias_key is not None:
-            dumper.represented_objects[dumper.alias_key] = node
 
         for item_key, item_value in vars(data).items():
             # skip special fields
@@ -92,8 +88,6 @@ class DBDumper:
         return dumper.represent_data(data.start)
 
     def _setup(self):
-        # Disable objects aliasing with ids
-        yaml.representer.ignore_aliases = lambda *data: True
         if self.expand:
             yaml.add_representer(DBList, self._represent_expanded_list)
         else:
