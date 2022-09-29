@@ -71,7 +71,13 @@ class DBDumper:
             if item_key in ['_db', '_indexes', '_schema', '_parent', '_first']:
                 continue
             node_key = dumper.represent_data(item_key)
+            # Check the object is mapped to one of its attribute or None.
             if item_value.__class__.__name__ in self.objects_map.keys():
+                # If the object is mapped to None, discard the attribute and
+                # continue to the next one.
+                if self.objects_map[item_value.__class__.__name__] is None:
+                    continue
+                # Else, map the object to one of its attribute.
                 item_value = getattr(
                     item_value, self.objects_map[item_value.__class__.__name__]
                 )
