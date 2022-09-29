@@ -69,8 +69,6 @@ _objects:
   Infrastructure:
     name: str
     description: str
-    datacenter: $Datacenter.name
-    room: $DatacenterRoom.name
     layout: list[:InfrastructurePart]
     tags: optional list[str]
   InfrastructurePart:

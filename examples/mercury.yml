@@ -132,8 +132,6 @@ datacenters:
 infrastructures:
 - name: mercury
   description: Mercury HPC cluster
-  datacenter: paris
-  room: noisy
   layout:
     - rack: R1-A01
       tags: [compute]
