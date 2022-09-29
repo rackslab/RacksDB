@@ -97,17 +97,37 @@ datacenters:
   rooms:
   - name: noisy
     dimensions:
-      width: 25m
-      depth: 42m
+      width: 14m
+      depth: 25m
     rows:
     - name: R1
       position:
-        width: 4m
+        width: 3m
         depth: 4m
       racks:
-      - name[]: R1-A[1-2]
+      - name[]: R1-A[01-10]
         type: standard
         slot: 0
+    - name: R2
+      reversed: true
+      position:
+        width: 3m
+        depth: 6m
+      racks:
+      - name[]: R2-A[01-10]
+        type: standard
+        slot: 0
+    - name: R3
+      position:
+        width: 3m
+        depth: 9m
+      racks:
+      - name[]: R3-A[01-05]
+        type: standard
+        slot: 2
+      - name[]: R3-A[07-10]
+        type: standard
+        slot: 9
 
 infrastructures:
 - name: mercury
@@ -115,16 +135,25 @@ infrastructures:
   datacenter: paris
   room: noisy
   layout:
-    - rack: R1-A1
+    - rack: R1-A01
       tags: [compute]
       nodes:
       - name[]: mecn[0001-0040]
         type: sm220bt
         slot: 0
+      - name: mecn0200
+        type: sm610u
+        slot: 21
       - name[]: mecn[0041-0060]
         type: sm610u
         slot: 22
-    - rack: R1-A2
+    - rack: R1-A02
+      tags: [compute]
+      nodes:
+      - name[]: mecn[0061-0116]
+        type: hpesyn480
+        slot: 2
+    - rack: R2-A03
       nodes:
       - name[]: mesrv[0001-0004]
         type: dellr550
