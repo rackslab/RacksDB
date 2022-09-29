@@ -132,7 +132,11 @@ class GenericDB(DBObject):
             '_root', loader.content, self._schema.content, None
         )
         for key, value in vars(obj).items():
-            setattr(self, key, value)
+            # Copy loaded object attributes to self GenericDB object, except
+            # _schema where we want to keep Schema object instead of loaded
+            # SchemaObject.
+            if key != '_schema':
+                setattr(self, key, value)
 
     def load_type(
         self,
