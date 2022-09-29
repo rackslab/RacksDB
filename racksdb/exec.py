@@ -23,7 +23,7 @@ import logging
 
 from .version import __version__
 from .generic.errors import DBFormatError, DBSchemaError
-from .generic.dumper import DBDumper
+from .generic.dumper import DBDumper, SchemaDumper
 from .base import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
 
@@ -68,6 +68,12 @@ class RacksDBExec:
         subparsers = parser.add_subparsers(
             help='Action to perform with database', dest='action'
         )
+
+        # Parser for the schema command
+        parser_schema = subparsers.add_parser(
+            'schema', help='Dump loaded schema'
+        )
+        parser_schema.set_defaults(func=self._run_schema)
 
         # Parser for the datacenters command
         parser_datacenters = subparsers.add_parser(
@@ -222,6 +228,13 @@ class RacksDBExec:
         formatter = logging.Formatter("[%(levelname)s] %(name)s: %(message)s")
         handler.setFormatter(formatter)
         root_logger.addHandler(handler)
+
+    def _run_schema(self):
+        dumper = SchemaDumper()
+        print(
+            dumper.dump(self.db._schema),
+            end='',
+        )
 
     def _run_datacenters(self):
         # print list of datacenters
