@@ -251,7 +251,10 @@ class Schema:
         # The new SchemaObject must be added soon in objects hash to avoid
         # recursion loop in the following calls to prop_keys(), calling
         # value_type() → find_obj() → parse_obj() with back references.
-        self.objects[object_id] = obj
+        # There is an exception for _content fake root object as it is already
+        # hold by Schema.content attribute.
+        if object_id != '_content':
+            self.objects[object_id] = obj
 
         for key, spec in objdef.items():
             prop = self.prop_spec(key, spec)
