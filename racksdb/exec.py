@@ -246,7 +246,7 @@ class RacksDBExec:
             )
             return
         objects_map = {
-            'RacksDBDatacenter': 'name',
+            'RacksDBDatacenter': None,
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRow': 'name',
             'RacksDBDatacenterRoomRack': 'name',
@@ -277,7 +277,7 @@ class RacksDBExec:
             'RacksDBDatacenter': 'name',
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRack': 'name',
-            'RacksDBInfrastructure': 'name',
+            'RacksDBInfrastructure': None,
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
@@ -374,7 +374,7 @@ class RacksDBExec:
             'RacksDBDatacenter': 'name',
             'RacksDBDatacenterRoom': 'name',
             'RacksDBDatacenterRoomRow': 'name',
-            'RacksDBDatacenterRoomRack': 'name',
+            'RacksDBDatacenterRoomRack': None,
             'RacksDBNodeType': 'id',
             'RacksDBInfrastructure': 'name',
         }
