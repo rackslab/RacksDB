@@ -27,6 +27,7 @@ from ClusterShell.NodeSet import NodeSet
 from .errors import DBFormatError
 from .definedtype import SchemaDefinedType
 from .schema import (
+    SchemaGenericValueType,
     SchemaNativeType,
     SchemaContainerList,
     SchemaExpandable,
@@ -142,7 +143,7 @@ class GenericDB(DBObject):
         self,
         token,
         literal,
-        schema_type: SchemaNativeType,
+        schema_type: SchemaGenericValueType,
         parent,
     ):
         logger.debug("Loading type %s (%s)", token, schema_type)
