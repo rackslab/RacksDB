@@ -287,7 +287,9 @@ class GenericDB(DBObject):
                 )
                 # Check if this attribute can be loaded, considering its
                 # references and loaded objects.
-                if not self.loadable_attribute(token, token_property, passes):
+                if not self.loadable_attribute(
+                    token, token_property, passes, obj
+                ):
                     # The attribute cannot be loaded, jump to next attribute.
                     logger.debug(
                         "Skipping object %s property %s in pass %d",
@@ -348,7 +350,7 @@ class GenericDB(DBObject):
                 )
         return token_property
 
-    def loadable_attribute(self, token, token_property, passes):
+    def loadable_attribute(self, token, token_property, passes, obj):
         subtype = token_property.type
         # If the property is a list, check the content of the list.
         if isinstance(token_property.type, SchemaContainerList):
@@ -367,6 +369,28 @@ class GenericDB(DBObject):
                         passes,
                     )
                     return False
+            # Check back references with properties are all loaded. If one back
+            # reference with a property points to a property not already loaded
+            # on back referenced object, the attribute cannot be loaded (yet).
+            for prop in subtype.properties:
+                if (
+                    isinstance(prop.type, SchemaBackReference)
+                    and prop.type.prop is not None
+                ):
+                    # Loop to find the back referenced object
+                    while obj._schema is not prop.type.obj and obj is not None:
+                        obj = obj._parent
+                    # Check attribute is already defined on referenced object
+                    if not hasattr(obj, prop.type.prop):
+                        logger.debug(
+                            "Found undefined back reference to %s.%s in "
+                            "property %s in pass %d",
+                            ref.name,
+                            prop.type.prop,
+                            token,
+                            passes,
+                        )
+                        return False
         return True
 
     def load_reference(self, token, literal, schema_type: SchemaReference):
