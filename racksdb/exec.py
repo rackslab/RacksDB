@@ -20,6 +20,7 @@
 import argparse
 import sys
 import logging
+from pathlib import Path
 
 from .version import __version__
 from .generic.errors import DBFormatError, DBSchemaError
@@ -58,12 +59,14 @@ class RacksDBExec:
             '--schema',
             help="Schema to load",
             required=True,
+            type=Path,
         )
         parser.add_argument(
             '-b',
             '--db',
             help="Database to load",
             required=True,
+            type=Path,
         )
         subparsers = parser.add_subparsers(
             help='Action to perform with database', dest='action'
