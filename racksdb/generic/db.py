@@ -123,6 +123,30 @@ class DBFileLoader:
                 raise DBFormatError(err)
 
 
+class DBSplittedFilesLoader:
+    def __init__(self, path):
+        # try the parent folder
+        if not path.exists():
+            raise DBFormatError(f"DB path {path} does not exist")
+        elif path.is_file():
+            if not path.name.endswith('.yml'):
+                raise DBFormatError(
+                    f"DB contains file {path} without .yml extension"
+                )
+            logger.debug("Loading DB file %s", path)
+            self.content = DBFileLoader(path).content
+        elif path.suffix == '.l':
+            self.content = []
+            for item in path.iterdir():
+                self.content.append(DBSplittedFilesLoader(item).content)
+        else:
+            # if directory, load recursively
+            self.content = {}
+            for item in path.iterdir():
+                logger.debug("Loading DB directory %s", path)
+                self.content[item.stem] = DBSplittedFilesLoader(item).content
+
+
 class GenericDB(DBObject):
     def __init__(self, prefix, schema):
         super().__init__(self, schema)
