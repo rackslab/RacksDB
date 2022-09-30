@@ -308,7 +308,7 @@ class GenericDB(DBObject):
         self, token, literal, schema_object: SchemaContainerList, parent
     ):
         if type(literal) != list:
-            raise DBFormatError(f"{schema_object.name}.{token} must be a list")
+            raise DBFormatError(f"token {token} {schema_object} must be a list")
         result = []
         for item in literal:
             result.append(
