@@ -18,7 +18,7 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
-from .generic.db import GenericDB, DBFileLoader
+from .generic.db import GenericDB, DBFileLoader, DBSplittedFilesLoader
 
 
 class RacksDB(GenericDB):
@@ -36,5 +36,5 @@ class RacksDB(GenericDB):
             SchemaDefinedTypeLoader(cls.DEFINED_TYPES_MODULE),
         )
         db = cls(schema)
-        super(cls, db).load(DBFileLoader(db_path))
+        super(cls, db).load(DBSplittedFilesLoader(db_path))
         return db
