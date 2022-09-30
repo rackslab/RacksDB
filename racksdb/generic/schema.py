@@ -85,6 +85,10 @@ class SchemaObject(SchemaGenericValueType):
         self.name = name
         self.properties = None  # list of SchemaProperty
         self.expandable = False
+        # Set of SchemaObject attached to this object properties, recursively.
+        self.subobjs = set()
+        # Set of references in this object and sub-objects properties.
+        self.refs = set()
 
     def __str__(self):
         if self.expandable:
@@ -271,9 +275,25 @@ class Schema:
                         "than one expandable property"
                     )
                 expandable = True
+
+            # Define refs and subobjs recursively
+            if isinstance(prop.type, SchemaReference):
+                obj.refs |= {prop.type.obj}
+            subtype = prop.type
+            if isinstance(prop.type, SchemaContainerList):
+                subtype = prop.type.content
+            if isinstance(subtype, SchemaObject):
+                obj.refs |= subtype.refs
+                obj.subobjs |= {subtype} | subtype.subobjs
             properties.append(prop)
         obj.expandable = expandable
         obj.properties = properties
+        logger.debug(
+            "Class %s refs: %s subobjs: %s",
+            object_id,
+            [obj.name for obj in obj.refs],
+            [obj.name for obj in obj.subobjs],
+        )
         return obj
 
     def find_defined_type(self, defined):

@@ -35,6 +35,7 @@ from .schema import (
     SchemaObject,
     SchemaReference,
     SchemaBackReference,
+    SchemaProperty,
 )
 
 logger = logging.getLogger(__name__)
@@ -243,41 +244,115 @@ class GenericDB(DBObject):
         return obj
 
     def load_object_attributes(self, obj, content, schema_object: SchemaObject):
-        for token, literal in content.items():
-            token_property = schema_object.prop(token)
-            if token_property is None:
-                # try expandable
-                if token.endswith('[]'):
-                    token_property = schema_object.prop(token[:-2])
-                    if token_property is None:
-                        raise DBFormatError(
-                            f"Property {token} is not defined in schema for "
-                            f"object {schema_object}"
-                        )
-                    if not isinstance(token_property.type, SchemaExpandable):
-                        raise DBFormatError(
-                            f"Property {token} is not expandable in schema for "
-                            f"object {schema_object}"
-                        )
+
+        _content = content.copy()
+        passes = 0
+
+        while len(_content):
+            # Pass number
+            passes += 1
+            # Flag to know if at least one attribute has been loaded in last
+            # pass.
+            processed = False
+
+            # Iterate over a copy of last pass remaining object attributes
+            for token, literal in _content.copy().items():
+                # Get the schema property corresponding to this token
+                token_property = self.token_object_property(
+                    token, schema_object
+                )
+                # Check if this attribute can be loaded, considering its
+                # references and loaded objects.
+                if not self.loadable_attribute(token, token_property, passes):
+                    # The attribute cannot be loaded, jump to next attribute.
+                    logger.debug(
+                        "Skipping object %s property %s in pass %d",
+                        schema_object.name,
+                        token,
+                        passes,
+                    )
+                    continue
                 else:
+                    # The attribute can be loaded, set the flag and remove the
+                    # attribute from the dict for the next pass.
+                    processed = True
+                    del _content[token]
+
+                attribute = self.load_type(
+                    token, literal, token_property.type, obj
+                )
+                if token.endswith('[]'):
+                    setattr(obj, token[:-2], attribute)
+                else:
+                    setattr(obj, token, attribute)
+            # Load back references
+            for prop in schema_object.properties:
+                if isinstance(prop.type, SchemaBackReference):
+                    setattr(
+                        obj, prop.name, self.load_back_reference(obj, prop.type)
+                    )
+            # Check if at least one attribute has been loaded during this pass,
+            # or raise DB format error exception.
+            if not processed:
+                raise DBFormatError(
+                    f"Unable to load {token} {schema_object.name} after "
+                    f"{passes} passes, probably because of circular references"
+                )
+
+    def token_object_property(
+        self, token, schema_object: SchemaObject
+    ) -> SchemaProperty:
+        token_property = schema_object.prop(token)
+        if token_property is None:
+            # try expandable
+            if token.endswith('[]'):
+                token_property = schema_object.prop(token[:-2])
+                if token_property is None:
                     raise DBFormatError(
                         f"Property {token} is not defined in schema for object "
                         f"{schema_object}"
                     )
-            attribute = self.load_type(token, literal, token_property.type, obj)
-            if token.endswith('[]'):
-                setattr(obj, token[:-2], attribute)
+                if not isinstance(token_property.type, SchemaExpandable):
+                    raise DBFormatError(
+                        f"Property {token} is not expandable in schema for "
+                        f"object {schema_object}"
+                    )
             else:
-                setattr(obj, token, attribute)
-        # Load back references
-        for prop in schema_object.properties:
-            if isinstance(prop.type, SchemaBackReference):
-                setattr(
-                    obj, prop.name, self.load_back_reference(obj, prop.type)
+                raise DBFormatError(
+                    f"Property {token} is not defined in schema for object "
+                    f"{schema_object}"
                 )
+        return token_property
+
+    def loadable_attribute(self, token, token_property, passes):
+        subtype = token_property.type
+        # If the property is a list, check the content of the list.
+        if isinstance(token_property.type, SchemaContainerList):
+            subtype = token_property.type.content
+        if isinstance(subtype, SchemaObject):
+            # If one object reference is not defined in inspected object
+            # sub-objects and not available in DB index, the attribute cannot be
+            # loaded (yet).
+            for ref in subtype.refs - subtype.subobjs:
+                if ref.name not in self._indexes:
+                    logger.debug(
+                        "Found undefined reference to %s in property %s in "
+                        "pass %d",
+                        ref.name,
+                        token,
+                        passes,
+                    )
+                    return False
+        return True
 
     def load_reference(self, token, literal, schema_type: SchemaReference):
         all_objs = self.find_objects(schema_type.obj.name, expand=True)
+        if all_objs is None:
+            raise DBFormatError(
+                f"Unable to find {token} reference because objects "
+                f"{schema_type.obj.name} are missing in DB indexes"
+            )
+
         logger.debug(
             "Found objects for type %s: %s", schema_type.obj.name, all_objs
         )
