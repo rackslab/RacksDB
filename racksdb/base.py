@@ -26,8 +26,9 @@ class RacksDB(GenericDB):
     PREFIX = 'RacksDB'
     DEFINED_TYPES_MODULE = 'racksdb.types'
 
-    def __init__(self, schema):
+    def __init__(self, schema, loader):
         super().__init__(self.PREFIX, schema)
+        self._loader = loader
 
     @classmethod
     def load(cls, schema_path, db_path):
@@ -35,6 +36,6 @@ class RacksDB(GenericDB):
             SchemaFileLoader(schema_path),
             SchemaDefinedTypeLoader(cls.DEFINED_TYPES_MODULE),
         )
-        db = cls(schema)
-        super(cls, db).load(DBSplittedFilesLoader(db_path))
+        db = cls(schema, DBSplittedFilesLoader(db_path))
+        super(cls, db).load(db._loader)
         return db

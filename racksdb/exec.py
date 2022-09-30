@@ -78,6 +78,10 @@ class RacksDBExec:
         )
         parser_schema.set_defaults(func=self._run_schema)
 
+        # Parser for the dump command
+        parser_dump = subparsers.add_parser('dump', help='Dump raw loaded DB')
+        parser_dump.set_defaults(func=self._run_dump)
+
         # Parser for the datacenters command
         parser_datacenters = subparsers.add_parser(
             'datacenters', help='Get informations about datacenters'
@@ -233,9 +237,14 @@ class RacksDBExec:
         root_logger.addHandler(handler)
 
     def _run_schema(self):
-        dumper = SchemaDumper()
         print(
-            dumper.dump(self.db._schema),
+            SchemaDumper().dump(self.db._schema),
+            end='',
+        )
+
+    def _run_dump(self):
+        print(
+            DBDumper().dump(self.db._loader.content),
             end='',
         )
 
