@@ -1,0 +1,21 @@
+id: dellr550
+model: Dell PowerEdge R550
+height: 2u
+width: full
+specs: https://www.delltechnologies.com/asset/en-us/products/servers/technical-support/dellemc-poweredge-r550-spec-sheet.pdf
+cpus:
+  sockets: 2
+  model: Intel Xeon Silver 4316
+  specs: https://www.intel.com/content/www/us/en/products/sku/215270/intel-xeon-silver-4316-processor-30m-cache-2-30-ghz/specifications.html
+  cores: 20
+ram:
+  dimm: 4
+  size: 32GB
+storage:
+- type: ssd
+  size: 960GB
+netifs:
+- type: ethernet
+  bandwidth: 1Gb
+- type: ethernet
+  bandwidth: 1Gb

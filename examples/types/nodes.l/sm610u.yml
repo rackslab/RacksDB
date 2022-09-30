@@ -1,0 +1,18 @@
+id: sm610u
+model: SuperMicro Ultra SYS-610U-TNR
+height: 1u
+width: full
+specs: https://www.supermicro.com/en/products/system/ultra/1u/sys-610u-tnr
+cpus:
+  sockets: 2
+  model: Intel Xeon Gold 6338
+  specs: https://ark.intel.com/content/www/us/en/ark/products/212285/intel-xeon-gold-6338-processor-48m-cache-2-00-ghz.html
+  cores: 20
+ram:
+  dimm: 16
+  size: 16GB
+netifs:
+- type: ethernet
+  bandwidth: 10Gb
+- type: ethernet
+  bandwidth: 10Gb

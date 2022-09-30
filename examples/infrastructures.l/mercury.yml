@@ -1,0 +1,27 @@
+name: mercury
+description: Mercury HPC cluster
+layout:
+- rack: R1-A01
+  tags: [compute]
+  nodes:
+  - name[]: mecn[0001-0040]
+    type: sm220bt
+    slot: 0
+  - name: mecn0200
+    type: sm610u
+    slot: 21
+  - name[]: mecn[0041-0060]
+    type: sm610u
+    slot: 22
+- rack: R1-A02
+  tags: [compute]
+  nodes:
+  - name[]: mecn[0061-0116]
+    type: hpesyn480
+    slot: 2
+- rack: R2-A03
+  nodes:
+  - name[]: mesrv[0001-0004]
+    type: dellr550
+    slot: 8
+    tags: [servers]

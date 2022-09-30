@@ -1,0 +1,35 @@
+name: paris
+rooms:
+  - name: noisy
+    dimensions:
+      width: 14m
+      depth: 25m
+    rows:
+    - name: R1
+      position:
+        width: 3m
+        depth: 4m
+      racks:
+      - name[]: R1-A[01-10]
+        type: standard
+        slot: 0
+    - name: R2
+      reversed: true
+      position:
+        width: 3m
+        depth: 6m
+      racks:
+      - name[]: R2-A[01-10]
+        type: standard
+        slot: 0
+    - name: R3
+      position:
+        width: 3m
+        depth: 9m
+      racks:
+      - name[]: R3-A[01-05]
+        type: standard
+        slot: 2
+      - name[]: R3-A[07-10]
+        type: standard
+        slot: 9

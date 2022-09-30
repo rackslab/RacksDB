@@ -1,0 +1,20 @@
+id: sm220bt
+model: SuperMicro A+ Server 2124BT-HTR
+height: 1u
+width: 1/2
+specs: https://www.supermicro.com/en/aplus/system/2u/2124/as-2124bt-htr.cfm
+cpus:
+  sockets: 2
+  model: AMD EPYC 7573X
+  specs: https://www.amd.com/en/products/cpu/amd-epyc-7573x
+  cores: 32
+ram:
+  dimm: 8
+  size: 32GB
+storage:
+- type: nvme
+  model: Samsung 980 Pro
+  size: 256GB
+netifs:
+- type: ethernet
+  bandwidth: 10Gb
