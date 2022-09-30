@@ -83,7 +83,7 @@ class SchemaNativeType(SchemaGenericValueType):
 class SchemaObject(SchemaGenericValueType):
     def __init__(self, name):
         self.name = name
-        self.properties = None  # list of SchemaProperty
+        self.properties = []  # list of SchemaProperty
         self.expandable = False
         # Set of SchemaObject attached to this object properties, recursively.
         self.subobjs = set()
@@ -248,8 +248,6 @@ class Schema:
 
     def parse_obj(self, object_id, objdef):
         logger.debug("Loading class of %s", object_id)
-        properties = []
-        expandable = False
 
         obj = SchemaObject(object_id)
         # The new SchemaObject must be added soon in objects hash to avoid
@@ -269,12 +267,12 @@ class Schema:
                 )
             if isinstance(prop.type, SchemaExpandable):
                 # check expandable uniqueness
-                if expandable:
+                if obj.expandable:
                     raise DBSchemaError(
                         f"Expandable object {object_id} cannot contain more "
                         "than one expandable property"
                     )
-                expandable = True
+                obj.expandable = True
 
             # Define refs and subobjs recursively
             if isinstance(prop.type, SchemaReference):
@@ -285,9 +283,7 @@ class Schema:
             if isinstance(subtype, SchemaObject):
                 obj.refs |= subtype.refs
                 obj.subobjs |= {subtype} | subtype.subobjs
-            properties.append(prop)
-        obj.expandable = expandable
-        obj.properties = properties
+            obj.properties.append(prop)
         logger.debug(
             "Class %s refs: %s subobjs: %s",
             object_id,
