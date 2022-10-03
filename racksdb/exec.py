@@ -62,6 +62,13 @@ class RacksDBExec:
             type=Path,
         )
         parser.add_argument(
+            '-e',
+            '--ext',
+            help="Path to extensions of schema (default: %(default)s)",
+            default=RacksDB.DEFAULT_EXT,
+            type=Path,
+        )
+        parser.add_argument(
             '-b',
             '--db',
             help="Database to load (default: %(default)s)",
@@ -225,7 +232,9 @@ class RacksDBExec:
         self._setup_logger()
 
         try:
-            self.db = RacksDB.load(self.args.schema, self.args.db)
+            self.db = RacksDB.load(
+                self.args.schema, self.args.ext, self.args.db
+            )
         except DBSchemaError as err:
             logger.error("Error while loading schema: %s", err)
             sys.exit(1)
