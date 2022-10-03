@@ -57,15 +57,15 @@ class RacksDBExec:
         parser.add_argument(
             '-s',
             '--schema',
-            help="Schema to load",
-            required=True,
+            help="Schema to load (default: %(default)s)",
+            default=RacksDB.DEFAULT_SCHEMA,
             type=Path,
         )
         parser.add_argument(
             '-b',
             '--db',
-            help="Database to load",
-            required=True,
+            help="Database to load (default: %(default)s)",
+            default=RacksDB.DEFAULT_DB,
             type=Path,
         )
         subparsers = parser.add_subparsers(
