@@ -152,6 +152,9 @@ class GenericDB(DBObject):
         super().__init__(self, schema)
         self._prefix = prefix
         self._indexes = {}  # objects indexes
+        # Set of SchemaObjects for which objects have been already loaded,
+        # including SchemaObjects of optional objects not present in database.
+        self._loaded_classes = set()
 
     def load(self, loader):
         obj = self.load_object(
@@ -265,6 +268,8 @@ class GenericDB(DBObject):
         if schema_object.name not in self._indexes:
             self._indexes[schema_object.name] = []
         self._indexes[schema_object.name].append(obj)
+        self._loaded_classes |= schema_object.subobjs
+        logger.debug("Loaded classes: %s", [cls.name for cls in self._loaded_classes])
         return obj
 
     def load_object_attributes(self, obj, content, schema_object: SchemaObject):
@@ -357,10 +362,10 @@ class GenericDB(DBObject):
             subtype = token_property.type.content
         if isinstance(subtype, SchemaObject):
             # If one object reference is not defined in inspected object
-            # sub-objects and not available in DB index, the attribute cannot be
-            # loaded (yet).
+            # sub-objects and not available in set of already loaded objects,
+            # the attribute cannot be loaded (yet).
             for ref in subtype.refs - subtype.subobjs:
-                if ref.name not in self._indexes:
+                if ref not in self._loaded_classes:
                     logger.debug(
                         "Found undefined reference to %s in property %s in "
                         "pass %d",
