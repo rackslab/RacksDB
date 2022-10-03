@@ -27,6 +27,7 @@ class RacksDB(GenericDB):
 
     DEFAULT_DB = '/var/lib/racksdb'
     DEFAULT_SCHEMA = '/usr/share/racksdb/schema.yml'
+    DEFAULT_EXT = '/etc/racksdb/extensions.yml'
     PREFIX = 'RacksDB'
     DEFINED_TYPES_MODULE = 'racksdb.types'
 
@@ -35,17 +36,24 @@ class RacksDB(GenericDB):
         self._loader = loader
 
     @classmethod
-    def load(cls, schema_path: Path = None, db_path: Path = None):
+    def load(
+        cls,
+        schema_path: Path = None,
+        ext_path: Path = None,
+        db_path: Path = None,
+    ):
         # Unfortunately, default values to arguments cannot be used as they are
         # class attributes and the class is not defined yet at this stage at
         # compilation time. As an alternative, the value None is checked at
         # runtime and replaced by values of class attributes.
         if schema_path is None:
             schema_path = Path(cls.DEFAULT_SCHEMA)
+        if ext_path is None:
+            ext_path = Path(cls.DEFAULT_EXT)
         if db_path is None:
             db_path = Path(cls.DEFAULT_DB)
         schema = Schema(
-            SchemaFileLoader(schema_path),
+            SchemaFileLoader(schema_path, ext_path),
             SchemaDefinedTypeLoader(cls.DEFINED_TYPES_MODULE),
         )
         db = cls(schema, DBSplittedFilesLoader(db_path))
