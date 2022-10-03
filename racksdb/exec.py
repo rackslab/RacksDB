@@ -68,9 +68,22 @@ class RacksDBExec:
             default=RacksDB.DEFAULT_DB,
             type=Path,
         )
-        subparsers = parser.add_subparsers(
-            help='Action to perform with database', dest='action'
-        )
+
+        # Unfortunately, Python 3.6 does support add_subparsers() required
+        # attribute. The requirement is later handled with a AttributeError on
+        # args.func to provide the same functionnal level.
+        # This Python version conditionnal test can be removed when support of
+        # Python 3.6 is dropped in Fatbuildr.
+        if sys.version_info[1] >= 3 and sys.version_info[1] >= 7:
+            subparsers = parser.add_subparsers(
+                help='Action to perform with database',
+                dest='action',
+                required=True,
+            )
+        else:
+            subparsers = parser.add_subparsers(
+                help='Action to perform with database', dest='action'
+            )
 
         # Parser for the schema command
         parser_schema = subparsers.add_parser(
@@ -220,7 +233,11 @@ class RacksDBExec:
             logger.error("Error while loading db: %s", err)
             sys.exit(1)
 
-        self.args.func()
+        try:
+            self.args.func()
+        except AttributeError:
+            parser.print_usage()
+            logger.error("The action argument must be given")
 
     def _setup_logger(self):
         if self.args.debug:
