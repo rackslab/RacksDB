@@ -397,7 +397,7 @@ class GenericDB(DBObject):
         all_objs = self.find_objects(schema_type.obj.name, expand=True)
         if all_objs is None:
             raise DBFormatError(
-                f"Unable to find {token} reference because objects "
+                f"Unable to find {token} {literal} reference because objects "
                 f"{schema_type.obj.name} are missing in DB indexes"
             )
 
