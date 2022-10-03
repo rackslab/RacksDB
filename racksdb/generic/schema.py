@@ -48,8 +48,9 @@ class SchemaDefinedTypeLoader:
 
 
 class SchemaFileLoader:
-    def __init__(self, path):
+    def __init__(self, path, extensions):
         self.path = path
+        self.extensions = extensions
 
     @property
     def content(self):
@@ -60,6 +61,42 @@ class SchemaFileLoader:
                 result = yaml.safe_load(fh)
             except yaml.composer.ComposerError as err:
                 raise DBSchemaError(err)
+        # load schema extensions
+        result = self.load_extensions(result)
+        return result
+
+    def load_extensions(self, result):
+        if not self.extensions.exists():
+            logger.debug(
+                "Schema extensions file %s not found, skipping extensions",
+                self.extensions,
+            )
+            return result
+
+        logger.debug("Loading schema extensions file %s", self.extensions)
+        with open(self.extensions) as fh:
+            try:
+                extensions = yaml.safe_load(fh)
+            except yaml.composer.ComposerError as err:
+                raise DBSchemaError(err)
+        if '_content' in extensions:
+            logger.debug(
+                "Updating database content additional content found in extension"
+            )
+            result['_content'].update(extensions['_content'])
+        if '_objects' in extensions:
+            for obj, properties in extensions['_objects'].items():
+                if obj in result['_objects']:
+                    logger.debug(
+                        "Updating object class %s with properties found in extension",
+                        obj,
+                    )
+                    result['_objects'][obj].update(properties)
+                else:
+                    logger.debug(
+                        "Additional object class %s found in extension", obj
+                    )
+                    result['_objects'][obj] = properties
         return result
 
 
