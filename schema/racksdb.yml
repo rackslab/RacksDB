@@ -59,6 +59,7 @@ _objects:
   DatacenterRoomPosition:
     width: ~dimension
     depth: ~dimension
+    rotation: default 0 ~angle
   DatacenterRoomRack:
     name: expandable
     slot: rangeid
