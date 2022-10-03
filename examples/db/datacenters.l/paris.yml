@@ -33,3 +33,40 @@ rooms:
       - name[]: R3-A[07-10]
         type: standard
         slot: 9
+    - name: R4
+      reversed: True
+      position:
+        width: 3m
+        depth: 12m
+        rotation: 90
+      racks:
+      - name[]: R4-A[01-06]
+        type: standard
+        slot: 0
+    - name: R5
+      position:
+        width: 5m
+        depth: 12m
+        rotation: 90
+      racks:
+      - name[]: R5-A[01-06]
+        type: standard
+        slot: 0
+    - name: R6
+      position:
+        width: 10m
+        depth: 15m
+        rotation: 60
+      racks:
+      - name[]: R6-A[01-06]
+        type: standard
+        slot: 0
+    - name: R7
+      position:
+        width: 11.8m
+        depth: 20m
+        rotation: 120
+      racks:
+      - name[]: R7-A[01-06]
+        type: standard
+        slot: 0
