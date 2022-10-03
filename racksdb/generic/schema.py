@@ -53,6 +53,8 @@ class SchemaFileLoader:
 
     @property
     def content(self):
+        if not self.path.exists():
+            raise DBSchemaError(f"Schema path {self.path} does not exist")
         with open(self.path) as fh:
             try:
                 result = yaml.safe_load(fh)
