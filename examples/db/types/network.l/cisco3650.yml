@@ -1,0 +1,7 @@
+id: cisco3650
+model: Cisco Catalyst 3650 switch
+height: 1u
+netifs:
+- type: ethernet
+  bandwidth: 1Gb
+  number: 48

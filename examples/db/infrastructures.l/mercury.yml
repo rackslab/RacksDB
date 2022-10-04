@@ -19,6 +19,17 @@ layout:
   - name[]: mecn[0061-0116]
     type: hpesyn480
     slot: 2
+- rack: R2-A02
+  network:
+  - name[]: mesw[01-04]
+    type: cisco3650
+    slot: 8
+    tags: [network]
+  storage:
+  - name: swnas01
+    type: qnaph1277
+    slot: 12
+    tags: [storage]
 - rack: R2-A03
   nodes:
   - name[]: mesrv[0001-0004]
