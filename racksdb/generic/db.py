@@ -269,7 +269,9 @@ class GenericDB(DBObject):
             self._indexes[schema_object.name] = []
         self._indexes[schema_object.name].append(obj)
         self._loaded_classes |= schema_object.subobjs
-        logger.debug("Loaded classes: %s", [cls.name for cls in self._loaded_classes])
+        logger.debug(
+            "Loaded classes: %s", [cls.name for cls in self._loaded_classes]
+        )
         return obj
 
     def load_object_attributes(self, obj, content, schema_object: SchemaObject):
