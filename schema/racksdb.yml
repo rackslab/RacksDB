@@ -7,7 +7,9 @@ _content:
 
 _objects:
   Types:
-    nodes: list[:NodeType]
+    nodes: default [] list[:NodeType]
+    storage: default [] list[:StorageEquipmentType]
+    network: default [] list[:NetworkEquipmentType]
     racks: list[:RackType]
   NodeType:
     id: str
@@ -34,6 +36,33 @@ _objects:
   NodeTypeNetif:
     type: ~netif_type
     bandwidth: ~bytes
+  StorageEquipmentType:
+    id: str
+    model: str
+    height: ~rack_height
+    width: default full ~rack_width
+    specs: optional str
+    disks: optional list[:StorageEquipmentTypeDisk]
+    netifs: optional list[:StorageEquipmentTypeNetif]
+  StorageEquipmentTypeDisk:
+    type: ~storage_type
+    size: ~bytes
+    model: optional str
+    number: int
+  StorageEquipmentTypeNetif:
+    type: ~netif_type
+    bandwidth: ~bytes
+  NetworkEquipmentType:
+    id: str
+    model: str
+    height: ~rack_height
+    width: default full ~rack_width
+    specs: optional str
+    netifs: optional list[:NetworkEquipmentTypeNetif]
+  NetworkEquipmentTypeNetif:
+    type: ~netif_type
+    bandwidth: ~bytes
+    number: int
   RackType:
     id: str
     height: ~dimension
@@ -74,12 +103,28 @@ _objects:
     tags: optional list[str]
   InfrastructurePart:
     rack: $DatacenterRoomRack.name
-    nodes: list[:Node]
+    nodes: default [] list[:Node]
+    storage: default [] list[:StorageEquipment]
+    network: default [] list[:NetworkEquipment]
     tags: optional list[str]
   Node:
     name: expandable
     infrastructure: ^Infrastructure
     rack: ^InfrastructurePart.rack
     type: optional $NodeType.id
+    slot: rangeid
+    tags: optional list[str]
+  StorageEquipment:
+    name: expandable
+    infrastructure: ^Infrastructure
+    rack: ^InfrastructurePart.rack
+    type: optional $StorageEquipmentType.id
+    slot: rangeid
+    tags: optional list[str]
+  NetworkEquipment:
+    name: expandable
+    infrastructure: ^Infrastructure
+    rack: ^InfrastructurePart.rack
+    type: optional $NetworkEquipmentType.id
     slot: rangeid
     tags: optional list[str]
