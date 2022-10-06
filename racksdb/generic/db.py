@@ -256,13 +256,14 @@ class GenericDB(DBObject):
             # Assign default value to optional properties when provided in
             # schema.
             if not hasattr(obj, prop.name) and prop.default is not None:
+                value = self.load_type(prop.name, prop.default, prop.type, obj)
                 logger.debug(
                     "Assigning object %s property %s default value %s",
                     schema_object,
                     prop.name,
-                    prop.default,
+                    value,
                 )
-                setattr(obj, prop.name, prop.default)
+                setattr(obj, prop.name, value)
 
         # add object to db indexes
         if schema_object.name not in self._indexes:
