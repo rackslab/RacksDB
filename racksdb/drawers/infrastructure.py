@@ -75,75 +75,88 @@ class InfrastructureDrawer(Drawer):
         tl.y += self.RACK_LABEL_OFFSET + self.RACK_OFFSET
         return tl
 
-    def _node_tl(self, row_index, rack, node) -> ImagePoint:
+    def _equipment_tl(self, row_index, rack, equipment) -> ImagePoint:
         tl = self._rack_tl(row_index, rack)
 
-        node_height_slot = (
-            node._first.slot
-            + math.floor((node.slot - node._first.slot) * node.type.width)
-            * node.type.height
+        equipment_height_slot = (
+            equipment._first.slot
+            + math.floor(
+                (equipment.slot - equipment._first.slot) * equipment.type.width
+            )
+            * equipment.type.height
         )
-        node_width_slot = (node.slot - node._first.slot) % (1 / node.type.width)
+        equipment_width_slot = (equipment.slot - equipment._first.slot) % (
+            1 / equipment.type.width
+        )
 
         logger.debug(
-            "Node %s calculated slots → height: %d width: %d",
-            node.name,
-            node_height_slot,
-            node_width_slot,
+            "Equipment %s calculated slots → height: %d width: %d",
+            equipment.name,
+            equipment_height_slot,
+            equipment_width_slot,
         )
 
-        tl.x += self.RACK_PANE_WIDTH + node_width_slot * node.type.width * (
-            int(node.rack.type.width * self.SCALE) - 2 * self.RACK_PANE_WIDTH
+        tl.x += (
+            self.RACK_PANE_WIDTH
+            + equipment_width_slot
+            * equipment.type.width
+            * (
+                int(equipment.rack.type.width * self.SCALE)
+                - 2 * self.RACK_PANE_WIDTH
+            )
         )
-        tl.y += (42 - node.type.height - node_height_slot) * self.RACK_U_HEIGHT
+        tl.y += (
+            42 - equipment.type.height - equipment_height_slot
+        ) * self.RACK_U_HEIGHT
         return tl
 
-    def _draw_rack_node(self, row_index, rack, node):
+    def _draw_rack_equipment(self, row_index, rack, equipment):
         logger.debug(
-            "Drawing node %s in rack %s",
-            node.name,
+            "Drawing equipment %s in rack %s",
+            equipment.name,
             rack.name,
         )
 
-        # top left of node
-        tl = self._node_tl(row_index, rack, node)
+        # top left of equipment
+        tl = self._equipment_tl(row_index, rack, equipment)
 
-        node_width = node.type.width * (
-            int(node.rack.type.width * self.SCALE) - 2 * self.RACK_PANE_WIDTH
+        equipment_width = equipment.type.width * (
+            int(equipment.rack.type.width * self.SCALE)
+            - 2 * self.RACK_PANE_WIDTH
         )
-        node_height = int(node.type.height * self.RACK_U_HEIGHT)
+        equipment_height = int(equipment.type.height * self.RACK_U_HEIGHT)
 
-        # draw node background
+        # draw equipment background
         self.ctx.set_source_rgb(0.6, 0.6, 0.6)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,
             tl.y,
-            node_width,
-            node_height,
+            equipment_width,
+            equipment_height,
         )
         self.ctx.fill()
 
-        # draw node frame
+        # draw equipment frame
         self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,
             tl.y,
-            node_width,
-            node_height,
+            equipment_width,
+            equipment_height,
         )
         self.ctx.stroke()
 
-        # Write node name, rotate the text if height > width
-        if node_height > node_width:
+        # Write equipment name, rotate the text if height > width
+        if equipment_height > equipment_width:
             self.ctx.move_to(tl.x + 2, tl.y + 2)
             self.ctx.save()
             self.ctx.rotate(math.pi / 2)
         else:
             self.ctx.move_to(tl.x + 2, tl.y + 15)
-        self.ctx.show_text(node.name)
-        if node_height > node_width:
+        self.ctx.show_text(equipment.name)
+        if equipment_height > equipment_width:
             self.ctx.restore()
 
     def _draw_rack(self, row_index, rack):
@@ -190,8 +203,8 @@ class InfrastructureDrawer(Drawer):
         # draw equipments in rack
         for part in self.infrastructure.layout:
             if part.rack is rack:
-                for node in part.nodes:
-                    self._draw_rack_node(row_index, rack, node)
+                for equipment in part.nodes + part.storage + part.network:
+                    self._draw_rack_equipment(row_index, rack, equipment)
 
     def _draw_rack_row(self, index, row, racks):
 
