@@ -113,6 +113,9 @@ class DBList:
     def __getitem__(self, id):
         return self.items[id]
 
+    def __add__(self, other):
+        return DBList(self.items + other.items)
+
 
 class DBFileLoader:
     def __init__(self, path):
