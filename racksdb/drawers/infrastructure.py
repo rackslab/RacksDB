@@ -37,10 +37,6 @@ class InfrastructureDrawer(Drawer):
     RACK_OFFSET = 10
     MARGIN_LEFT = 30
     RACK_U_HEIGHT = 44.45 * SCALE
-    RACK_HEIGHT = RACK_U_HEIGHT * 42
-    RACK_ROW_HEIGHT = (
-        RACK_HEIGHT + ROW_LABEL_OFFSET + RACK_LABEL_OFFSET + RACK_OFFSET
-    )
     RACK_PANE_WIDTH = 10
     RACK_SPACING = 3  # space between racks
 
@@ -54,17 +50,27 @@ class InfrastructureDrawer(Drawer):
             raise RacksDBError(
                 f"Unable to find infrastructure {name} in database"
             )
+        # List of rack rows used by the infrastructure
+        self.rack_rows = []
+        # List of racks used by the insfrastructure
+        self.racks = []
 
-    def _rack_row_tl(self, row_index) -> ImagePoint:
-        return ImagePoint(
-            self.MARGIN_LEFT,
-            self.MARGIN_TOP
-            + self.ROW_LABEL_OFFSET
-            + self.RACK_ROW_HEIGHT * row_index,
-        )
+    def _rack_row_tl(self, row) -> ImagePoint:
+        # sum height of all previous rows
+        pos_y = self.MARGIN_TOP
+        for _row in self.rack_rows:
+            if _row is row:
+                break
+            pos_y += (
+                int(_row.height * self.SCALE)
+                + self.ROW_LABEL_OFFSET
+                + self.RACK_LABEL_OFFSET
+                + self.RACK_OFFSET
+            )
+        return ImagePoint(self.MARGIN_LEFT, pos_y)
 
-    def _rack_tl(self, row_index, rack) -> ImagePoint:
-        tl = self._rack_row_tl(row_index)
+    def _rack_tl(self, row, rack) -> ImagePoint:
+        tl = self._rack_row_tl(row)
 
         # Sum the width of all racks in row before the current rack
         for row_rack in rack.row.racks:
@@ -75,8 +81,8 @@ class InfrastructureDrawer(Drawer):
         tl.y += self.RACK_LABEL_OFFSET + self.RACK_OFFSET
         return tl
 
-    def _equipment_tl(self, row_index, rack, equipment) -> ImagePoint:
-        tl = self._rack_tl(row_index, rack)
+    def _equipment_tl(self, row, rack, equipment) -> ImagePoint:
+        tl = self._rack_tl(row, rack)
 
         equipment_height_slot = (
             equipment._first.slot
@@ -110,7 +116,7 @@ class InfrastructureDrawer(Drawer):
         ) * self.RACK_U_HEIGHT
         return tl
 
-    def _draw_rack_equipment(self, row_index, rack, equipment):
+    def _draw_rack_equipment(self, row, rack, equipment):
         logger.debug(
             "Drawing equipment %s in rack %s",
             equipment.name,
@@ -118,7 +124,7 @@ class InfrastructureDrawer(Drawer):
         )
 
         # top left of equipment
-        tl = self._equipment_tl(row_index, rack, equipment)
+        tl = self._equipment_tl(row, rack, equipment)
 
         equipment_width = equipment.type.width * (
             int(equipment.rack.type.width * self.SCALE)
@@ -159,11 +165,11 @@ class InfrastructureDrawer(Drawer):
         if equipment_height > equipment_width:
             self.ctx.restore()
 
-    def _draw_rack(self, row_index, rack):
+    def _draw_rack(self, row, rack):
         logger.debug("Drawing rack %s (%s)", rack.name, rack.slot)
 
         # top left of rack
-        tl = self._rack_tl(row_index, rack)
+        tl = self._rack_tl(row, rack)
 
         rack_width = rack.type.width * self.SCALE
         rack_height = rack.type.height * self.SCALE
@@ -204,13 +210,13 @@ class InfrastructureDrawer(Drawer):
         for part in self.infrastructure.layout:
             if part.rack is rack:
                 for equipment in part.nodes + part.storage + part.network:
-                    self._draw_rack_equipment(row_index, rack, equipment)
+                    self._draw_rack_equipment(row, rack, equipment)
 
-    def _draw_rack_row(self, index, row, racks):
+    def _draw_rack_row(self, row):
 
         logger.debug("Drawing row %s", row.name)
 
-        tl = self._rack_row_tl(index)
+        tl = self._rack_row_tl(row)
 
         # write row name
         self.ctx.set_source_rgb(0, 0, 0)  # black
@@ -222,45 +228,44 @@ class InfrastructureDrawer(Drawer):
         self.ctx.show_text(f"row {row.name}")
 
         # iterate over the racks to draw racks in row
-        for rack in racks:
+        for rack in self.racks:
             if rack.row is row:
-                self._draw_rack(index, rack)
+                self._draw_rack(row, rack)
 
-    def _draw_infrastructure(self, rack_rows, racks):
-        for index, row in enumerate(rack_rows):
-            self._draw_rack_row(index, row, racks)
+    def _draw_infrastructure(self):
+        for row in self.rack_rows:
+            self._draw_rack_row(row)
 
     def draw(self):
 
-        rack_rows = []
-        racks = []
-
         # Get list of racks and rows used by the infrastructure
         for part in self.infrastructure.layout:
-            if part.rack not in racks:
-                racks.append(part.rack)
-            if part.rack.row not in rack_rows:
-                rack_rows.append(part.rack.row)
+            if part.rack not in self.racks:
+                self.racks.append(part.rack)
+            if part.rack.row not in self.rack_rows:
+                self.rack_rows.append(part.rack.row)
 
         # Sum all rows maximum rack height to calculate image height
         total_row_max_heights = 0
-        for rack_row in rack_rows:
+        for rack_row in self.rack_rows:
             row_max_height = 0
             for rack in rack_row.racks:
                 row_max_height = max(row_max_height, rack.type.height)
             total_row_max_heights += row_max_height
+            # add attributes to row
+            rack_row.height = row_max_height
 
         # Find the maximum rack x to calculate image width
         total_racks_widths = 0
-        for rack in racks:
-            tl = self._rack_tl(0, rack)
+        for rack in self.racks:
+            tl = self._rack_tl(rack.row, rack)
             x_tr = tl.x + int(rack.type.width * self.SCALE)
             total_racks_widths = max(total_racks_widths, x_tr)
 
         surface_width = total_racks_widths + self.MARGIN_LEFT
         surface_height = (
             2 * self.MARGIN_TOP
-            + len(rack_rows)
+            + len(self.rack_rows)
             * (
                 self.ROW_LABEL_OFFSET
                 + self.RACK_LABEL_OFFSET
@@ -270,5 +275,5 @@ class InfrastructureDrawer(Drawer):
         )
 
         self.init_ctx(surface_width, surface_height)
-        self._draw_infrastructure(rack_rows, racks)
+        self._draw_infrastructure()
         self.write()
