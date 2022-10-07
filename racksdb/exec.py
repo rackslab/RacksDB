@@ -77,10 +77,10 @@ class RacksDBExec:
         )
 
         # Unfortunately, Python 3.6 does support add_subparsers() required
-        # attribute. The requirement is later handled with a AttributeError on
+        # attribute. The requirement is later handled with hasattr() check on
         # args.func to provide the same functionnal level.
         # This Python version conditionnal test can be removed when support of
-        # Python 3.6 is dropped in Fatbuildr.
+        # Python 3.6 is dropped in RacksDB.
         if sys.version_info[1] >= 3 and sys.version_info[1] >= 7:
             subparsers = parser.add_subparsers(
                 help='Action to perform with database',
@@ -242,11 +242,12 @@ class RacksDBExec:
             logger.error("Error while loading db: %s", err)
             sys.exit(1)
 
-        try:
-            self.args.func()
-        except AttributeError:
+        if not hasattr(self.args, 'func'):
             parser.print_usage()
             logger.error("The action argument must be given")
+            sys.exit(1)
+
+        self.args.func()
 
     def _setup_logger(self):
         if self.args.debug:
