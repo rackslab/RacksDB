@@ -6,8 +6,8 @@
 - [ ] Tests of boolean properties in Schema
 - [ ] Tests of circular dependencies in schemas
 - [ ] Tests of generic DB loads
-- [ ] Add other types of equipments (eg. network switches, NAS/SAN)
-- [ ] Support racks cols in rooms
+- [x] Add other types of equipments (eg. network switches, NAS/SAN)
+- [x] Support racks cols in rooms
 - [x] CLI simple DB query
   - [x] datacenters
   - [x] infrastructures
@@ -21,14 +21,16 @@
 - [x] Support back references in schema
 - [x] Support back references to parent object attribute in schema
 - [x] Split database into multiple YAML files
-- [ ] Default schema/db filename
+- [x] Default schema/db filename
 - [x] Add DB dump CLI feature
 - [x] Replace Schema.dump() method with SchemaDumper
 - [x] Add CLI feature to dump schema
 - [x] Remove _content object from Schema
 - [x] Remove datacenter/room properties from Infrastructure attributes
 - [x] Add way to remove objects properties in dumps
-- [ ] Support schemas extensions
+- [x] Support schemas extensions
+- [x] Support different racks heights infrastructure draws
+- [x] Avoid global AttributeError catch when calling args func
 - [ ] Write manpage
 - [ ] Full documentation with antora
 - [ ] deb/rpm packages
@@ -36,8 +38,12 @@
 # TODO v2
 
 - [ ] Add JSON DBDumper
+- [ ] Draw pixel perfect lines (cf. https://www.cairographics.org/FAQ/#sharp_lines)
 - [ ] Draw racks based on imported SVG file
 - [ ] Draw equipments based on imported SVG file
 - [ ] Tiny web application to explore DB content
 - [ ] Check collisions in rooms
 - [ ] Check collisions in racks
+- [ ] Support additional defined types
+- [ ] Network cables and connections
+- [ ] IPAM
