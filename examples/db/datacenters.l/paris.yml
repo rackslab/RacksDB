@@ -19,9 +19,12 @@ rooms:
         width: 3m
         depth: 6m
       racks:
-      - name[]: R2-A[01-10]
-        type: standard
+      - name[]: R2-A[01-02]
+        type: half
         slot: 0
+      - name[]: R2-A[03-10]
+        type: standard
+        slot: 2
     - name: R3
       position:
         width: 3m
