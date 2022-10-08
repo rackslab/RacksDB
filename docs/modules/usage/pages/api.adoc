@@ -1,0 +1,668 @@
+= Library API
+
+:!example-caption:
+
+RacksDB provides a Python library API that can be used to fully integrate the
+database with your tools and software stack. This document explains the overall
+logic of this library with some examples.
+
+== Module
+
+RacksDB provides one main module `racksdb` with essentially one class `RacksDB`.
+This should be all you need to import to interact with RacksDB.
+
+[source,python]
+----
+>>> from racksdb import RacksDB
+>>> RacksDB
+<class 'racksdb.RacksDB'>
+----
+
+[#load]
+== Load database
+
+The `RacksDB` class has one static method `load()` to load the database:
+
+[source,python]
+----
+>>> from racksdb import RacksDB
+>>> db = RacksDB.load()
+----
+
+This method returns an instanciated `RacksDB` object:
+
+[source,python]
+----
+>>> type(db)
+<class 'racksdb.RacksDB'>
+----
+
+This object can then be used to interact with database content.
+
+Without more arguments, the `load()` method loads the
+xref:db:files.adoc[database], xref:db:schema.adoc[schema] and
+xref:db:ext.adoc[extensions] at their defaults paths. Alternative paths can be
+specified in arguments:
+
+[source,python]
+----
+>>> from racksdb import RacksDB
+>>> db = RacksDB.load(
+...    schema='/usr/share/racksdb/schema.yml',
+...    ext='/etc/racksdb/extensions.yml',
+...    db='/var/lib/racksdb',
+... )
+----
+
+All arguments are optional and can be specified individually. The method accepts
+both strings and standards
+https://docs.python.org/3/library/pathlib.html[Paths objects] as arguments.
+
+The default paths are defined as class attributes:
+
+[source,python]
+----
+>>> RacksDB.DEFAULT_DB
+'/var/lib/racksdb'
+>>> RacksDB.DEFAULT_EXT
+'/etc/racksdb/extensions.yml'
+>>> RacksDB.DEFAULT_SCHEMA
+'/usr/share/racksdb/schema.yml'
+----
+
+Two exceptions can be raised by the `load()` method:
+
+* `racksdb.generic.errors.DBSchemaError` exception in case of error with the
+  schema.
+* `racksdb.generic.errors.DBFormatError` exception when an error is encountered
+  with the database content.
+
+The exceptions are raised with a detailed description of the error.
+
+[#model]
+== Generic Object Model
+
+The database is essentially composed of 2 types of Python objects, detailled in
+the following subsections.
+
+=== `DBObject`
+
+RacksDB database structure is composed of
+xref:db:structure.adoc#objects[many objects]. Each type of object is represented
+with its own specific class, inherited from the abstract `DBObject` class.
+
+.Example
+====
+The xref:db:structure.adoc#obj-types[Types object] is represented with the
+`RacksDBTypes` class which inherits from the `DBObject` class:
+
+[source,python]
+----
+>>> type(db.types)
+<class 'racksdb.generic.db.RacksDBTypes'>
+>>> from racksdb.generic.db import DBObject
+>>> isinstance(db.types, DBObject)
+True
+----
+====
+
+Every *objects properties* and *automatic back references* defined in
+xref:db:structure.adoc#objects[database structure] can be directly accessed
+through the corresponding attribute.
+
+.Example
+====
+The `RacksDBTypes` object has attributes `nodes`, `network`, `storage` and
+`racks` corresponding to the properties of
+xref:db:structure.adoc#obj-types[Types object]:
+
+[source,python]
+----
+>>> for prop in ['nodes', 'network', 'storage', 'racks']:
+...   hasattr(db.types, prop)
+... 
+True
+True
+True
+True
+----
+====
+
+The type of the attributes depends on the type of the property:
+
+* For *sequences*, the attribute is a xref:#list[`DBList`] object. Please refer
+  to the following xref:#list[dedicated section] for more details.
+
+* For *native types*, the attribute has the corresponding Python native type
+  (_ex:_ str or float).
++
+--
+.Examples
+====
+The type of `model` property of xref:db:structure.adoc#obj-nodetype[NodeType
+object] is a string, this is converted to a native Python _str_:
+
+[source,python]
+----
+>>> type(db.types.nodes.first().model)
+<class 'str'>
+----
+
+The type of `height` property of xref:db:structure.adoc#obj-racktype[RackType
+object] is an integer, this is converted to a native Python _int_:
+[source,python]
+----
+>>> type(db.types.racks.first().height)
+<class 'int'>
+----
+====
+--
+
+* For *references* and *back references*, the attribute is a reference the
+  corresponding object in database.
++
+--
+.Examples
+====
+The type of `type` property of xref:db:structure.adoc#obj-node[Node object] is a
+reference to xref:db:structure.adoc#obj-nodetype[NodeType object], the attribute
+is a reference the corresponding `RacksDBNodeType` object in database:
+
+[source,python]
+----
+>>> type(db.infrastructures.first().layout.first().nodes.first().type)
+<class 'racksdb.generic.db.RacksDBNodeType'>
+----
+
+There is a back reference named `datacenter` on
+xref:db:structure.adoc#obj-datacenterroom[DatacenterRoom object], the attribute
+is a reference to the parent `RacksDBDatacenter` object:
+
+[source,python]
+----
+>>> db.datacenters.first().rooms.first().datacenter
+<racksdb.generic.db.RacksDBDatacenter object at 0x7f0aaf13db10>
+>>> db.datacenters.first() == db.datacenters.first().rooms.first().datacenter
+True
+----
+====
+--
+
+* For *defined types*, the attribute has the resulting type of the defined type.
+.Examples
+====
+The `depth` property of
+xref:db:structure.adoc#obj-datacenterroomdimensions[DatacenterRoomDimensions
+object] is a xref:db:structure.adoc#deftype-dimension[`~dimension` defined type]
+whose resulting type is an integer. The attribute is a Python native _int_:
+
+[source,python]
+----
+>>> type(db.datacenters.first().rooms.first().dimensions.depth)
+<class 'int'>
+----
+
+The `width` property of
+xref:db:structure.adoc#obj-networkequipmenttype[NetworkEquipmentType
+object] is a xref:db:structure.adoc#deftype-rack_width[`~rack_width` defined type]
+whose resulting type is a float. The attribute is a Python native _float_:
+
+[source,python]
+----
+>>> type(db.types.network.first().width)
+<class 'float'>
+----
+====
+
+[NOTE]
+====
+The `RacksDB` object, representing the root of the whole xref:#load[loaded
+database] is also a `DBObject`. This can be verified with this:
+
+[source,python]
+----
+>>> isinstance(db, DBObject)
+True
+----
+
+For this reaison, it has the `types`, `datacenters` and `infrastructures`
+attributes corresponding to the properties of the
+xref:db:structure.adoc#obj-root[database structure root].
+====
+
+[#list]
+=== `DBList`
+
+The object properties containing a list (_aka_. sequence) of objects are
+represented as `DBList` objects.
+
+.Example
+====
+The list of xref:db:structure.adoc#obj-datacenter[Datacenter] objects holded by
+the `datacenters` properties of xref:db:structure.adoc#obj-root[database root]
+object is a `DBList`:
+
+[source,python]
+----
+>>> type(db.datacenters)
+<class 'racksdb.generic.db.DBList'>
+----
+====
+
+==== Attributes
+
+The `DBList` objects have an `items` attribute. This is the list of all objects
+contained in the `DBList` object.
+
+.Example
+====
+Usage of `items` attribute on the datacenters `DBList`:
+
+[source,python]
+----
+>>> type(db.datacenters.items)
+<class 'list'>
+>>> db.datacenters.items
+[<racksdb.generic.db.RacksDBDatacenter object at 0x7f258b191b10>]
+>>> len(db.datacenters.items)
+1
+----
+====
+
+This can notably be used to access an object by index.
+
+.Example
+====
+[source,python]
+----
+>>> db.datacenters.items[0]
+<racksdb.generic.db.RacksDBDatacenter object at 0x7f258b191b10>
+>>> db.datacenters.items[0].name
+'paris'
+----
+====
+
+==== Methods
+
+The `DBList` objects provide 2 methods:
+
+* `first()` method returns the first object object contained in the `DBList`
+  object.
++
+--
+.Example
+====
+Get the first node type:
+
+[source,python]
+----
+>>> type(db.types.nodes.first())
+<class 'racksdb.generic.db.RacksDBNodeType'>
+----
+====
+--
+* `filter()` method returns a subset of all objects contained in the list
+  matching the criteria in arguments. This method must be supported by the
+  specialized class to work properly or no filtering is performed. Please refer
+  to the xref:#specializations[Classes Specializations section] to discover the
+  classes supporting filtering.
+
+==== Iterations and Loops
+
+The `DBList` objects provide an iterator to loop easily over the objects
+contained in the list, in a memory efficient way.
+
+.Example
+====
+To iterate over the node types objects, run the following loop:
+
+[source,python]
+----
+>>> for nodetype in db.types.nodes:
+...   print(nodetype.id)
+... 
+sm220bt
+sm610u
+hpesyn480
+dellr550
+----
+====
+
+[#subscript]
+==== Subscript Operator
+
+Some xref:db:structure.adoc#objects[objects in database] have a key property. In
+this case, it is possible to use the Python subscript operator (ie. `[]`) to
+select one particular object in the list.
+
+For example, the xref:db:structure.adoc#obj-infrastructure[Infrastructure]
+object has a key with the `name` property. Then, the subscript operator can be
+used on the `infrastructures` property of
+xref:db:structure.adoc#obj-root[database root] object to access a particular
+infrastructure by its name.
+
+.Example
+====
+[source,python]
+----
+>>> type(db.infrastructures['tiger'])
+<class 'racksdb.generic.db.RacksDBInfrastructure'>
+>>> db.infrastructures['tiger'].description
+'Tiger Hadoop cluster'
+----
+====
+
+[#specializations]
+== Classes Specializations
+
+Some specialized `DBObject` subclasses provide additional methods and
+attributes, either for conveniency or to provide additional features. These
+specializations are documented for each class.
+
+=== `RacksDB`
+
+==== Attributes
+
+The `RacksDB` class provides the following specialized attribute:
+
+* `nodes`: the xref:#list[`DBList` object] containing all nodes of all
+  infrastructure defined in RacksDB database.
++
+--
+.Example
+====
+Count the total number of nodes in the database:
+
+[source,python]
+----
+>>> len(db.nodes.items)
+196
+----
+====
+--
+
+=== `RacksDBInfrastructure`
+
+==== Attributes
+
+The `RacksDBInfrastructure` class provides the following specialized attribute:
+
+* `nodes`: the xref:#list[`DBList` object] containing all nodes of all layout
+  parts of the infrastructure.
++
+--
+.Example
+====
+Count the total number of nodes in the _tiger_ infrastructure:
+
+[source,python]
+----
+>>> len(db.infrastructures['tiger'].nodes.items)
+75
+----
+====
+--
+
+=== `RacksDBNode`
+
+==== Attributes
+
+The `RacksDBNode` class provides the following specialized attribute:
+
+* `tags`: the list of tags applied on the node, which is actually the union of
+  the tags applied on the infrastructure part and the node itself.
++
+--
+.Example
+====
+[source,python]
+----
+>>> db.infrastructures['tiger'].nodes['srv001'].tags
+['compute', 'servers']
+----
+====
+
+[CAUTION]
+====
+Beware this specialized attribute can override the optional `tags`
+property of xref:db:structure.adoc#obj-node[Node object]. When defined, the
+original value of the underlying property can be retrieved through the
+`__loaded_tags` attribute:
+
+[source,python]
+----
+>>> db.infrastructures['tiger'].nodes['srv001'].__loaded_tags.items
+['servers']
+----
+====
+--
+
+==== Filtering
+
+The `RacksDBNode` class provides an implementation for the `_filter()` method,
+for easy filtering of xref:#list[`DBList`] containing `RacksDBNode` objects. It
+accepts the following arguments:
+
+* `infrastructure`: the name of an infrastructure
+* `name`: the name of a node
+* `tags`: a list of tags
+
+A node is selected only if it matches all criteria. If multiple tags are
+provided, only the nodes for which all the tags are applied are selected.
+
+.Examples
+====
+Get all nodes named _cn001_:
+
+[source,python]
+----
+>>> db.nodes.filter(name='cn001')
+----
+
+Get all nodes of insfrastructure _tiger_ with tag _compute_:
+
+[source,python]
+----
+>>> db.nodes.filter(infrastructure='tiger', tags=['compute'])
+----
+====
+
+== Database content
+
+By combining the explanations about the xref:#model[Generic Object model], the
+xref:db:structure.adoc[database structure] and the available
+xref:#specializations[classes specializations], you get all theoretical
+information required to explore database with RacksDB Python library. This
+section provide some practical examples to illustrate the principles.
+
+=== Types
+
+The equipments types are available through the `types` attribute of `RacksDB`
+object:
+
+[source,python]
+----
+>>> db.types
+<racksdb.generic.db.RacksDBTypes object at 0x7f5660345810>
+----
+
+.Examples
+====
+Print the height in meters of all types of racks:
+
+[source,python]
+----
+>>> for rack in db.types.racks:
+...   print(f"{rack.id}: {rack.height/10**3}m")
+... 
+standard: 1.867m
+half: 1.198m
+----
+
+Print the list of node types ID and models:
+
+[source,python]
+----
+>>> for nodetype in db.types.nodes:
+...   print(f"{nodetype.id}: {nodetype.model}")
+... 
+sm220bt: SuperMicro A+ Server 2124BT-HTR
+sm610u: SuperMicro Ultra SYS-610U-TNR
+hpesyn480: HPE Synergy 480 Gen10 Compute Module
+dellr550: Dell PowerEdge R550
+----
+
+Print the number of network interfaces, with their bandwidth in Gb/s, for each
+network equipment type:
+
+[source,python]
+----
+>>> for equipment in db.types.network:
+...   print(f"{equipment.model} :")
+...   for netif in equipment.netifs:
+...     print(f" [{netif.type.upper()}] {netif.number}x{netif.bandwidth*8/10**9}Gb/s")
+... 
+Cisco Catalyst 3650 switch :
+ [ETHERNET] 48x1.0Gb/s
+----
+
+Print the raw capacity in TB of each storage equipment type:
+
+[source,python]
+----
+>>> size = 0
+>>> for equipment in db.types.storage:
+...   for disk in equipment.disks:
+...     size += disk.size * disk.number
+...   print(f"{equipment.model}: {size/1024**4}TB")
+... 
+QNAP TS-H1277XU-RP: 48.0TB
+----
+====
+
+=== Datacenters
+
+Datacenters are available through the `datacenters` attribute of `RacksDB`
+object:
+
+[source,python]
+----
+>>> db.datacenters
+<racksdb.generic.db.DBList object at 0x7f5660344c10>
+----
+
+.Examples
+====
+Get the name of the first datacenter:
+
+[source,python]
+----
+>>> db.datacenters.first().name
+'paris'
+----
+
+Get the list of all datacenters rooms:
+
+[source,python]
+----
+>>> [room.name for datacenter in db.datacenters for room in datacenter.rooms]
+['noisy']
+----
+
+Print the list of racks by room per datacenter:
+
+[source,python]
+----
+>>> for datacenter in db.datacenters:
+...   for room in datacenter.rooms:
+...       print(f"{datacenter.name}: {room.name}: "
+...             f"racks: {[rack.name for row in room.rows for rack in row.racks]}")
+... 
+paris: noisy: racks: ['R1-A01', 'R1-A02', 'R1-A03', … 'R7-A04', 'R7-A05', 'R7-A06']
+----
+====
+
+=== Infrastructures
+
+Infrastructures are available through the `infrastructures` attribute of
+`RacksDB` object:
+
+[source,python]
+----
+>>> db.infrastructures
+<racksdb.generic.db.DBList object at 0x7f5660346890>
+----
+
+.Examples
+====
+Get the list of all infrastructure names:
+
+[source,python]
+----
+>>> [infrastructure.name for infrastructure in db.infrastructures]
+['tiger', 'mercury']
+----
+
+Print the list of nodes of the _tiger_ infrastructure:
+
+[source,python]
+----
+>>> for node in db.infrastructures['tiger'].nodes:
+...     print(node.name)
+... 
+cn001
+cn002
+cn003
+…
+cn226
+cn227
+cn228
+----
+
+Print the list of racks and datacenter where the _tiger_ infrastructure is
+located:
+
+[source,python]
+----
+>>> for part in db.infrastructures['tiger'].layout:
+...     print(f"{part.rack.name} ({part.rack.datacenter.name})")
+... 
+R01 (paris)
+R02 (paris)
+----
+
+The list of tags applied to node _srv001_ of infrastructure _tiger_:
+
+[source,python]
+----
+>>> db.infrastructures['tiger'].nodes['srv001'].tags
+['compute', 'servers']
+----
+
+The name of nodes in infrastructure _tiger_ with tag _servers_:
+
+[source,python]
+----
+>>> for node in db.infrastructures['tiger'].nodes.filter(tags=['servers']):
+...   node.name
+... 
+'srv001'
+'srv002'
+----
+
+The set of racks where are located all nodes with tag _compute_:
+
+[source,python]
+----
+>>> set([node.rack.name for node in db.nodes.filter(tags=['compute'])])
+{'R02', 'R1-A01', 'R01', 'R1-A02'}
+----
+
+The model names of nodes with tag _servers_:
+
+[source,python]
+----
+>>> set([node.type.model for node in db.nodes.filter(tags=['servers'])])
+{'Dell PowerEdge R550'}
+----
+====

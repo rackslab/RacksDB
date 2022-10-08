@@ -1,0 +1,107 @@
+= Database Structure Reference
+
+:symbol-seq: icon:list[title=Sequence]
+:symbol-ref: icon:arrow-up-right-from-square[title=Reference]
+:symbol-obj: icon:cube[title=Object]
+:symbol-deftype: icon:shapes[title=Defined type]
+:symbol-backref: icon:share-from-square[title=Reference,flip=horizontal]
+:symbol-key: icon:key[title=Key]
+
+This page contains *the reference documentation of RacksDB database structure*,
+with all objects models and properties. The document starts with an introduction
+to concepts and a legend. Then, the root content of the database is described,
+followed by all subsequents objects. At the end, the defined types are
+described.
+
+== Introduction
+
+=== Symbols legend
+
+Some icons are used in the tables of this page for symbolic representations of
+data types:
+
+{symbol-seq}:: This is a *sequence* (_aka._ a list or an array) of
+a given data type.
+
+{symbol-ref}:: This is *reference* to another object attribute, declared
+elsewhere in the database.
++
+--
+NOTE: If the given attribute value cannot be found among the corresponding
+declared objects, RacksDB considers this reference cannot be solved and raises
+an error while loading the database.
+--
+
+{symbol-obj}:: This is an *object type*, as described in the « xref:#objects[] »
+section.
+
+{symbol-deftype}:: This is a *defined type*. The values of these data types are
+parsed by special bits of code provided by RacksDB, to match against special
+values or perform units conversions to convert them into native types (_ex:_
+string, float, integer, etc). The defined types available in RackDB are
+described in the « xref:#deftype[] » section.
+
+{symbol-backref}:: This is a *back reference*, pointing to a parent object or
+one of its attributes. Back references are essentially used for convenience in
+the xref:usage:api.adoc[library API].
++
+--
+NOTE: The *back references* type _must not_ be defined in the database files.
+They are automatically defined and resolved by RacksDB when loading the
+database.
+--
+
+Other symbols are used for attributes of properties:
+
+{symbol-key}:: This indicates the property is a *key* for this object. The
+purpose of keys is to facilitate selection of a particular object among a list
+in xref:usage:api.adoc[library API].
+
+=== Automatic expansion
+
+In order to significantly reduce boilerplate when declaring numerous consecutive
+objects, RacksDB is able to automatically expand range of objects. For this
+purpose, two additional data types are used in the database:
+
+expandable:: This is a string representing a range of values that can be
+expanded into a list. For example, `node[01-03,05]` can be expanded into
+`node01`, `node02`, `node03` and `node05`. For more details about this syntax,
+please refer to the documentation of
+https://clustershell.readthedocs.io/en/latest/tools/nodeset.html[ClusterShell
+`nodeset` command].
+
+rangeid:: This is an integer value associated the first item of an _expandable_,
+automatically incremented for all the other items in the list.
+
+.Show example
+[%collapsible]
+====
+Consider an object with the following properties:
+
+* `name` of type _expandable_,
+* `id` of type _rangeid_.
+
+And the following content in database file:
+
+[source,yaml]
+----
+- name: node[01-03]
+  id: 10
+----
+
+It is eventually expanded by RacksDB into this sequence:
+
+[source,yaml]
+----
+- name: node01
+  id: 10
+- name: node02
+  id: 11
+- name: node03
+  id: 12
+----
+====
+
+include::partial$objects.adoc[]
+
+include::partial$deftypes.adoc[]

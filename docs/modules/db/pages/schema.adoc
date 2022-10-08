@@ -1,0 +1,27 @@
+= Schema File
+
+RacksDB is provided with a database schema. It is basically a YAML file that
+defines the _objects_ represented in the database with their _properties_, and
+the relations between these objects.
+
+When RacksDB is installed, the schema is available in path
+[.path]#`/usr/share/racksdb/schema.yml`#.
+
+The file is also available in
+https://github.com/rackslab/racksdb/blob/main/schema/racksdb.yml[source code Git
+repository].
+
+The schema file is a mapping that contains 3 main keys:
+
+`_version`:: The version number of the schema
+`_objects`:: The definitions of objects with properties
+`_content`:: The definition of the object at database root
+
+The object properties have a set of attributes (_ex:_ key flag, optional flag,
+default value) and a type. The type can either be:
+
+include::partial$prop-types.adoc[]
+
+The content of this file eventually defines the
+xref:structure.adoc[database structure]. This schema can be customized to store
+additional data using xref:ext.adoc[schema extensions].

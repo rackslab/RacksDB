@@ -1,0 +1,86 @@
+= Database Files
+
+== Location
+
+By default, RacksDB expects the database to be located in
+[.path]#`/var/lib/racksdb`# directory, splitted into multiple files.
+
+NOTE: RacksDB can load databases at the location of your choice, at the
+condition of specifying the path in xref:usage:racksdb.adoc[`racksdb`
+command] options and xref:usage:api.adoc[library `load()`] arguments. For this
+reason, it is highly recommended to use the default path.
+
+== Files Tree
+
+RacksDB database can be stored in a single YAML file. However, for obvious
+maintenaibility reasons, it is recommended to split the database into multiple
+files. RacksDB can load a database by walking into a directory recursively. It
+loads all YAML formatted files with `.yml` extension. It perfoms a mapping
+between the files hierarchy and the resulting YAML tree.
+
+When a folder is suffixed by `.l`, RacksDB considers the files in this folder
+to be members of a sequence (_aka._ list or array). The content of each of these
+files is an item in this list. In this case, the filename is ignored.
+
+In other folders, the files are considered to be a key/value pair of a mapping
+(_aka_. hash or associative array). The filename without its extension is the
+key, the value is the content of the file.
+
+Following these principles, users are free to choose the level of fragmentation
+in the database model, at their own convenience.
+
+.Show basic example
+[%collapsible]
+====
+For example, consider this basic example YAML file:
+
+[source,yaml]
+----
+apples:
+- variety: granny smith
+  color: green
+- variety: golden
+  color: yellow
+stocks:
+  apples:
+    granny smith: 10
+    golden: 20
+----
+
+It is strictly identical to this folder tree:
+
+[source]
+----
+📂 apples.l/
+  📄 granny.yml
+  📄 golden.yml
+📂 stocks/
+  📄 apples.yml
+----
+
+With the following files content:
+
+`granny.yml`::
+
+[source,yaml]
+----
+variety: granny smith
+color: green
+----
+
+`golden.yml`::
+
+[source,yaml]
+----
+variety: golden
+color: yellow
+----
+
+`apples.yml`::
+
+[source,yaml]
+----
+granny smith: 10
+golden: 20
+----
+====

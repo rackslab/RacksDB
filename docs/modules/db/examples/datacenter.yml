@@ -1,0 +1,61 @@
+# tag::datacenter[]
+datacenters:
+- name: mydatacenter
+  rooms:
+  - name: myroom
+# end::datacenter[]
+# tag::dimensions[]
+    dimensions:
+      depth: 8m
+      width: 10m
+# end::dimensions[]
+# tag::rows[]
+    rows:
+# end::rows[]
+# tag::row-r1[]
+    # Row R1 with 4 racks horizontally aligned (no rotation)
+    - name: R1
+      position:
+        depth: 2m
+        width: 1m
+      racks:
+      - name: R1-[01-04] # 4 racks
+        type: standard
+# end::row-r1[]
+
+# tag::row-r2[]
+    # Row R2 with 4 racks and doors oriented to the top on the room.
+    - name: R2
+      reversed: true
+      position:
+        depth: 1.5m
+        width: 6m
+      racks:
+      - name: R2-[01-04] # 4 racks
+        type: standard
+# end::row-r2[]
+
+# tag::row-r3[]
+    # Row R3 with 6 racks
+    - name: R3
+      position:
+        depth: 4m
+        width: 2m
+        rotation: 30 # Slight rotation
+      racks:
+      - name: R3-[01-06] # 6 racks
+        type: standard
+# end::row-r3[]
+
+# tag::row-r4[]
+    # Row R4 with 6 racks.
+    - name: R4
+      reversed: true # Get doors oriented to room's right wall
+      position:
+        depth: 3m
+        width: 8m
+        rotation: 90 # Vertical row
+      racks:
+      - name: R4-[01-04] # 4 racks
+        type: standard
+# end::row-r4[]

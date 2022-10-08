@@ -1,0 +1,211 @@
+ifeval::["{backend}" != "manpage"]
+= `racksdb` CLI manpage
+
+This section explains all `racksdb` command options available, with
+many examples and descriptions of its behaviours. The content of the page this
+also available in `racksdb(1)` manpage after installation.
+
+endif::[]
+
+:!example-caption:
+
+== Synopsis
+
+[.cli-opt]#*racksdb*# `[_GENERAL OPTIONS_] COMMAND [_COMMAND OPTIONS_]`
+
+== General Options
+
+[.cli-opt]#*-h, --help*#::
+  Show this help message and exit.
+
+[.cli-opt]#*-v, --version*#::
+  Show RacksDB version number and exit.
+
+[.cli-opt]#*--debug*#::
+  Enable debug mode with more messages in output.
+
+[.cli-opt]#*-b, --db*=#[.cli-optval]##_DB_##::
+  Path to database. Both files and directories paths are accepted. If the path
+  is a directory, all YAML files in this directory are loaded, recursively. If
+  the path does not exist, an error is reported. Default value is
+  `/var/lib/racksdb/` directory.
+
+[.cli-opt]#*-s, --schema*=#[.cli-optval]##_SCHEMA_##::
+  Path to RacksDB schema YAML file. If the file does not exist, an error is
+  reported. Default value is `/usr/share/racksdb/schema.yml`.
+
+[.cli-opt]#*-e, --ext*=#[.cli-optval]##_EXT_##::
+  Path to optional RacksDB schema extensions. If the file does not exist,
+  it is silently ignored by RacksDB. Default value is
+  `/etc/racksdb/extensions.yml`.
+
+== Commands
+
+All commands accept [.cli-opt]#*-h, --help*# option to get details about
+available option for this particular command (_ex:_ `racksdb nodes --help`).
+Commands are grouped by functional purpose, and listed in lexicographical order
+inside each group.
+
+=== Analysis commands
+
+[.cli-opt]#*dump*#::
+
+  Dump raw data loaded from database on standard output. The generated output
+  can be reloaded by RackDB.
+
+[.cli-opt]#*schema*#::
+
+  Dump schema, including optional extensions, on standard output.
+
+=== Search commands
+
+These commands are named after the entities to search in the database. By
+default, the output is a dump containing many information about the entities
+formatted in YAML.
+
+All search commands accepts the following options:
+
+[.cli-opt]#*-l, --list*#::
+  List names of selected entities, without detailed information.
+
+[.cli-opt]#*--with-objects-types*#::
+  Add object types names in detailed dumps. This option has no effect with
+  [.cli-opt]#*-l, --list*#.
+
+The search commands available are the following:
+
+[.cli-opt]#*datacenters*#::
+
+  Dump information about datacenters.
+
+[.cli-opt]#*infrastructures*#::
+
+  Dump information about infrastructures.
+
+[.cli-opt]#*nodes*#::
+
+  Dump information about nodes.
++
+--
+This command accepts the following options:
+
+*[.cli-opt]#--infrastructure*=#[.cli-optval]##_INFRASTRUCTURE_##::
+  Select the nodes in this infrastructure.
+
+*[.cli-opt]#--name*=#[.cli-optval]##_NAME_##::
+  Name of the node to search.
+
+*[.cli-opt]#--tags*=#[.cli-optval]##_TAG_ [_TAG_]##::
+  Select the nodes labelled with these tags.
+--
+
+[.cli-opt]#*racks*#::
+
+  Dump information about racks.
++
+--
+This command accepts the following options:
+
+[.cli-opt]#*--name*=#[.cli-optval]##_NAME_##::
+  Name of the rack to search.
+--
+
+.Examples
+====
+[source,console]
+$ racksdb datacenters
+
+[.cli-example-desc]
+Dump information about all the datacenters with their rooms and racks.
+
+[source,console]
+$ racksdb infrastructures
+
+[.cli-example-desc]
+Dump information about all the infrastructures with their parts and equipments.
+
+[source,console]
+$ racksdb infrastructures --list
+
+[.cli-example-desc]
+List names of all infrastructures in database.
+
+[source,console]
+$ racksdb nodes --name cn001
+
+[.cli-example-desc]
+Dump information node named _cn001_.
+
+[source,console]
+$ racksdb nodes --tags compute
+
+[.cli-example-desc]
+Dump information of all nodes that have the _compute_ tag.
+
+[source,console]
+$ racksdb nodes --infrastructure tiger --tags server --list
+
+[.cli-example-desc]
+List names of all nodes in _tiger_ infrastructure that also have the _server_
+tag.
+
+[source,console]
+$ racksdb racks
+
+[.cli-example-desc]
+Dump information about all racks with their equipments.
+====
+
+
+[#draw]
+=== Draw commands
+
+The [.cli-opt]#*draw*# command is used to generate image file with graphical
+representations of database entities. This command is used in combination with a
+sub-command to indicate the type of database entity.
+
+This command accepts the following options:
+
+[.cli-opt]#*--name*=#[.cli-optval]##_NAME_##::
+  Name of the entity to represent. This option is required.
+
+[.cli-opt]#*--format*=#[.cli-optval]##_FORMAT_##::
+  File format of the generated image file. Possible values are _png_, _svg_ and
+  _pdf_. Default value is _png_.
+
+The following sub-commands are available:
+
+[.cli-opt]#*infrastructure*#::
+
+  Draw racks of an infrastructure, grouped by rows. The front side of the racks
+  are represented with the equipments of the infrastructure.
+
+[.cli-opt]#*room*#::
+
+  Draw datacenter room map with its racks. The room is represented from the top
+  view with rows and racks at their position in this room.
+
+.Examples
+====
+[source,console]
+$ racksdb draw room --name=atlas
+
+[.cli-example-desc]
+Generate the map of datacenter room _atlas_ with all its racks in PNG image file
+`atlas.png`.
+
+[source,console]
+$ racksdb draw infrastructure --name=tiger --format=svg
+
+[.cli-example-desc]
+Generate SVG image file `tiger.svg` with racks and equipments used in _tiger_
+infrastructure.
+====
+
+== Exit status
+
+*0*::
+  `racksdb` has processed command with success.
+
+*1*::
+  `racksdb` encountered an error.

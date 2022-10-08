@@ -1,0 +1,148 @@
+= Equipments Positionning How-To
+
+:infra: tiger
+:set1: pass:quotes,attributes[<span style='color: #1766beff;'>*set 1*</span>]
+:set2: pass:quotes,attributes[<span style='color: #d9924fff;'>*set 2*</span>]
+:set3: pass:quotes,attributes[<span style='color: #1f8d45ff;'>*set 3*</span>]
+:set4: pass:quotes,attributes[<span style='color: #e1cd2dff;'>*set 4*</span>]
+:set5: pass:quotes,attributes[<span style='color: #87329dff;'>*set 5*</span>]
+:set6: pass:quotes,attributes[<span style='color: #df4c4eff;'>*set 6*</span>]
+
+This document explains how-to define in RacksDB the positions of your
+infrastructure's equipments in the racks.
+
+For learning purpose, consider this example infrastructure named « *_{infra}_* »
+with equipments distributed in 2 racks *R01* and *R02*:
+
+image:equipments_positionning_example.svg[Equipments positionning example,500]
+
+In RacksDB, the equipments are declared *by rack*. Then, for each rack, the
+equipments are declared grouped in sets of *similar and consecutive equipments*.
+In this example, 6 sets can be identified:
+
+image:equipments_positionning_sets.svg[Equipments positionning sets,500]
+
+In the first rack *R01*:
+
+* {set1} with 40 *_dense_* nodes `cn[001-040]` (*1u* height and *half* rack
+  width).
+* {set2} with 5 *_classic_* nodes `cn[101-104]` (*1u* height and *full* rack
+  width).
+* {set3} with 2 *_fat_* nodes `srv[001-002]` (*2u* height and *full* rack
+  width).
+
+In the second rack *R02*:
+
+* {set4} with 28 *_blade_* nodes `cn[201-228]` (*5u* height and *1/7^th^* rack
+  width).
+* {set5} with 4 network switches `sw[001-004]` (*1u* height and *full* rack
+  width).
+* {set6} with 1 NAS `nas001` (*2u* height and *full* rack width).
+
+Each set has its specific equipments type. All these equipment types must be
+initially declared in the xref:structure.adoc#obj-types[Types] object of the
+database, with their individual dimensions. For this example, this can be
+declared this way:
+
+[source,yaml]
+----
+include::example$types.yml[tag=!boilerplate]
+----
+
+CAUTION: Many required properties of xref:structure.adoc#obj-nodetype[NodeType],
+xref:structure.adoc#obj-networkequipmenttype[NetworkEquipmentType] and
+xref:structure.adoc#obj-storageequipmenttype[StorageEquipmentType] objects have
+been voluntarily discarded of this snippet (ex: CPU, storage devices, network
+interfaces) for focusing on dimensions and positions matters.
+
+NOTE: The default width of
+xref:structure.adoc#obj-networkequipmenttype[NetworkEquipmentType] and
+xref:structure.adoc#obj-storageequipmenttype[StorageEquipmentType] is `full` and
+corresponds to the example. This is the reason why it is not explicitely defined
+in the snippet.
+
+At this stage, the dimensions of every single type of equipment is specified in
+RacksDB. Then, the infrastructure with all its equipments actually present must
+be declared, as an xref:structure.adoc#obj-infrastructure[Infrastructure]
+object.
+
+First, define the infrastructure's name and description:
+
+[source,yaml,subs=attributes]
+----
+include::example$infrastructure.yml[tags=name;desc]
+----
+
+For every set of equipments, the *slot of the rack* used by *the 1^st^
+equipment* in the set must be determined. This slot number defines the position
+of all the equipments in the set.
+
+RacksDB considers this first equipment in the set is located on the *left side*
+of the rack, starting from this slot. Then it fills the rows *from left to
+right*, and then *from bottom to top*, in _z-like_ pattern, with all consecutive
+equipments in the set, considering the individual dimensions of their respective
+type. If the equipment type width is the full rack width, equipments are just
+stacked up.
+
+This logic is represented in this schema:
+
+image:equipments_positionning_expansion.svg[Equipments positionning expansion,500]
+
+In RackDB, racks slots are numbered *from bottom to top*, starting from *0*.
+
+In rack *R01*:
+
+* In {set1}, the 1^st^ equipment is located in slot 2.
+* In {set2}, the 1^st^ equipment is located in slot 24. 
+* In {set3}, the 1^st^ equipment is located in slot 30
+
+In rack *R02*:
+
+* In {set4}, the 1^st^ equipment is located in slot 2
+* In {set5}, the 1^st^ equipment is located in slot 26
+* In {set6}, the 1^st^ equipment is located in slot 35
+
+In RacksDB database, this infrastructure layout can be declared this way, for
+rack *R1-01*:
+
+[source,yaml,subs=quotes]
+----
+…
+include::example$infrastructure.yml[tag=layout]
+include::example$infrastructure.yml[tag=rack-1]
+…
+----
+
+And for rack *R1-A02*:
+
+[source,yaml,subs=quotes]
+----
+…
+include::example$infrastructure.yml[tag=rack-2]
+----
+
+After this in-depth look over this example, you are probably now able to specify
+the positions of your infrastructures' equipments in RacksDB!
+
+NOTE: If you feel the layout of your equipments cannot be specified in RacksDB
+in a consistent and natural manner, please
+https://github.com/rackslab/racksdb/issues/new[file an issue] on project code
+tracker. We would be happy to consider your specificities.
+
+.Show complete types and infrastructure YAML example
+[%collapsible]
+====
+[source,yaml,subs="attributes,quotes"]
+----
+include::example$types.yml[tags=**]
+infrastructures:
+- name: {infra}
+include::example$infrastructure.yml[tag=!name,indent=2]
+----
+
+CAUTION: This full example is not a complete valid RacksDB database, it notably
+misses essential xref:structure.adoc#obj-racktype[RackType] and
+xref:structure.adoc#obj-datacenter[Datacenter] objects. Please refer to the
+xref:install:quickstart.adoc#examples[quickstart guide examples] section for
+ready to use examples.
+====

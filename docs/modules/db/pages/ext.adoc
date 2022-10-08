@@ -1,0 +1,69 @@
+= Schema Extensions
+
+== Purpose
+
+RacksDB offers the possibility to define custom extensions of
+xref:schema.adoc[vendor database schema] with additional objects or additional
+properties to existing objects. RacksDB ensures at load time the database
+content fully respect the structure defined by the combination of the
+vendor schema and the defined extensions.
+
+The additional data is automatically available through the
+xref:usage:racksdb.adoc[CLI] and xref:usage:api.adoc[library API],
+without further modification.
+
+This feature can be used to enrich RacksDB database with data useful to your
+applications without requiring another data source, with the advantage of being
+fully integrated with the other data defined in RacksDB.
+
+== Definition file
+
+The extensions must be defined in a plain file formated in YAML language.
+
+By default, RacksDB loads extensions defined in file
+[.path]#`/etc/racksdb/extensions.yml`#. If this file does not exist, RacksDB
+silently ignores it and just loads the built-in schema without modification.
+
+NOTE: RacksDB can load extensions at the path of your choice, at the condition
+of specifying this path in xref:usage:racksdb.adoc[`racksdb`
+command] options and xref:usage:api.adoc[library `load()`] arguments. For this
+reason, it is highly recommended to use the default path.
+
+== Extension definition
+
+The syntax of the extension file is roughly similar to the
+xref:schema.adoc[schema file].
+
+The YAML extension file can contain 2 keys at its root:
+
+* `pass:[_content]`: This is a map (_aka_: hash or dict) to add keys at the root
+  of database structure.
+* `pass:[_objects]`: This is a map to define new objects or modify properties of
+  existing objects. The key is the name the object, the value is the map of
+  object properties. If the object is already defined in RacksDB vendor
+  structure, this object is modified with the provided properties. Otherwise, a
+  new object is defined.
+
+In the properties map, the keys are the name of the properties, the values are
+an optional set of attributes such as a default value or an optional flag, and a
+data type. The type can either be:
+
+include::partial$prop-types.adoc[]
+
+== Example
+
+Here a simple example of an extension definition file:
+
+[source,yaml]
+----
+include::example$extensions.yml[]
+----
+
+With this extensions:
+
+* The `power` key is added at the root of RacksDB database structure. It can
+  contain an optional list of `Ups` object.
+* The new `Ups` object is defined, as it does not exist in RacksDB vendor
+  structure. This object contains an integer property named `capacity`.
+* The xref:structure.adoc#obj-racktype[RackType] object is extended with an
+  optional `weight` integer attribute.

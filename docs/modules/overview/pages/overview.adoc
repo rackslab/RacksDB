@@ -1,0 +1,79 @@
+= Overview
+
+== Purpose
+
+*RacksDB* is an _open source_ solution to modelize your datacenters
+infrastructures. It provides a simple database schema to store information about
+the equipments in your datacenters, with tools and library to request this
+database. This database can be used as *reference source* for many purposes in
+IT management.
+
+image::overview:racksdb_overview.svg[RacksDB Overview,750]
+
+* **Inventory**: Get permanent reference list of equipments charactistics and
+  enable conformity testing.
+* **Automation**: Adopt Infrastructure-as-Code by coupling generic configuration
+  management logic with infrastructures model.
+* **Continuous deployment**: Define advanced deployment rules based on nodes
+  characteristics declared in RacksDB.
+* **Monitoring**: Synchronize monitoring services with equipments database and
+  define dynamic dashboard.
+* **Documentation**: Get updated architecture diagrams and define generic
+  adaptative procedures.
+
+:wiki-cmdb: https://en.wikipedia.org/wiki/Configuration_management_database
+:wiki-dcim: https://en.wikipedia.org/wiki/Data_center_management#Data_center_infrastructure_management
+
+Generally speaking, *RacksDB* is a specialized
+{wiki-cmdb}[CMDB]footnote:[Configuration management database] dedicated
+to {wiki-dcim}[DCIM]footnote:[Data center-infrastructure management].
+
+Compared to others products, *RacksDB* can be considered lightweight
+alternative to more advanced tools such as https://netbox.dev/[NetBox] and
+https://www.racktables.org/[RackTables]. Discover the xref:#characteristics[main
+characteristics] that makes it unique among other solutions.
+
+[#characteristics]
+== Characteristics
+
+The main characteristics of *RacksDB* are the following:
+
+* **YAML based.** The data are stored in plain files using human-readable YAML
+  format, easily managed with Git.
+* **Simple and pragmatic.** The database schema is intuitive and practical,
+  infrastructures can be described in few minutes.
+* **Tag-based.** Easy filtering of data and equipments based on associated tags.
+* **Decentralized architecture.** RacksDB can be deployed without central
+  server, just by replicating few plain YAML files.
+* **Extensibility.** In addition to RacksDB simple format, custom schema
+  extensions can be defined to store specific data.
+
+== Interfaces
+
+image::overview:racksdb_interfaces.svg[RacksDB Interfaces,300]
+
+Once the database is defined, data can be searched and extracted using the
+xref:usage:racksdb.adoc[`racksdb` CLI].
+
+For full integration with your software, the xref:usage:api.adoc[library
+API] can also be used to stay continuously synchronized with database content.
+
+[sidebar]
+--
+.More links
+* xref:usage:racksdb.adoc[`racksdb` command manual]
+* xref:usage:api.adoc[Library API reference] documentation with examples
+--
+
+== Diagrams
+
+RacksDB can be used to generate diagrams of your datacenter rooms and the racks
+with all their equipments.
+
+image::overview:racksdb_diagrams.png[RacksDB Diagrams,400,xref=image$racksdb_diagrams.svg]
+
+[sidebar]
+--
+.More links
+* xref:usage:racksdb.adoc#draw[`racksdb` CLI drawing feature]
+--

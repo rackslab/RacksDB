@@ -1,0 +1,22 @@
+= Getting Started
+
+image::overview:racksdb_logo.svg[RacksDB Overview,150,float=right]
+
+*RacksDB* is an _open source_ solution to modelize your datacenters
+infrastructures in a simple database schema to store information about
+the equipments in your datacenters provided with tools and library to request
+this database.
+
+icon:glasses[] Get a xref:overview.adoc[complete overview] of RacksDB purpose, goals and
+characteristics.
+
+icon:download[] For installation procedure, checkout the
+xref:install:quickstart.adoc[quickstart guide].
+
+Advanced detailed informations are available:
+
+[no-bullet]
+* icon:database[] xref:db:def.adoc[Database schema reference documentation]
+* icon:terminal[] xref:usage:racksdb.adoc[`racksdb` command manpage]
+* icon:code[] xref:usage:api.adoc[Library API reference documentation]
+* icon:maximize[] xref:db:ext.adoc[Schema extension howto]

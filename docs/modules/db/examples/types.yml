@@ -1,0 +1,68 @@
+types:
+
+  # nodes
+  nodes:
+  - id: dense # node type for set 1
+    height: 1u
+    width: 1/2 # half rack width
+# tag::boilerplate[]
+    model: Dense node of 1U height and half rack width
+    cpus:
+      sockets: 2
+      model: Intel Xeon Silver 4316
+      cores: 20
+    ram:
+      dimm: 4
+      size: 32GB
+# end::boilerplate[]
+  - id: classic # node type for set 2
+    height: 1u
+    width: full
+# tag::boilerplate[]
+    model: Classic node of 1U height
+    cpus:
+      sockets: 2
+      model: Intel Xeon Silver 4316
+      cores: 20
+    ram:
+      dimm: 4
+      size: 32GB
+# end::boilerplate[]
+  - id: fat # node type for set 3
+    height: 2u
+    width: full
+# tag::boilerplate[]
+    model: Large node of 2U height
+    cpus:
+      sockets: 2
+      model: Intel Xeon Silver 4316
+      cores: 20
+    ram:
+      dimm: 4
+      size: 32GB
+# end::boilerplate[]
+  - id: blade # node type for set 4
+    height: 5u
+    width: 1/7 # 7 blades can be installed in the width of the rack
+# tag::boilerplate[]
+    model: Blade node
+    cpus:
+      sockets: 2
+      model: Intel Xeon Silver 4316
+      cores: 20
+    ram:
+      dimm: 4
+      size: 32GB
+# end::boilerplate[]
+
+  # network equipments
+  network:
+  - id: racksw # network equipment type for set 5
+    height: 1u
+    model: Rack switch
+
+  # storage equipments
+  storage:
+  - id: nas # storage equipment type for set 6
+    height: 2u
+    model: 2U NAS

@@ -1,0 +1,66 @@
+[#deftype]
+== Defined Types
+
+:url-deftypes: https://github.com/rackslab/racksdb/blob/main/racksdb/types
+
+[cols="2a,2a,1l,3a"]
+|===
+|Name|Examples|Resulting type|Comment
+
+|[#deftype-angle]`~angle`
+{url-deftypes}/angle.py[icon:code[]]
+|* `90`
+* `120`
+|int
+|The resulting value is angle in *degrees*. RacksDB does not accept values below
+0 or above 360.
+
+|[#deftype-bytes]`~bytes`
+{url-deftypes}/bytes.py[icon:code[]]
+|* `1.2Gb`
+* `3MB`
+|int
+|The resulting value is the *number of bytes*.
+
+|[#deftype-dimension]`~dimension`
+{url-deftypes}/dimension.py[icon:code[]]
+|* `23cm`
+* `1.56m`
+* `1900mm`
+|int
+|The resulting value is the *number of millimeters*.
+
+|[#deftype-netif_type]`~netif_type`
+{url-deftypes}/netif_type.py[icon:code[]]
+|* `ethernet`
+* `infiniband`
+|str
+|The resulting value is the *name of network interface type*.
+
+|[#deftype-rack_height]`~rack_height`
+{url-deftypes}/rack_height.py[icon:code[]]
+|* `1u`
+* `2u`
+|int
+|The resulting value is the *number of rack units* (aka. U).
+
+|[#deftype-rack_width]`~rack_width`
+{url-deftypes}/rack_width.py[icon:code[]]
+|* `full`
+* `1/2`
+* `1/8`
+* `1`
+|float
+|The resulting value is *the normalized part of the rack width* (_ex:_ 1.0 is
+100% of the rack width, 0.5 is 50% of the rack width). The special value `full`
+is equals to 1.
+
+|[#deftype-storage_type]`~storage_type`
+{url-deftypes}/storage_type.py[icon:code[]]
+|* `disk`
+* `ssd`
+* `nvme`
+|str
+|The resulting value is the *name of storage device type*.
+
+|===

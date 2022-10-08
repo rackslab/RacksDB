@@ -1,0 +1,5 @@
+* a native type (_ex:_ _str_ or _int_)
+* another object or a list of another object, prefixed by `:`
+* a reference to another object property, prefixed by `$`
+* a back reference to a parent object or one of its properties, prefixed by `^`
+* a xref:structure.adoc#deftypes[defined type], prefixed by `~`

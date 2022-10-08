@@ -1,0 +1,22 @@
+= racksdb(1)
+Rackslab: https://rackslab.io
+:doctype: manpage
+:manmanual: racksdb
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+
+racksdb - Explore Yaml database of datacenter infrastructures
+
+include::../modules/usage/pages/racksdb.adoc[]
+
+== Resources
+
+RacksDB web site: https://github.com/rackslab/racksdb
+
+== Copying
+
+Copyright (C) 2022 {author}. +
+
+RacksDB is distributed under the terms of the GNU General Public License v3.0
+or later (GPLv3+).

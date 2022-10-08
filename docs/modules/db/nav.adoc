@@ -1,0 +1,8 @@
+* xref:def.adoc[]
+** xref:files.adoc[]
+** xref:schema.adoc[]
+** xref:structure.adoc[Structure Reference]
+** xref:ext.adoc[]
+** Positionning How-Tos
+*** xref:positionning-racks.adoc[Racks Positionning]
+*** xref:positionning-equipments.adoc[Equipments Positionning]

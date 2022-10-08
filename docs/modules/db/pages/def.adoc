@@ -1,0 +1,18 @@
+= Database Definition
+
+The content of RacksDB database is formatted in https://yaml.org/[YAML
+language]. The database can be stored in a single YAML file or splitted in
+multiple files. The content of the files must match the database schema provided
+by RacksDB with its expected objects and properties.
+
+This section gives all detailed information to define a RacksDB database,
+including:
+
+* The xref:files.adoc[location of the database] on the system and how-to
+  organize it into multiple files.
+* General information of the xref:schema.adoc[schema file],
+* The xref:structure.adoc[database structure], with its objects and the involved
+  defined types.
+* How-to xref:ext.adoc[define extensions] of database schema for custom data.
+* Guides to help specify the xref:positionning-racks.adoc[positions of racks]
+  and xref:positionning-equipments.adoc[equipments in racks]

@@ -1,0 +1,25 @@
+= Quickstart
+
+TBD
+
+////
+FIXME: Document how-to install RacksDB
+////
+
+[#examples]
+== Examples
+
+RacksDB provides several fully working examples of databases. When RacksDB is
+installed, these examples are available in `/usr/share/doc/rackslab/examples`.
+
+It is recommended to use these examples as a starting point to define your own
+database.
+
+Run this command to copy a complete example:
+
+[source,console]
+----
+$ cp -r /usr/share/doc/racksdb/examples/db/* /var/lib/racksdb/
+----
+
+Then adapt the content of the files to match your actual infrastructures.

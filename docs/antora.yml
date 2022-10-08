@@ -1,0 +1,13 @@
+name: racksdb
+title: RacksDB
+version: beta
+start_page: overview:start.adoc
+asciidoc:
+  attributes:
+    source-language: asciidoc@
+    table-caption: false
+nav:
+- modules/overview/nav.adoc
+- modules/install/nav.adoc
+- modules/db/nav.adoc
+- modules/usage/nav.adoc

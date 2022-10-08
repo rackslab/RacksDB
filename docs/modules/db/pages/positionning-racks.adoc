@@ -1,0 +1,149 @@
+= Racks Positionning How-To
+:R1: pass:quotes,attributes[<span style='color: #58a93eff;'>*R1*</span>]
+:R2: pass:quotes,attributes[<span style='color: #cb7215ff;'>*R2*</span>]
+:R3: pass:quotes,attributes[<span style='color: #3b7eccff;'>*R3*</span>]
+:R4: pass:quotes,attributes[<span style='color: #a24075ff;'>*R4*</span>]
+
+This document explains how-to modelize in RacksDB the datacenter rooms with
+their empty racks at their exact position.
+
+For learning purpose, consider this example datacenter room map with this overly
+uncommon racks layout:
+
+image:racks_rows_positionning_example_map.svg[Uncommon datacenter room map,800]
+
+First, the map indicates the room measures _10 meters_ in width and _8 meters_
+in depth. This is modelized in RacksDB database like this:
+
+[source,yaml]
+----
+include::example$datacenter.yml[tags=datacenter;dimensions]
+----
+
+The dimensions of the room are reported in the `dimensions` property of
+xref:structure.adoc#obj-datacenterroom[DatacenterRoom] object, using
+xref:structure.adoc#deftype-dimension[~dimension] defined type.
+
+In RacksDB database model, racks are grouped in *rows*. A row is basically an
+alignment of one or multiple racks. In this example, 4 rows can easily be
+identified:
+
+image:racks_rows_positionning_example_rows.svg[Datacenter room map racks rows,800]
+
+* The row {R1}, with 4 racks horizontally aligned.
+* The row {R2}, with 4 racks and doors oriented to the top on the room.
+* The row {R3}, with 6 racks slightly rotated.
+* The row {R4}, with 6 racks vertically aligned.
+
+The *reference point* to control racks position is the *_top-left_ corner of the
+1^st^ rack* in the row. The _position_ of the racks row is then defined by
+*the distance* between this *reference point* and the *_top-left_ corner of the
+room*.
+
+The *rotation angle* is considered clockwise compared to an horizontal line. The
+unit is in degrees. The default rotation angle is 0, _ie._ the row is
+horizontal. A rotation of 90° or 270° represents a vertically aligned racks row.
+
+CAUTION: For more determinism, the _top-left_ corner is considered *_before_*
+the rotation of the row. This implies that, with some rotation angles, the
+reference point used for placing the rack rows might not necessarily be the
+exact _top-left_ corner of the racks row on the resulting map.
+
+By default, RacksDB arbitrary places the *racks doors* oriented to the bottom of
+the room. The rows must be marked as *_reversed_* to get the doors on the other
+side.
+
+CAUTION: The orientation of the doors is considered *_before_* the rotation of
+the row. This implies that, with rotation angles between 90 and 270°, the doors
+are actually oriented to the bottom of the room without the row being reversed.
+
+Consider the following measures for the example:
+
+image:racks_rows_positionning_example_annoted.svg[Racks rows positionning example,800]
+
+NOTE: The reference point of row {R4} is not the actual _top-left_ corner in the
+room map. This is explained by the fact that the _top-left_ corner is evaluated
+*_before_* the rotation of the row, as previously stated. With a rotation angle
+of 90°, the _bottom-left_ corner becomes after the rotation the actual
+_top-left_ corner in the map.
+
+This whould result in the following rack rows definitions in RackDB database:
+
+* row {R1}:
++
+--
+[source,yaml]
+----
+include::example$datacenter.yml[tag=datacenter]
+    …
+include::example$datacenter.yml[tag=rows]
+include::example$datacenter.yml[tag=row-r1]
+    …
+----
+
+The distances between the reference point and the _top-left_ corner of the room
+is reported in the `position` property of
+xref:structure.adoc#obj-datacenterroomrow[DatacenterRoomRow] object.
+--
+
+* row {R2}:
++
+--
+[source,yaml]
+----
+    …
+include::example$datacenter.yml[tag=row-r2]
+    …
+----
+
+The row is marked as _reversed_, using the `reversed` boolean property
+xref:structure.adoc#obj-datacenterroomrow[DatacenterRoomRow] object, to
+orientate the rack doors to the top of the room.
+--
+
+* row {R3}:
++
+--
+[source,yaml]
+----
+    …
+include::example$datacenter.yml[tag=row-r3]
+    …
+----
+
+This row has a set of 6 racks. The rotation is expressed in the optional
+`rotation` property of
+xref:structure.adoc#obj-datacenterroomrow[DatacenterRoomRow] object, with a
+value of 30° using the xref:structure.adoc#deftype-angle[~angle] defined type.
+--
+
+* row {R4}:
++
+--
+[source,yaml]
+----
+    …
+include::example$datacenter.yml[tag=row-r4]
+----
+
+This row has a rotation angle of 90° (_ie._ vertically aligned oriented to the
+bottom of the room). The row is marked as _reversed_ to orientate the racks
+doors to the right side of the room.
+--
+
+Based on this rather uncommon example, you are probably now able to specify the
+positions of your racks in datacenter rooms in RacksDB!
+
+NOTE: Please https://github.com/rackslab/racksdb/issues/new[file an issue] on
+project code tracker if you feel the layout of your datacenter rooms and racks
+cannot be modelized in RacksDB, we would be happy to consider your
+specificities.
+
+.Show complete datacenter YAML example
+[%collapsible]
+====
+[source,yaml]
+----
+include::example$datacenter.yml[tags=**]
+----
+====
