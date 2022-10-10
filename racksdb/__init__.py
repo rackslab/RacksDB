@@ -21,6 +21,7 @@ from pathlib import Path
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBFileLoader, DBSplittedFilesLoader
+from . import bases
 
 
 class RacksDB(GenericDB):
@@ -32,7 +33,7 @@ class RacksDB(GenericDB):
     DEFINED_TYPES_MODULE = 'racksdb.types'
 
     def __init__(self, schema, loader):
-        super().__init__(self.PREFIX, schema)
+        super().__init__(self.PREFIX, schema, bases)
         self._loader = loader
 
     @classmethod
