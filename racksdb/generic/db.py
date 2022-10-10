@@ -67,8 +67,20 @@ class DBExpandableObject(DBObject):
             _attributes[range_attribute[0]] = value
             for rangeid_name, rangeid_value in rangeid_attributes.items():
                 _attributes[rangeid_name] = rangeid_value.index(index)
+
+            bases = [DBObject]
+            # Add provided module base if defined
+            try:
+                bases.append(
+                    getattr(
+                        self._db._bases,
+                        f"{self._db._prefix}{self._schema.name}Base",
+                    )
+                )
+            except AttributeError:
+                pass
             obj = type(
-                f"{self._db._prefix}{self._schema.name}", (DBObject,), dict()
+                f"{self._db._prefix}{self._schema.name}", tuple(bases), dict()
             )(self._db, self._schema)
             for attr_name, attr_value in _attributes.items():
                 setattr(obj, attr_name, attr_value)
@@ -151,9 +163,11 @@ class DBSplittedFilesLoader:
 
 
 class GenericDB(DBObject):
-    def __init__(self, prefix, schema):
+    def __init__(self, prefix, schema, bases):
         super().__init__(self, schema)
         self._prefix = prefix
+        # Module of base classes for instanciated DB objects
+        self._bases = bases
         self._indexes = {}  # objects indexes
         # Set of SchemaObjects for which objects have been already loaded,
         # including SchemaObjects of optional objects not present in database.
@@ -229,15 +243,20 @@ class GenericDB(DBObject):
         )
         # is it expandable?
         if schema_object.expandable:
-            obj = type(
-                f"{self._prefix}Expandable{schema_object.name}",
-                (DBExpandableObject,),
-                dict(),
-            )(self, schema_object)
+            bases = [DBExpandableObject]
+            classname = f"{self._prefix}Expandable{schema_object.name}"
         else:
-            obj = type(
-                f"{self._prefix}{schema_object.name}", (DBObject,), dict()
-            )(self, schema_object)
+            bases = [DBObject]
+            classname = f"{self._prefix}{schema_object.name}"
+        # Add provided module base if defined
+        try:
+            bases.append(
+                getattr(self._bases, f"{self._prefix}{schema_object.name}Base")
+            )
+        except AttributeError:
+            pass
+        # instanciate the object with its dynamically defined class
+        obj = type(classname, tuple(bases), dict())(self, schema_object)
 
         obj._parent = parent
 
