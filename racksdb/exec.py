@@ -25,7 +25,7 @@ from pathlib import Path
 from .version import __version__
 from .generic.errors import DBFormatError, DBSchemaError
 from .generic.dumper import DBDumper, SchemaDumper
-from .base import RacksDB
+from . import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
 
 logger = logging.getLogger(__name__)
