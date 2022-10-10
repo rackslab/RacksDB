@@ -1,0 +1,87 @@
+types:
+  nodes:
+  - id: sm220bt
+    model: SuperMicro A+ 2124BT-HTR
+    height: 1u
+    width: 1/2
+    cpus:
+      cores: 32
+      model: AMD EPYC 7573X
+      sockets: 2
+    ram:
+      dimm: 8
+      size: 32GB
+    storage:
+    - model: Samsung 980 Pro
+      size: 256GB
+      type: nvme
+    netifs:
+    - bandwidth: 10Gb
+      type: ethernet
+  network:
+  - id: cisco3650
+    model: Cisco Catalyst 3650 switch
+    height: 1u
+    netifs:
+    - bandwidth: 1Gb
+      number: 48
+      type: ethernet
+  storage:
+  - id: qnaph1277
+    model: QNAP TS-H1277XU-RP
+    height: 2u
+    disks:
+    - model: Seagate IronWolf
+      number: 12
+      size: 4TB
+      type: disk
+  racks:
+  - id: standard
+    height: 1867mm
+    width: 600mm
+    depth: 914mm
+    slots: 42u
+
+datacenters:
+- name: paris
+  rooms:
+  - name: atlas
+    dimensions:
+      depth: 4m
+      width: 8m
+    rows:
+    - name: R1
+      position:
+        depth: 1.5m
+        width: 1.5m
+      racks:
+      - name: R1-A[01-10]
+        type: standard
+        slot: 0
+
+infrastructures:
+- name: tiger
+  description: HPC cluster
+  layout:
+  - rack: R1-A01
+    tags:
+    - compute
+    nodes:
+    - name: ticn[0001-0040]
+      slot: 0
+      type: sm220bt
+  - rack: R1-A02
+    tags:
+    - compute
+    network:
+    - type: cisco3650
+      name: tisw[01-02]
+      slot: 8
+      tags:
+      - network
+    storage:
+    - name: tinas01
+      slot: 12
+      tags:
+      - storage
+      type: qnaph1277
