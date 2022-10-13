@@ -74,7 +74,7 @@ class RoomDrawer(Drawer):
                         last_rack_width = filled_slots[reversed_slot].type.width
                         break
                 if not (last_rack_width):
-                    last_rack_width = self.db.types.racks[0].width
+                    last_rack_width = self.db.types.racks.first().width
                 tl.x += int(last_rack_width * self.SCALE)
         return tl
 
