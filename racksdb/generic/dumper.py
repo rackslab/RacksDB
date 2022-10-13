@@ -68,7 +68,14 @@ class DBDumper:
 
         for item_key, item_value in vars(data).items():
             # skip special fields
-            if item_key in ['_db', '_indexes', '_schema', '_parent', '_first']:
+            if item_key in [
+                '_db',
+                '_indexes',
+                '_schema',
+                '_parent',
+                '_first',
+                '_key',
+            ]:
                 continue
             node_key = dumper.represent_data(item_key)
             # Check the object is mapped to one of its attribute or None.

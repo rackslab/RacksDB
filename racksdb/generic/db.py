@@ -54,6 +54,11 @@ class DBExpandableObject(DBObject):
         range_attribute = None
         rangeid_attributes = {}
         for attribute, value in vars(self).items():
+            # Skip selection of special _key attribute at this stage, it is
+            # handled later when attributes are set on freshly instanciated
+            # object.
+            if attribute == '_key':
+                continue
             if isinstance(value, DBObjectRange):
                 range_attribute = (attribute, value)
             elif isinstance(value, DBObjectRangeId):
@@ -84,6 +89,10 @@ class DBExpandableObject(DBObject):
             )(self._db, self._schema)
             for attr_name, attr_value in _attributes.items():
                 setattr(obj, attr_name, attr_value)
+                # Set object _key attribute if property is a key
+                prop = self._schema.prop(attr_name)
+                if prop is not None and prop.key:
+                    setattr(obj, '_key', attr_value)
             result.append(obj)
             if first is None:
                 first = obj
@@ -122,8 +131,14 @@ class DBList:
             else:
                 yield item
 
-    def __getitem__(self, id):
-        return self.items[id]
+    def __getitem__(self, key):
+        for item in self.items:
+            if getattr(item, '_key', None) == key:
+                return item
+        raise KeyError(f"Key {key} not found")
+
+    def first(self):
+        return self.items[0]
 
     def __add__(self, other):
         return DBList(self.items + other.items)
@@ -286,6 +301,9 @@ class GenericDB(DBObject):
                     value,
                 )
                 setattr(obj, prop.name, value)
+            # Set object _key attribute if property is a key
+            if prop.key:
+                setattr(obj, '_key', getattr(obj, prop.name))
 
         # add object to db indexes
         if schema_object.name not in self._indexes:

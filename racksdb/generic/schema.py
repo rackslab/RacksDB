@@ -182,20 +182,23 @@ class SchemaBackReference(SchemaGenericValueType):
 
 
 class SchemaProperty:
-    def __init__(self, name, required, default, value_type):
+    def __init__(self, name, required, key, default, value_type):
         self.name = name
         self.required = required
+        self.key = key
         self.default = default
         self.type = value_type
 
     def __str__(self):
         if self.required:
-            return f"required {self.type}"
+            result = 'required '
         else:
-            if self.default is not None:
-                return f"optional {self.type} ({self.default})"
-            else:
-                return f"optional {self.type}"
+            result = 'optional '
+        if self.key:
+            result += 'key '
+        result += self.type
+        if self.default is not None:
+            result += f" ({self.default})"
 
 
 class Schema:
@@ -229,6 +232,12 @@ class Schema:
             required = False
             spec = spec[9:]  # remove optional key
 
+        # check key
+        key = False
+        if spec.startswith('key '):
+            key = True
+            spec = spec[4:]  # remove keyword
+
         # check default
         default = None
         if spec.startswith('default '):
@@ -238,7 +247,9 @@ class Schema:
             # value to the appropriate Python type.
             default = yaml.safe_load(items[1])
             spec = items[2]
-        return SchemaProperty(name, required, default, self.value_type(spec))
+        return SchemaProperty(
+            name, required, key, default, self.value_type(spec)
+        )
 
     def value_type(self, spec):
         # parse native types
