@@ -97,7 +97,7 @@ _objects:
     room: ^DatacenterRoom
     row: ^DatacenterRoomRow
   Infrastructure:
-    name: str
+    name: key str
     description: str
     layout: list[:InfrastructurePart]
     tags: optional list[str]
@@ -108,7 +108,7 @@ _objects:
     network: default [] list[:NetworkEquipment]
     tags: optional list[str]
   Node:
-    name: expandable
+    name: key expandable
     infrastructure: ^Infrastructure
     rack: ^InfrastructurePart.rack
     type: optional $NodeType.id
