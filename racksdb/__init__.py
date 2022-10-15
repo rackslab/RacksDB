@@ -20,7 +20,7 @@
 from pathlib import Path
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
-from .generic.db import GenericDB, DBFileLoader, DBSplittedFilesLoader
+from .generic.db import GenericDB, DBList, DBFileLoader, DBSplittedFilesLoader
 from . import bases
 
 
@@ -35,6 +35,13 @@ class RacksDB(GenericDB):
     def __init__(self, schema, loader):
         super().__init__(self.PREFIX, schema, bases)
         self._loader = loader
+
+    @property
+    def nodes(self):
+        result = DBList([])
+        for infrastructure in self.infrastructures:
+            result += infrastructure.nodes
+        return result
 
     @classmethod
     def load(
