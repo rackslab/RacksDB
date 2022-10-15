@@ -76,11 +76,15 @@ class DBExpandableObject(DBObject):
             bases = [DBObject]
             # Add provided module base if defined
             try:
-                bases.append(
+                # Insert bases module class in the beginning of the list to make
+                # sure methods from this classes are called over the methods from
+                # DBObject.
+                bases.insert(
+                    0,
                     getattr(
                         self._db._bases,
                         f"{self._db._prefix}{self._schema.name}Base",
-                    )
+                    ),
                 )
             except AttributeError:
                 pass
@@ -265,8 +269,12 @@ class GenericDB(DBObject):
             classname = f"{self._prefix}{schema_object.name}"
         # Add provided module base if defined
         try:
-            bases.append(
-                getattr(self._bases, f"{self._prefix}{schema_object.name}Base")
+            # Insert bases module class in the beginning of the list to make
+            # sure methods from this classes are called over the methods from
+            # DBObject.
+            bases.insert(
+                0,
+                getattr(self._bases, f"{self._prefix}{schema_object.name}Base"),
             )
         except AttributeError:
             pass
