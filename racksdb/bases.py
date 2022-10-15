@@ -30,3 +30,31 @@ class RacksDBInfrastructureBase:
             for node in part.nodes:
                 result.items.append(node)
         return result
+
+
+class RacksDBNodeBase:
+    @property
+    def _tags(self):
+        result = []
+        for tag in getattr(self._parent, 'tags', []):
+            result.append(tag)
+        for tag in getattr(self, 'tags', []):
+            result.append(tag)
+        return result
+
+    def filter(self, infrastructure=None, name=None, tags=None):
+        # filter by name
+        if name is not None and name != self.name:
+            return False
+        # filter by infrastructure name
+        if (
+            infrastructure is not None
+            and infrastructure != self.infrastructure.name
+        ):
+            return False
+        # filter by tags
+        if tags is not None:
+            for tag in tags:
+                if tag not in self._tags:
+                    return False
+        return True
