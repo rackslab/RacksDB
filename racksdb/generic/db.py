@@ -310,6 +310,11 @@ class GenericDB(DBObject):
                     f"Property {prop.name} is required in schema for object "
                     f"{schema_object}"
                 )
+            # Load back references
+            if isinstance(prop.type, SchemaBackReference):
+                setattr(
+                    obj, prop.name, self.load_back_reference(obj, prop.type)
+                )
             # Assign default value to optional properties when provided in
             # schema.
             if not hasattr(obj, prop.name) and prop.default is not None:
@@ -379,12 +384,6 @@ class GenericDB(DBObject):
                     setattr(obj, token[:-2], attribute)
                 else:
                     setattr(obj, token, attribute)
-            # Load back references
-            for prop in schema_object.properties:
-                if isinstance(prop.type, SchemaBackReference):
-                    setattr(
-                        obj, prop.name, self.load_back_reference(obj, prop.type)
-                    )
             # Check if at least one attribute has been loaded during this pass,
             # or raise DB format error exception.
             if not processed:
