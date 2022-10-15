@@ -175,8 +175,7 @@ class RacksDBExec:
             help='Filter nodes by infrastructure',
         )
         parser_nodes.add_argument(
-            '--tag',
-            help='Filter nodes by tag',
+            '--tags', help='Filter nodes by tag', nargs='*'
         )
         parser_nodes.set_defaults(func=self._run_nodes)
 
@@ -337,33 +336,11 @@ class RacksDBExec:
         if self.args.name is not None:
             self.args.expand = True
 
-        selected_nodes = self.db.find_objects('Node', self.args.expand)
-
-        # filter nodes by name
-        if self.args.name is not None:
-            selected_nodes = [
-                node for node in selected_nodes if self.args.name == node.name
-            ]
-
-        # filter nodes by infrastructure
-        if self.args.infrastructure is not None:
-            selected_nodes = [
-                node
-                for node in selected_nodes
-                if self.args.infrastructure == node.infrastructure.name
-            ]
-
-        # filter nodes by tag
-        if self.args.tag is not None:
-            selected_nodes = [
-                node
-                for node in selected_nodes
-                if (
-                    hasattr(node.rack, 'tags')
-                    and self.args.tag in node.rack.tags
-                )
-                or (hasattr(node, 'tags') and self.args.tag in node.tags)
-            ]
+        selected_nodes = self.db.nodes.filter(
+            name=self.args.name,
+            infrastructure=self.args.infrastructure,
+            tags=self.args.tags,
+        )
 
         if not self.args.details:
             print('\n'.join([str(node.name) for node in selected_nodes]))
