@@ -46,6 +46,11 @@ class DBObject:
         self._db = db
         self._schema = schema
 
+    def filter(self, **kwargs):
+        """Abstract filter method, must be overriden by filter method from
+        specialized bases module classes when needed."""
+        return True
+
 
 class DBExpandableObject(DBObject):
     def objects(self):
@@ -143,6 +148,13 @@ class DBList:
 
     def first(self):
         return self.items[0]
+
+    def filter(self, **kwargs):
+        result = DBList([])
+        for item in self.items:
+            if item.filter(**kwargs):
+                result.items.append(item)
+        return result
 
     def __add__(self, other):
         return DBList(self.items + other.items)
