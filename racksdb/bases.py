@@ -34,11 +34,13 @@ class RacksDBInfrastructureBase:
 
 class RacksDBNodeBase:
     @property
-    def _tags(self):
+    def tags(self):
         result = []
         for tag in getattr(self._parent, 'tags', []):
             result.append(tag)
-        for tag in getattr(self, 'tags', []):
+        # RacksDBNodeBase loaded tags are renamed with loaded prefix to avoid
+        # conflict with this property.
+        for tag in getattr(self, f"{self.LOADED_PREFIX}tags", []):
             result.append(tag)
         return result
 
@@ -55,6 +57,6 @@ class RacksDBNodeBase:
         # filter by tags
         if tags is not None:
             for tag in tags:
-                if tag not in self._tags:
+                if tag not in self.tags:
                     return False
         return True
