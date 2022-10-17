@@ -77,6 +77,11 @@ class DBDumper:
                 '_key',
             ]:
                 continue
+            # If the attribute has been renamed with loaded prefix, call bases
+            # module class attribute instead.
+            if item_key.startswith(data.LOADED_PREFIX):
+                item_key = item_key[len(data.LOADED_PREFIX):]
+                item_value = getattr(data, item_key)
             node_key = dumper.represent_data(item_key)
             # Check the object is mapped to one of its attribute or None.
             if item_value.__class__.__name__ in self.objects_map.keys():

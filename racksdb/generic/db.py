@@ -42,6 +42,8 @@ logger = logging.getLogger(__name__)
 
 
 class DBObject:
+    LOADED_PREFIX = '__loaded_'
+
     def __init__(self, db, schema):
         self._db = db
         self._schema = schema
@@ -381,9 +383,19 @@ class GenericDB(DBObject):
                     token, literal, token_property.type, obj
                 )
                 if token.endswith('[]'):
-                    setattr(obj, token[:-2], attribute)
-                else:
-                    setattr(obj, token, attribute)
+                    token = token[:-2]
+                # Check the bases module class does not already provide a
+                # conflicting attribute with the same name. In this case, it is
+                # renamed with LOADED_PREFIX.
+                if hasattr(obj, token):
+                    logger.debug(
+                        "Renaming object attribute %s.%s with prefix %s",
+                        obj,
+                        token,
+                        obj.LOADED_PREFIX,
+                    )
+                    token = obj.LOADED_PREFIX + token
+                setattr(obj, token, attribute)
             # Check if at least one attribute has been loaded during this pass,
             # or raise DB format error exception.
             if not processed:
