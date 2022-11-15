@@ -98,7 +98,7 @@ _objects:
     rotation: default 0 ~angle # The rotation angle of the racks row clockwise compared to the width axis of the room (ie. an horizontal line).
   DatacenterRoomRack:
     name: expandable # The names of the racks in this set.
-    slot: rangeid # The first slot used by this set of racks.
+    slot: default 0 rangeid # The first slot used by this set of racks.
     type: $RackType.id # The unique ID of rack type of this racks set.
     datacenter: ^Datacenter # The datacenter where this rack is located.
     room: ^DatacenterRoom # The datacenter room where this rack is located.
