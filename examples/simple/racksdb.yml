@@ -4,7 +4,7 @@ types:
     model: SuperMicro A+ 2124BT-HTR
     height: 1u
     width: 1/2
-    cpus:
+    cpu:
       cores: 32
       model: AMD EPYC 7573X
       sockets: 2
@@ -57,7 +57,6 @@ datacenters:
       racks:
       - name: R1-A[01-10]
         type: standard
-        slot: 0
 
 infrastructures:
 - name: tiger

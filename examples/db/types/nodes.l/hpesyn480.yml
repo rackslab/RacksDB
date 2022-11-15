@@ -3,7 +3,7 @@ model: HPE Synergy 480 Gen10 Compute Module
 height: 5u
 width: 1/7
 specs: https://www.hpe.com/psnow/doc/PSN1010025863USEN.pdf
-cpus:
+cpu:
   sockets: 2
   model: Intel Xeon Scalable 6148
   specs: https://www.intel.com/content/www/us/en/products/sku/120489/intel-xeon-gold-6148-processor-27-5m-cache-2-40-ghz/specifications.html
