@@ -343,7 +343,7 @@ NOTE: Please refer to xref:positionning-equipments.adoc[equipment positionning h
 |The type of network equipment unique identifier.
 
 |{symbol-ref}{nbsp}xref:#obj-networkequipmenttype[{symbol-obj}{nbsp}NetworkEquipmentType].id
-|[.grey]#-#
+|[.green]#icon:check[]#
 
 |slot
 |The slot in the rack used by the first network equipment in this set.
@@ -471,7 +471,7 @@ NOTE: Please refer to xref:positionning-equipments.adoc[equipment positionning h
 |The type of nodes unique identifier.
 
 |{symbol-ref}{nbsp}xref:#obj-nodetype[{symbol-obj}{nbsp}NodeType].id
-|[.grey]#-#
+|[.green]#icon:check[]#
 
 |slot
 |The slot in the rack used by the first node in this set.
@@ -738,7 +738,7 @@ NOTE: Please refer to xref:positionning-equipments.adoc[equipment positionning h
 |The type of storage equipment unique identifier.
 
 |{symbol-ref}{nbsp}xref:#obj-storageequipmenttype[{symbol-obj}{nbsp}StorageEquipmentType].id
-|[.grey]#-#
+|[.green]#icon:check[]#
 
 |slot
 |The slot in the rack used by the first storage equipment in this set.
