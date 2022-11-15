@@ -46,9 +46,9 @@ class RacksDB(GenericDB):
     @classmethod
     def load(
         cls,
-        schema: Path | None = None,
-        ext: Path | None = None,
-        db: Path | None = None,
+        schema: str | Path | None = None,
+        ext: str | Path | None = None,
+        db: str | Path | None = None,
     ):
         # Unfortunately, default values to arguments cannot be used as they are
         # class attributes and the class is not defined yet at this stage at
@@ -57,10 +57,16 @@ class RacksDB(GenericDB):
 
         if schema is None:
             schema = Path(cls.DEFAULT_SCHEMA)
+        elif isinstance(schema, str):
+            schema = Path(schema)
         if ext is None:
             ext = Path(cls.DEFAULT_EXT)
+        elif isinstance(ext, str):
+            ext = Path(ext)
         if db is None:
             db = Path(cls.DEFAULT_DB)
+        elif isinstance(db, str):
+            db = Path(db)
         _schema = Schema(
             SchemaFileLoader(schema, ext),
             SchemaDefinedTypeLoader(cls.DEFINED_TYPES_MODULE),
