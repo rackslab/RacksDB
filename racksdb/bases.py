@@ -44,7 +44,7 @@ class RacksDBNodeBase:
             result.append(tag)
         return result
 
-    def filter(self, infrastructure=None, name=None, tags=None):
+    def _filter(self, infrastructure=None, name=None, tags=None):
         # filter by name
         if name is not None and name != self.name:
             return False
