@@ -46,9 +46,9 @@ class RacksDB(GenericDB):
     @classmethod
     def load(
         cls,
-        schema: Path = None,
-        ext: Path = None,
-        db: Path = None,
+        schema: Path | None = None,
+        ext: Path | None = None,
+        db: Path | None = None,
     ):
         # Unfortunately, default values to arguments cannot be used as they are
         # class attributes and the class is not defined yet at this stage at
