@@ -2,12 +2,17 @@ BIN ?= asciidoctor
 MAN_OPTS ?= --backend manpage
 REVNUMBER := $(shell python3 -c 'exec(open("../racksdb/version.py").read()); print(__version__)')
 
-all: man
+all: man ref
 
 man: man/racksdb.1
 
 man/%.1: man/%.adoc modules/usage/pages/%.adoc
 	$(BIN) $(MAN_OPTS) --attribute mansource="RacksDB v$(REVNUMBER)" $<
+
+ref: modules/db/partials/objects.adoc
+
+modules/db/partials/objects.adoc: ../schema/racksdb.yml
+	python3 utils/schema-objs.py > $@
 
 SVGS := $(shell find . -name '*.svg')
 

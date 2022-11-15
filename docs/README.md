@@ -8,6 +8,15 @@ To generate the manpage, run this command:
 $ make man
 ```
 
+## Generate objects reference documentation
+
+To generate the schema objects partial of database structure reference
+documentation, run this command:
+
+```sh
+make gen
+```
+
 ## Optimize SVG images
 
 To optimize the SVG images in documentation, run this command:

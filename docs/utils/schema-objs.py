@@ -72,11 +72,11 @@ def bases(obj):
 def main():
     # Load the schema, the DB does not matter here.
     db = RacksDB.load(
-        schema=Path('schema/racksdb.yml'),
-        db=Path('examples/simple/racksdb.yml'),
+        schema=Path('../schema/racksdb.yml'),
+        db=Path('../examples/simple/racksdb.yml'),
     )
 
-    with open('schema/racksdb.yml') as fh:
+    with open('../schema/racksdb.yml') as fh:
         # Load the schema with LineLoader to get line numbers of attributes
         # objects declarations
         data = yaml.load(fh.read(), Loader=LineLoader)
@@ -112,7 +112,7 @@ def main():
                 obj.has_backref = True
 
     # Render template
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader('docs/utils'))
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader('utils'))
     env.filters['bases'] = bases
     template = env.get_template('schema-objs.adoc.j2')
     output = template.render(
