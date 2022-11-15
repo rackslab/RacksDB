@@ -48,9 +48,9 @@ class DBObject:
         self._db = db
         self._schema = schema
 
-    def filter(self, **kwargs):
-        """Abstract filter method, must be overriden by filter method from
-        specialized bases module classes when needed."""
+    def _filter(self, **kwargs):
+        """Abstract filter method, must be overriden in specialized bases module
+        classes when filtering is needed."""
         return True
 
 
@@ -154,7 +154,7 @@ class DBList:
     def filter(self, **kwargs):
         result = DBList([])
         for item in self.items:
-            if item.filter(**kwargs):
+            if item._filter(**kwargs):
                 result.items.append(item)
         return result
 
