@@ -196,9 +196,10 @@ class SchemaProperty:
             result = 'optional '
         if self.key:
             result += 'key '
-        result += self.type
+        result += str(self.type)
         if self.default is not None:
             result += f" ({self.default})"
+        return result
 
 
 class Schema:
