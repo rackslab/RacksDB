@@ -117,11 +117,6 @@ class RacksDBExec:
             help='Show object types in details',
             action='store_true',
         )
-        parser_datacenters.add_argument(
-            '--expand',
-            help='Expand racks in rows',
-            action='store_true',
-        )
         parser_datacenters.set_defaults(func=self._run_datacenters)
 
         # Parser for the infrastructures command
@@ -139,11 +134,6 @@ class RacksDBExec:
             help='Show object types in details',
             action='store_true',
         )
-        parser_infras.add_argument(
-            '--expand',
-            help='Expand equipments in infrastructures',
-            action='store_true',
-        )
         parser_infras.set_defaults(func=self._run_infras)
 
         # Parser for the nodes command
@@ -159,11 +149,6 @@ class RacksDBExec:
         parser_nodes.add_argument(
             '--with-objects-types',
             help='Show object types in details',
-            action='store_true',
-        )
-        parser_nodes.add_argument(
-            '--expand',
-            help='Expand nodes',
             action='store_true',
         )
         parser_nodes.add_argument(
@@ -192,11 +177,6 @@ class RacksDBExec:
         parser_racks.add_argument(
             '--with-objects-types',
             help='Show object types in details',
-            action='store_true',
-        )
-        parser_racks.add_argument(
-            '--expand',
-            help='Expand racks',
             action='store_true',
         )
         parser_racks.add_argument(
@@ -292,7 +272,7 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=self.args.expand,
+            expand=True,
         )
         print(
             dumper.dump([datacenter for datacenter in self.db.datacenters]),
@@ -320,7 +300,7 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=self.args.expand,
+            expand=True,
         )
         print(
             dumper.dump(
@@ -330,11 +310,6 @@ class RacksDBExec:
         )
 
     def _run_nodes(self):
-
-        # When users search nodes by name, they expect the nodes being expanded
-        # to get one node out of a range.
-        if self.args.name is not None:
-            self.args.expand = True
 
         selected_nodes = self.db.nodes.filter(
             name=self.args.name,
@@ -355,20 +330,13 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=self.args.expand,
+            expand=True,
         )
         print(dumper.dump(selected_nodes), end='')
 
     def _run_racks(self):
 
-        # When users search nodes by name, they expect the racks being expanded
-        # to get one rack out of a range.
-        if self.args.name is not None:
-            self.args.expand = True
-
-        selected_racks = self.db.find_objects(
-            'DatacenterRoomRack', self.args.expand
-        )
+        selected_racks = self.db.find_objects('DatacenterRoomRack', True)
 
         # filter racks by name
         if self.args.name is not None:
@@ -397,7 +365,7 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=self.args.expand,
+            expand=True,
         )
         print(dumper.dump(selected_racks), end='')
 
