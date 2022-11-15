@@ -272,7 +272,6 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=True,
         )
         print(
             dumper.dump([datacenter for datacenter in self.db.datacenters]),
@@ -300,7 +299,6 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=True,
         )
         print(
             dumper.dump(
@@ -330,7 +328,6 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=True,
         )
         print(dumper.dump(selected_nodes), end='')
 
@@ -365,7 +362,6 @@ class RacksDBExec:
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
-            expand=True,
         )
         print(dumper.dump(selected_racks), end='')
 
