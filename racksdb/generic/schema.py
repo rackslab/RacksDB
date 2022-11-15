@@ -81,7 +81,7 @@ class SchemaFileLoader:
                 raise DBSchemaError(err)
         if '_content' in extensions:
             logger.debug(
-                "Updating database content additional content found in extension"
+                "Updating schema with additional content found in extension"
             )
             result['_content'].update(extensions['_content'])
         if '_objects' in extensions:
