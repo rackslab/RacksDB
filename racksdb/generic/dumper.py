@@ -30,28 +30,19 @@ logger = logging.getLogger(__name__)
 
 
 class DBDumper:
-    def __init__(self, show_types=False, objects_map={}, expand=False):
+    def __init__(self, show_types=False, objects_map={}):
         self.show_types = show_types
         self.objects_map = objects_map
-        self.expand = expand
         self._setup()
         # refs to last represented objects, used to inform users in case of dump
         # recursion loops
         self._last_objs = collections.deque([], 8)
 
-    def _represent_expanded_list(self, dumper, data):
-
-        value = []
-        tag = u'tag:yaml.org,2002:seq'
-        for _object in data:
-            value.append(dumper.represent_data(_object))
-        return yaml.SequenceNode(tag, value)
-
     def _represent_list(self, dumper, data):
 
         value = []
         tag = u'tag:yaml.org,2002:seq'
-        for _object in data.items:
+        for _object in data:
             value.append(dumper.represent_data(_object))
         return yaml.SequenceNode(tag, value)
 
@@ -106,10 +97,7 @@ class DBDumper:
         return dumper.represent_data(data.start)
 
     def _setup(self):
-        if self.expand:
-            yaml.add_representer(DBList, self._represent_expanded_list)
-        else:
-            yaml.add_representer(DBList, self._represent_list)
+        yaml.add_representer(DBList, self._represent_list)
         yaml.add_multi_representer(DBObject, self._represent_dbobject)
         yaml.add_multi_representer(DBObjectRange, self._represent_dbobjectrange)
         yaml.add_multi_representer(
