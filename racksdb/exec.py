@@ -107,14 +107,14 @@ class RacksDBExec:
             'datacenters', help='Get informations about datacenters'
         )
         parser_datacenters.add_argument(
-            '-d',
-            '--details',
-            help='Show datacenters full details',
+            '-l',
+            '--list',
+            help='List datacenters',
             action='store_true',
         )
         parser_datacenters.add_argument(
             '--with-objects-types',
-            help='Show object types in details',
+            help='Show object types in dumps',
             action='store_true',
         )
         parser_datacenters.set_defaults(func=self._run_datacenters)
@@ -124,14 +124,14 @@ class RacksDBExec:
             'infrastructures', help='Get informations about infrastructures'
         )
         parser_infras.add_argument(
-            '-d',
-            '--details',
-            help='Show infrastructures full details',
+            '-l',
+            '--list',
+            help='List infrastructures names',
             action='store_true',
         )
         parser_infras.add_argument(
             '--with-objects-types',
-            help='Show object types in details',
+            help='Show object types in dumps',
             action='store_true',
         )
         parser_infras.set_defaults(func=self._run_infras)
@@ -141,14 +141,14 @@ class RacksDBExec:
             'nodes', help='Get informations about nodes'
         )
         parser_nodes.add_argument(
-            '-d',
-            '--details',
-            help='Show nodes full details',
+            '-l',
+            '--list',
+            help='List nodes names',
             action='store_true',
         )
         parser_nodes.add_argument(
             '--with-objects-types',
-            help='Show object types in details',
+            help='Show object types in dumps',
             action='store_true',
         )
         parser_nodes.add_argument(
@@ -169,14 +169,14 @@ class RacksDBExec:
             'racks', help='Get informations about racks'
         )
         parser_racks.add_argument(
-            '-d',
-            '--details',
-            help='Show racks full details',
+            '-l',
+            '--list',
+            help='List racks names',
             action='store_true',
         )
         parser_racks.add_argument(
             '--with-objects-types',
-            help='Show object types in details',
+            help='Show object types in dumps',
             action='store_true',
         )
         parser_racks.add_argument(
@@ -256,7 +256,7 @@ class RacksDBExec:
 
     def _run_datacenters(self):
         # print list of datacenters
-        if not self.args.details:
+        if self.args.list:
             print(
                 '\n'.join(
                     [datacenter.name for datacenter in self.db.datacenters]
@@ -280,7 +280,7 @@ class RacksDBExec:
 
     def _run_infras(self):
         # print list of infrastructures
-        if not self.args.details:
+        if self.args.list:
             print(
                 '\n'.join(
                     [
@@ -315,7 +315,7 @@ class RacksDBExec:
             tags=self.args.tags,
         )
 
-        if not self.args.details:
+        if self.args.list:
             print('\n'.join([str(node.name) for node in selected_nodes]))
             return
         objects_map = {
@@ -348,7 +348,7 @@ class RacksDBExec:
                     if rack.name == part.rack.name:
                         rack.nodes = part.nodes
 
-        if not self.args.details:
+        if self.args.list:
             print('\n'.join([str(rack.name) for rack in selected_racks]))
             return
         objects_map = {
