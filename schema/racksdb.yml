@@ -24,7 +24,7 @@ _objects:
     height: ~rack_height # Height of the node.
     width: ~rack_width # Width of the node.
     specs: optional str # URL to node specsheet.
-    cpus: :NodeTypeCpu # CPU configuration of the node.
+    cpu: :NodeTypeCpu # CPU configuration of the node.
     ram: :NodeTypeRam # RAM configuration of the node.
     storage: optional list[:NodeTypeStorage] # List of storage devices of the node.
     netifs: optional list[:NodeTypeNetif] # List of network interfaces of the node.
