@@ -1,9 +1,11 @@
-# RacksDB
-
 <img
   src="docs/modules/overview/images/racksdb_logo.svg"
   alt="RacksDB Overview"
-  style="float: right; margin: 20px; max-width: 150px">
+  align="right"
+  width="200px"
+  style="margin: 20px;">
+
+# RacksDB
 
 ## Overview
 
@@ -23,10 +25,13 @@ source** for many purposes in IT management.
 * **Documentation**: Get updated architecture diagrams and define generic
   adaptative procedures.
 
-<img
-  src="docs/modules/overview/images/racksdb_overview.svg"
-  alt="RacksDB Overview"
-  style="display: inline-block; margin: 0 auto; max-width: 500px">
+<p align="center">
+  <img
+    src="docs/modules/overview/images/racksdb_overview.svg"
+    alt="RacksDB Overview"
+    width="600px"
+    style="margin: 0 auto;">
+</p>
 
 Generally speaking, **RacksDB** is a specialized
 [CMDB](https://en.wikipedia.org/wiki/Configuration_management_database)
