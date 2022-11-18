@@ -49,7 +49,7 @@ Library class type: `RacksDBDatacenter`
 |===
 |Property|Description|Type|Required
 
-|name
+|name{nbsp}{symbol-key}
 |Unique name of the datacenter.
 
 |str
@@ -72,7 +72,7 @@ Library class type: `RacksDBDatacenterRoom`
 |===
 |Property|Description|Type|Required
 
-|name
+|name{nbsp}{symbol-key}
 |Unique name of the room in this datacenter.
 
 |str
@@ -214,7 +214,7 @@ Library class type: `RacksDBDatacenterRoomRow`
 |===
 |Property|Description|Type|Required
 
-|name
+|name{nbsp}{symbol-key}
 |Unique name of the racks row.
 
 |str
@@ -382,7 +382,7 @@ Library class type: `RacksDBNetworkEquipmentType`
 |===
 |Property|Description|Type|Required
 
-|id
+|id{nbsp}{symbol-key}
 |Unique identifier of the network equipment type.
 
 |str
@@ -510,7 +510,7 @@ Library class type: `RacksDBNodeType`
 |===
 |Property|Description|Type|Required
 
-|id
+|id{nbsp}{symbol-key}
 |Unique identifier of node type.
 
 |str
@@ -685,7 +685,7 @@ Library class type: `RacksDBRackType`
 |===
 |Property|Description|Type|Required
 
-|id
+|id{nbsp}{symbol-key}
 |Unique identifier of the rack type.
 
 |str
@@ -777,7 +777,7 @@ Library class type: `RacksDBStorageEquipmentType`
 |===
 |Property|Description|Type|Required
 
-|id
+|id{nbsp}{symbol-key}
 |Unique identifier of storage equipment type.
 
 |str
