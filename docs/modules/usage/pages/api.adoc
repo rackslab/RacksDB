@@ -521,7 +521,7 @@ Get all nodes named _cn001_:
 >>> db.nodes.filter(name='cn001')
 ----
 
-Get all nodes of insfrastructure _tiger_ with tag _compute_:
+Get all nodes of infrastructure _tiger_ with tag _compute_:
 
 [source,python]
 ----
