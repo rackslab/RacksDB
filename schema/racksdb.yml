@@ -19,7 +19,7 @@ _objects:
     network: default [] list[:NetworkEquipmentType] # List of network equipments types definitions.
     racks: list[:RackType] # List of (empty) racks types definitions.
   NodeType:
-    id: str # Unique identifier of node type.
+    id: key str # Unique identifier of node type.
     model: str # Node type model name.
     height: ~rack_height # Height of the node.
     width: ~rack_width # Width of the node.
@@ -44,7 +44,7 @@ _objects:
     type: ~netif_type # The type of network interface.
     bandwidth: ~bytes # The bandwidth (per second) of the network interface.
   StorageEquipmentType:
-    id: str # Unique identifier of storage equipment type.
+    id: key str # Unique identifier of storage equipment type.
     model: str # Storage equipment model name.
     height: ~rack_height # Height of storage equipment.
     width: default full ~rack_width # Width of storage equipment.
@@ -60,7 +60,7 @@ _objects:
     type: ~netif_type # The type of network interface.
     bandwidth: ~bytes # The bandwidth (per second) of the network interface.
   NetworkEquipmentType:
-    id: str # Unique identifier of the network equipment type.
+    id: key str # Unique identifier of the network equipment type.
     model: str # Network equipment model name.
     height: ~rack_height # Height of network equipment.
     width: default full ~rack_width # Width of network equipment.
@@ -71,7 +71,7 @@ _objects:
     bandwidth: ~bytes # The bandwidth (per second) of the network interface.
     number: int # The number of this network interface available in the network equipment.
   RackType:
-    id: str # Unique identifier of the rack type.
+    id: key str # Unique identifier of the rack type.
     height: ~dimension # Height of the rack.
     width: ~dimension # Width of the rack.
     depth: ~dimension # Depth of the rack.
