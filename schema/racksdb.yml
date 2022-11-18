@@ -79,6 +79,7 @@ _objects:
   Datacenter:
     name: key str # Unique name of the datacenter.
     rooms: list[:DatacenterRoom] # List of rooms in this datacenter.
+    tags: optional list[str] # The list of tags associated to this datacenter.
   DatacenterRoom:
     name: key str # Unique name of the room in this datacenter.
     dimensions: :DatacenterRoomDimensions # Dimensions of this room.
