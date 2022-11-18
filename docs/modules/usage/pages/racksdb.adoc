@@ -77,6 +77,16 @@ The search commands available are the following:
 [.cli-opt]#*datacenters*#::
 
   Dump information about datacenters.
++
+--
+This command accepts the following options:
+
+*[.cli-opt]#--name*=#[.cli-optval]##_NAME_##::
+  Name of the datacenter to search.
+
+*[.cli-opt]#--tags*=#[.cli-optval]##_TAG_ [_TAG_]##::
+  Select the datacenters labelled with these tags.
+--
 
 [.cli-opt]#*infrastructures*#::
 
