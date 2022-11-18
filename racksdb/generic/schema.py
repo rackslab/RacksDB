@@ -309,6 +309,8 @@ class Schema:
         if object_id != '_content':
             self.objects[object_id] = obj
 
+        has_key = False  # flag to check key property uniquess
+
         for key, spec in objdef.items():
             prop = self.prop_spec(key, spec)
             if isinstance(prop.type, SchemaObject) and prop.type.expandable:
@@ -324,6 +326,13 @@ class Schema:
                         "than one expandable property"
                     )
                 obj.expandable = True
+            if prop.key:
+                # check key uniqueness among all properties
+                if has_key:
+                    raise DBSchemaError(
+                        f"Object {object_id} cannot contain more than one key"
+                    )
+                has_key = True
 
             # Define refs and subobjs recursively
             if isinstance(prop.type, SchemaReference):
