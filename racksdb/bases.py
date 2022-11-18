@@ -35,6 +35,17 @@ class RacksDBInfrastructureBase:
     def tags(self):
         return [tag for tag in getattr(self, f"{self.LOADED_PREFIX}tags", [])]
 
+    def _filter(self, name=None, tags=None):
+        # filter by name
+        if name is not None and name != self.name:
+            return False
+        # filter by tags
+        if tags is not None:
+            for tag in tags:
+                if tag not in self.tags:
+                    return False
+        return True
+
 
 class RacksDBNodeBase:
     @property
