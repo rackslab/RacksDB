@@ -20,6 +20,12 @@
 from .generic.db import DBList
 
 
+class RacksDBDatacenterBase:
+    @property
+    def tags(self):
+        return [tag for tag in getattr(self, f"{self.LOADED_PREFIX}tags", [])]
+
+
 class RacksDBInfrastructureBase:
     @property
     def nodes(self):
