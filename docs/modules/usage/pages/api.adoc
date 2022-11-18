@@ -403,6 +403,38 @@ Count the total number of nodes in the _tiger_ infrastructure:
 ====
 --
 
+* `tags`: The list of tags associated to the infrastructure, returned as a list
+  of strings. If the underlying `tags` property of
+  xref:db:structure.adoc#obj-infrastructure[Infrastructure object] is not
+  defined, the value is an empty list.
++
+--
+.Example
+====
+Get the list of tags of the _mercury_ infrastructure:
+
+[source,python]
+----
+>>> db.infrastructures['mercury'].tags
+['hpc', 'cluster']
+----
+====
+
+[CAUTION]
+====
+This attribute overrides the `tags` property of
+xref:db:structure.adoc#obj-infrastructure[Infrastructure object]. When defined,
+the original value of the underlying property can be retrieved through the
+`__loaded_tags` attribute as a xref:#list[`DBList`] object:
+
+[source,python]
+----
+>>> db.infrastructures['mercury'].__loaded_tags.items
+['hpc', 'cluster']
+----
+====
+--
+
 === `RacksDBNode`
 
 ==== Attributes
