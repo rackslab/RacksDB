@@ -1,4 +1,4 @@
-= Equipments Positionning How-To
+= Equipments Positioning How-To
 
 :infra: tiger
 :set1: pass:quotes,attributes[<span style='color: #1766beff;'>*set 1*</span>]
@@ -14,13 +14,13 @@ infrastructure's equipments in the racks.
 For learning purpose, consider this example infrastructure named « *_{infra}_* »
 with equipments distributed in 2 racks *R01* and *R02*:
 
-image:equipments_positionning_example.svg[Equipments positionning example,500]
+image:equipments_positioning_example.svg[Equipments positioning example,500]
 
 In RacksDB, the equipments are declared *by rack*. Then, for each rack, the
 equipments are declared grouped in sets of *similar and consecutive equipments*.
 In this example, 6 sets can be identified:
 
-image:equipments_positionning_sets.svg[Equipments positionning sets,500]
+image:equipments_positioning_sets.svg[Equipments positioning sets,500]
 
 In the first rack *R01*:
 
@@ -86,7 +86,7 @@ stacked up.
 
 This logic is represented in this schema:
 
-image:equipments_positionning_expansion.svg[Equipments positionning expansion,500]
+image:equipments_positioning_expansion.svg[Equipments positioning expansion,500]
 
 In RackDB, racks slots are numbered *from bottom to top*, starting from *0*.
 

@@ -1,4 +1,4 @@
-= Racks Positionning How-To
+= Racks Positioning How-To
 :R1: pass:quotes,attributes[<span style='color: #58a93eff;'>*R1*</span>]
 :R2: pass:quotes,attributes[<span style='color: #cb7215ff;'>*R2*</span>]
 :R3: pass:quotes,attributes[<span style='color: #3b7eccff;'>*R3*</span>]
@@ -10,7 +10,7 @@ their empty racks at their exact position.
 For learning purpose, consider this example datacenter room map with this overly
 uncommon racks layout:
 
-image:racks_rows_positionning_example_map.svg[Uncommon datacenter room map,800]
+image:racks_rows_positioning_example_map.svg[Uncommon datacenter room map,800]
 
 First, the map indicates the room measures _10 meters_ in width and _8 meters_
 in depth. This is modelized in RacksDB database like this:
@@ -28,7 +28,7 @@ In RacksDB database model, racks are grouped in *rows*. A row is basically an
 alignment of one or multiple racks. In this example, 4 rows can easily be
 identified:
 
-image:racks_rows_positionning_example_rows.svg[Datacenter room map racks rows,800]
+image:racks_rows_positioning_example_rows.svg[Datacenter room map racks rows,800]
 
 * The row {R1}, with 4 racks horizontally aligned.
 * The row {R2}, with 4 racks and doors oriented to the top on the room.
@@ -59,7 +59,7 @@ are actually oriented to the bottom of the room without the row being reversed.
 
 Consider the following measures for the example:
 
-image:racks_rows_positionning_example_annoted.svg[Racks rows positionning example,800]
+image:racks_rows_positioning_example_annoted.svg[Racks rows positioning example,800]
 
 NOTE: The reference point of row {R4} is not the actual _top-left_ corner in the
 room map. This is explained by the fact that the _top-left_ corner is evaluated

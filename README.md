@@ -78,7 +78,7 @@ To install and start using RacksDB in a few steps, follow the
 
 The [full documentation](https://docs.rackslab.io/racksdb/beta/)
 of RacksDB is available online with complete database definition reference
-documentation, how-tos (extensions, positionning), CLI manpage and library API
+documentation, how-tos (extensions, positioning), CLI manpage and library API
 documentation.
 
 ## Authors

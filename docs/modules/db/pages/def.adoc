@@ -14,5 +14,5 @@ including:
 * The xref:structure.adoc[database structure], with its objects and the involved
   defined types.
 * How-to xref:ext.adoc[define extensions] of database schema for custom data.
-* Guides to help specify the xref:positionning-racks.adoc[positions of racks]
-  and xref:positionning-equipments.adoc[equipments in racks]
+* Guides to help specify the xref:positioning-racks.adoc[positions of racks]
+  and xref:positioning-equipments.adoc[equipments in racks]
