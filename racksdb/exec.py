@@ -117,6 +117,13 @@ class RacksDBExec:
             help='Show object types in dumps',
             action='store_true',
         )
+        parser_datacenters.add_argument(
+            '--name',
+            help='Filter datacenter by name',
+        )
+        parser_datacenters.add_argument(
+            '--tags', help='Filter datacenter by tag', nargs='*'
+        )
         parser_datacenters.set_defaults(func=self._run_datacenters)
 
         # Parser for the infrastructures command
@@ -262,11 +269,15 @@ class RacksDBExec:
         )
 
     def _run_datacenters(self):
+        selected_datacenters = self.db.datacenters.filter(
+            name=self.args.name,
+            tags=self.args.tags,
+        )
         # print list of datacenters
         if self.args.list:
             print(
                 '\n'.join(
-                    [datacenter.name for datacenter in self.db.datacenters]
+                    [datacenter.name for datacenter in selected_datacenters]
                 )
             )
             return
@@ -281,7 +292,7 @@ class RacksDBExec:
             objects_map=objects_map,
         )
         print(
-            dumper.dump([datacenter for datacenter in self.db.datacenters]),
+            dumper.dump([datacenter for datacenter in selected_datacenters]),
             end='',
         )
 
