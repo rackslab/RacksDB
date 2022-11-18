@@ -31,8 +31,10 @@ import jinja2
 from racksdb import RacksDB
 from racksdb.generic.schema import SchemaBackReference
 
+
 class LineLoader(yaml.loader.SafeLoader):
     """Custom loader to line number of every nodes YAML file."""
+
     def __init__(self, stream):
         super().__init__(stream)
 
@@ -90,7 +92,7 @@ def main():
         if obj.name != '_content':
             obj_line = schema_lines[data['_objects']['__line_' + obj.name]]
             if '#' in obj_line:
-                obj.description = obj_line.split('#',1)[1].strip()
+                obj.description = obj_line.split('#', 1)[1].strip()
             else:
                 obj.description = None
         for prop in obj.properties:
@@ -100,7 +102,7 @@ def main():
                 item = data['_objects'][obj.name]
             prop_line = schema_lines[item['__line_' + prop.name]]
             if '#' in prop_line:
-                prop.description = prop_line.split('#',1)[1].strip()
+                prop.description = prop_line.split('#', 1)[1].strip()
             else:
                 prop.description = '-'
 
