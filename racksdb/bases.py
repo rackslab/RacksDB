@@ -31,6 +31,10 @@ class RacksDBInfrastructureBase:
                 result.items.append(node)
         return result
 
+    @property
+    def tags(self):
+        return [tag for tag in getattr(self, f"{self.LOADED_PREFIX}tags", [])]
+
 
 class RacksDBNodeBase:
     @property
