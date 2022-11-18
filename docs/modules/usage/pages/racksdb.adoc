@@ -81,6 +81,16 @@ The search commands available are the following:
 [.cli-opt]#*infrastructures*#::
 
   Dump information about infrastructures.
++
+--
+This command accepts the following options:
+
+*[.cli-opt]#--name*=#[.cli-optval]##_NAME_##::
+  Name of the infrastructure to search.
+
+*[.cli-opt]#--tags*=#[.cli-optval]##_TAG_ [_TAG_]##::
+  Select the infrastructures labelled with these tags.
+--
 
 [.cli-opt]#*nodes*#::
 
