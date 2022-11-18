@@ -60,6 +60,12 @@ Library class type: `RacksDBDatacenter`
 
 |{symbol-seq}{nbsp}xref:#obj-datacenterroom[{symbol-obj}{nbsp}DatacenterRoom]
 |[.green]#icon:check[]#
+
+|tags
+|The list of tags associated to this datacenter.
+
+|{symbol-seq}{nbsp}str
+|[.grey]#-#
 |===
 
 [#obj-datacenterroom]
