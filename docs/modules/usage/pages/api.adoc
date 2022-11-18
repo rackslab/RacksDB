@@ -381,6 +381,44 @@ Count the total number of nodes in the database:
 ====
 --
 
+=== `RacksDBDatacenter`
+
+==== Attributes
+
+The `RacksDBDatacenter` class provides the following specialized attribute:
+
+* `tags`: The list of tags associated to the datacenter, returned as a list
+  of strings. If the underlying `tags` property of
+  xref:db:structure.adoc#obj-datacenter[Datacenter object] is not
+  defined, the value is an empty list.
++
+--
+.Example
+====
+Get the list of tags of the _paris_ datacenter:
+
+[source,python]
+----
+>>> db.datacenters['paris'].tags
+['freecooling', 'tier2']
+----
+====
+
+[CAUTION]
+====
+This attribute overrides the `tags` property of
+xref:db:structure.adoc#obj-datacenter[Datacenter object]. When defined,
+the original value of the underlying property can be retrieved through the
+`__loaded_tags` attribute as a xref:#list[`DBList`] object:
+
+[source,python]
+----
+>>> db.datacenters['paris'].__loaded_tags.items
+['freecooling', 'tier2']
+----
+====
+--
+
 === `RacksDBInfrastructure`
 
 ==== Attributes
