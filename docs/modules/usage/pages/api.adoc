@@ -435,6 +435,36 @@ the original value of the underlying property can be retrieved through the
 ====
 --
 
+==== Filtering
+
+The `RacksDBInfrastructure` class provides an implementation of the `_filter()`
+method, for easy filtering of xref:#list[`DBList`] containing
+`RacksDBInfrastructure` objects. It accepts the following arguments:
+
+* `name`: the name of an infrastructure
+* `tags`: a list of tags
+
+An infrastructure is selected only if it matches all criteria. If multiple tags
+are provided, only the infrastructures for which all the tags are applied are
+selected.
+
+.Examples
+====
+Get the infrastructure named _mercury_:
+
+[source,python]
+----
+>>> db.infrastructures.filter(name='mercury')
+----
+
+Get all infrastructures with tag _cluster_:
+
+[source,python]
+----
+>>> db.infrastructures.filter(tags=['cluster'])
+----
+====
+
 === `RacksDBNode`
 
 ==== Attributes
@@ -471,7 +501,7 @@ original value of the underlying property can be retrieved through the
 
 ==== Filtering
 
-The `RacksDBNode` class provides an implementation for the `_filter()` method,
+The `RacksDBNode` class provides an implementation of the `_filter()` method,
 for easy filtering of xref:#list[`DBList`] containing `RacksDBNode` objects. It
 accepts the following arguments:
 
