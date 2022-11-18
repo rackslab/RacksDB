@@ -77,10 +77,10 @@ _objects:
     depth: ~dimension # Depth of the rack.
     slots: ~rack_height # Number of U slots available in the rack.
   Datacenter:
-    name: str # Unique name of the datacenter.
+    name: key str # Unique name of the datacenter.
     rooms: list[:DatacenterRoom] # List of rooms in this datacenter.
   DatacenterRoom:
-    name: str # Unique name of the room in this datacenter.
+    name: key str # Unique name of the room in this datacenter.
     dimensions: :DatacenterRoomDimensions # Dimensions of this room.
     rows: optional list[:DatacenterRoomRow] # List of racks rows on this room.
     datacenter: ^Datacenter # Back reference to the datacenter where this room is located.
@@ -88,7 +88,7 @@ _objects:
     width: ~dimension # Width of datacenter room.
     depth: ~dimension # Depth of datacenter room.
   DatacenterRoomRow:
-    name: str # Unique name of the racks row.
+    name: key str # Unique name of the racks row.
     position: :DatacenterRoomPosition # The position of the racks row in the room.
     racks: list[:DatacenterRoomRack] # The list of (empty) racks in the room.
     reversed: default false bool # Boolean to control the side of the racks doors in the racks row. When reversed is true, the doors are on the top.
