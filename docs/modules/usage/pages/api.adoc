@@ -419,6 +419,36 @@ the original value of the underlying property can be retrieved through the
 ====
 --
 
+==== Filtering
+
+The `RacksDBDatacenter` class provides an implementation of the `_filter()`
+method, for easy filtering of xref:#list[`DBList`] containing
+`RacksDBDatacenter` objects. It accepts the following arguments:
+
+* `name`: the name of an infrastructure
+* `tags`: a list of tags
+
+A datacenter is selected only if it matches all criteria. If multiple tags
+are provided, only the datacenters for which all the tags are applied are
+selected.
+
+.Examples
+====
+Get the datacenters named _paris_:
+
+[source,python]
+----
+>>> db.datacenters.filter(name='paris')
+----
+
+Get all datacenters with tag _tier2_:
+
+[source,python]
+----
+>>> db.datacenters.filter(tags=['tier2'])
+----
+====
+
 === `RacksDBInfrastructure`
 
 ==== Attributes
