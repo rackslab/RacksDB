@@ -93,7 +93,7 @@ _objects:
     position: :DatacenterRoomPosition # The position of the racks row in the room.
     racks: list[:DatacenterRoomRack] # The list of (empty) racks in the room.
     reversed: default false bool # Boolean to control the side of the racks doors in the racks row. When reversed is true, the doors are on the top.
-  DatacenterRoomPosition: # NOTE: Please refer to xref:positionning-racks.adoc[racks positionning how-to] for more details.
+  DatacenterRoomPosition: # NOTE: Please refer to xref:positioning-racks.adoc[racks positioning how-to] for more details.
     width: ~dimension # The position of the top-left corner of the racks row in the width axis of the room.
     depth: ~dimension # The position of the top-left corner of the racks row in the depth axis of the room.
     rotation: default 0 ~angle # The rotation angle of the racks row clockwise compared to the width axis of the room (ie. an horizontal line).
@@ -115,21 +115,21 @@ _objects:
     storage: default [] list[:StorageEquipment] # The list of storage equipments of the infrastructure in this rack.
     network: default [] list[:NetworkEquipment] # The list of network equipments of the infrastructure in this rack.
     tags: optional list[str] # The list of tags associated to the equipments of the infrastructure in this rack.
-  Node: # NOTE: Please refer to xref:positionning-equipments.adoc[equipment positionning how-to] for more details.
+  Node: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
     name: key expandable # The names of the nodes in this set.
     infrastructure: ^Infrastructure # The infrastructure of these nodes.
     rack: ^InfrastructurePart.rack # The rack of these nodes.
     type: $NodeType.id # The type of nodes unique identifier.
     slot: rangeid # The slot in the rack used by the first node in this set.
     tags: optional list[str] # The list of tags associated to these nodes.
-  StorageEquipment: # NOTE: Please refer to xref:positionning-equipments.adoc[equipment positionning how-to] for more details.
+  StorageEquipment: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
     name: expandable # The names of the storage equipments in this set.
     infrastructure: ^Infrastructure # The infrastructure of these storage equipments.
     rack: ^InfrastructurePart.rack # The rack of these storage equipments.
     type: $StorageEquipmentType.id {} # The type of storage equipment unique identifier.
     slot: rangeid # The slot in the rack used by the first storage equipment in this set.
     tags: optional list[str] # The list of tags associated to these storage equipments.
-  NetworkEquipment: # NOTE: Please refer to xref:positionning-equipments.adoc[equipment positionning how-to] for more details.
+  NetworkEquipment: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
     name: expandable # The names of the network equipments in this set.
     infrastructure: ^Infrastructure # The infrastructure of these network equipments.
     rack: ^InfrastructurePart.rack # The rack of these network equipments.
