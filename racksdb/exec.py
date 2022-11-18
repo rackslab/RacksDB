@@ -134,6 +134,13 @@ class RacksDBExec:
             help='Show object types in dumps',
             action='store_true',
         )
+        parser_infras.add_argument(
+            '--name',
+            help='Filter infrastructures by name',
+        )
+        parser_infras.add_argument(
+            '--tags', help='Filter infrastructures by tag', nargs='*'
+        )
         parser_infras.set_defaults(func=self._run_infras)
 
         # Parser for the nodes command
@@ -279,14 +286,16 @@ class RacksDBExec:
         )
 
     def _run_infras(self):
+        selected_infras = self.db.infrastructures.filter(
+            name=self.args.name,
+            tags=self.args.tags,
+        )
+
         # print list of infrastructures
         if self.args.list:
             print(
                 '\n'.join(
-                    [
-                        infrastructure.name
-                        for infrastructure in self.db.infrastructures
-                    ]
+                    [infrastructure.name for infrastructure in selected_infras]
                 )
             )
             return
@@ -301,9 +310,7 @@ class RacksDBExec:
             objects_map=objects_map,
         )
         print(
-            dumper.dump(
-                [infrastructure for infrastructure in self.db.infrastructures]
-            ),
+            dumper.dump([infrastructure for infrastructure in selected_infras]),
             end='',
         )
 
