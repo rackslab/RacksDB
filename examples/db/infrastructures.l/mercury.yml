@@ -1,5 +1,8 @@
 name: mercury
 description: Mercury HPC cluster
+tags:
+- hpc
+- cluster
 layout:
 - rack: R1-A01
   tags: [compute]
