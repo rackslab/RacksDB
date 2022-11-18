@@ -139,10 +139,23 @@ $ racksdb datacenters
 Dump information about all the datacenters with their rooms and racks.
 
 [source,console]
+$ racksdb datacenters --tags tier2
+
+[.cli-example-desc]
+Dump information about all the datacenters that have the _tier2_ tag.
+
+[source,console]
 $ racksdb infrastructures
 
 [.cli-example-desc]
 Dump information about all the infrastructures with their parts and equipments.
+
+[source,console]
+$ racksdb infrastructures --tags hpc cluster
+
+[.cli-example-desc]
+Dump information about all the infrastructures that have both the _hpc_ and
+_cluster_ tags.
 
 [source,console]
 $ racksdb infrastructures --list
