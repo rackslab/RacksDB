@@ -328,9 +328,21 @@ class GenericDB(DBObject):
                     value,
                 )
                 setattr(obj, prop.name, value)
-            # Set object _key attribute if property is a key
+            # If property is a key, check value uniqueness and set object _key
+            # attribute.
             if prop.key:
-                setattr(obj, '_key', getattr(obj, prop.name))
+                value = getattr(obj, prop.name)
+                # If another object of the same type is already present in index
+                if schema_object.name in self._indexes:
+                    # Check over all previously loaded objects of the same type
+                    # if this key value has not been used yet.
+                    for _obj in self._indexes[schema_object.name]:
+                        if getattr(_obj, prop.name) == value:
+                            raise DBFormatError(
+                                f"Key value {value} of {schema_object} is not "
+                                "unique."
+                            )
+                setattr(obj, '_key', value)
 
         # add object to db indexes
         if schema_object.name not in self._indexes:
