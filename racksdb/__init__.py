@@ -18,6 +18,7 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 from pathlib import Path
+from typing import Union
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBList, DBFileLoader, DBSplittedFilesLoader
@@ -46,9 +47,9 @@ class RacksDB(GenericDB):
     @classmethod
     def load(
         cls,
-        schema: str | Path | None = None,
-        ext: str | Path | None = None,
-        db: str | Path | None = None,
+        schema: Union[str, Path, None] = None,
+        ext: Union[str, Path, None] = None,
+        db: Union[str, Path, None] = None,
     ):
         # Unfortunately, default values to arguments cannot be used as they are
         # class attributes and the class is not defined yet at this stage at
