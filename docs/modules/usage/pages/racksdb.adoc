@@ -28,16 +28,16 @@ endif::[]
   Path to database. Both files and directories paths are accepted. If the path
   is a directory, all YAML files in this directory are loaded, recursively. If
   the path does not exist, an error is reported. Default value is
-  `/var/lib/racksdb/` directory.
+  [.path]#`/var/lib/racksdb/`# directory.
 
 [.cli-opt]#*-s, --schema*=#[.cli-optval]##_SCHEMA_##::
   Path to RacksDB schema YAML file. If the file does not exist, an error is
-  reported. Default value is `/usr/share/racksdb/schema.yml`.
+  reported. Default value is [.path]#`/usr/share/racksdb/schema.yml`#.
 
 [.cli-opt]#*-e, --ext*=#[.cli-optval]##_EXT_##::
   Path to optional RacksDB schema extensions. If the file does not exist,
   it is silently ignored by RacksDB. Default value is
-  `/etc/racksdb/extensions.yml`.
+  [.path]#`/etc/racksdb/extensions.yml`#.
 
 == Commands
 
