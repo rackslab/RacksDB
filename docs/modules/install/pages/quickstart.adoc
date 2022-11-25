@@ -1,25 +1,223 @@
 = Quickstart
 
-TBD
+This quickstart guide provides the first steps to get RacksDB up and ready!
 
-////
-FIXME: Document how-to install RacksDB
-////
+== Installation
+
+Several installation methods are supported for RacksDB. It is recommended to use
+xref:#deb[Deb] or xref:#rpm[RPM] packages repositories (depending on your Linux
+distribution) for more integration with your system but installation from
+xref:#pypi[PyPI] repository is also available.
+
+[#deb]
+=== Deb (Debian, Ubuntu)
+
+First download packages repository signing key:
+
+[source,console]
+----
+# curl -sS https://pkgs.rackslab.io/keyring.asc | gpg --dearmor | tee /usr/share/keyrings/rackslab.gpg > /dev/null
+----
+
+Create `/etc/apt/sources.list.d/rackslab.list` with this content:
+
+* Debian 11 _« bullseye »_ :
++
+[source]
+----
+deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb bullseye main
+----
+
+* Debian 12 _« bookworm »_ :
++
+[source]
+----
+deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb bookworm main
+----
+
+* Debian unstable _« sid »_ :
++
+[source]
+----
+deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb sid main
+----
+
+* Ubuntu 22.04 LTS _« jammy »_ :
++
+[source]
+----
+deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb ubuntu22.04 main
+----
+
+Update packages sources metadata:
+
+[source,console]
+----
+# apt update
+----
+
+Install RacksDB packages and dependencies:
+
+[source,console]
+----
+# apt install racksdb
+----
+
+[#rpm]
+=== RPM (RHEL, CentOS, Rocky Linux, Fedora)
+
+[NOTE]
+====
+On RHEL8, CentOS 8 and Rocky Linux 8 some dependencies are missing in
+standard distribution repositories. You must enable
+https://docs.fedoraproject.org/en-US/epel/[EPEL] _el8_ repositories to get all
+requirements on these distributions:
+
+[source,shell]
+----
+# dnf install -y epel-release
+----
+====
+
+Download and save RPM repository kerying:
+
+[source,console]
+----
+# curl https://pkgs.rackslab.io/keyring.asc --output /etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+
+Create DNF repository file `/etc/yum.repos.d/rackslab.repo`:
+
+* For RHEL8, CentOS 8 and Rocky Linux 8 :
+
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/el8/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+
+* For Fedora 36 :
+
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/fc36/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+
+* For Fedora 37 :
+
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/fc37/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+
+Install RacksDB packages:
+
+[source,console]
+----
+# dnf install racksdb
+----
+
+[#pypi]
+=== PyPI
+
+To install RacksDB python package from https://pypi.org/[PyPI repository], run
+the following command:
+
+[source,console]
+----
+$ pip install racksdb
+----
+
+This can be installed with basic user permissions by using a
+https://docs.python.org/3/tutorial/venv.html[Python virtual environment].
 
 [#examples]
-== Examples
+== Bootstrap database
 
 RacksDB provides several fully working examples of databases. When RacksDB is
-installed, these examples are available in `/usr/share/doc/rackslab/examples`.
+installed with system packages, these examples are available in
+`/usr/share/doc/rackslab/examples`.
 
 It is recommended to use these examples as a starting point to define your own
 database.
 
-Run this command to copy a complete example:
+Run this command to copy a complete example database:
 
 [source,console]
 ----
-$ cp -r /usr/share/doc/racksdb/examples/db/* /var/lib/racksdb/
+$ sudo cp -r /usr/share/doc/racksdb/examples/db/* /var/lib/racksdb/
 ----
 
-Then adapt the content of the files to match your actual infrastructures.
+== Explore example database
+
+The database is boostraped with fake example data, you can explore its content
+with some commands, for example:
+
+* Get datacenters information:
+
+[source,console]
+----
+$ racksdb datacenters
+----
+
+* Get the content of a rack:
+
+[source,console]
+----
+$ racksdb racks --name R1-A01
+----
+
+* Get the list of compute nodes in an infrastructure:
+
+[source,console]
+----
+$ racksdb nodes --infrastructure mercury --tags compute --list
+----
+
+For more details, please refer to xref:usage:racksdb.adoc[`racksdb`(1) command
+manpage].
+
+[sidebar]
+--
+.More links
+* xref:usage:racksdb.adoc[`racksdb`(1) command manpage]
+--
+
+== Define real database
+
+It is time to adapt the content of the database to match your actual
+infrastructures. For this purpose, you should edit the files in directory
+[.path]#`/var/lib/racksdb`#.
+
+The bootstrap example should help you to guess the structure and properties but
+the xref:db:structure.adoc[database structure reference documentation] provides
+all details.
+
+The xref:db:positioning-racks.adoc[racks] and
+xref:db:positionning-equipements[equipments] positionning How-tos may also help
+you to define complex layouts.
+
+[sidebar]
+--
+.More links
+* xref:db:structure.adoc[Database structure reference documentation]
+* xref:db:positioning-racks.adoc[Racks positionning How-to]
+* xref:db:positionning-equipements[Equipments positionning How-to]
+--
