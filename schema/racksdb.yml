@@ -5,7 +5,7 @@
 # structure. These comments MUST NOT be wrapped over multiple lines or tools are
 # unable to extract these comments properly.
 
-_version: 0.0.1
+_version: 0.1.0
 
 _content:
   types: :Types # Datacenter equipments types definitions.
