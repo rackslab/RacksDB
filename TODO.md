@@ -1,11 +1,6 @@
-# TODO v1
+# TODO v0.1 beta
 
 - [x] Tests of generic Schema loads
-- [ ] Tests of back references in Schema
-- [ ] Tests of default properties in Schema
-- [ ] Tests of boolean properties in Schema
-- [ ] Tests of circular dependencies in schemas
-- [ ] Tests of generic DB loads
 - [x] Add other types of equipments (eg. network switches, NAS/SAN)
 - [x] Support racks cols in rooms
 - [x] CLI simple DB query
@@ -31,12 +26,24 @@
 - [x] Support schemas extensions
 - [x] Support different racks heights infrastructure draws
 - [x] Avoid global AttributeError catch when calling args func
-- [ ] Write manpage
-- [ ] Full documentation with antora
-- [ ] deb/rpm packages
+- [x] Filter infrastructure by name and tag with CLI
+- [x] API with objects attached methods
+- [x] Rename cpus→cpus in schema
+- [x] Add db.nodes() method
+- [x] Write manpage
+- [x] Full documentation with antora
+- [x] Publish on PyPI
+- [x] deb/rpm packages
+- [x] Write quickstart guide
 
-# TODO v2
+# TODO v0.2
 
+- [ ] Tests of back references in Schema
+- [ ] Tests of default properties in Schema
+- [ ] Tests of boolean properties in Schema
+- [ ] Tests of circular dependencies in schemas
+- [ ] Tests of generic DB loads
+- [ ] Add class/object diagram of database schema in docs
 - [ ] Add JSON DBDumper
 - [ ] Draw pixel perfect lines (cf. https://www.cairographics.org/FAQ/#sharp_lines)
 - [ ] Draw racks based on imported SVG file
