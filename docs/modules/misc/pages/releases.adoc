@@ -1,0 +1,10 @@
+= Release notes
+
+This page contains the releases notes of RacksDB with details about the new
+features, modifications and bug fixes coming with all releases.
+
+NOTE: This page is rendered based on the content of
+https://github.com/rackslab/racksdb/blob/main/CHANGELOG.md[`CHANGELOG.md`]
+in RacksDB source code.
+
+include::partial$CHANGELOG.adoc[lines=8..-1,leveloffset=-1]

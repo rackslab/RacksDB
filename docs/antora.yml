@@ -11,3 +11,10 @@ nav:
 - modules/install/nav.adoc
 - modules/db/nav.adoc
 - modules/usage/nav.adoc
+- modules/misc/nav.adoc
+ext:
+  collector:
+    run:
+      command: sh docs/generate-changelog.sh
+    scan:
+      dir: generated-doc

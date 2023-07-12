@@ -9,8 +9,10 @@ and this project adheres to
 ## [Unreleased]
 
 ### Added
-- docs: add installation method from sources intended to software developers in
-  the quickstart guide.
+- docs:
+  - Add installation method from sources intended to software developers in the
+    quickstart guide.
+  - Add the _« Release notes »_ page based on the content of `CHANGELOG.md`.
 
 ### Changed
 - docs: present the supported Linux distributions with tabs in the quickstart
