@@ -12,6 +12,10 @@ and this project adheres to
 - docs: add installation method from sources intended to software developers in
   the quickstart guide.
 
+### Changed
+- docs: present the supported Linux distributions with tabs in the quickstart
+  guide.
+
 ### Fixed
 - Rename module that contains defined types definitions dtypes to avoid
   potential conflict with Python standard library types module (#18).

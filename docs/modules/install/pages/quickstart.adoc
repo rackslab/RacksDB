@@ -26,33 +26,65 @@ First download packages repository signing key:
 
 Create `/etc/apt/sources.list.d/rackslab.list` with this content:
 
-* Debian 11 _« bullseye »_ :
-+
-[source]
-----
-deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb bullseye main
-----
 
-* Debian 12 _« bookworm »_ :
+[tabs]
+======
+Debian 11 _« bullseye »_::
 +
+====
 [source]
 ----
-deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb bookworm main
+Types: deb
+URIs: https://pkgs.rackslab.io/deb
+Suites: bullseye
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/rackslab.gpg
 ----
+====
 
-* Debian unstable _« sid »_ :
+Debian 12 _« bookworm »_::
 +
+====
 [source]
 ----
-deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb sid main
+Types: deb
+URIs: https://pkgs.rackslab.io/deb
+Suites: bookworm
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/rackslab.gpg
 ----
+====
 
-* Ubuntu 22.04 LTS _« jammy »_ :
+Debian unstable _« sid »_::
 +
+====
 [source]
 ----
-deb [signed-by=/usr/share/keyrings/rackslab.gpg arch=amd64] https://pkgs.rackslab.io/deb ubuntu22.04 main
+Types: deb
+URIs: https://pkgs.rackslab.io/deb
+Suites: sid
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/rackslab.gpg
 ----
+====
+
+Ubuntu 22.04 LTS _« jammy »_::
++
+====
+[source]
+----
+Types: deb
+URIs: https://pkgs.rackslab.io/deb
+Suites: ubuntu22.04
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/rackslab.gpg
+----
+====
+======
 
 Update packages sources metadata:
 
@@ -93,7 +125,15 @@ Download and save RPM repository kerying:
 
 Create DNF repository file `/etc/yum.repos.d/rackslab.repo`:
 
-* For RHEL8, CentOS 8 and Rocky Linux 8 :
+[tabs]
+======
+RHEL8::
++
+====
+
+NOTE: These packages are also compatible with https://www.centos.org/[CentOS 8],
+https://rockylinux.org/[Rocky Linux 8] and
+https://almalinux.org/[AlmaLinux OS 8].
 
 [source]
 ----
@@ -105,9 +145,11 @@ enabled=1
 countme=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
+====
 
-* For Fedora 36 :
-
+Fedora 36::
++
+====
 [source]
 ----
 [rackslab]
@@ -118,9 +160,11 @@ enabled=1
 countme=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
+====
 
-* For Fedora 37 :
-
+Fedora 37::
++
+====
 [source]
 ----
 [rackslab]
@@ -131,6 +175,8 @@ enabled=1
 countme=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
+====
+======
 
 Install RacksDB packages:
 
