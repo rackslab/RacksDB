@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+- Rename module that contains defined types definitions dtypes to avoid
+  potential conflict with Python standard library types module (#18).
+
 ## [0.1.0~beta] - 2022-11-28
 
 [unreleased]: https://github.com/rackslab/racksdb/compare/v0.1.0-beta...HEAD

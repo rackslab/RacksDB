@@ -26,7 +26,7 @@ from racksdb.generic.definedtype import SchemaDefinedType
 class TestSchemaDefinedTypeLoader(unittest.TestCase):
     def test_schema_defined_type_loader(self):
         # Load defined types provided in RacksDB
-        loader = SchemaDefinedTypeLoader('racksdb.types')
+        loader = SchemaDefinedTypeLoader('racksdb.dtypes')
         # Verify at least one defined type has been loaded
         self.assertGreater(len(loader.content), 0)
         # Verify loader content is a dict
