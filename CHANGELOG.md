@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+- docs: add installation method from sources intended to software developers in
+  the quickstart guide.
+
 ### Fixed
 - Rename module that contains defined types definitions dtypes to avoid
   potential conflict with Python standard library types module (#18).
