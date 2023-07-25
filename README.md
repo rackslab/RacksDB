@@ -81,6 +81,34 @@ of RacksDB is available online with complete database definition reference
 documentation, how-tos (extensions, positioning), CLI manpage and library API
 documentation.
 
+## Development
+
+### Web application frontend
+
+#### Project setup
+```
+npm install
+```
+
+#### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+#### Compiles and minifies for production
+```
+npm run build
+```
+
+#### Lints and fixes files
+```
+npm run lint
+```
+
+#### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
 ## Authors
 
 RacksDB is developed and maintained by [Rackslab](https://rackslab.io). Please
