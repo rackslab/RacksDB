@@ -2,14 +2,14 @@
 <div class="datacenters">
     <h1>Datacenters</h1>
 
-    <div class="search-filter">
-        <input type="text" v-model="search" placeholder="Search a datacenter"/>
-        
-        <div class="item-datacenter" v-for="datacenter in datacenters" :key="datacenter">
-            <a href="#">{{ datacenter.name }}</a>
-        </div>
+    <input id="myInput" type="text" v-model="input" placeholder="Search a datacenter" v-on:keyup="myFunction()"/>
 
-    </div>
+
+    <ul id="myUL">
+      <li v-for="datacenter in datacenters" :key="datacenter"><a href="#">{{datacenter.name}}</a></li>
+    </ul>
+
+
 
 </div>
 
@@ -17,7 +17,6 @@
 
 <script>
 import axios from 'axios';
-
 
 export default {
   data() {
@@ -33,21 +32,34 @@ export default {
       try {
         const datacentersResponse = await axios.get('http://localhost:5000/api/datacenters');
         this.datacenters = datacentersResponse.data;
-        
-    } catch (error){
+      } catch (error){
         this.error = 'Error fetching data';
         console.error(error)
-    }
-},
-filteredList() {
-    if (this.search){
-        return this.datacenters.filter((datacenter) =>
-        datacenter.toLocaleLowerCase().includes(this.search))
-    }
-}
-},
-};
+      }
+    },
 
+    myFunction() {
+    // Declare variables
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+      a = li[i].getElementsByTagName("a")[0];
+      txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+  }
+
+  },
+}; 
 
 </script>
   
