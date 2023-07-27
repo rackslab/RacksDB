@@ -10,11 +10,17 @@ db = RacksDB.load()
 def get_datacenters():
     datacenters = []
     for datacenter in db.datacenters.items:
-        datacenter_info ={
-            'name': datacenter.name,
-            'tags': datacenter.tags
-        }
-        datacenters.append(datacenter_info)
+        for room in datacenter.rooms:
+            datacenter_info ={
+                'name': datacenter.name,
+                'tags': datacenter.tags,
+                'room_name': room.name,
+                'room_width': room.dimensions.width,
+                'room_depth': room.dimensions.depth,
+                'nb_rack': len(room.rows.items),
+
+            }
+            datacenters.append(datacenter_info)
     return jsonify(datacenters)
 
 @app.route('/api/infrastructures', methods=['GET'])
