@@ -19,7 +19,7 @@ export default {
 
 <style scoped>
   .header{
-    margin: 0% 1% 1% 1%;
+    margin: 0% 1% 1% 0%;
   }
 </style>
 

@@ -75,6 +75,7 @@ export default {
     .slider{
       position: relative;
       background-image: url('../assets/racks_black.jpg');
+      width: 100vw;
       background-size: cover;
       background-position: center;
       height: 250px;
