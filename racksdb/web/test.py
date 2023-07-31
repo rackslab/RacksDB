@@ -26,11 +26,19 @@ print(' ')
 print('####################################')
 print(' ')
 
-for datacenter in db.datacenters.filter(name='paris').items:
+for datacenter in db.datacenters.items:
     for room in datacenter.rooms:
-        print(datacenter.name)
-        print(datacenter.tags)
-        print(room.name)
-        print(room.dimensions.width)
-        print(room.dimensions.depth)
-        print(len(room.rows.items))
+        for row in room.rows:
+            for rack in row.racks:
+                print(datacenter.name)
+                print(datacenter.tags)
+                print(room.name)
+                print(room.dimensions.width)
+                print(room.dimensions.depth)
+                print(len(room.rows.items))
+                print(rack.name)
+
+
+print(' ')
+print('####################################')
+print(' ')

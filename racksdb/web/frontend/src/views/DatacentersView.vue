@@ -28,10 +28,35 @@
               <td>{{ selectedDatacenter.room_depth }}</td>
               <td>{{ selectedDatacenter.room_width }}</td>
               <td>{{ selectedDatacenter.nb_rack }}</td>
-              <td><button type="button" class="btn btn-primary">SEE THE ROOM</button></td>
+              <td><button type="button" class="btn btn-primary" @click="showRoom()">SEE THE ROOM</button></td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="show-room" v-if="selectedDatacenter">
+        <h2>{{ selectedDatacenter.name }} Room {{ selectedDatacenter.room_name }}</h2>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Fill rate</th>
+              <th scope="col">List of infrastructures</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="rack in showRack()" :key="rack.name">
+              <td> {{ rack.rack_name }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+
+
       </div>
 
   </div>
@@ -44,8 +69,11 @@ export default {
   data() {
     return {
       datacenters: [], // liste de tous les datacenters qui sont dans la BDD.
+      infrastrucutures: [],
+      racks: [],
       showList: false, // Cette propriété permet de ne pas afficher la liste des datacenters (elle s'affiche uniquement quand il commence à taper quelque chose)
       selectedDatacenter: null, // cette propriété permet d'afficher le contenu demandé par l'utilisateur lors de la recherche
+      selectedRoom: null,
     };
   },
   mounted() {
@@ -57,6 +85,12 @@ export default {
       try {
         const datacentersResponse = await axios.get('http://localhost:5000/api/datacenters');
         this.datacenters = datacentersResponse.data;
+
+        const infrastructuresResponse = await axios.get('http://localhost:5000/api/infrastructures');
+        this.infrastructures = infrastructuresResponse.data;
+
+        const racksResponse = await axios.get('http://localhost:5000/api/racks');
+        this.racks = racksResponse.data;
       } catch (error){
         this.error = 'Error fetching data';
         console.error(error)
@@ -90,8 +124,20 @@ export default {
     const userSelection = event.target.textContent;
 
     this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === userSelection);
+  },
+
+  showRoom() {
+
+  },
+
+  showRack() {
+    if (this.selectedDatacenter) {
+        return this.racks.filter(rack => rack.datacenter_name === this.selectedDatacenter.name);
+      }
+      return [];
   }
   },
+
 }; 
 </script>
   

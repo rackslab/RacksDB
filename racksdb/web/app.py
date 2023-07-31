@@ -35,5 +35,19 @@ def get_infrastructures():
         infrastructures.append(infrastructure_info)
     return jsonify(infrastructures)
 
+@app.route('/api/racks', methods=['GET'])
+def get_racks():
+    racks = []
+    for datacenter in db.datacenters.items:
+        for room in datacenter.rooms:
+            for row in room.rows:
+                for rack in row.racks:
+                    racks_info ={
+                        'datacenter_name': datacenter.name,
+                        'rack_name': rack.name,
+                    }
+                    racks.append(racks_info)
+    return jsonify(racks)
+
 if __name__ == '__main__':
     app.run(debug=True)
