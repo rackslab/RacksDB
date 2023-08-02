@@ -35,21 +35,7 @@ export default {
 
 </script>
   
-<style scoped>
-  .header {
-    margin: 0% 1% 1% 1%;
-  }
-
-  .nav-link {
-    color: #000;
-    font-weight: normal;
-  }
-
-  /* Style pour les liens actifs */
-  .nav-link.active {
-    font-weight: bold;
-    color: #8233f3;
-  }
+<style scoped src="../assets/css/HeaderPage.css">
 
 </style>
   

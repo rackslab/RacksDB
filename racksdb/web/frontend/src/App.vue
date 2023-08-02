@@ -18,8 +18,6 @@ export default {
 </script>
 
 <style scoped>
-  .header{
-    margin: 0% 1% 1% 0%;
-  }
+
 </style>
 

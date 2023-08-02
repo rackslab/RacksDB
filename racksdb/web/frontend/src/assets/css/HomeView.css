@@ -1,0 +1,71 @@
+    
+    /* Style of the section with the img in the background */ 
+    .slider{
+        position: relative;
+        background-image: url('../racks_black.jpg');
+        width: 100vw;
+        background-size: cover;
+        background-position: center;
+        height: 250px;
+      }
+    
+      /* Style to center the title in the middle of the img */
+    .slider .main-title{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Style of the pseudo element to add the filter to the img */
+    .slider .overlay::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(128, 50, 241, 0.2);
+    }
+    
+    .slider h1{
+      color: white;
+      z-index: 1;
+    }
+  
+    .cards {
+      display: flex;
+      justify-content: space-around;
+      margin: 5% 0% 0% 0%
+    }
+  
+    .datacenters, .infrastructures {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 300px;
+      height: 300px;
+      border-radius: 50px;
+      background: #ffffff;
+      box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+    }
+  
+    ul{
+      list-style: none;
+    }
+
+    .title_card, .name {
+        color: #8032f1;
+        text-transform: capitalize;
+    }
+
+    .description {
+        font-style: italic;
+    }
+
+    .datacenters ul, .infrastructures ul{
+        display: flex;
+        flex-direction: column ;
+    }
