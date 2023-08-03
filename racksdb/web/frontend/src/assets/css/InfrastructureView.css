@@ -3,3 +3,37 @@
     flex-direction: column;
     align-items: center;
 }
+
+
+.cards{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    margin: 10px;
+    padding: 10px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50px;
+    background: #ffffff;
+    box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+    text-align: center;
+    justify-content: center;
+  }
+
+  ul{
+    list-style: none;
+  }
+
+  .name {
+    color: #8032f1;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.type{
+    color: #8032f1;
+}

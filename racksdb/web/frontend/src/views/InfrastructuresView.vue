@@ -5,8 +5,24 @@
       <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
 
       <ul id="myUL" v-show="showList">
-        <li v-for="infrastructure in infrastructures" :key="infrastructure.name" @click="showResult($event)">{{infrastructure.name}}</li>
+        <li v-for="infrastructure in infrastructures" :key="infrastructure.name" @click="showSearchResult($event)">{{infrastructure.name}}</li>
       </ul>
+
+      <div class="cards" v-if="selectedInfrastructure">
+
+
+          <div class="card" v-for="rack in showResultSelection()" :key="rack">
+            <ul>
+              <li><span class="name">{{ rack.rack_name }}</span></li>
+              <li><span class="type">Pas encore trouvé</span></li>
+              <li>{{ rack.node_name }}</li>
+              <li>{{ rack.node_id }}</li>
+            </ul>
+        </div>
+
+
+
+      </div>
 
     </div>
 </template>
@@ -20,6 +36,7 @@ export default {
   data() {
     return {
       infrastructures: [],
+      racks: [],
       showList: false,
       selectedInfrastructure: null,
     };
@@ -61,10 +78,18 @@ export default {
     this.showList = this.input.trim() !=='';
     },
 
-    showResult(event) {
+    showSearchResult(event) {
       const userSelection = event.target.textContent;
       this.selectedInfrastructure = this.infrastructures.find(infrastructure => infrastructure.name === userSelection);
+    },
+
+    showResultSelection(){
+      if(this.selectedInfrastructure){
+        return this.racks.filter(rack => rack.infrastructure_name === this.selectedInfrastructure.name)
+      }
     }
+
+
 
   },
 }; 
