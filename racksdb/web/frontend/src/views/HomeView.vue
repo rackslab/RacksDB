@@ -13,20 +13,19 @@
       <div class="cards">
 
         <div class="datacenters">
-          <h2>{{datacenters.length}} Datacenters</h2>
+          <h2 class="title_card">{{datacenters.length}} Datacenters</h2>
           <ul>
             <li v-for="datacenter in datacenters" :key="datacenter.id">
-              {{datacenter.name}}, {{ datacenter.tags.join(' ') }}
+              <span class="name">{{datacenter.name}}</span> <span class="description">, {{ datacenter.tags.join(' ') }}</span>
             </li>
           </ul>
         </div>
 
         <div class="infrastructures">
-          <h2>{{ infrastructures.length }} Infrastructures</h2>
+          <h2 class="title_card">{{ infrastructures.length }} Infrastructures</h2>
           <ul>
             <li v-for="infrastructure in infrastructures" :key="infrastructure.id">
-              {{ infrastructure.name }}, {{ infrastructure.tags.join(' ') }}
-  
+              <span class="name">{{infrastructure.name}}</span> <span class="description">, {{ infrastructure.tags.join(' ') }}</span>
             </li>
           </ul>
         </div>
@@ -43,7 +42,8 @@ export default {
   data() {
     return {
       datacenters: [],
-      infrastructures: []
+      infrastructures: [],
+
     };
   },
   mounted() {
@@ -52,65 +52,21 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const datacentersResponse = await axios.get('http://localhost:5000/api/datacenters');
-        this.datacenters = datacentersResponse.data;
+        const response = await axios.get('http://localhost:5000/api/homeview');
+        this.datacenters = response.data.datacenters;
+        this.infrastructures = response.data.infrastructures
 
-        const infrastructuresResponse = await axios.get('http://localhost:5000/api/infrastructures');
-        this.infrastructures = infrastructuresResponse.data;
       } catch (error){
         this.error = 'Error fetching data';
         console.error(error)
       }
     },
+
   },
 };
 
-
-
 </script>
-    
-    <style scoped>
-    
-    /* Style of the section with the img in the background */ 
-    .slider{
-      position: relative;
-      background-image: url('../assets/racks_black.jpg');
-      width: 100vw;
-      background-size: cover;
-      background-position: center;
-      height: 250px;
-    }
-  
-    /* Style to center the title in the middle of the img */
-  .slider .main-title{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
-  
-  /* Style of the pseudo element to add the filter to the img */
-  .slider .overlay::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(128, 50, 241, 0.2);
-  }
-  
-  .slider h1{
-    color: white;
-    z-index: 1;
-  }
 
-  .cards {
-    display: flex;
-    justify-content: space-around;
-    margin: 2% 0% 0% 0%
-    
-  }
-    </style>
+<style scoped src="../assets/css/HomeView.css">
+</style>
      
