@@ -1,12 +1,8 @@
 <template>
-  <!-- La balise HeaderPage permet d'insérer le composant dans l'entièreté de l'application -->
 <HeaderPage />
-
 </template>
 
-
 <script>
-// Importation du composant HeaderPage pour ensuite l'insérer dans l'application
 import HeaderPage from './components/HeaderPage.vue'
 
 export default {
@@ -18,6 +14,5 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
 

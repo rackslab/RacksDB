@@ -47,18 +47,15 @@
           </thead>
 
           <tbody>
-            <tr v-for="rack in showRack()" :key="rack.name">
+            <tr v-for="rack in racks" :key="rack.name">
               <td> {{ rack.rack_name }}</td>
-              <td></td>
-              <td></td>
+              <td>Hello1</td>
+              <td>{{ rack.infrastructure_name || 'N/A' }}</td>
             </tr>
-          </tbody>
+            </tbody>
         </table>
 
-
-
       </div>
-
   </div>
 </template>
 
@@ -68,12 +65,10 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      datacenters: [], // liste de tous les datacenters qui sont dans la BDD.
-      infrastrucutures: [],
-      racks: [],
-      showList: false, // Cette propriété permet de ne pas afficher la liste des datacenters (elle s'affiche uniquement quand il commence à taper quelque chose)
-      selectedDatacenter: null, // cette propriété permet d'afficher le contenu demandé par l'utilisateur lors de la recherche
-      selectedRoom: null,
+      datacenters: [], // List of all the data for datacenters
+      racks: [], // List of all the data for racks
+      showList: false, // Hides the list of datacenters until the user write something
+      selectedDatacenter: null, // The selection of the user will be in this variable
     };
   },
   mounted() {
@@ -83,29 +78,25 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const datacentersResponse = await axios.get('http://localhost:5000/api/datacenters');
-        this.datacenters = datacentersResponse.data;
+        const response = await axios.get('http://localhost:5000/api/datacenters');
+        this.datacenters = response.data.datacenters;
+        this.racks = response.data.racks
 
-        const infrastructuresResponse = await axios.get('http://localhost:5000/api/infrastructures');
-        this.infrastructures = infrastructuresResponse.data;
-
-        const racksResponse = await axios.get('http://localhost:5000/api/racks');
-        this.racks = racksResponse.data;
       } catch (error){
         this.error = 'Error fetching data';
         console.error(error)
       }
     },
 
+    // This method recovers the elements of the template and loop through all the items
+    // and hide those who don't match the search query
     searchDatacenter() {
-    // Declare variables
     var input, filter, ul, li, i, txtValue;
     input = document.getElementById('myInput'); 
     filter = input.value.toUpperCase();
     ul = document.getElementById("myUL");
     li = ul.getElementsByTagName('li');
 
-    // Loop through all list items, and hide those who don't match the search query
     for (i = 0; i < li.length; i++) {
       txtValue = li[i].textContent || li[i].innerText;
       
@@ -116,36 +107,17 @@ export default {
       }
     }
     this.showList = this.input.trim() !=='';
+    },
+
+    // This method get the selection of the user (event) and put the result of the query in a variable
+    showResult(event){
+      const userSelection = event.target.textContent;
+      this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === userSelection);
+    },
   },
-
-  showResult(event){
-    // On récupère la sélection de l'utilisateur .target permet de récupérer la référence dom de l'élément
-    // .textContent permet lui de prendre uniquement le texte.
-    const userSelection = event.target.textContent;
-
-    this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === userSelection);
-  },
-
-  showRoom() {
-
-  },
-
-  showRack() {
-    if (this.selectedDatacenter) {
-        return this.racks.filter(rack => rack.datacenter_name === this.selectedDatacenter.name);
-      }
-      return [];
-  }
-  },
-
 }; 
 </script>
   
-<style scoped>
-.datacenters{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+<style scoped src="../assets/css/DatacenterView.css">
 </style>
   
