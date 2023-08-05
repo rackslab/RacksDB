@@ -4,7 +4,7 @@
     align-items: center;
 }
 
-
+/* Container of the equipments cards */
 .cards{
     display: flex;
     flex-direction: row;
@@ -12,6 +12,7 @@
     flex-wrap: wrap;
 }
 
+/* style of the cards */
 .card {
     margin: 10px;
     padding: 10px;
@@ -22,18 +23,56 @@
     box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
     text-align: center;
     justify-content: center;
-  }
+}
 
-  ul{
-    list-style: none;
-  }
+/* Style of the data in the cards*/
+ul{
+  list-style: none;
+}
 
-  .name {
-    color: #8032f1;
-    font-weight: bold;
-    text-transform: capitalize;
+.name {
+  color: #8032f1;
+  font-weight: bold;
+  text-transform: capitalize;
 }
 
 .type{
-    color: #8032f1;
+  color: #8032f1;
+}
+
+/* Styles of the popup */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-inner {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  text-align: center;
+}
+
+.popup-close {
+  margin-top: 20px;
+  cursor: pointer;
+  background-color: #007BFF;
+  color: #fff;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+.popup-close:hover {
+  background-color: #0056b3;
 }
