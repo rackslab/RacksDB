@@ -77,6 +77,8 @@ _objects:
     depth: ~dimension # Depth of the rack.
     slots: ~rack_height # Number of U slots available in the rack.
   Datacenter:
+    gps_long: optional float # datacenter longitude
+    gps_lat: optional float # datacenter latitude
     name: key str # Unique name of the datacenter.
     rooms: list[:DatacenterRoom] # List of rooms in this datacenter.
     tags: optional list[str] # The list of tags associated to this datacenter.
