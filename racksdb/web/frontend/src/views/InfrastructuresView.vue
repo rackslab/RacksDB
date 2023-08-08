@@ -16,21 +16,46 @@
               <li><span class="name">{{ item.rack_name }}</span></li>
               <li><span class="type">Pas encore trouvé</span></li>
               <li>{{ item.name }}</li>
-              <li @click="showPopup(item.id)">{{ item.id }}</li>
+              <li @click="openModal(item.id)">{{ item.id }}</li>
             </ul>
-        </div>
+          </div>
       </div>
 
-      <!-- Popup -->
-      <div v-if="showPopupFlag" class="popup">
-        <div class="pop-inner">
-          <div class="details" v-for="e in node_equipments" :key="e">
-            <!-- content of the popup will go here-->
-          </div>
-            <button class="popup-close" @click="hidePopup">Close popup</button>
+      <!-- Modal -->
+    <div v-if="showPopupFlag" class="modal">
+      <div class="modal-content">
+        <!-- Affichez ici les détails de la modal en utilisant `selectedItemId` -->
+        <h2>Modal Content for ID: {{ selectedItemId }}</h2>
+
+        <div v-if="selectedEquipment">
+          <ul>
+            <li>ID: {{ selectedEquipment.node_id }}</li>
+            <li>Model: {{ selectedEquipment.node_model }}</li>
+            <li>Height: {{ selectedEquipment.node_height }}u</li>
+            <li>Width: {{ selectedEquipment.node_width }}</li>
+            <li>Specs: {{ selectedEquipment.node_specs }}</li>
+            
+            <!-- Specific for nodes-->
+            <li>CPU:</li>
+            <li>Sockets: {{ selectedEquipment.node_cpu_socket }}</li>
+            <li>Model: {{ selectedEquipment.node_cpu_model }}</li>
+            <li>Specs: {{ selectedEquipment.node_cpu_specs }}</li>
+            <li>Cores: {{ selectedEquipment.node_cpu_cores }}</li>
+            <li>RAM:</li>
+            <li>Dimm: {{ selectedEquipment.node_ram_dimm }}</li>
+            <li>Size: {{ selectedEquipment.node_ram_size }}GB</li>
+
+
+          </ul>
         </div>
+    
+        <!-- ... Autres informations liées à l'élément sélectionné ... -->
+        <button @click="closeModal">Close</button>
       </div>
     </div>
+
+    </div>
+   
 
 </template>
 
@@ -48,8 +73,9 @@ export default {
       node_equipments: [],
       showList: false,
       selectedInfrastructure: null,
+      selectedEquipment: null,
       showPopupFlag: false,
-      popupItemId: null,
+      selectedItemId: null,
     };
   },
   mounted() {
@@ -65,8 +91,12 @@ export default {
         this.storages = response.data.storages;
         this.networks = response.data.networks;
 
-        const response2 = await axios.get('http://localhost:5000/api/infrastructuresEquipments');
+        console.log(response.data);
+
+        const response2 = await axios.get('http://localhost:5000/api/equipments');
         this.node_equipments = response2.data.node_equipments;
+
+        console.log("je retourne ça :" + response2.data);
 
       } catch (error){
         this.error = 'Error fetching data';
@@ -115,14 +145,18 @@ export default {
       }
     },
 
-    showPopup(itemId) {
-      this.showPopupFlag = true; // afficher le pop up
-      this.popupItemId = itemId; // Stock l'id de l'élément cliqué
+    getEquipmentDetails(itemId){
+      return this.node_equipments.find(equipment => equipment.node_id === itemId)
     },
 
-    hidePopup() {
+    openModal(itemId) {
+      this.showPopupFlag = true;
+      this.selectedItemId = itemId;
+      this.selectedEquipment = this.getEquipmentDetails(itemId);
+    },
+
+    closeModal(){
       this.showPopupFlag = false;
-      this.popupItemId = null;
     },
 
   },
