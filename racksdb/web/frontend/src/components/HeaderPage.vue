@@ -5,7 +5,7 @@
 
             <!-- Left part of the navbar : clickable logo -->
             <a class="navbar-brand" href="/">
-              <img src="../assets/racksdb_logo.svg" alt="Logo Racksdb" width="100" height="100">
+              <img class="img" src="../assets/racksdb_logo.svg" alt="Logo Racksdb">
             </a>
   
           <!-- Lateral menu for small screen -->
