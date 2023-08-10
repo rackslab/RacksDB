@@ -5,7 +5,8 @@
   width: 100vw;
   background-size: cover;
   background-position: center;
-  height: 250px;
+  height: 300px;
+  margin-top: 17px;
 }
 
 .slider h1{
@@ -59,7 +60,7 @@
 
 ul{
   list-style: none;
-  margin: 42px 0px 0px 0px;
+  margin: 30px 0px 0px 0px;
 }
 
 li{
@@ -68,7 +69,7 @@ li{
 }
 
 .title_card, .name {
-  margin: 20px 0px 0px 0px ;
+  margin: 30px 0px 0px 0px ;
   color: #8032f1;
   text-transform: capitalize;
 
@@ -83,3 +84,6 @@ li{
   flex-direction: column ;
 }
 
+a{
+  text-decoration: none;
+}
