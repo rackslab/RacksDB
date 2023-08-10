@@ -35,32 +35,43 @@
 
 /* Container where datacenters card and infrastructures card are */
 .cards {
-  display: flex;
+  display: flex; 
+  flex-wrap: wrap;
   justify-content: space-around;
-  margin: 5% 0% 0% 0%
+  margin: 5% 10% 0% 10%
 }
 
 /* Style and disposition of the cards */
 .datacenters, .infrastructures {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 300px;
+  justify-content: flex-start; /* Aligne le contenu en haut de l'axe principal */
+  align-items: center; /* Aligne le contenu à gauche de l'axe transversal */
+  width: 350px;
+  height: 320px;
   border-radius: 50px;
   background: #ffffff;
-  box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+  box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
 }
+
       
 /* Style of the data in the cards*/
+
 ul{
   list-style: none;
+  margin: 42px 0px 0px 0px;
+}
+
+li{
+  margin: 11px 0px 0px 0px;
+
 }
 
 .title_card, .name {
+  margin: 20px 0px 0px 0px ;
   color: #8032f1;
   text-transform: capitalize;
+
 }
 
 .description {
@@ -71,3 +82,4 @@ ul{
   display: flex;
   flex-direction: column ;
 }
+

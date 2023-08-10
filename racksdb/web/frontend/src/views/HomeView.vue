@@ -14,22 +14,28 @@
 
         <div class="datacenters">
           <h2 class="title_card">{{datacenters.length}} Datacenters</h2>
-          <ul>
-            <li v-for="datacenter in datacenters" :key="datacenter.id">
-              <span class="name">{{datacenter.name}}</span> <span class="description">, {{ datacenter.tags.join(' ') }}</span>
-            </li>
-          </ul>
+          <div class="list">
+            <ul>
+              <li v-for="datacenter in datacenters" :key="datacenter.id">
+                <span class="name">{{datacenter.name}}</span> <span class="description">, {{ datacenter.tags.join(' ') }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div class="infrastructures">
           <h2 class="title_card">{{ infrastructures.length }} Infrastructures</h2>
-          <ul>
-            <li v-for="infrastructure in infrastructures" :key="infrastructure.id">
-              <span class="name">{{infrastructure.name}}</span> <span class="description">, {{ infrastructure.tags.join(' ') }}</span>
-            </li>
-          </ul>
+          <div class="list">
+            <ul>
+              <li v-for="infrastructure in infrastructures" :key="infrastructure.id">
+                <span class="name">{{infrastructure.name}}</span> <span class="description">, {{ infrastructure.tags.join(' ') }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
+
+
 
     </div>
 </template>
