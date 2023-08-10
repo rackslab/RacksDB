@@ -28,7 +28,7 @@
           <tbody>
             <tr>
               <th scope="row">{{ selectedDatacenter.room_name}}</th>
-              <td>{{ selectedDatacenter.room_depth }}</td>
+              <td>{{ selectedDatacenterc }}</td>
               <td>{{ selectedDatacenter.room_width }}</td>
               <td>{{ selectedDatacenter.nb_rack }}</td>
               <td><button type="button" class="btn btn-primary" @click="showRoom()">SEE THE ROOM</button></td>

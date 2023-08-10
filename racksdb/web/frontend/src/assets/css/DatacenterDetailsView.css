@@ -1,0 +1,50 @@
+.datacenter-details{
+    width: 100vw;
+    height: 87vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.search{
+    margin-top: 5%;
+}
+
+h1{
+    display: flex;
+    justify-content: center;
+}
+
+input{
+    padding: 7px;
+    margin: 10px;
+    border: 1;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    width: 500px;
+}
+
+input:focus {
+    outline-color: #8233f3;
+    outline-width: 2px;
+    outline-style: solid;
+}
+
+ul{
+    list-style: none;
+}
+
+  
+a{
+    text-decoration: none;
+    color: black;
+    text-transform: capitalize;
+}
+
+a:hover{
+    text-decoration: none;
+    color: #8233f3;
+    text-transform: capitalize;
+}
+
+  
