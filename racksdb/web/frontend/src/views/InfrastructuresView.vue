@@ -1,13 +1,16 @@
 <template>
     <div class="infrastructures">
-      <h1>Infrastructures</h1>
+      <div class="search">
+        <h1>Infrastructures</h1>
+  
+        <!-- Search zone -->
+        <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
+  
+        <ul id="myUL" v-show="showList">
+          <li v-for="infrastructure in infrastructures" :key="infrastructure.name" @click="showSearchResult($event)">{{infrastructure.name}}</li>
+        </ul>
 
-      <!-- Search zone -->
-      <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
-
-      <ul id="myUL" v-show="showList">
-        <li v-for="infrastructure in infrastructures" :key="infrastructure.name" @click="showSearchResult($event)">{{infrastructure.name}}</li>
-      </ul>
+      </div>
 
       <!-- Cards of the infrastructure -->
       <div class="cards" v-if="selectedInfrastructure">
