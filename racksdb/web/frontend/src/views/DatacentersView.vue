@@ -1,12 +1,15 @@
 <template>
   <div class="datacenters">
+    <div class="search">
       <h1>Datacenters</h1>
 
       <input id="myInput" type="text" v-model="input" placeholder="Search a datacenter" v-on:keyup="searchDatacenter()"/>
 
       <ul id="myUL" v-show="showList">
-        <li v-for="datacenter in datacenters" :key="datacenter" @click="showResult($event)">{{datacenter.name}}</li>
-      </ul>
+        <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)"><li @click="showResult($event)">{{datacenter.name}}</li></router-link>
+      </ul> 
+
+    </div>
 
       <div v-if="selectedDatacenter">
         <h2>{{ selectedDatacenter.name }}</h2>
@@ -110,10 +113,16 @@ export default {
     },
 
     // This method get the selection of the user (event) and put the result of the query in a variable
-    showResult(event){
-      const userSelection = event.target.textContent;
-      this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === userSelection);
+    showResult(datacenterName) {
+      this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === datacenterName);
+      this.$router.push({ name: 'datacenterdetails', params: { datacenterName: datacenterName } });
     },
+
+    // This method send the user to a dedicated page for the datacenter selected
+    getDatacenterDetailsRoute(datacenterName) {
+      return `/datacenter/${encodeURIComponent(datacenterName)}`
+    },
+    
   },
 }; 
 </script>
