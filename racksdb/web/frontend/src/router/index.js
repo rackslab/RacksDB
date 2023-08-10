@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DatacentersView from '../views/DatacentersView.vue'
+import DatacenterDetailsView from '../views/DatacenterDetailsView.vue'
 import InfrastructuresView from '../views/InfrastructuresView.vue'
 
 const routes = [
@@ -17,11 +18,17 @@ const routes = [
   },
 
   {
+    path: '/datacenter/:datacenterName', // Use dynamic parameter
+    name: 'datacenterdetails', 
+    component: DatacenterDetailsView, // create a new component to display details of the datacenter
+    props: true, // allow you to pass parameters as props to the component
+  },
+
+  {
     path: '/infrastructures',
     name: 'infrastructures',
     component: InfrastructuresView
   },
-
 
 ]
 
