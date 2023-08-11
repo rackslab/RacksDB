@@ -71,7 +71,7 @@ import axios from 'axios';
         },
 
         getRoomRoute(datacenterRoom){
-            return`/datacenter/${encodeURIComponent(this.datacenterName)}/${encodeURIComponent(datacenterRoom)}`
+            return`/datacenters/${encodeURIComponent(this.datacenterName)}/${encodeURIComponent(datacenterRoom)}`
         }
     }
   }
