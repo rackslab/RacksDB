@@ -16,7 +16,7 @@
           <router-link to="/datacenters"><h2 class="title_card">{{datacenters.length}} Datacenters</h2></router-link> 
             <ul>
               <li v-for="datacenter in datacenters" :key="datacenter.id">
-                <router-link to="/datacenter/:datacenter.name"><span class="name">{{datacenter.name}}</span></router-link> <span class="description">, {{ datacenter.tags.join(' ') }}</span>
+                <router-link :to="getDatacenterDetailsRoute(datacenter.name)"><span class="name">{{datacenter.name}}</span></router-link> <span class="description">, {{ datacenter.tags.join(' ') }}</span>
               </li>
             </ul>
         </div>
@@ -25,7 +25,7 @@
           <router-link to="/infrastructures"><h2 class="title_card">{{ infrastructures.length }} Infrastructures</h2></router-link>
             <ul>
               <li v-for="infrastructure in infrastructures" :key="infrastructure.id">
-                <router-link to="infrastructures"><span class="name">{{infrastructure.name}}</span></router-link> <span class="description">, {{ infrastructure.tags.join(' ') }}</span>
+                <router-link :to="getInfrastructureDetailsRoute(infrastructure.name)"><span class="name">{{infrastructure.name}}</span></router-link> <span class="description">, {{ infrastructure.tags.join(' ') }}</span>
               </li>
             </ul>
         </div>
@@ -62,6 +62,17 @@ export default {
         this.error = 'Error fetching data';
         console.error(error)
       }
+    },
+
+
+    // This method send the user to a dedicated page for the datacenter selected
+    getDatacenterDetailsRoute(datacenterName) {
+      return `/datacenters/${encodeURIComponent(datacenterName)}`
+    },
+
+    // This method send the user to a dedicated page for the datacenter selected
+    getInfrastructureDetailsRoute(infrastructureName) {
+      return `/infrastructures/${encodeURIComponent(infrastructureName)}`
     },
 
   },
