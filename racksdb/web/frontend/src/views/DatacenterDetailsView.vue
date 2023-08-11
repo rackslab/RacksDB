@@ -1,51 +1,28 @@
 <template>
     <div class="datacenter-details">
               
-        
-        <div v-if="selectedDatacenter">
-            <h2>{{ selectedDatacenter.name }}</h2>
+        <div v-if="selectedDatacenter" class="details-table">
+            <h2>{{ selectedDatacenter.name }} Datacenter :</h2>
 
             <table class="table table-bordered">
-            <thead>
-                <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Depth</th>
-                <th scope="col">width</th>
-                <th scope="col">Number of racks</th>
-                <th scope="col"> Access to the room</th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Depth</th>
+                    <th scope="col">width</th>
+                    <th scope="col">Number of racks</th>
+                    <th scope="col"> Access to the room</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr>
-                <th scope="row">{{ selectedDatacenter.room_name}}</th>
-                <td>{{ selectedDatacenter.room_depth }}</td>
-                <td>{{ selectedDatacenter.room_width }}</td>
-                <td>{{ selectedDatacenter.nb_rack }}</td>
-                <td><button type="button" class="btn btn-primary" @click="showRoom()">SEE THE ROOM</button></td>
-                </tr>
-            </tbody>
-            </table>
-            </div>
-
-            <div class="show-room" v-if="selectedDatacenter">
-            <h2>{{ selectedDatacenter.name }} Room {{ selectedDatacenter.room_name }}</h2>
-
-            <table class="table table-bordered">
-            <thead>
-                <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Fill rate</th>
-                <th scope="col">List of infrastructures</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr v-for="rack in racks" :key="rack.name">
-                <td> {{ rack.rack_name }}</td>
-                <td>Hello1</td>
-                <td>{{ rack.infrastructure_name || 'N/A' }}</td>
-                </tr>
+                <tbody>
+                    <tr>
+                    <td>{{ selectedDatacenter.room_name}}</td>
+                    <td>{{ selectedDatacenter.room_depth }}</td>
+                    <td>{{ selectedDatacenter.room_width }}</td>
+                    <td>{{ selectedDatacenter.nb_rack }}</td>
+                    <router-link :to="getRoomRoute(selectedDatacenter.room_name)"><td><button type="button" class="btn btn-primary">SEE THE ROOM</button></td></router-link>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -92,6 +69,10 @@ import axios from 'axios';
             this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === datacenterName);
             console.log(this.selectedDatacenter)
         },
+
+        getRoomRoute(datacenterRoom){
+            return`/datacenter/${encodeURIComponent(this.datacenterName)}/${encodeURIComponent(datacenterRoom)}`
+        }
     }
   }
  
