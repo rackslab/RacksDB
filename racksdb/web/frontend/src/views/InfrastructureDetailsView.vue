@@ -134,7 +134,7 @@ export default {
 }; 
 </script>
   
-<style scoped src="../assets/css/InfrastructureView.css">
+<style scoped src="../assets/css/InfrastructureDetailsView.css">
 
 </style>
   
