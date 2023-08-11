@@ -57,12 +57,15 @@ thead th{
     color: #8233f3 !important;
     background-color: #e7e5eb;
     vertical-align: middle;
+    border: 1px black solid;
+
 }
 tbody td{
-    height: 95px;
+    height: 100px;
     width: 200px;
     font-weight: normal;
     vertical-align: middle;
+    border: 1px black solid;
 }
 
 button{
@@ -81,15 +84,3 @@ h2{
     text-transform: capitalize;
 }
 
-/* links style */
-a{
-    text-decoration: none;
-    color: black;
-    text-transform: capitalize;
-}
-
-a:hover{
-    text-decoration: none;
-    color: #8233f3;
-    text-transform: capitalize;
-}
