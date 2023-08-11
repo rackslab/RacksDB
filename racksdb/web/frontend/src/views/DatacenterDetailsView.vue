@@ -21,7 +21,7 @@
                     <td>{{ selectedDatacenter.room_depth }}</td>
                     <td>{{ selectedDatacenter.room_width }}</td>
                     <td>{{ selectedDatacenter.nb_rack }}</td>
-                    <router-link :to="getRoomRoute(selectedDatacenter.room_name)"><td><button type="button" class="btn btn-primary">SEE THE ROOM</button></td></router-link>
+                    <td><router-link :to="getRoomRoute(selectedDatacenter.room_name)"><button type="button" class="btn btn-primary">SEE THE ROOM</button></router-link></td>
                     </tr>
                 </tbody>
             </table>
