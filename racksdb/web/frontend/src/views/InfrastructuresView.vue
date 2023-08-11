@@ -7,56 +7,9 @@
         <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
   
         <ul id="myUL" v-show="showList">
-          <li v-for="infrastructure in infrastructures" :key="infrastructure.name" @click="showSearchResult($event)">{{infrastructure.name}}</li>
+          <router-link v-for="infrastructure in infrastructures" :key="infrastructure.name" :to="getInfrastructureDetailsRoute(infrastructure.name)"><li @click="showSearchResult($event)">{{infrastructure.name}}</li></router-link>
         </ul>
-
       </div>
-
-      <!-- Cards of the infrastructure -->
-      <div class="cards" v-if="selectedInfrastructure">
-          <div class="card" v-for="item in showResultSelection()" :key="item">
-            <ul>
-              <li><span class="name">{{ item.rack_name }}</span></li>
-              <li><span class="type">Pas encore trouvé</span></li>
-              <li>{{ item.name }}</li>
-              <li @click="openModal(item.id)">{{ item.id }}</li>
-            </ul>
-          </div>
-      </div>
-
-      <!-- Modal -->
-    <div v-if="showPopupFlag" class="modal">
-      <div class="modal-content">
-        <!-- Affichez ici les détails de la modal en utilisant `selectedItemId` -->
-        <h2>Modal Content for ID: {{ selectedItemId }}</h2>
-
-        <div v-if="selectedEquipment">
-          <ul>
-            <li>ID: {{ selectedEquipment.node_id }}</li>
-            <li>Model: {{ selectedEquipment.node_model }}</li>
-            <li>Height: {{ selectedEquipment.node_height }}u</li>
-            <li>Width: {{ selectedEquipment.node_width }}</li>
-            <li>Specs: {{ selectedEquipment.node_specs }}</li>
-            
-            <!-- Specific for nodes-->
-            <li>CPU:</li>
-            <li>Sockets: {{ selectedEquipment.node_cpu_socket }}</li>
-            <li>Model: {{ selectedEquipment.node_cpu_model }}</li>
-            <li>Specs: {{ selectedEquipment.node_cpu_specs }}</li>
-            <li>Cores: {{ selectedEquipment.node_cpu_cores }}</li>
-            <li>RAM:</li>
-            <li>Dimm: {{ selectedEquipment.node_ram_dimm }}</li>
-            <li>Size: {{ selectedEquipment.node_ram_size }}GB</li>
-
-
-          </ul>
-        </div>
-    
-        <!-- ... Autres informations liées à l'élément sélectionné ... -->
-        <button @click="closeModal">Close</button>
-      </div>
-    </div>
-
     </div>
    
 
@@ -130,9 +83,14 @@ export default {
     },
 
     // This method get the selection of the user (event) and put the result of the query in a variable
-    showSearchResult(event) {
-      const userSelection = event.target.textContent;
-      this.selectedInfrastructure = this.infrastructures.find(infrastructure => infrastructure.name === userSelection);
+    showSearchResult(infrastructureName) {
+      this.selectedInfrastructure = this.infrastructures.find(infrastructure => infrastructure.name === infrastructureName);
+      this.$router.push({ name: 'infrastructuredetails', params: {infrastructureName: infrastructureName}});
+    },
+
+    // This method send the user to a dedicated page for the datacenter selected
+    getInfrastructureDetailsRoute(infrastructureName) {
+      return `/infrastructures/${encodeURIComponent(infrastructureName)}`
     },
 
     // if a infrastructure is selected, this method will merge all the data of this infrastructure in one variable
