@@ -120,7 +120,7 @@ export default {
 
     // This method send the user to a dedicated page for the datacenter selected
     getDatacenterDetailsRoute(datacenterName) {
-      return `/datacenter/${encodeURIComponent(datacenterName)}`
+      return `/datacenters/${encodeURIComponent(datacenterName)}`
     },
     
   },
