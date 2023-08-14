@@ -6,7 +6,8 @@
       <input id="myInput" type="text" v-model="input" placeholder="Search a datacenter" v-on:keyup="searchDatacenter()"/>
 
       <ul id="myUL" v-show="showList">
-        <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)"><li @click="showResult($event)">{{datacenter.name}}</li></router-link>
+        <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)">
+          <li @click="showResult($event)">{{datacenter.name}}</li></router-link>
       </ul> 
 
     </div>
@@ -70,7 +71,7 @@ export default {
     return {
       datacenters: [], // List of all the data for datacenters
       racks: [], // List of all the data for racks
-      showList: false, // Hides the list of datacenters until the user write something
+      showList: true, // Hides the list of datacenters until the user write something
       selectedDatacenter: null, // The selection of the user will be in this variable
     };
   },
