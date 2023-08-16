@@ -1,0 +1,96 @@
+.datacenter-room{
+    width: 100vw;
+    height: 87vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* search box */
+.search{
+    margin: 5%;
+}
+
+h1{
+    display: flex;
+    justify-content: center;
+}
+
+input{
+    padding: 7px;
+    margin: 10px;
+    border: 1;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    width: 500px;
+}
+
+input:focus {
+    outline-color: #8233f3;
+    outline-width: 2px;
+    outline-style: solid;
+}
+
+ul{
+    list-style: none;
+}
+
+/* table style */
+.show-room{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+table{
+    text-align: center;
+}
+
+thead th{
+    height: 100px;
+    width: 200px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #8233f3 !important;
+    background-color: #e7e5eb;
+    vertical-align: middle;
+    border: 1px black solid;
+
+}
+tbody td{
+    height: 100px;
+    width: 200px;
+    font-weight: normal;
+    vertical-align: middle;
+    border: 1px black solid;
+}
+
+button{
+    background-color: #8233f3;
+    color: white;
+    border: #8233f3;
+}
+
+button:hover{
+    background-color: white;
+    color: #8233f3;
+    border: 1px solid #8233f3;
+}
+
+h2{
+    text-transform: capitalize;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    text-transform: capitalize;
+}
+
+a:hover{
+    text-decoration: none;
+    color: #8233f3;
+    text-transform: capitalize;
+}
