@@ -7,59 +7,9 @@
 
       <ul id="myUL" v-show="showList">
         <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)">
-          <li @click="showResult($event)">{{datacenter.name}}</li></router-link>
+          <li>{{datacenter.name}}</li></router-link>
       </ul> 
-
     </div>
-
-      <div v-if="selectedDatacenter">
-        <h2>{{ selectedDatacenter.name }}</h2>
-
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Depth</th>
-              <th scope="col">width</th>
-              <th scope="col">Number of racks</th>
-              <th scope="col"> Access to the room</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <th scope="row">{{ selectedDatacenter.room_name}}</th>
-              <td>{{ selectedDatacenterc }}</td>
-              <td>{{ selectedDatacenter.room_width }}</td>
-              <td>{{ selectedDatacenter.nb_rack }}</td>
-              <td><button type="button" class="btn btn-primary" @click="showRoom()">SEE THE ROOM</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="show-room" v-if="selectedDatacenter">
-        <h2>{{ selectedDatacenter.name }} Room {{ selectedDatacenter.room_name }}</h2>
-
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Fill rate</th>
-              <th scope="col">List of infrastructures</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr v-for="rack in racks" :key="rack.name">
-              <td> {{ rack.rack_name }}</td>
-              <td>Hello1</td>
-              <td>{{ rack.infrastructure_name || 'N/A' }}</td>
-            </tr>
-            </tbody>
-        </table>
-
-      </div>
   </div>
 </template>
 
@@ -111,12 +61,6 @@ export default {
       }
     }
     this.showList = this.input.trim() !=='';
-    },
-
-    // This method get the selection of the user (event) and put the result of the query in a variable
-    showResult(datacenterName) {
-      this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.name === datacenterName);
-      this.$router.push({ name: 'datacenterdetails', params: { datacenterName: datacenterName } });
     },
 
     // This method send the user to a dedicated page for the datacenter selected
