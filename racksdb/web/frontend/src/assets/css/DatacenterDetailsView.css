@@ -84,3 +84,14 @@ h2{
     text-transform: capitalize;
 }
 
+a{
+    text-decoration: none;
+    color: black;
+    text-transform: capitalize;
+}
+
+a:hover{
+    text-decoration: none;
+    color: #8233f3;
+    text-transform: capitalize;
+}
