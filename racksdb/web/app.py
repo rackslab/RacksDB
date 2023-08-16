@@ -76,7 +76,10 @@ def get_datacenters():
 @app.route('/api/infrastructures', methods=['GET'])
 def get_infrastructures():
     infrastructures = []
-    racks = []
+    nodes = []
+    storages = []
+    networks = []
+
     for infrastructure in db.infrastructures:
                 infrastructure_info = {
                     'name': infrastructure.name,
@@ -87,20 +90,118 @@ def get_infrastructures():
     for infrastructure in db.infrastructures:
         for rack in infrastructure.layout:
              for node in rack.nodes:
-                  rack_info = {
+                  node_info = {
                        'infrastructure_name': infrastructure.name,
                        'rack_name': rack.rack.name,
-                       'node_name': node.name,
-                       'node_id': node.type.id,  
+                       'name': node.name,
+                       'id': node.type.id,  
+                       'type': 'Node'
                   }
-                  racks.append(rack_info)
+                  nodes.append(node_info)
+
+        for infrastructure in db.infrastructures:
+            for rack in infrastructure.layout:
+                for storage in rack.storage:
+                    storage_info = {
+                        'infrastructure_name': infrastructure.name,
+                        'name': storage.name,
+                        'id': storage.type.id,  
+                    }
+                    storages.append(storage_info)
+
+        for infrastructure in db.infrastructures:
+            for rack in infrastructure.layout:
+                for network in rack.network:
+                    network_info = {
+                        'infrastructure_name': infrastructure.name,
+                        'name': network.name,
+                        'id': network.type.id,  
+                    }
+                    networks.append(network_info)
 
 
     reponse_data = {
         'infrastructures': infrastructures,
-        'racks': racks
+        'nodes': nodes,
+        'storages': storages,
+        'networks': networks,
     }
     return jsonify(reponse_data)
+
+# This route gives all the data about the equipment for the popup on the infrastructure page
+@app.route('/api/equipments', methods=['GET'])
+def get_equipments():
+    node_equipments = []
+
+    for infrastructure in db.infrastructures:
+        for rack in infrastructure.layout:
+                for node in rack.nodes:
+                    node_info = {
+                        'infrastructure_name': infrastructure.name,
+                        'node_id': node.type.id,
+                        'node_model': node.type.model,
+                        'node_height': node.type.height,
+                        'node_width': node.type.width,
+                        'node_specs': node.type.specs,
+                        'node_cpu_socket': node.type.cpu.sockets,
+                        'node_cpu_model': node.type.cpu.model,
+                        'node_cpu_specs': node.type.cpu.specs,
+                        'node_cpu_cores': node.type.cpu.cores,
+                        'node_ram_dimm': node.type.ram.dimm,
+                        'node_ram_size': node.type.ram.size,
+                    } 
+                node_equipments.append(node_info)
+
+    reponse_data = {
+        'node_equipments': node_equipments,
+    }
+    return jsonify(reponse_data)
+
+
+# This route gives all the data for datacenterRoom page
+@app.route('/api/datacenterroom', methods=['GET'])
+def get_room():
+    datacenters = []
+    infrastructures = []
+    racks = []
+
+    for datacenter in db.datacenters.items:
+        for room in datacenter.rooms:
+            datacenter_info ={
+                'name': datacenter.name,
+                'room_name': room.name,
+            }
+            datacenters.append(datacenter_info)
+
+    for datacenter in db.datacenters.items:
+        for room in datacenter.rooms:
+            for row in room.rows:
+                for rack in row.racks:
+                    racks_info ={
+                        'datacenter_name': datacenter.name,
+                        'rack_name': rack.name,
+                    }
+                    racks.append(racks_info)
+
+    for infrastructure in db.infrastructures:
+        for rack in infrastructure.layout:
+                  infrastructure_info = {
+                       'name': infrastructure.name,
+                       'rack_name': rack.rack.name,
+  
+                  }
+                  infrastructures.append(infrastructure_info)
+
+    reponse_data = {
+        'datacenters': datacenters,
+        'infrastructures': infrastructures,
+        'racks': racks
+    }
+
+    return jsonify(reponse_data)
+         
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

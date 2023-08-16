@@ -11,8 +11,8 @@
                 <li>{{datacenter.name}}</li></router-link>
             </ul> 
 
-
         </div>
+
 
         <div class="show-room" v-if="selectedDatacenter">
             <h2>{{ selectedDatacenter.name }} Room {{ selectedDatacenter.room_name }}</h2>
@@ -27,10 +27,10 @@
             </thead>
 
             <tbody>
-                <tr v-for="rack in racks" :key="rack.name">
+                <tr v-for="rack in getRack()" :key="rack.name">
                 <td> {{ rack.rack_name }}</td>
                 <td>N/A</td>
-                <td></td>
+                <td> {{ getInfrastructure(rack.rack_name).join(', ') }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -49,6 +49,7 @@ import axios from 'axios';
     data() {
         return {
             datacenters: [],
+            infrastructures: [],
             racks: [],
             showList: false,
             selectedDatacenter: null,
@@ -64,8 +65,9 @@ import axios from 'axios';
     methods: {
         async fetchData() {
             try {
-                const response = await axios.get('http://localhost:5000/api/datacenters');
+                const response = await axios.get('http://localhost:5000/api/datacenterroom');
                 this.datacenters = response.data.datacenters;
+                this.infrastructures = response.data.infrastructures;
                 this.racks = response.data.racks;
 
                 this.show(this.datacenterRoom);
@@ -102,8 +104,23 @@ import axios from 'axios';
 
         show(datacenterRoom) {
             this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.room_name === datacenterRoom);
-            console.log(this.selectedDatacenter)
+            console.log('ici' + this.selectedDatacenter.name)
         },
+
+        getRack(){
+            const filteredRack = this.racks.filter(rack => rack.datacenter_name === this.selectedDatacenter.name)
+
+            return filteredRack
+        },
+
+        getInfrastructure(rack){
+            const filteredInfrastructure = this.infrastructures.filter(infrastructure => infrastructure.rack_name === rack)
+            .map(infrastructure => infrastructure.name);
+
+
+            return filteredInfrastructure
+        }
+
 
     }
   }
