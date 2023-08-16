@@ -9,7 +9,7 @@
 
 /* search box */
 .search{
-    margin-top: 5%;
+    margin: 5%;
 }
 
 h1{
@@ -41,11 +41,10 @@ ul{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 5%;
+
 }
 
 table{
-    margin: 2%;
     text-align: center;
 }
 
