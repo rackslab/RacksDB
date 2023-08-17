@@ -30,7 +30,7 @@
                 <tr v-for="rack in getRack()" :key="rack.name">
                 <td> {{ rack.rack_name }}</td>
                 <td>N/A</td>
-                <td> {{ getInfrastructure(rack.rack_name).join(', ') }}</td>
+                <td> {{ getInfrastructure(rack.rack_name).join(', ') || '/'}}</td>
                 </tr>
                 </tbody>
             </table>
