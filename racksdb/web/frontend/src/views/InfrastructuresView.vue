@@ -7,7 +7,7 @@
         <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
   
         <ul id="myUL" v-show="showList">
-          <router-link v-for="infrastructure in infrastructures" :key="infrastructure.name" :to="getInfrastructureDetailsRoute(infrastructure.name)"><li @click="showSearchResult($event)">{{infrastructure.name}}</li></router-link>
+          <router-link v-for="infrastructure in infrastructures" :key="infrastructure.name" :to="getInfrastructureDetailsRoute(infrastructure.name)"><li>{{infrastructure.name}}</li></router-link>
         </ul>
       </div>
     </div>
@@ -60,12 +60,6 @@ export default {
       }
     }
     this.showList = this.input.trim() !=='';
-    },
-
-    // This method get the selection of the user (event) and put the result of the query in a variable
-    showSearchResult(infrastructureName) {
-      this.selectedInfrastructure = this.infrastructures.find(infrastructure => infrastructure.name === infrastructureName);
-      this.$router.push({ name: 'infrastructuredetails', params: {infrastructureName: infrastructureName}});
     },
 
     // This method send the user to a dedicated page for the datacenter selected
