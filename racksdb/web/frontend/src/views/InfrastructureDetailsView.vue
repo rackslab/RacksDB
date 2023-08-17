@@ -1,5 +1,16 @@
 <template>
-    <div class="infrastructures">
+    <div class="infrastructure-details">
+
+      <div class="search">
+        <h1>Infrastructures</h1>
+  
+        <!-- Search zone -->
+        <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
+  
+        <ul id="myUL" v-show="showList">
+          <router-link v-for="infrastructure in infrastructures" :key="infrastructure.name" :to="getInfrastructureDetailsRoute(infrastructure.name)"><li>{{infrastructure.name}}</li></router-link>
+        </ul>
+      </div>
  
       <!-- Cards of the infrastructure -->
       <div class="cards" v-if="selectedInfrastructure">
@@ -70,6 +81,13 @@ export default {
       selectedItemId: null,
     };
   },
+
+  watch: {
+        infrastructureName(newValue) {
+            this.show(newValue)
+        }
+    },
+
   mounted() {
     this.fetchData();
   },
@@ -96,6 +114,31 @@ export default {
         this.error = 'Error fetching data';
         console.error(error)
       }
+    },
+
+    searchInfrastructure() {
+      var input, filter, ul, li, i, txtValue;
+
+      input = document.getElementById('myInput')
+      filter = input.value.toUpperCase();
+      ul = document.getElementById('myUL');
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+      txtValue = li[i].textContent || li[i].innerText;
+      
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+    this.showList = this.input.trim() !=='';
+    },
+
+    // This method send the user to a dedicated page for the datacenter selected
+    getInfrastructureDetailsRoute(infrastructureName) {
+      return `/infrastructures/${encodeURIComponent(infrastructureName)}`
     },
 
     show(infrastructureName) {
