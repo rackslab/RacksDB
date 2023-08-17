@@ -11,11 +11,8 @@
         </ul>
       </div>
     </div>
-   
-
 </template>
 
-  
 <script>
 import axios from 'axios';
 
@@ -23,15 +20,8 @@ export default {
   data() {
     return {
       infrastructures: [],
-      nodes: [],
-      storages: [],
-      networks: [],
-      node_equipments: [],
-      showList: false,
+      showList: true,
       selectedInfrastructure: null,
-      selectedEquipment: null,
-      showPopupFlag: false,
-      selectedItemId: null,
     };
   },
   mounted() {
@@ -43,16 +33,6 @@ export default {
       try {
         const response = await axios.get('http://localhost:5000/api/infrastructures');
         this.infrastructures = response.data.infrastructures;
-        this.nodes = response.data.nodes;
-        this.storages = response.data.storages;
-        this.networks = response.data.networks;
-
-        console.log(response.data);
-
-        const response2 = await axios.get('http://localhost:5000/api/equipments');
-        this.node_equipments = response2.data.node_equipments;
-
-        console.log("je retourne ça :" + response2.data);
 
       } catch (error){
         this.error = 'Error fetching data';
@@ -93,38 +73,10 @@ export default {
       return `/infrastructures/${encodeURIComponent(infrastructureName)}`
     },
 
-    // if a infrastructure is selected, this method will merge all the data of this infrastructure in one variable
-    showResultSelection(){
-      if(this.selectedInfrastructure){
-        const filteredNodes = this.nodes.filter(node => node.infrastructure_name === this.selectedInfrastructure.name);
-        const filteredStorages = this.storages.filter(storage => storage.infrastructure_name === this.selectedInfrastructure.name);
-        const filteredNetworks = this.networks.filter(network => network.infrastructure_name === this.selectedInfrastructure.name);
-
-        const mergedData = filteredNodes.concat(filteredStorages, filteredNetworks);
-
-        return mergedData;
-      }
-    },
-
-    getEquipmentDetails(itemId){
-      return this.node_equipments.find(equipment => equipment.node_id === itemId)
-    },
-
-    openModal(itemId) {
-      this.showPopupFlag = true;
-      this.selectedItemId = itemId;
-      this.selectedEquipment = this.getEquipmentDetails(itemId);
-    },
-
-    closeModal(){
-      this.showPopupFlag = false;
-    },
-
   },
 }; 
 </script>
   
 <style scoped src="../assets/css/InfrastructureView.css">
-
 </style>
   
