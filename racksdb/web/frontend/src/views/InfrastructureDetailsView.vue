@@ -17,9 +17,9 @@
           <div class="card" v-for="item in showResultSelection()" :key="item">
             <ul>
               <li><span class="name">{{ item.rack_name }}</span></li>
-              <li><span class="type">Pas encore trouvé</span></li>
+              <li><span class="type">{{ item.type }}</span></li>
               <li>{{ item.name }}</li>
-              <li @click="openModal(item.id)">{{ item.id }}</li>
+              <li @click="openModal(item.id, item.type)">{{ item.id }}</li>
             </ul>
           </div>
       </div>
@@ -30,15 +30,13 @@
         <!-- Affichez ici les détails de la modal en utilisant `selectedItemId` -->
         <h2>Modal Content for ID: {{ selectedItemId }}</h2>
 
-        <div v-if="selectedEquipment">
+        <div v-if="selectedEquipment && selectedItemType=== 'node'">
           <ul>
             <li>ID: {{ selectedEquipment.node_id }}</li>
             <li>Model: {{ selectedEquipment.node_model }}</li>
             <li>Height: {{ selectedEquipment.node_height }}u</li>
             <li>Width: {{ selectedEquipment.node_width }}</li>
             <li>Specs: {{ selectedEquipment.node_specs }}</li>
-            
-            <!-- Specific for nodes-->
             <li>CPU:</li>
             <li>Sockets: {{ selectedEquipment.node_cpu_socket }}</li>
             <li>Model: {{ selectedEquipment.node_cpu_model }}</li>
@@ -47,6 +45,20 @@
             <li>RAM:</li>
             <li>Dimm: {{ selectedEquipment.node_ram_dimm }}</li>
             <li>Size: {{ selectedEquipment.node_ram_size }}GB</li>
+
+          </ul>
+        </div>
+
+        <div v-if="selectedEquipment && selectedItemType=== 'storage'">
+          <ul>
+            <li>ID: {{ selectedEquipment.storage_id }}</li>
+            <li>Model: {{ selectedEquipment.storage_model }}</li>
+            <li>Height: {{ selectedEquipment.storage_height }}u</li>
+            <li>Disks:</li>
+            <li>- Type: {{ selectedEquipment.disk_type }}</li>
+            <li>Size: {{ selectedEquipment.disk_size }}</li>
+            <li>Model: {{ selectedEquipment.disk_model }}</li>
+            <li>Number: {{ selectedEquipment.disk_number }}</li>
 
           </ul>
         </div>
@@ -81,6 +93,7 @@ export default {
       selectedEquipment: null,
       showPopupFlag: false,
       selectedItemId: null,
+      selectedItemType: null,
     };
   },
 
@@ -153,12 +166,12 @@ export default {
     // if a infrastructure is selected, this method will merge all the data of this infrastructure in one variable
     showResultSelection(){
       if(this.selectedInfrastructure){
-        const filteredNodes = this.nodes.filter(node => node.infrastructure_name === this.selectedInfrastructure.name);
-        const filteredStorages = this.storages.filter(storage => storage.infrastructure_name === this.selectedInfrastructure.name);
-        const filteredNetworks = this.networks.filter(network => network.infrastructure_name === this.selectedInfrastructure.name);
+        const filteredNodes = this.nodes.filter(node => node.infrastructure_name === this.selectedInfrastructure.name).map(node => ({ ...node, type: 'node'}));
+        const filteredStorages = this.storages.filter(storage => storage.infrastructure_name === this.selectedInfrastructure.name).map(storage => ({ ...storage, type: 'storage'}));
+        const filteredNetworks = this.networks.filter(network => network.infrastructure_name === this.selectedInfrastructure.name).map(network => ({ ...network, type: 'network'}));
 
         const mergedData = filteredNodes.concat(filteredStorages, filteredNetworks);
-
+        
         return mergedData;
       }
     },
@@ -167,9 +180,10 @@ export default {
       return this.node_equipments.find(equipment => equipment.node_id === itemId)
     },
 
-    openModal(itemId) {
+    openModal(itemId, itemType) {
       this.showPopupFlag = true;
       this.selectedItemId = itemId;
+      this.selectedItemType = itemType
       this.selectedEquipment = this.getEquipmentDetails(itemId);
     },
 
