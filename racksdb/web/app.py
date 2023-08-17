@@ -132,6 +132,8 @@ def get_infrastructures():
 @app.route('/api/equipments', methods=['GET'])
 def get_equipments():
     node_equipments = []
+    storage_equipments = []
+    network_equipments = []
 
     for infrastructure in db.infrastructures:
         for rack in infrastructure.layout:
@@ -151,9 +153,44 @@ def get_equipments():
                         'node_ram_size': node.type.ram.size,
                     } 
                 node_equipments.append(node_info)
+    
+    for infrastructure in db.infrastructures:
+         for rack in infrastructure.layout:
+              for storage in rack.storage:
+                   for type in storage.type.disks:
+                        storage_info = {
+                             'infrastructure_name': infrastructure.name,
+                             'storage_id': storage.type.id,
+                             'storage_model': storage.type.model,
+                             'storage_height': storage.type.height,
+                             'disk_type': type.type,
+                             'disk_size': type.size,
+                             'disk_model': type.model,
+                             'disk_number': type.number
+                        }
+                        storage_equipments.append(storage_info)
+        
+    for infrastrucure in db.infrastructures:
+         for rack in infrastructure.layout:
+              for network in rack.network:
+                   for type in network.type.netifs:
+                        network_info = {
+                            'infrastructure_name': infrastrucure.name,
+                            'network_id': network.type.id,
+                            'network_model': network.type.model,
+                            'network_height': network.type.height,
+                            'network_width': network.type.width,
+                            'netif_type': type.type,
+                            'netif_bandwidth': type.bandwidth,
+                            'netif_number': type.number,    
+                        }
+                        network_equipments.append(network_info)
+
 
     reponse_data = {
         'node_equipments': node_equipments,
+        'storage_equipments': storage_equipments,
+        'network_equipments': network_equipments
     }
     return jsonify(reponse_data)
 

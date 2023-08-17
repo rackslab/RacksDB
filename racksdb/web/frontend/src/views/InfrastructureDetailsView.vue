@@ -74,6 +74,8 @@ export default {
       storages: [],
       networks: [],
       node_equipments: [],
+      network_equipments: [],
+      storage_equipments: [],
       showList: false,
       selectedInfrastructure: null,
       selectedEquipment: null,
@@ -107,6 +109,8 @@ export default {
 
         const response2 = await axios.get('http://localhost:5000/api/equipments');
         this.node_equipments = response2.data.node_equipments;
+        this.storage_equipments = response2.data.storage_equipments;
+        this.network_equipments = response2.data.network_equipments;
 
         console.log("je retourne ça :" + response2.data);
 
