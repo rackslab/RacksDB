@@ -30,6 +30,10 @@ input:focus {
   outline-style: solid;
 }
 
+ul{
+  list-style: none;
+}
+
 /* Link style */
 a{
   text-decoration: none;
@@ -42,4 +46,3 @@ a:hover{
   color: #8233f3;
   text-transform: capitalize;
 }
-
