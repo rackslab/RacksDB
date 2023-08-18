@@ -1,3 +1,7 @@
+body{
+    font-family: 'Roboto', sans-serif;
+  }
+  
 .datacenter-details{
     width: 100vw;
     height: 87vh;
@@ -94,3 +98,4 @@ a:hover{
     color: #8233f3;
     text-transform: capitalize;
 }
+
