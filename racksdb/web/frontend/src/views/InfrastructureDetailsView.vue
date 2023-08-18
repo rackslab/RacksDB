@@ -19,7 +19,7 @@
               <li><span class="name">{{ item.rack_name }}</span></li>
               <li><span class="type">{{ item.type }}</span></li>
               <li>{{ item.name }}</li>
-              <li @click="openModal(item.id, item.type)">{{ item.id }}</li>
+              <li @click="openModal(item.id, item.type)" class="equipment">{{ item.id }}</li>
             </ul>
           </div>
       </div>
@@ -28,40 +28,83 @@
     <div v-if="showPopupFlag" class="modal">
       <div class="modal-content">
         <!-- Affichez ici les détails de la modal en utilisant `selectedItemId` -->
-        <h2>Modal Content for ID: {{ selectedItemId }}</h2>
+        <h2>{{ selectedItemId }} details :</h2>
 
-        <div v-if="selectedEquipment && selectedItemType=== 'node'">
-          <ul>
-            <li>ID: {{ selectedEquipment.node_id }}</li>
-            <li>Model: {{ selectedEquipment.node_model }}</li>
-            <li>Height: {{ selectedEquipment.node_height }}u</li>
-            <li>Width: {{ selectedEquipment.node_width }}</li>
-            <li>Specs: {{ selectedEquipment.node_specs }}</li>
-            <li>CPU:</li>
-            <li>Sockets: {{ selectedEquipment.node_cpu_socket }}</li>
-            <li>Model: {{ selectedEquipment.node_cpu_model }}</li>
-            <li>Specs: {{ selectedEquipment.node_cpu_specs }}</li>
-            <li>Cores: {{ selectedEquipment.node_cpu_cores }}</li>
-            <li>RAM:</li>
-            <li>Dimm: {{ selectedEquipment.node_ram_dimm }}</li>
-            <li>Size: {{ selectedEquipment.node_ram_size }}GB</li>
+        <div v-if="selectedEquipment" class="details">
+          <div v-if="selectedItemType=== 'node'">
+            <ul>
+              <div class="section1">
+                <li><span class="property">ID:</span> {{ selectedEquipment.node_id }}</li>
+                <li><span class="property">Model:</span>  {{ selectedEquipment.node_model }}</li>
+                <li><span class="property">Height:</span> {{ selectedEquipment.node_height }}u</li>
+                <li><span class="property">Width:</span> {{ selectedEquipment.node_width }}</li>
+                <li><span class="property">Specs:</span> {{ selectedEquipment.node_specs }}</li>
+              </div>
 
-          </ul>
+              <div class="section2">
+                <li><span class="property">CPU:</span></li>
+                <div class="section2a">
+                  <li><span class="property">Sockets:</span> {{ selectedEquipment.node_cpu_socket }}</li>
+                  <li><span class="property">Model:</span> {{ selectedEquipment.node_cpu_model }}</li>
+                  <li><span class="property">Specs:</span> {{ selectedEquipment.node_cpu_specs }}</li>
+                  <li><span class="property">Cores:</span> {{ selectedEquipment.node_cpu_cores }}</li>
+                </div>
+              </div>
+
+              <div class="section3">
+                <li><span class="property">RAM:</span></li>
+                <div class="section3a">
+                  <li><span class="property">Dimm:</span> {{ selectedEquipment.node_ram_dimm }}</li>
+                  <li><span class="property">Size:</span> {{ selectedEquipment.node_ram_size }}GB</li>
+                </div>
+              </div>
+            </ul>
+          </div>
+
+          <div v-else-if="selectedItemType=== 'storage'">
+            <ul>
+              <div class="section1">
+                <li><span class="property">ID:</span> {{ selectedEquipment.storage_id }}</li>
+                <li><span class="property">Model:</span> {{ selectedEquipment.storage_model }}</li>
+                <li><span class="property">Height:</span> {{ selectedEquipment.storage_height }}u</li>
+              </div>
+
+              <div class="section2">
+                <li><span class="property">Disks:</span></li>
+                <div class="section2a">
+                  <li><span class="property">Type:</span> {{ selectedEquipment.disk_type }}</li>
+                  <li><span class="property">Size:</span> {{ selectedEquipment.disk_size }}</li>
+                  <li><span class="property">Model:</span> {{ selectedEquipment.disk_model }}</li>
+                  <li><span class="property">Number:</span> {{ selectedEquipment.disk_number }}</li>
+                </div>
+
+              </div>
+            </ul>
+          </div>
+
+          <div v-else-if="selectedItemType=== 'network'">
+            <ul>
+              <div class="section1">
+                <li><span class="property">ID:</span> {{ selectedEquipment.network_id }}</li>
+                <li><span class="property">Model:</span> {{ selectedEquipment.network_model }}</li>
+                <li><span class="property">Height:</span> {{ selectedEquipment.network_height }}u</li>
+                <li><span class="property">Width:</span> {{ selectedEquipment.network_width }}u</li>
+              </div>
+              
+              <div class="section2">
+                <li><span class="property">Netifs:</span></li>
+                <div class="section2a">
+                  <li><span class="property">Type:</span> {{ selectedEquipment.netif_type }}</li>
+                  <li><span class="property">Bandwidth:</span> {{ selectedEquipment.netif_bandwidth }}</li>
+                  <li><span class="property">Number:</span> {{ selectedEquipment.netif_number }}</li>
+                </div>
+              </div>
+            </ul>
+          </div>
         </div>
 
-        <div v-if="selectedEquipment && selectedItemType=== 'storage'">
-          <ul>
-            <li>ID: {{ selectedEquipment.storage_id }}</li>
-            <li>Model: {{ selectedEquipment.storage_model }}</li>
-            <li>Height: {{ selectedEquipment.storage_height }}u</li>
-            <li>Disks:</li>
-            <li>- Type: {{ selectedEquipment.disk_type }}</li>
-            <li>Size: {{ selectedEquipment.disk_size }}</li>
-            <li>Model: {{ selectedEquipment.disk_model }}</li>
-            <li>Number: {{ selectedEquipment.disk_number }}</li>
 
-          </ul>
-        </div>
+
         <!-- ... Autres informations liées à l'élément sélectionné ... -->
         <button @click="closeModal">Close</button>
       </div>
@@ -176,15 +219,26 @@ export default {
       }
     },
 
-    getEquipmentDetails(itemId){
-      return this.node_equipments.find(equipment => equipment.node_id === itemId)
+    getEquipmentDetails(itemId, itemType){
+      if(itemType==='node') {
+        const node = this.node_equipments.find(equipment => equipment.node_id === itemId)
+        return node
+
+      } else if (itemType ==='storage') {
+        const storage = this.storage_equipments.find(equipment => equipment.storage_id === itemId)
+        return storage
+
+      } else {
+        const network = this.network_equipments.find(equipment => equipment.network_id === itemId)
+        return network
+      }
     },
 
     openModal(itemId, itemType) {
       this.showPopupFlag = true;
       this.selectedItemId = itemId;
       this.selectedItemType = itemType
-      this.selectedEquipment = this.getEquipmentDetails(itemId);
+      this.selectedEquipment = this.getEquipmentDetails(itemId, itemType);
     },
 
     closeModal(){

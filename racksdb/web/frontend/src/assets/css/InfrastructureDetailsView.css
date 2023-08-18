@@ -1,3 +1,7 @@
+body{
+  font-family: 'Roboto', sans-serif;
+}
+
 .infrastructure-details{
   width: 100vw;
   height: 87vh;
@@ -85,6 +89,13 @@ ul{
   color: #8032f1;
 }
 
+.equipment:hover{
+  transition-duration: 100ms;
+  font-size: 1.2em;
+  text-decoration: #8032f1 underline ;
+  cursor: pointer;
+}
+
 /* Styles of the popup */
 .modal {
   position: fixed;
@@ -92,7 +103,7 @@ ul{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,14 +125,41 @@ ul{
 }
 
 .modal button {
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
+  background-color: #8233f3;
+  color: white;
+  border: #8233f3;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .modal button:hover {
-  background-color: #0056b3;
+  background-color: white;
+  color: #8233f3;
+  border: 1px solid #8233f3;
+}
+
+.details{
+  padding: 5%;
+}
+
+.section1{
+  padding: 2% 0% 2% 0%;
+}
+
+.section2a{
+  padding: 0% 0% 0% 2%;
+}
+
+.section3{
+  padding: 2% 0% 2% 0%;
+}
+
+.section3a{
+  padding: 0% 0% 0% 2%;
+}
+
+.property{
+    font-weight: bold;
+    padding-right: 1%;
 }
