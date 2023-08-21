@@ -1,6 +1,5 @@
 <template>
     <div class="datacenter-room">
-
         <div class="search">
             <h1>Datacenters</h1>
 
@@ -10,7 +9,6 @@
                 <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)">
                 <li>{{datacenter.name}}</li></router-link>
             </ul> 
-
         </div>
 
 
@@ -18,28 +16,28 @@
             <h2>{{ selectedDatacenter.name }} Room {{ selectedDatacenter.room_name }}</h2>
 
             <table class="table table-bordered">
-            <thead>
-                <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Fill rate</th>
-                <th scope="col">List of infrastructures</th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Fill rate</th>
+                    <th scope="col">List of infrastructures</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr v-for="rack in getRack()" :key="rack.name">
-                <td> {{ rack.rack_name }}</td>
-                <td>N/A</td>
-                <td> {{ getInfrastructure(rack.rack_name).join(', ') || '/'}}</td>
-                </tr>
-                </tbody>
+                <tbody>
+                    <tr v-for="rack in getRack()" :key="rack.name">
+                    <td> {{ rack.rack_name }}</td>
+                    <td>N/A</td>
+                    <td> {{ getInfrastructure(rack.rack_name).join(', ') || '/'}}</td>
+                    </tr>
+                    </tbody>
             </table>
         </div>
 
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
 import axios from 'axios';
 
   export default {
@@ -56,7 +54,6 @@ import axios from 'axios';
         };
     },
 
-
     mounted() {
         this.fetchData();
 
@@ -65,7 +62,7 @@ import axios from 'axios';
     methods: {
         async fetchData() {
             try {
-                const response = await axios.get('http://localhost:5000/api/datacenterroom');
+                const response = await axios.get('http://localhost:5000/api/datacenterRoom');
                 this.datacenters = response.data.datacenters;
                 this.infrastructures = response.data.infrastructures;
                 this.racks = response.data.racks;
@@ -98,33 +95,25 @@ import axios from 'axios';
         },
 
         getDatacenterDetailsRoute(datacenterName) {
-            this.selectedDatacenter == null
             return `/datacenters/${encodeURIComponent(datacenterName)}`
         },
 
         show(datacenterRoom) {
             this.selectedDatacenter = this.datacenters.find(datacenter => datacenter.room_name === datacenterRoom);
-            console.log('ici' + this.selectedDatacenter.name)
         },
 
         getRack(){
             const filteredRack = this.racks.filter(rack => rack.datacenter_name === this.selectedDatacenter.name)
-
             return filteredRack
         },
 
         getInfrastructure(rack){
             const filteredInfrastructure = this.infrastructures.filter(infrastructure => infrastructure.rack_name === rack)
             .map(infrastructure => infrastructure.name);
-
-
             return filteredInfrastructure
-        }
-
-
+        },
     }
   }
- 
   </script>
   
   <style scoped src="../assets/css/DatacenterRoomView.css">
