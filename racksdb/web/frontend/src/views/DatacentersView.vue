@@ -31,7 +31,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:5000/api/datacenters');
+        const response = await axios.get('http://localhost:5000/api/datacentersView');
         this.datacenters = response.data.datacenters;
 
       } catch (error){
