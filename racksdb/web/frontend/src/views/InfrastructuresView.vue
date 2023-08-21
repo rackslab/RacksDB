@@ -3,7 +3,6 @@
       <div class="search">
         <h1>Infrastructures</h1>
   
-        <!-- Search zone -->
         <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
   
         <ul id="myUL" v-show="showList">
@@ -21,9 +20,9 @@ export default {
     return {
       infrastructures: [],
       showList: true,
-      selectedInfrastructure: null,
     };
   },
+
   mounted() {
     this.fetchData();
   },
@@ -31,7 +30,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:5000/api/infrastructures');
+        const response = await axios.get('http://localhost:5000/api/infrastructuresView');
         this.infrastructures = response.data.infrastructures;
 
       } catch (error){
@@ -40,8 +39,6 @@ export default {
       }
     },
 
-    // This method recovers the elements of the template and loop through all the items
-    // and hide those who don't match the search query
     searchInfrastructure() {
       var input, filter, ul, li, i, txtValue;
 
@@ -62,11 +59,9 @@ export default {
     this.showList = this.input.trim() !=='';
     },
 
-    // This method send the user to a dedicated page for the datacenter selected
     getInfrastructureDetailsRoute(infrastructureName) {
       return `/infrastructures/${encodeURIComponent(infrastructureName)}`
     },
-
   },
 }; 
 </script>
