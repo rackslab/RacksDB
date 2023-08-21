@@ -11,7 +11,6 @@ body{
     align-items: center;
 }
 
-/* search box */
 .search{
     margin: 5%;
 }
@@ -39,13 +38,11 @@ ul{
     list-style: none;
 }
 
-/* table style */
 .details-table{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
 }
 
 table{
@@ -63,12 +60,17 @@ thead th{
     border: 1px black solid;
 
 }
+
 tbody td{
     height: 100px;
     width: 200px;
     font-weight: normal;
     vertical-align: middle;
     border: 1px black solid;
+}
+
+.room{
+    text-transform: capitalize;
 }
 
 button{
@@ -98,4 +100,3 @@ a:hover{
     color: #8233f3;
     text-transform: capitalize;
 }
-

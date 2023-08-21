@@ -11,7 +11,6 @@ body{
   align-items: center;
 }
 
-/* SearchBar */
 .search{
   margin-top: 5%;
 }
@@ -39,7 +38,6 @@ ul{
   list-style: none;
 }
 
-/* Link style */
 a{
   text-decoration: none;
   color: black;
@@ -52,16 +50,18 @@ a:hover{
   text-transform: capitalize;
 }
 
-/* Container of the equipments cards */
-.cards{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 5%  ;
+.infrastructure-name{
+  text-transform: capitalize;
+  margin: 5% 0% 2% 0%;
 }
 
-/* style of the cards */
+.cards{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .card {
     margin: 10px;
     padding: 10px;
@@ -74,19 +74,24 @@ a:hover{
     justify-content: center;
 }
 
-/* Style of the data in the cards*/
 ul{
   list-style: none;
 }
 
+li{
+  margin: 1.5%;
+}
+
 .name {
   color: #8032f1;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 500;
   text-transform: capitalize;
 }
 
 .type{
   color: #8032f1;
+  font-size: 1.3em;
 }
 
 .equipment:hover{
@@ -96,7 +101,6 @@ ul{
   cursor: pointer;
 }
 
-/* Styles of the popup */
 .modal {
   position: fixed;
   top: 0;
@@ -115,7 +119,6 @@ ul{
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   max-width: 800px;
-
 }
 
 .modal h2 {
@@ -140,26 +143,26 @@ ul{
 }
 
 .details{
-  padding: 5%;
+  margin: 5%;
 }
 
 .section1{
-  padding: 2% 0% 2% 0%;
+  margin: 2% 0% 2% 0%;
 }
 
 .section2a{
-  padding: 0% 0% 0% 2%;
+  margin: 0% 0% 0% 2%;
 }
 
 .section3{
-  padding: 2% 0% 2% 0%;
+  margin: 2% 0% 2% 0%;
 }
 
 .section3a{
-  padding: 0% 0% 0% 2%;
+  margin: 0% 0% 0% 2%;
 }
 
 .property{
-    font-weight: bold;
-    padding-right: 1%;
+  font-weight: bold;
+  margin-right: 1%;
 }

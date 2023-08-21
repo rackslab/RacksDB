@@ -2,7 +2,6 @@ body{
   font-family: 'Roboto', sans-serif;
 }
 
-/* Style of the section with the img in the background */ 
 .slider{
   position: relative;
   background-image: url('../racks_black.jpg');
@@ -18,7 +17,6 @@ body{
   z-index: 1;
 }
 
-/* Style to center the title in the middle of the img */
 .slider .main-title{
   display: flex;
   justify-content: center;
@@ -27,7 +25,6 @@ body{
   height: 100%;
 }
     
-/* Style of the pseudo element to add the filter to the img */
 .slider .overlay::before {
   content: '';
   position: absolute;
@@ -38,7 +35,6 @@ body{
   background-color: rgba(128, 50, 241, 0.2);
 }
 
-/* Container where datacenters card and infrastructures card are */
 .cards {
   display: flex; 
   flex-wrap: wrap;
@@ -46,21 +42,17 @@ body{
   margin: 5% 10% 0% 10%
 }
 
-/* Style and disposition of the cards */
 .datacenters, .infrastructures {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Aligne le contenu en haut de l'axe principal */
-  align-items: center; /* Aligne le contenu à gauche de l'axe transversal */
+  justify-content: flex-start;
+  align-items: center;
   width: 350px;
   height: 320px;
   border-radius: 50px;
   background: #ffffff;
   box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
 }
-
-      
-/* Style of the data in the cards*/
 
 ul{
   list-style: none;

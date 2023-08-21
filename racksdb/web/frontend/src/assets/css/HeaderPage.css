@@ -18,7 +18,6 @@ body{
   font-weight: normal;
 }
 
-/* Style of active links */
 .nav-link.active {
   color: #8233f3 !important;
   font-weight: bold;
