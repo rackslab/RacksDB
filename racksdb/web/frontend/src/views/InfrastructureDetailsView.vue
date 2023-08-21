@@ -4,15 +4,15 @@
       <div class="search">
         <h1>Infrastructures</h1>
   
-        <!-- Search zone -->
         <input id="myInput" type="text" v-model="input" placeholder="Search an infrastructure" v-on:keyup="searchInfrastructure()"/>
   
         <ul id="myUL" v-show="showList">
           <router-link v-for="infrastructure in infrastructures" :key="infrastructure.name" :to="getInfrastructureDetailsRoute(infrastructure.name)"><li>{{infrastructure.name}}</li></router-link>
         </ul>
       </div>
- 
-      <!-- Cards of the infrastructure -->
+
+      <h2 class="infrastructure-name">{{ infrastructureName }}</h2>
+
       <div class="cards" v-if="selectedInfrastructure">
           <div class="card" v-for="item in showResultSelection()" :key="item">
             <ul>
@@ -24,97 +24,90 @@
           </div>
       </div>
 
-      <!-- Modal -->
-    <div v-if="showPopupFlag" class="modal">
-      <div class="modal-content">
-        <!-- Affichez ici les détails de la modal en utilisant `selectedItemId` -->
-        <h2>{{ selectedItemId }} details :</h2>
+      <div v-if="showPopupFlag" class="modal">
+        <div class="modal-content">
 
-        <div v-if="selectedEquipment" class="details">
-          <div v-if="selectedItemType=== 'node'">
-            <ul>
-              <div class="section1">
-                <li><span class="property">ID:</span> {{ selectedEquipment.node_id }}</li>
-                <li><span class="property">Model:</span>  {{ selectedEquipment.node_model }}</li>
-                <li><span class="property">Height:</span> {{ selectedEquipment.node_height }}u</li>
-                <li><span class="property">Width:</span> {{ selectedEquipment.node_width }}</li>
-                <li><span class="property">Specs:</span> {{ selectedEquipment.node_specs }}</li>
-              </div>
+          <h2>{{ selectedItemId }} details :</h2>
 
-              <div class="section2">
-                <li><span class="property">CPU:</span></li>
-                <div class="section2a">
-                  <li><span class="property">Sockets:</span> {{ selectedEquipment.node_cpu_socket }}</li>
-                  <li><span class="property">Model:</span> {{ selectedEquipment.node_cpu_model }}</li>
-                  <li><span class="property">Specs:</span> {{ selectedEquipment.node_cpu_specs }}</li>
-                  <li><span class="property">Cores:</span> {{ selectedEquipment.node_cpu_cores }}</li>
+          <div v-if="selectedEquipment" class="details">
+            <div v-if="selectedItemType === 'node'">
+              <ul>
+                <div class="section1">
+                  <li><span class="property">ID:</span> {{ selectedEquipment.node_id }}</li>
+                  <li><span class="property">Model:</span>  {{ selectedEquipment.node_model }}</li>
+                  <li><span class="property">Height:</span> {{ selectedEquipment.node_height }}u</li>
+                  <li><span class="property">Width:</span> {{ selectedEquipment.node_width }}</li>
+                  <li><span class="property">Specs:</span> {{ selectedEquipment.node_specs }}</li>
                 </div>
-              </div>
 
-              <div class="section3">
-                <li><span class="property">RAM:</span></li>
-                <div class="section3a">
-                  <li><span class="property">Dimm:</span> {{ selectedEquipment.node_ram_dimm }}</li>
-                  <li><span class="property">Size:</span> {{ selectedEquipment.node_ram_size }}GB</li>
+                <div class="section2">
+                  <li><span class="property">CPU:</span></li>
+                  <div class="section2a">
+                    <li><span class="property">Sockets:</span> {{ selectedEquipment.node_cpu_socket }}</li>
+                    <li><span class="property">Model:</span> {{ selectedEquipment.node_cpu_model }}</li>
+                    <li><span class="property">Specs:</span> {{ selectedEquipment.node_cpu_specs }}</li>
+                    <li><span class="property">Cores:</span> {{ selectedEquipment.node_cpu_cores }}</li>
+                  </div>
                 </div>
-              </div>
-            </ul>
+
+                <div class="section3">
+                  <li><span class="property">RAM:</span></li>
+                  <div class="section3a">
+                    <li><span class="property">Dimm:</span> {{ selectedEquipment.node_ram_dimm }}</li>
+                    <li><span class="property">Size:</span> {{ selectedEquipment.node_ram_size }}GB</li>
+                  </div>
+                </div>
+              </ul>
+            </div>
+
+            <div v-else-if="selectedItemType === 'storage'">
+              <ul>
+                <div class="section1">
+                  <li><span class="property">ID:</span> {{ selectedEquipment.storage_id }}</li>
+                  <li><span class="property">Model:</span> {{ selectedEquipment.storage_model }}</li>
+                  <li><span class="property">Height:</span> {{ selectedEquipment.storage_height }}u</li>
+                </div>
+
+                <div class="section2">
+                  <li><span class="property">Disks:</span></li>
+                  <div class="section2a">
+                    <li><span class="property">Type:</span> {{ selectedEquipment.disk_type }}</li>
+                    <li><span class="property">Size:</span> {{ selectedEquipment.disk_size }}</li>
+                    <li><span class="property">Model:</span> {{ selectedEquipment.disk_model }}</li>
+                    <li><span class="property">Number:</span> {{ selectedEquipment.disk_number }}</li>
+                  </div>
+
+                </div>
+              </ul>
+            </div>
+
+            <div v-else-if="selectedItemType === 'network'">
+              <ul>
+                <div class="section1">
+                  <li><span class="property">ID:</span> {{ selectedEquipment.network_id }}</li>
+                  <li><span class="property">Model:</span> {{ selectedEquipment.network_model }}</li>
+                  <li><span class="property">Height:</span> {{ selectedEquipment.network_height }}u</li>
+                  <li><span class="property">Width:</span> {{ selectedEquipment.network_width }}u</li>
+                </div>
+                
+                <div class="section2">
+                  <li><span class="property">Netifs:</span></li>
+                  <div class="section2a">
+                    <li><span class="property">Type:</span> {{ selectedEquipment.netif_type }}</li>
+                    <li><span class="property">Bandwidth:</span> {{ selectedEquipment.netif_bandwidth }}</li>
+                    <li><span class="property">Number:</span> {{ selectedEquipment.netif_number }}</li>
+                  </div>
+                </div>
+              </ul>
+            </div>
           </div>
 
-          <div v-else-if="selectedItemType=== 'storage'">
-            <ul>
-              <div class="section1">
-                <li><span class="property">ID:</span> {{ selectedEquipment.storage_id }}</li>
-                <li><span class="property">Model:</span> {{ selectedEquipment.storage_model }}</li>
-                <li><span class="property">Height:</span> {{ selectedEquipment.storage_height }}u</li>
-              </div>
-
-              <div class="section2">
-                <li><span class="property">Disks:</span></li>
-                <div class="section2a">
-                  <li><span class="property">Type:</span> {{ selectedEquipment.disk_type }}</li>
-                  <li><span class="property">Size:</span> {{ selectedEquipment.disk_size }}</li>
-                  <li><span class="property">Model:</span> {{ selectedEquipment.disk_model }}</li>
-                  <li><span class="property">Number:</span> {{ selectedEquipment.disk_number }}</li>
-                </div>
-
-              </div>
-            </ul>
-          </div>
-
-          <div v-else-if="selectedItemType=== 'network'">
-            <ul>
-              <div class="section1">
-                <li><span class="property">ID:</span> {{ selectedEquipment.network_id }}</li>
-                <li><span class="property">Model:</span> {{ selectedEquipment.network_model }}</li>
-                <li><span class="property">Height:</span> {{ selectedEquipment.network_height }}u</li>
-                <li><span class="property">Width:</span> {{ selectedEquipment.network_width }}u</li>
-              </div>
-              
-              <div class="section2">
-                <li><span class="property">Netifs:</span></li>
-                <div class="section2a">
-                  <li><span class="property">Type:</span> {{ selectedEquipment.netif_type }}</li>
-                  <li><span class="property">Bandwidth:</span> {{ selectedEquipment.netif_bandwidth }}</li>
-                  <li><span class="property">Number:</span> {{ selectedEquipment.netif_number }}</li>
-                </div>
-              </div>
-            </ul>
-          </div>
+          <button @click="closeModal">Close</button>
         </div>
-
-
-
-        <!-- ... Autres informations liées à l'élément sélectionné ... -->
-        <button @click="closeModal">Close</button>
       </div>
     </div>
-    </div>
-   
-
 </template>
 
-  
 <script>
 import axios from 'axios';
 
@@ -153,22 +146,16 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:5000/api/infrastructures');
+        const response = await axios.get('http://localhost:5000/api/infrastructureDetails');
         this.infrastructures = response.data.infrastructures;
         this.nodes = response.data.nodes;
         this.storages = response.data.storages;
         this.networks = response.data.networks;
+        this.node_equipments = response.data.node_equipments;
+        this.storage_equipments = response.data.storage_equipments;
+        this.network_equipments = response.data.network_equipments;
 
         this.show(this.infrastructureName);
-
-        console.log(response.data);
-
-        const response2 = await axios.get('http://localhost:5000/api/equipments');
-        this.node_equipments = response2.data.node_equipments;
-        this.storage_equipments = response2.data.storage_equipments;
-        this.network_equipments = response2.data.network_equipments;
-
-        console.log("je retourne ça :" + response2.data);
 
       } catch (error){
         this.error = 'Error fetching data';
@@ -196,17 +183,14 @@ export default {
     this.showList = this.input.trim() !=='';
     },
 
-    // This method send the user to a dedicated page for the datacenter selected
     getInfrastructureDetailsRoute(infrastructureName) {
       return `/infrastructures/${encodeURIComponent(infrastructureName)}`
     },
 
     show(infrastructureName) {
         this.selectedInfrastructure = this.infrastructures.find(infrastructure => infrastructure.name === infrastructureName);
-        console.log(this.selectedInfrastructure)
     },
 
-    // if a infrastructure is selected, this method will merge all the data of this infrastructure in one variable
     showResultSelection(){
       if(this.selectedInfrastructure){
         const filteredNodes = this.nodes.filter(node => node.infrastructure_name === this.selectedInfrastructure.name).map(node => ({ ...node, type: 'node'}));
@@ -220,7 +204,7 @@ export default {
     },
 
     getEquipmentDetails(itemId, itemType){
-      if(itemType==='node') {
+      if(itemType ==='node') {
         const node = this.node_equipments.find(equipment => equipment.node_id === itemId)
         return node
 
@@ -244,7 +228,6 @@ export default {
     closeModal(){
       this.showPopupFlag = false;
     },
-
   },
 }; 
 </script>
