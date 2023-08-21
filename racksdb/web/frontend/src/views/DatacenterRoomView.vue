@@ -28,9 +28,15 @@
                     <tr v-for="rack in getRack()" :key="rack.name">
                     <td> {{ rack.rack_name }}</td>
                     <td>N/A</td>
-                    <td> {{ getInfrastructure(rack.rack_name).join(', ') || '/'}}</td>
+                    <td>
+                        <ul>
+                            <router-link v-for="item in getInfrastructure(rack.rack_name)" :key="item" :to="getInfrastructureDetailsRoute(item)">
+                                <li>{{ item }}</li>
+                            </router-link>
+                        </ul>
+                    </td>
                     </tr>
-                    </tbody>
+                </tbody>
             </table>
         </div>
 
@@ -111,6 +117,10 @@ import axios from 'axios';
             const filteredInfrastructure = this.infrastructures.filter(infrastructure => infrastructure.rack_name === rack)
             .map(infrastructure => infrastructure.name);
             return filteredInfrastructure
+        },
+
+        getInfrastructureDetailsRoute(infrastructureName) {
+            return `/infrastructures/${encodeURIComponent(infrastructureName)}`
         },
     }
   }
