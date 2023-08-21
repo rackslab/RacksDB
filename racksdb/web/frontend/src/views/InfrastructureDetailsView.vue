@@ -36,7 +36,7 @@
                   <li><span class="property">ID:</span> {{ selectedEquipment.node_id }}</li>
                   <li><span class="property">Model:</span>  {{ selectedEquipment.node_model }}</li>
                   <li><span class="property">Height:</span> {{ selectedEquipment.node_height }}u</li>
-                  <li><span class="property">Width:</span> {{ selectedEquipment.node_width }}</li>
+                  <li><span class="property">Width:</span> {{ selectedEquipment.node_width }}u</li>
                   <li><span class="property">Specs:</span> {{ selectedEquipment.node_specs }}</li>
                 </div>
 
@@ -54,7 +54,8 @@
                   <li><span class="property">RAM:</span></li>
                   <div class="section3a">
                     <li><span class="property">Dimm:</span> {{ selectedEquipment.node_ram_dimm }}</li>
-                    <li><span class="property">Size:</span> {{ selectedEquipment.node_ram_size }}GB</li>
+                    <li><span class="property">Size:</span> {{ selectedEquipment.node_ram_size / (1024**3)}} GB</li>
+
                   </div>
                 </div>
               </ul>
@@ -72,7 +73,7 @@
                   <li><span class="property">Disks:</span></li>
                   <div class="section2a">
                     <li><span class="property">Type:</span> {{ selectedEquipment.disk_type }}</li>
-                    <li><span class="property">Size:</span> {{ selectedEquipment.disk_size }}</li>
+                    <li><span class="property">Size:</span> {{ selectedEquipment.disk_size / (1024**4)}}TB</li>
                     <li><span class="property">Model:</span> {{ selectedEquipment.disk_model }}</li>
                     <li><span class="property">Number:</span> {{ selectedEquipment.disk_number }}</li>
                   </div>
@@ -94,7 +95,7 @@
                   <li><span class="property">Netifs:</span></li>
                   <div class="section2a">
                     <li><span class="property">Type:</span> {{ selectedEquipment.netif_type }}</li>
-                    <li><span class="property">Bandwidth:</span> {{ selectedEquipment.netif_bandwidth }}</li>
+                    <li><span class="property">Bandwidth:</span> {{ selectedEquipment.netif_bandwidth / (1024**3) }} GB</li>
                     <li><span class="property">Number:</span> {{ selectedEquipment.netif_number }}</li>
                   </div>
                 </div>
