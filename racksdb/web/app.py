@@ -78,6 +78,7 @@ def get_room():
     datacenters = []
     infrastructures = []
     racks = []
+    fillRates = []
 
     for datacenter in db.datacenters.items:
         for room in datacenter.rooms:
@@ -105,6 +106,19 @@ def get_room():
   
                   }
                   infrastructures.append(infrastructure_info)
+    
+    for datacenter in db.datacenters:
+        for room in datacenter.rooms:
+            for row in room.rows:
+                for rack in row.racks:
+                    rack_capacity = {
+                        'racktype_id': rack.type.id,
+                        'racktype_slots': rack.type.slots  
+                    }
+
+
+    
+
 
     reponse_data = {
         'datacenters': datacenters,
@@ -238,6 +252,64 @@ def get_infrastructureDetails():
         'node_equipments': node_equipments,
         'storage_equipments': storage_equipments,
         'network_equipments': network_equipments
+    }
+    return jsonify(reponse_data)
+
+
+
+@app.route('/api/tempo', methods=['GET'])
+def get_tempo():
+    racks = []
+    heights = []
+    widths = []
+
+    for infrastructure in db.infrastructures:
+         for rack in infrastructure.layout:
+                rack_info = {
+                    'rack_name': rack.rack.name,
+                    'rack_slot': rack.rack.type.slots
+                }
+                racks.append(rack_info)
+
+                for node in rack.nodes:
+                    node_info = {
+                          'node': node.name,
+                          'node_height': node.type.height,
+                          'node_width': node.type.width
+                    }
+                    racks.append(node_info)
+                    heights.append(node.type.height)
+                    widths.append(node.type.width)
+                
+                for storage in rack.storage:
+                    storage_info = {
+                          'storage': storage.name,
+                          'storage_height': storage.type.height,
+                          'storage_width': storage.type.width,
+                    }
+                    racks.append(storage_info)
+                    heights.append(storage.type.height)
+                    widths.append(storage.type.width)
+
+                for network in rack.network:
+                    network_info = {
+                        'network': network.name,
+                        'network_height': network.type.height,
+                        'network_width': network.type.width,
+                    }
+                    racks.append(network_info)
+                    heights.append(network.type.height)
+                    widths.append(network.type.width)
+
+    
+
+    total_height = sum(heights)
+    total_width = sum(widths)
+
+    reponse_data = {
+        'rack' : racks,
+        'total_height': total_height,
+        'total_width': total_width,
     }
     return jsonify(reponse_data)
 
