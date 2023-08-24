@@ -95,7 +95,7 @@
                   <li><span class="property">Netifs:</span></li>
                   <div class="section2a">
                     <li><span class="property">Type:</span> {{ selectedEquipment.netif_type }}</li>
-                    <li><span class="property">Bandwidth:</span> {{ selectedEquipment.netif_bandwidth / (1024**3) }} GB</li>
+                    <li><span class="property">Bandwidth:</span> {{ (selectedEquipment.netif_bandwidth * 8 )/ 1000**3}} Gb/s</li>
                     <li><span class="property">Number:</span> {{ selectedEquipment.netif_number }}</li>
                   </div>
                 </div>
