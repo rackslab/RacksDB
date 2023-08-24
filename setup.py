@@ -32,7 +32,13 @@ setup(
     license='GPLv3+',
     url='https://github.com/rackslab/racksdb',
     platforms=['GNU/Linux'],
-    install_requires=['PyYAML', 'ClusterShell', 'pycairo'],
+    install_requires=[
+        'ClusterShell',
+        'Flask',
+        'Flask-Cors',
+        'pycairo',
+        'PyYAML',
+    ],
     entry_points={
         'console_scripts': [
             'racksdb=racksdb.exec:RacksDBExec.run',
