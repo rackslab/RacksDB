@@ -27,7 +27,7 @@
                 <tbody>
                     <tr v-for="rack in getRack()" :key="rack.name">
                     <td> {{ rack.rack_name }}</td>
-                    <td>N/A</td>
+                    <td> {{ rack.rack_name in rackFillRate ? Math.round(rackFillRate[rack.rack_name].fillrate, 2)+"%" : "N/A" }}</td>
                     <td>
                         <ul>
                             <router-link v-for="item in getInfrastructure(rack.rack_name)" :key="item" :to="getInfrastructureDetailsRoute(item)">
@@ -55,6 +55,7 @@ import axios from 'axios';
             datacenters: [],
             infrastructures: [],
             racks: [],
+            rackFillRate: {},
             showList: false,
             selectedDatacenter: null,
         };
@@ -72,6 +73,9 @@ import axios from 'axios';
                 this.datacenters = response.data.datacenters;
                 this.infrastructures = response.data.infrastructures;
                 this.racks = response.data.racks;
+                this.rackFillRate = response.data.rackFillRate;
+                console.log(this.rackFillRate)
+
 
                 this.show(this.datacenterRoom);
 
@@ -112,6 +116,8 @@ import axios from 'axios';
             const filteredRack = this.racks.filter(rack => rack.datacenter_name === this.selectedDatacenter.name)
             return filteredRack
         },
+
+
 
         getInfrastructure(rack){
             const filteredInfrastructure = this.infrastructures.filter(infrastructure => infrastructure.rack_name === rack)
