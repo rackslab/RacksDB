@@ -83,31 +83,63 @@ documentation.
 
 ## Development
 
-### Web application frontend
+### Install from source
 
-#### Project setup
-```
-npm install
-```
+Install RacksDB and its dependencies, typically in a virtual environment:
 
-#### Compiles and hot-reloads for development
 ```
-npm run serve
+$ python3 setup.py install
 ```
 
-#### Compiles and minifies for production
+### Web application
+
+#### Backend
+
+Launch backend REST API application with these commands:
+
 ```
-npm run build
+$ cd racksdb/web && python3 app.py
 ```
 
-#### Lints and fixes files
+#### Frontend
+
+The frontend of the web application is developed with VueJS framework version 3,
+it requires NodeJS >= 16. Unless already provided by your Linux distribution, it
+is recommended to use [nvm](https://github.com/nvm-sh/nvm) in most cases to
+install a recent version of NodeJS in your home directory.
+
+Go into frontend application directory:
+
 ```
-npm run lint
+$ cd racksdb/web/frontend
 ```
 
-#### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Install required dependencies:
 
+```
+$ npm install
+```
+
+Compiles and hot-reloads for development:
+
+```
+$ npm run serve
+```
+
+Compiles and minifies for production:
+
+```
+$ npm run build
+```
+
+Lints and fixes files:
+
+```
+$ npm run lint
+```
+
+To customize the configuration, please refer to
+[VueJS Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Authors
 
