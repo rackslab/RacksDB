@@ -1,6 +1,6 @@
 BIN ?= asciidoctor
 MAN_OPTS ?= --backend manpage
-REVNUMBER := $(shell python3 -c 'exec(open("../racksdb/version.py").read()); print(__version__)')
+REVNUMBER := $(shell python3 -c "import tomli; content = tomli.load(open('../pyproject.toml', 'rb')); print(content['project']['version'])")
 
 all: man ref
 

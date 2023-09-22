@@ -22,7 +22,7 @@ import sys
 import logging
 from pathlib import Path
 
-from .version import __version__
+from .version import get_version
 from .generic.errors import DBFormatError, DBSchemaError
 from .generic.dumper import DBDumper, SchemaDumper
 from . import RacksDB
@@ -45,7 +45,7 @@ class RacksDBExec:
             '--version',
             dest='version',
             action='version',
-            version='RacksDB ' + __version__,
+            version='RacksDB ' + get_version(),
         )
         parser.add_argument(
             '--debug',

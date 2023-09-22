@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "RacksDB"
+version = "0.0.2a1"
+description = "Modelize your datacenters infrastructures in YAML database"
+license = {text = "GPLv3+"}
+requires-python = ">=3.6"
+keywords = ["cmdb", "inventory", "yaml", "datacenters", "racks", "hpc", "cluster"]
+authors = [
+    {name = "Rémi Palancher", email = "remi@rackslab.io"},
+]
+dependencies = [
+    "PyYAML",
+    "ClusterShell",
+    "pycairo",
+]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Database :: Database Engines/Servers",
+    "Topic :: System :: Clustering",
+    "Topic :: System :: Systems Administration",
+]
+
+[project.scripts]
+racksdb = "racksdb.exec:RacksDBExec.run"
+
+[tool.setuptools.packages.find]
+include = ['racksdb*']
+
+[project.urls]
+"Homepage" = "https://github.com/rackslab/RacksDB"
+"Bug Tracker" = "https://github.com/rackslab/RacksDB/issues"
+
+[tool.black]
+target-version = ['py36']
+color = 1
