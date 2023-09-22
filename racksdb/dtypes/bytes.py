@@ -15,16 +15,16 @@ class SchemaDefinedTypeBytes(SchemaDefinedType):
         match = self._match(value)
         quantity = float(match.group(1))
         unit = match.group(3)
-        if unit == 'Mb':
+        if unit == "Mb":
             quantity *= (10 ** 6) / 8
-        elif unit == 'MB':
+        elif unit == "MB":
             quantity *= 1024 ** 2
-        elif unit == 'Gb':
+        elif unit == "Gb":
             quantity *= (10 ** 9) / 8
-        elif unit == 'GB':
+        elif unit == "GB":
             quantity *= 1024 ** 3
-        elif unit == 'Tb':
+        elif unit == "Tb":
             quantity *= (10 ** 12) / 8
-        elif unit == 'TB':
+        elif unit == "TB":
             quantity *= 1024 ** 4
         return int(quantity)

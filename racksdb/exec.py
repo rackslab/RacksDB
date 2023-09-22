@@ -24,40 +24,38 @@ class RacksDBExec:
         cls()
 
     def __init__(self):
-        parser = argparse.ArgumentParser(
-            description='Do something with RacksDB.'
+        parser = argparse.ArgumentParser(description="Do something with RacksDB.")
+        parser.add_argument(
+            "-v",
+            "--version",
+            dest="version",
+            action="version",
+            version="RacksDB " + get_version(),
         )
         parser.add_argument(
-            '-v',
-            '--version',
-            dest='version',
-            action='version',
-            version='RacksDB ' + get_version(),
-        )
-        parser.add_argument(
-            '--debug',
-            dest='debug',
-            action='store_true',
+            "--debug",
+            dest="debug",
+            action="store_true",
             help="Enable debug mode",
         )
 
         parser.add_argument(
-            '-s',
-            '--schema',
+            "-s",
+            "--schema",
             help="Schema to load (default: %(default)s)",
             default=RacksDB.DEFAULT_SCHEMA,
             type=Path,
         )
         parser.add_argument(
-            '-e',
-            '--ext',
+            "-e",
+            "--ext",
             help="Path to extensions of schema (default: %(default)s)",
             default=RacksDB.DEFAULT_EXT,
             type=Path,
         )
         parser.add_argument(
-            '-b',
-            '--db',
+            "-b",
+            "--db",
             help="Database to load (default: %(default)s)",
             default=RacksDB.DEFAULT_DB,
             type=Path,
@@ -70,140 +68,136 @@ class RacksDBExec:
         # Python 3.6 is dropped in RacksDB.
         if sys.version_info[1] >= 3 and sys.version_info[1] >= 7:
             subparsers = parser.add_subparsers(
-                help='Action to perform with database',
-                dest='action',
+                help="Action to perform with database",
+                dest="action",
                 required=True,
             )
         else:
             subparsers = parser.add_subparsers(
-                help='Action to perform with database', dest='action'
+                help="Action to perform with database", dest="action"
             )
 
         # Parser for the schema command
-        parser_schema = subparsers.add_parser(
-            'schema', help='Dump loaded schema'
-        )
+        parser_schema = subparsers.add_parser("schema", help="Dump loaded schema")
         parser_schema.set_defaults(func=self._run_schema)
 
         # Parser for the dump command
-        parser_dump = subparsers.add_parser('dump', help='Dump raw loaded DB')
+        parser_dump = subparsers.add_parser("dump", help="Dump raw loaded DB")
         parser_dump.set_defaults(func=self._run_dump)
 
         # Parser for the datacenters command
         parser_datacenters = subparsers.add_parser(
-            'datacenters', help='Get informations about datacenters'
+            "datacenters", help="Get informations about datacenters"
         )
         parser_datacenters.add_argument(
-            '-l',
-            '--list',
-            help='List datacenters',
-            action='store_true',
+            "-l",
+            "--list",
+            help="List datacenters",
+            action="store_true",
         )
         parser_datacenters.add_argument(
-            '--with-objects-types',
-            help='Show object types in dumps',
-            action='store_true',
+            "--with-objects-types",
+            help="Show object types in dumps",
+            action="store_true",
         )
         parser_datacenters.add_argument(
-            '--name',
-            help='Filter datacenter by name',
+            "--name",
+            help="Filter datacenter by name",
         )
         parser_datacenters.add_argument(
-            '--tags', help='Filter datacenter by tag', nargs='*'
+            "--tags", help="Filter datacenter by tag", nargs="*"
         )
         parser_datacenters.set_defaults(func=self._run_datacenters)
 
         # Parser for the infrastructures command
         parser_infras = subparsers.add_parser(
-            'infrastructures', help='Get informations about infrastructures'
+            "infrastructures", help="Get informations about infrastructures"
         )
         parser_infras.add_argument(
-            '-l',
-            '--list',
-            help='List infrastructures names',
-            action='store_true',
+            "-l",
+            "--list",
+            help="List infrastructures names",
+            action="store_true",
         )
         parser_infras.add_argument(
-            '--with-objects-types',
-            help='Show object types in dumps',
-            action='store_true',
+            "--with-objects-types",
+            help="Show object types in dumps",
+            action="store_true",
         )
         parser_infras.add_argument(
-            '--name',
-            help='Filter infrastructures by name',
+            "--name",
+            help="Filter infrastructures by name",
         )
         parser_infras.add_argument(
-            '--tags', help='Filter infrastructures by tag', nargs='*'
+            "--tags", help="Filter infrastructures by tag", nargs="*"
         )
         parser_infras.set_defaults(func=self._run_infras)
 
         # Parser for the nodes command
         parser_nodes = subparsers.add_parser(
-            'nodes', help='Get informations about nodes'
+            "nodes", help="Get informations about nodes"
         )
         parser_nodes.add_argument(
-            '-l',
-            '--list',
-            help='List nodes names',
-            action='store_true',
+            "-l",
+            "--list",
+            help="List nodes names",
+            action="store_true",
         )
         parser_nodes.add_argument(
-            '--with-objects-types',
-            help='Show object types in dumps',
-            action='store_true',
+            "--with-objects-types",
+            help="Show object types in dumps",
+            action="store_true",
         )
         parser_nodes.add_argument(
-            '--name',
-            help='Filter nodes by name',
+            "--name",
+            help="Filter nodes by name",
         )
         parser_nodes.add_argument(
-            '--infrastructure',
-            help='Filter nodes by infrastructure',
+            "--infrastructure",
+            help="Filter nodes by infrastructure",
         )
-        parser_nodes.add_argument(
-            '--tags', help='Filter nodes by tag', nargs='*'
-        )
+        parser_nodes.add_argument("--tags", help="Filter nodes by tag", nargs="*")
         parser_nodes.set_defaults(func=self._run_nodes)
 
         # Parser for the racks command
         parser_racks = subparsers.add_parser(
-            'racks', help='Get informations about racks'
+            "racks", help="Get informations about racks"
         )
         parser_racks.add_argument(
-            '-l',
-            '--list',
-            help='List racks names',
-            action='store_true',
+            "-l",
+            "--list",
+            help="List racks names",
+            action="store_true",
         )
         parser_racks.add_argument(
-            '--with-objects-types',
-            help='Show object types in dumps',
-            action='store_true',
+            "--with-objects-types",
+            help="Show object types in dumps",
+            action="store_true",
         )
         parser_racks.add_argument(
-            '--name',
-            help='Filter racks by name',
+            "--name",
+            help="Filter racks by name",
         )
 
         parser_racks.set_defaults(func=self._run_racks)
 
         # Parser for the draw command
-        parser_draw = subparsers.add_parser('draw', help='Draw DB components')
+        parser_draw = subparsers.add_parser("draw", help="Draw DB components")
         parser_draw.add_argument(
-            'entity',
-            choices=['room', 'infrastructure'],
-            help='Entity to draw',
+            "entity",
+            choices=["room", "infrastructure"],
+            help="Entity to draw",
         )
         parser_draw.add_argument(
-            '--name',
-            help='Name of entity to draw',
+            "--name",
+            help="Name of entity to draw",
             required=True,
         )
         parser_draw.add_argument(
-            '--format',
-            help='Format of output image (default: %(default)s)',
-            choices=['png', 'svg', 'pdf'],
-            default='png',
+            "--format",
+            help="Format of output image (default: %(default)s)",
+            choices=["png", "svg", "pdf"],
+            default="png",
         )
         parser_draw.set_defaults(func=self._run_draw)
 
@@ -212,9 +206,7 @@ class RacksDBExec:
         self._setup_logger()
 
         try:
-            self.db = RacksDB.load(
-                self.args.schema, self.args.ext, self.args.db
-            )
+            self.db = RacksDB.load(self.args.schema, self.args.ext, self.args.db)
         except DBSchemaError as err:
             logger.error("Error while loading schema: %s", err)
             sys.exit(1)
@@ -222,7 +214,7 @@ class RacksDBExec:
             logger.error("Error while loading db: %s", err)
             sys.exit(1)
 
-        if not hasattr(self.args, 'func'):
+        if not hasattr(self.args, "func"):
             parser.print_usage()
             logger.error("The action argument must be given")
             sys.exit(1)
@@ -246,13 +238,13 @@ class RacksDBExec:
     def _run_schema(self):
         print(
             SchemaDumper().dump(self.db._schema),
-            end='',
+            end="",
         )
 
     def _run_dump(self):
         print(
             DBDumper().dump(self.db._loader.content),
-            end='',
+            end="",
         )
 
     def _run_datacenters(self):
@@ -262,17 +254,13 @@ class RacksDBExec:
         )
         # print list of datacenters
         if self.args.list:
-            print(
-                '\n'.join(
-                    [datacenter.name for datacenter in selected_datacenters]
-                )
-            )
+            print("\n".join([datacenter.name for datacenter in selected_datacenters]))
             return
         objects_map = {
-            'RacksDBDatacenter': None,
-            'RacksDBDatacenterRoom': 'name',
-            'RacksDBDatacenterRoomRow': 'name',
-            'RacksDBDatacenterRoomRack': 'name',
+            "RacksDBDatacenter": None,
+            "RacksDBDatacenterRoom": "name",
+            "RacksDBDatacenterRoomRow": "name",
+            "RacksDBDatacenterRoomRack": "name",
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
@@ -280,7 +268,7 @@ class RacksDBExec:
         )
         print(
             dumper.dump([datacenter for datacenter in selected_datacenters]),
-            end='',
+            end="",
         )
 
     def _run_infras(self):
@@ -292,16 +280,14 @@ class RacksDBExec:
         # print list of infrastructures
         if self.args.list:
             print(
-                '\n'.join(
-                    [infrastructure.name for infrastructure in selected_infras]
-                )
+                "\n".join([infrastructure.name for infrastructure in selected_infras])
             )
             return
         objects_map = {
-            'RacksDBDatacenter': 'name',
-            'RacksDBDatacenterRoom': 'name',
-            'RacksDBDatacenterRoomRack': 'name',
-            'RacksDBInfrastructure': None,
+            "RacksDBDatacenter": "name",
+            "RacksDBDatacenterRoom": "name",
+            "RacksDBDatacenterRoomRack": "name",
+            "RacksDBInfrastructure": None,
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
@@ -309,7 +295,7 @@ class RacksDBExec:
         )
         print(
             dumper.dump([infrastructure for infrastructure in selected_infras]),
-            end='',
+            end="",
         )
 
     def _run_nodes(self):
@@ -321,24 +307,24 @@ class RacksDBExec:
         )
 
         if self.args.list:
-            print('\n'.join([str(node.name) for node in selected_nodes]))
+            print("\n".join([str(node.name) for node in selected_nodes]))
             return
         objects_map = {
-            'RacksDBGroupRack': 'name',
-            'RacksDBDatacenter': 'name',
-            'RacksDBDatacenterRoom': 'name',
-            'RacksDBDatacenterRoomRow': 'name',
-            'RacksDBInfrastructure': 'name',
+            "RacksDBGroupRack": "name",
+            "RacksDBDatacenter": "name",
+            "RacksDBDatacenterRoom": "name",
+            "RacksDBDatacenterRoomRow": "name",
+            "RacksDBInfrastructure": "name",
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
-        print(dumper.dump(selected_nodes), end='')
+        print(dumper.dump(selected_nodes), end="")
 
     def _run_racks(self):
 
-        selected_racks = self.db.find_objects('DatacenterRoomRack', True)
+        selected_racks = self.db.find_objects("DatacenterRoomRack", True)
 
         # filter racks by name
         if self.args.name is not None:
@@ -354,27 +340,25 @@ class RacksDBExec:
                         rack.nodes = part.nodes
 
         if self.args.list:
-            print('\n'.join([str(rack.name) for rack in selected_racks]))
+            print("\n".join([str(rack.name) for rack in selected_racks]))
             return
         objects_map = {
-            'RacksDBDatacenter': 'name',
-            'RacksDBDatacenterRoom': 'name',
-            'RacksDBDatacenterRoomRow': 'name',
-            'RacksDBDatacenterRoomRack': None,
-            'RacksDBNodeType': 'id',
-            'RacksDBInfrastructure': 'name',
+            "RacksDBDatacenter": "name",
+            "RacksDBDatacenterRoom": "name",
+            "RacksDBDatacenterRoomRow": "name",
+            "RacksDBDatacenterRoomRack": None,
+            "RacksDBNodeType": "id",
+            "RacksDBInfrastructure": "name",
         }
         dumper = DBDumper(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
-        print(dumper.dump(selected_racks), end='')
+        print(dumper.dump(selected_racks), end="")
 
     def _run_draw(self):
-        if self.args.entity == 'infrastructure':
-            drawer = InfrastructureDrawer(
-                self.db, self.args.name, self.args.format
-            )
-        elif self.args.entity == 'room':
+        if self.args.entity == "infrastructure":
+            drawer = InfrastructureDrawer(self.db, self.args.name, self.args.format)
+        elif self.args.entity == "room":
             drawer = RoomDrawer(self.db, self.args.name, self.args.format)
         drawer.draw()

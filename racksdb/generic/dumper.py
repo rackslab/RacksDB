@@ -28,7 +28,7 @@ class DBDumper:
     def _represent_list(self, dumper, data):
 
         value = []
-        tag = u'tag:yaml.org,2002:seq'
+        tag = "tag:yaml.org,2002:seq"
         for _object in data:
             value.append(dumper.represent_data(_object))
         return yaml.SequenceNode(tag, value)
@@ -40,19 +40,19 @@ class DBDumper:
         if self.show_types:
             tag = f"{data.__class__.__name__}"
         else:
-            tag = u'tag:yaml.org,2002:map'  # YAML generic mapping type
+            tag = "tag:yaml.org,2002:map"  # YAML generic mapping type
 
         node = yaml.MappingNode(tag, value)
 
         for item_key, item_value in vars(data).items():
             # skip special fields
             if item_key in [
-                '_db',
-                '_indexes',
-                '_schema',
-                '_parent',
-                '_first',
-                '_key',
+                "_db",
+                "_indexes",
+                "_schema",
+                "_parent",
+                "_first",
+                "_key",
             ]:
                 continue
             # If the attribute has been renamed with loaded prefix, call bases
@@ -87,9 +87,7 @@ class DBDumper:
         yaml.add_representer(DBList, self._represent_list)
         yaml.add_multi_representer(DBObject, self._represent_dbobject)
         yaml.add_multi_representer(DBObjectRange, self._represent_dbobjectrange)
-        yaml.add_multi_representer(
-            DBObjectRangeId, self._represent_dbobjectrangeid
-        )
+        yaml.add_multi_representer(DBObjectRangeId, self._represent_dbobjectrangeid)
 
     def dump(self, data):
         noalias_dumper = yaml.dumper.Dumper
@@ -111,7 +109,7 @@ class SchemaDumper:
 
     def _represent_schemaobject(self, dumper, data):
         value = []
-        tag = u'tag:yaml.org,2002:map'  # YAML generic mapping type
+        tag = "tag:yaml.org,2002:map"  # YAML generic mapping type
         node = yaml.MappingNode(tag, value)
         for prop in data.properties:
             value.append(
@@ -123,25 +121,19 @@ class SchemaDumper:
         return node
 
     def _represent_schemadefinedtype(self, dumper, data):
-        tag = u'tag:yaml.org,2002:str'  # YAML generic string type
+        tag = "tag:yaml.org,2002:str"  # YAML generic string type
         node = yaml.ScalarNode(tag, data.pattern)
         return node
 
     def _setup(self):
         yaml.add_representer(SchemaObject, self._represent_schemaobject)
-        yaml.add_multi_representer(
-            SchemaDefinedType, self._represent_schemadefinedtype
-        )
+        yaml.add_multi_representer(SchemaDefinedType, self._represent_schemadefinedtype)
 
     def dump(self, schema):
         noalias_dumper = yaml.dumper.Dumper
         noalias_dumper.ignore_aliases = lambda self, data: True
         # dump all Schema object content except _schema attribute
         return yaml.dump(
-            {
-                key: value
-                for key, value in vars(schema).items()
-                if key != '_schema'
-            },
+            {key: value for key, value in vars(schema).items() if key != "_schema"},
             Dumper=noalias_dumper,
         )

@@ -51,7 +51,7 @@ class LineLoader(yaml.loader.SafeLoader):
         for key, value in node.value:
             line_key = yaml.nodes.ScalarNode(
                 tag=yaml.resolver.BaseResolver.DEFAULT_SCALAR_TAG,
-                value='__line_' + key.value,
+                value="__line_" + key.value,
             )
             line_value = yaml.nodes.ScalarNode(
                 tag=yaml.resolver.BaseResolver.DEFAULT_SCALAR_TAG,
@@ -60,9 +60,7 @@ class LineLoader(yaml.loader.SafeLoader):
             additional_pairs.append((line_key, line_value))
 
         node.value += additional_pairs
-        mapping = yaml.constructor.Constructor.construct_mapping(
-            self, node, deep=deep
-        )
+        mapping = yaml.constructor.Constructor.construct_mapping(self, node, deep=deep)
         return mapping
 
 
@@ -74,11 +72,11 @@ def bases(obj):
 def main():
     # Load the schema, the DB does not matter here.
     db = RacksDB.load(
-        schema=Path('../schema/racksdb.yml'),
-        db=Path('../examples/simple/racksdb.yml'),
+        schema=Path("../schema/racksdb.yml"),
+        db=Path("../examples/simple/racksdb.yml"),
     )
 
-    with open('../schema/racksdb.yml') as fh:
+    with open("../schema/racksdb.yml") as fh:
         # Load the schema with LineLoader to get line numbers of attributes
         # objects declarations
         data = yaml.load(fh.read(), Loader=LineLoader)
@@ -89,22 +87,22 @@ def main():
     # Enrich schema with description provided in schema file, in comment in the
     # line of the property declaration.
     for obj in [db._schema.content] + list(db._schema.objects.values()):
-        if obj.name != '_content':
-            obj_line = schema_lines[data['_objects']['__line_' + obj.name]]
-            if '#' in obj_line:
-                obj.description = obj_line.split('#', 1)[1].strip()
+        if obj.name != "_content":
+            obj_line = schema_lines[data["_objects"]["__line_" + obj.name]]
+            if "#" in obj_line:
+                obj.description = obj_line.split("#", 1)[1].strip()
             else:
                 obj.description = None
         for prop in obj.properties:
             if obj is db._schema.content:
-                item = data['_content']
+                item = data["_content"]
             else:
-                item = data['_objects'][obj.name]
-            prop_line = schema_lines[item['__line_' + prop.name]]
-            if '#' in prop_line:
-                prop.description = prop_line.split('#', 1)[1].strip()
+                item = data["_objects"][obj.name]
+            prop_line = schema_lines[item["__line_" + prop.name]]
+            if "#" in prop_line:
+                prop.description = prop_line.split("#", 1)[1].strip()
             else:
-                prop.description = '-'
+                prop.description = "-"
 
     # Enrich schema object with has_backref boolean
     for obj in db._schema.objects.values():
@@ -114,16 +112,16 @@ def main():
                 obj.has_backref = True
 
     # Render template
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader('utils'))
-    env.filters['bases'] = bases
-    template = env.get_template('schema-objs.adoc.j2')
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader("utils"))
+    env.filters["bases"] = bases
+    template = env.get_template("schema-objs.adoc.j2")
     output = template.render(
         schema=db._schema,
-        object_prefix='RacksDB',
-        deftype_prefix='racksdb.types.',
+        object_prefix="RacksDB",
+        deftype_prefix="racksdb.types.",
     )
     print(output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -14,11 +14,11 @@ from . import bases
 
 class RacksDB(GenericDB):
 
-    DEFAULT_DB = '/var/lib/racksdb'
-    DEFAULT_SCHEMA = '/usr/share/racksdb/schema.yml'
-    DEFAULT_EXT = '/etc/racksdb/extensions.yml'
-    PREFIX = 'RacksDB'
-    DEFINED_TYPES_MODULE = 'racksdb.dtypes'
+    DEFAULT_DB = "/var/lib/racksdb"
+    DEFAULT_SCHEMA = "/usr/share/racksdb/schema.yml"
+    DEFAULT_EXT = "/etc/racksdb/extensions.yml"
+    PREFIX = "RacksDB"
+    DEFINED_TYPES_MODULE = "racksdb.dtypes"
 
     def __init__(self, schema, loader):
         super().__init__(self.PREFIX, schema, bases)

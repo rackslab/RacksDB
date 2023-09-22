@@ -15,8 +15,8 @@ class SchemaDefinedTypeDimension(SchemaDefinedType):
         match = self._match(value)
         size = float(match.group(1))
         unit = match.group(3)
-        if unit == 'cm':
+        if unit == "cm":
             size *= 10
-        elif unit == 'm':
+        elif unit == "m":
             size *= 1000
         return int(size)

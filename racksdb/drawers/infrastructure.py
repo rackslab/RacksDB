@@ -34,9 +34,7 @@ class InfrastructureDrawer(Drawer):
             if infrastructure.name == name:
                 self.infrastructure = infrastructure
         if self.infrastructure is None:
-            raise RacksDBError(
-                f"Unable to find infrastructure {name} in database"
-            )
+            raise RacksDBError(f"Unable to find infrastructure {name} in database")
         # List of rack rows used by the infrastructure
         self.rack_rows = []
         # List of racks used by the insfrastructure
@@ -63,9 +61,7 @@ class InfrastructureDrawer(Drawer):
         # Sum the width of all racks in row before the current rack
         for row_rack in rack.row.racks:
             if row_rack.slot < rack.slot:
-                dl.x += (
-                    int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
-                )
+                dl.x += int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
         dl.y += self.RACK_LABEL_OFFSET + self.RACK_OFFSET
         return dl
 
@@ -90,18 +86,10 @@ class InfrastructureDrawer(Drawer):
             equipment_width_slot,
         )
 
-        tl.x += (
-            self.RACK_PANE_WIDTH
-            + equipment_width_slot
-            * equipment.type.width
-            * (
-                int(equipment.rack.type.width * self.SCALE)
-                - 2 * self.RACK_PANE_WIDTH
-            )
+        tl.x += self.RACK_PANE_WIDTH + equipment_width_slot * equipment.type.width * (
+            int(equipment.rack.type.width * self.SCALE) - 2 * self.RACK_PANE_WIDTH
         )
-        tl.y -= (
-            equipment.type.height + equipment_height_slot
-        ) * self.RACK_U_HEIGHT
+        tl.y -= (equipment.type.height + equipment_height_slot) * self.RACK_U_HEIGHT
 
         return tl
 
@@ -116,8 +104,7 @@ class InfrastructureDrawer(Drawer):
         tl = self._equipment_tl(row, rack, equipment)
 
         equipment_width = equipment.type.width * (
-            int(equipment.rack.type.width * self.SCALE)
-            - 2 * self.RACK_PANE_WIDTH
+            int(equipment.rack.type.width * self.SCALE) - 2 * self.RACK_PANE_WIDTH
         )
         equipment_height = int(equipment.type.height * self.RACK_U_HEIGHT)
 
@@ -255,11 +242,7 @@ class InfrastructureDrawer(Drawer):
         surface_height = (
             2 * self.MARGIN_TOP
             + len(self.rack_rows)
-            * (
-                self.ROW_LABEL_OFFSET
-                + self.RACK_LABEL_OFFSET
-                + self.RACK_OFFSET
-            )
+            * (self.ROW_LABEL_OFFSET + self.RACK_LABEL_OFFSET + self.RACK_OFFSET)
             + int(total_row_max_heights * self.SCALE)
         )
 

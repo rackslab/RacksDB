@@ -25,20 +25,18 @@ class Drawer:
         self.filename = f"{name}.{output_format}"
 
     def init_ctx(self, width, height):
-        if self.output_format == 'png':
-            self.surface = cairo.ImageSurface(
-                cairo.FORMAT_ARGB32, width, height
-            )
-        elif self.output_format == 'svg':
+        if self.output_format == "png":
+            self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        elif self.output_format == "svg":
             self.surface = cairo.SVGSurface(self.filename, width, height)
-        elif self.output_format == 'pdf':
+        elif self.output_format == "pdf":
             self.surface = cairo.PDFSurface(self.filename, width, height)
         self.ctx = cairo.Context(self.surface)
 
     def write(self):
-        if self.output_format == 'png':
+        if self.output_format == "png":
             self.surface.write_to_png(self.filename)
-        elif self.output_format in ['svg', 'pdf']:
+        elif self.output_format in ["svg", "pdf"]:
             self.surface.finish()
             self.surface.flush()
         logger.info("Generated %s", self.filename)

@@ -27,7 +27,7 @@ class SchemaDefinedTypeLoader:
         for importer, modname, _ in pkgutil.iter_modules(base_module.__path__):
             logger.debug("Loading module %s/%s", modname, importer)
             module = importlib.import_module(f"{self.path}.{modname}")
-            class_suffix = modname.replace('_', ' ').title().replace(' ', '')
+            class_suffix = modname.replace("_", " ").title().replace(" ", "")
             class_name = f"SchemaDefinedType{class_suffix}"
             logger.debug("Loading class %s", class_name)
             results[modname] = getattr(module, class_name)()
@@ -66,24 +66,20 @@ class SchemaFileLoader:
                 extensions = yaml.safe_load(fh)
             except yaml.composer.ComposerError as err:
                 raise DBSchemaError(err)
-        if '_content' in extensions:
-            logger.debug(
-                "Updating schema with additional content found in extension"
-            )
-            result['_content'].update(extensions['_content'])
-        if '_objects' in extensions:
-            for obj, properties in extensions['_objects'].items():
-                if obj in result['_objects']:
+        if "_content" in extensions:
+            logger.debug("Updating schema with additional content found in extension")
+            result["_content"].update(extensions["_content"])
+        if "_objects" in extensions:
+            for obj, properties in extensions["_objects"].items():
+                if obj in result["_objects"]:
                     logger.debug(
                         "Updating object class %s with properties found in extension",
                         obj,
                     )
-                    result['_objects'][obj].update(properties)
+                    result["_objects"][obj].update(properties)
                 else:
-                    logger.debug(
-                        "Additional object class %s found in extension", obj
-                    )
-                    result['_objects'][obj] = properties
+                    logger.debug("Additional object class %s found in extension", obj)
+                    result["_objects"][obj] = properties
         return result
 
 
@@ -97,13 +93,13 @@ class SchemaNativeType(SchemaGenericValueType):
 
     def __str__(self):
         if self.native is str:
-            return 'str'
+            return "str"
         elif self.native is int:
-            return 'int'
+            return "int"
         elif self.native is float:
-            return 'float'
+            return "float"
         elif self.native is bool:
-            return 'bool'
+            return "bool"
 
 
 class SchemaObject(SchemaGenericValueType):
@@ -178,11 +174,11 @@ class SchemaProperty:
 
     def __str__(self):
         if self.required:
-            result = 'required '
+            result = "required "
         else:
-            result = 'optional '
+            result = "optional "
         if self.key:
-            result += 'key '
+            result += "key "
         result += str(self.type)
         if self.default is not None:
             result += f" ({self.default})"
@@ -201,7 +197,7 @@ class Schema:
         self._schema = schema_loader.content
 
         try:
-            self.version = self._schema['_version']
+            self.version = self._schema["_version"]
         except KeyError:
             raise DBSchemaError("Version must be defined in schema")
         self.types = types_loader.content
@@ -209,44 +205,42 @@ class Schema:
         self.objects = {}
 
         try:
-            self.content = self.parse_obj('_content', self._schema['_content'])
+            self.content = self.parse_obj("_content", self._schema["_content"])
         except KeyError:
             raise DBSchemaError("Content must be defined in schema")
 
     def prop_spec(self, name, spec):
         # check optional
         required = True
-        if spec.startswith('optional '):
+        if spec.startswith("optional "):
             required = False
             spec = spec[9:]  # remove optional key
 
         # check key
         key = False
-        if spec.startswith('key '):
+        if spec.startswith("key "):
             key = True
             spec = spec[4:]  # remove keyword
 
         # check default
         default = None
-        if spec.startswith('default '):
+        if spec.startswith("default "):
             required = False
-            items = spec.split(' ')
+            items = spec.split(" ")
             # The default value is loaded using the yaml library to convert the
             # value to the appropriate Python type.
             default = yaml.safe_load(items[1])
             spec = items[2]
-        return SchemaProperty(
-            name, required, key, default, self.value_type(spec)
-        )
+        return SchemaProperty(name, required, key, default, self.value_type(spec))
 
     def value_type(self, spec):
         # parse native types
         for native_type in (str, int, float, bool):
             if spec == native_type.__name__:
                 return SchemaNativeType(native_type)
-        if spec == 'expandable':
+        if spec == "expandable":
             return SchemaExpandable()
-        if spec == 'rangeid':
+        if spec == "rangeid":
             return SchemaRangeId()
         # list
         match = self.pattern_type_list.match(spec)
@@ -274,14 +268,9 @@ class Schema:
     def find_obj(self, object_id):
         if object_id in self.objects:
             return self.objects[object_id]
-        if (
-            '_objects' not in self._schema
-            or object_id not in self._schema['_objects']
-        ):
-            raise DBSchemaError(
-                f"Definition of object {object_id} not found in schema"
-            )
-        obj = self.parse_obj(object_id, self._schema['_objects'][object_id])
+        if "_objects" not in self._schema or object_id not in self._schema["_objects"]:
+            raise DBSchemaError(f"Definition of object {object_id} not found in schema")
+        obj = self.parse_obj(object_id, self._schema["_objects"][object_id])
         return obj
 
     def parse_obj(self, object_id, objdef):
@@ -293,7 +282,7 @@ class Schema:
         # value_type() → find_obj() → parse_obj() with back references.
         # There is an exception for _content fake root object as it is already
         # hold by Schema.content attribute.
-        if object_id != '_content':
+        if object_id != "_content":
             self.objects[object_id] = obj
 
         has_key = False  # flag to check key property uniquess
@@ -343,17 +332,13 @@ class Schema:
         try:
             return self.types[defined]
         except KeyError:
-            raise DBSchemaError(
-                f"Definition of defined type {defined} not found"
-            )
+            raise DBSchemaError(f"Definition of defined type {defined} not found")
 
     def obj_reference(self, spec, object_id, object_prop):
         obj = self.find_obj(object_id)
         # verify property is defined for object
         if obj.prop(object_prop) is None:
-            raise DBSchemaError(
-                f"Reference {spec} to undefined {obj} object property"
-            )
+            raise DBSchemaError(f"Reference {spec} to undefined {obj} object property")
         return SchemaReference(obj, object_prop)
 
     def obj_back_reference(self, object_id, object_prop):

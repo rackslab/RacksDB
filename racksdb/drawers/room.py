@@ -51,9 +51,7 @@ class RoomDrawer(Drawer):
         # filling empty slots with previous rack width
         for slot in range(rack.slot):
             if slot not in filled_slots:
-                logger.debug(
-                    "Row %s slot %d is not filled", rack.row.name, slot
-                )
+                logger.debug("Row %s slot %d is not filled", rack.row.name, slot)
                 last_rack_width = 0
                 reversed_slot = slot
                 for reversed_slot in range(slot, 0, -1):
@@ -103,10 +101,7 @@ class RoomDrawer(Drawer):
             self.ctx.save()
             # If the rack row rotation angle is between 0 and 180, flip the text
             # to be right side up.
-            if (
-                rack.row.position.rotation > 0
-                and rack.row.position.rotation < 180
-            ):
+            if rack.row.position.rotation > 0 and rack.row.position.rotation < 180:
                 self.ctx.move_to(tl.x + 15, tl.y - 2 + rack_height)
                 self.ctx.rotate(-math.pi / 2)
             else:

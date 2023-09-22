@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 class DBObject:
-    LOADED_PREFIX = '__loaded_'
+    LOADED_PREFIX = "__loaded_"
 
     def __init__(self, db, schema):
         self._db = db
@@ -51,7 +51,7 @@ class DBExpandableObject(DBObject):
             # Skip selection of special _key attribute at this stage, it is
             # handled later when attributes are set on freshly instanciated
             # object.
-            if attribute == '_key':
+            if attribute == "_key":
                 continue
             if isinstance(value, DBObjectRange):
                 range_attribute = (attribute, value)
@@ -82,19 +82,19 @@ class DBExpandableObject(DBObject):
                 )
             except AttributeError:
                 pass
-            obj = type(
-                f"{self._db._prefix}{self._schema.name}", tuple(bases), dict()
-            )(self._db, self._schema)
+            obj = type(f"{self._db._prefix}{self._schema.name}", tuple(bases), dict())(
+                self._db, self._schema
+            )
             for attr_name, attr_value in _attributes.items():
                 setattr(obj, attr_name, attr_value)
                 # Set object _key attribute if property is a key
                 prop = self._schema.prop(attr_name)
                 if prop is not None and prop.key:
-                    setattr(obj, '_key', attr_value)
+                    setattr(obj, "_key", attr_value)
             result.append(obj)
             if first is None:
                 first = obj
-            setattr(obj, '_first', first)
+            setattr(obj, "_first", first)
         return result
 
 
@@ -131,7 +131,7 @@ class DBList:
 
     def __getitem__(self, key):
         for item in self.items:
-            if getattr(item, '_key', None) == key:
+            if getattr(item, "_key", None) == key:
                 return item
         raise KeyError(f"Key {key} not found")
 
@@ -164,13 +164,11 @@ class DBSplittedFilesLoader:
         if not path.exists():
             raise DBFormatError(f"DB path {path} does not exist")
         elif path.is_file():
-            if not path.name.endswith('.yml'):
-                raise DBFormatError(
-                    f"DB contains file {path} without .yml extension"
-                )
+            if not path.name.endswith(".yml"):
+                raise DBFormatError(f"DB contains file {path} without .yml extension")
             logger.debug("Loading DB file %s", path)
             self.content = DBFileLoader(path).content
-        elif path.suffix == '.l':
+        elif path.suffix == ".l":
             self.content = []
             for item in path.iterdir():
                 self.content.append(DBSplittedFilesLoader(item).content)
@@ -194,14 +192,12 @@ class GenericDB(DBObject):
         self._loaded_classes = set()
 
     def load(self, loader):
-        obj = self.load_object(
-            '_root', loader.content, self._schema.content, None
-        )
+        obj = self.load_object("_root", loader.content, self._schema.content, None)
         for key, value in vars(obj).items():
             # Copy loaded object attributes to self GenericDB object, except
             # _schema where we want to keep Schema object instead of loaded
             # SchemaObject.
-            if key != '_schema':
+            if key != "_schema":
                 setattr(self, key, value)
 
     def load_type(
@@ -226,15 +222,13 @@ class GenericDB(DBObject):
         elif isinstance(schema_type, SchemaExpandable):
             if type(literal) != str:
                 DBFormatError(
-                    f"token {token} of {schema_type} is not a valid expandable "
-                    "str"
+                    f"token {token} of {schema_type} is not a valid expandable str"
                 )
             return self.load_expandable(literal)
         elif isinstance(schema_type, SchemaRangeId):
             if type(literal) != int:
                 DBFormatError(
-                    f"token {token} of {schema_type} is not a valid rangeid "
-                    "integer"
+                    f"token {token} of {schema_type} is not a valid rangeid integer"
                 )
             return self.load_rangeid(literal)
         elif isinstance(schema_type, SchemaContainerList):
@@ -258,9 +252,7 @@ class GenericDB(DBObject):
     def load_object(
         self, token, literal, schema_object: SchemaObject, parent: SchemaObject
     ):
-        logger.debug(
-            "Loading object %s with %s (%s)", token, literal, schema_object
-        )
+        logger.debug("Loading object %s with %s (%s)", token, literal, schema_object)
         # is it expandable?
         if schema_object.expandable:
             bases = [DBExpandableObject]
@@ -301,9 +293,7 @@ class GenericDB(DBObject):
                 )
             # Load back references
             if isinstance(prop.type, SchemaBackReference):
-                setattr(
-                    obj, prop.name, self.load_back_reference(obj, prop.type)
-                )
+                setattr(obj, prop.name, self.load_back_reference(obj, prop.type))
             # Assign default value to optional properties when provided in
             # schema.
             if not hasattr(obj, prop.name) and prop.default is not None:
@@ -329,16 +319,14 @@ class GenericDB(DBObject):
                                 f"Key value {value} of {schema_object} is not "
                                 "unique."
                             )
-                setattr(obj, '_key', value)
+                setattr(obj, "_key", value)
 
         # add object to db indexes
         if schema_object.name not in self._indexes:
             self._indexes[schema_object.name] = []
         self._indexes[schema_object.name].append(obj)
         self._loaded_classes |= schema_object.subobjs
-        logger.debug(
-            "Loaded classes: %s", [cls.name for cls in self._loaded_classes]
-        )
+        logger.debug("Loaded classes: %s", [cls.name for cls in self._loaded_classes])
         return obj
 
     def load_object_attributes(self, obj, content, schema_object: SchemaObject):
@@ -356,14 +344,10 @@ class GenericDB(DBObject):
             # Iterate over a copy of last pass remaining object attributes
             for token, literal in _content.copy().items():
                 # Get the schema property corresponding to this token
-                token_property = self.token_object_property(
-                    token, schema_object
-                )
+                token_property = self.token_object_property(token, schema_object)
                 # Check if this attribute can be loaded, considering its
                 # references and loaded objects.
-                if not self.loadable_attribute(
-                    token, token_property, passes, obj
-                ):
+                if not self.loadable_attribute(token, token_property, passes, obj):
                     # The attribute cannot be loaded, jump to next attribute.
                     logger.debug(
                         "Skipping object %s property %s in pass %d",
@@ -378,10 +362,8 @@ class GenericDB(DBObject):
                     processed = True
                     del _content[token]
 
-                attribute = self.load_type(
-                    token, literal, token_property.type, obj
-                )
-                if token.endswith('[]'):
+                attribute = self.load_type(token, literal, token_property.type, obj)
+                if token.endswith("[]"):
                     token = token[:-2]
                 # Check the bases module class does not already provide a
                 # conflicting attribute with the same name. In this case, it is
@@ -409,7 +391,7 @@ class GenericDB(DBObject):
         token_property = schema_object.prop(token)
         if token_property is None:
             # try expandable
-            if token.endswith('[]'):
+            if token.endswith("[]"):
                 token_property = schema_object.prop(token[:-2])
                 if token_property is None:
                     raise DBFormatError(
@@ -440,8 +422,7 @@ class GenericDB(DBObject):
             for ref in subtype.refs - subtype.subobjs:
                 if ref not in self._loaded_classes:
                     logger.debug(
-                        "Found undefined reference to %s in property %s in "
-                        "pass %d",
+                        "Found undefined reference to %s in property %s in pass %d",
                         ref.name,
                         token,
                         passes,
@@ -479,23 +460,17 @@ class GenericDB(DBObject):
                 f"{schema_type.obj.name} are missing in DB indexes"
             )
 
-        logger.debug(
-            "Found objects for type %s: %s", schema_type.obj.name, all_objs
-        )
+        logger.debug("Found objects for type %s: %s", schema_type.obj.name, all_objs)
         for _obj in all_objs:
             property_value = getattr(_obj, schema_type.prop)
             if property_value == literal:
                 return _obj
-        raise DBFormatError(
-            f"Unable to find {token} reference with value {literal}"
-        )
+        raise DBFormatError(f"Unable to find {token} reference with value {literal}")
 
     def load_back_reference(self, parent, schema_type: SchemaBackReference):
         logger.debug("Loading back reference of %s/%s", parent, schema_type)
         while parent._schema is not schema_type.obj and parent is not None:
-            logger.debug(
-                "Back reference %s != %s", parent._schema, schema_type.obj
-            )
+            logger.debug("Back reference %s != %s", parent._schema, schema_type.obj)
             parent = parent._parent
 
         # If the SchemaBackReference has a property, return the reference to
@@ -505,27 +480,19 @@ class GenericDB(DBObject):
         else:
             return parent
 
-    def load_list(
-        self, token, literal, schema_object: SchemaContainerList, parent
-    ):
+    def load_list(self, token, literal, schema_object: SchemaContainerList, parent):
         if type(literal) != list:
             raise DBFormatError(f"token {token} {schema_object} must be a list")
         result = []
         for item in literal:
-            result.append(
-                self.load_type(token, item, schema_object.content, parent)
-            )
+            result.append(self.load_type(token, item, schema_object.content, parent))
         return DBList(result)
 
     def load_expandable(self, literal):
-        return type(f"{self._prefix}ExpandableRange", (DBObjectRange,), dict())(
-            literal
-        )
+        return type(f"{self._prefix}ExpandableRange", (DBObjectRange,), dict())(literal)
 
     def load_rangeid(self, literal):
-        return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(
-            literal
-        )
+        return type(f"{self._prefix}RangeId", (DBObjectRangeId,), dict())(literal)
 
     def find_objects(self, object_type_name, expand=False):
         if object_type_name not in self._indexes:

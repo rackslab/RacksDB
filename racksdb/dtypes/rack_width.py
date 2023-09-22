@@ -13,7 +13,7 @@ class SchemaDefinedTypeRackWidth(SchemaDefinedType):
 
     def parse(self, value):
         match = self._match(value)
-        if value == 'full':
+        if value == "full":
             return 1.0
         else:
             dividend = int(match.group(1))

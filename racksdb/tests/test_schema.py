@@ -23,55 +23,51 @@ class FakeTypesLoader:
 
 
 VALID_SCHEMA = {
-    '_version': '1',
-    '_content': {
-        'apples': 'list[:Apple]',
-        'pear': ':Pear',
-        'bananas': 'optional list[:Banana]',
-        'stock': 'list[:AppleCrate]',
+    "_version": "1",
+    "_content": {
+        "apples": "list[:Apple]",
+        "pear": ":Pear",
+        "bananas": "optional list[:Banana]",
+        "stock": "list[:AppleCrate]",
     },
-    '_objects': {
-        'Apple': {
-            'color': 'str',
-            'weight': '~weight',
-            'variety': 'str',
+    "_objects": {
+        "Apple": {
+            "color": "str",
+            "weight": "~weight",
+            "variety": "str",
         },
-        'Pear': {'color': 'str', 'weight': '~weight', 'variety': 'str'},
-        'Banana': {'origin': 'str'},
-        'AppleCrate': {
-            'name': 'expandable',
-            'id': 'rangeid',
-            'variety': '$Apple.variety',
-            'quantity': 'int',
+        "Pear": {"color": "str", "weight": "~weight", "variety": "str"},
+        "Banana": {"origin": "str"},
+        "AppleCrate": {
+            "name": "expandable",
+            "id": "rangeid",
+            "variety": "$Apple.variety",
+            "quantity": "int",
         },
     },
 }
 
-VALID_DEFINED_TYPES = {'weight': SchemaDefinedType()}
+VALID_DEFINED_TYPES = {"weight": SchemaDefinedType()}
 
 
 class TestSchema(unittest.TestCase):
     def test_empty_schema(self):
         schema_loader = FakeSchemaLoader({})
         types_loader = FakeTypesLoader({})
-        with self.assertRaisesRegex(
-            DBSchemaError, 'Version must be defined in schema'
-        ):
+        with self.assertRaisesRegex(DBSchemaError, "Version must be defined in schema"):
             Schema(schema_loader, types_loader)
 
     def test_empty_content(self):
-        schema_loader = FakeSchemaLoader({'_version': '0'})
+        schema_loader = FakeSchemaLoader({"_version": "0"})
         types_loader = FakeTypesLoader({})
-        with self.assertRaisesRegex(
-            DBSchemaError, 'Content must be defined in schema'
-        ):
+        with self.assertRaisesRegex(DBSchemaError, "Content must be defined in schema"):
             Schema(schema_loader, types_loader)
 
     def test_minimal_schema(self):
-        schema_loader = FakeSchemaLoader({'_version': '0', '_content': {}})
+        schema_loader = FakeSchemaLoader({"_version": "0", "_content": {}})
         types_loader = FakeTypesLoader({})
         schema = Schema(schema_loader, types_loader)
-        self.assertEqual(schema.version, '0')
+        self.assertEqual(schema.version, "0")
         self.assertEqual(len(schema.types), 0)
         self.assertEqual(len(schema.content.properties), 0)
 
@@ -79,13 +75,13 @@ class TestSchema(unittest.TestCase):
         schema_loader = FakeSchemaLoader(VALID_SCHEMA)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         schema = Schema(schema_loader, types_loader)
-        self.assertEqual(schema.version, '1')
+        self.assertEqual(schema.version, "1")
         self.assertEqual(len(schema.types), 1)
         self.assertEqual(len(schema.content.properties), 4)
 
     def test_missing_objects(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        del schema_content['_objects']
+        del schema_content["_objects"]
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -94,9 +90,9 @@ class TestSchema(unittest.TestCase):
             Schema(schema_loader, types_loader)
 
     def test_missing_object(self):
-        for obj in VALID_SCHEMA['_objects'].keys():
+        for obj in VALID_SCHEMA["_objects"].keys():
             schema_content = copy.deepcopy(VALID_SCHEMA)
-            del schema_content['_objects'][obj]
+            del schema_content["_objects"][obj]
             schema_loader = FakeSchemaLoader(schema_content)
             types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
             with self.assertRaisesRegex(
@@ -107,7 +103,7 @@ class TestSchema(unittest.TestCase):
     def test_missing_defined_type(self):
         schema_loader = FakeSchemaLoader(VALID_SCHEMA)
         defined_types = copy.deepcopy(VALID_DEFINED_TYPES)
-        del defined_types['weight']
+        del defined_types["weight"]
         types_loader = FakeTypesLoader(defined_types)
         with self.assertRaisesRegex(
             DBSchemaError, "Definition of defined type weight not found"
@@ -116,17 +112,15 @@ class TestSchema(unittest.TestCase):
 
     def test_invalid_type(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content['_objects']['Apple']['color'] = 'fail'
+        schema_content["_objects"]["Apple"]["color"] = "fail"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
-        with self.assertRaisesRegex(
-            DBSchemaError, "Unable to parse value type 'fail'"
-        ):
+        with self.assertRaisesRegex(DBSchemaError, "Unable to parse value type 'fail'"):
             Schema(schema_loader, types_loader)
 
     def test_expandable_not_in_list(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content['_content']['stock'] = ':AppleCrate'
+        schema_content["_content"]["stock"] = ":AppleCrate"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -138,7 +132,7 @@ class TestSchema(unittest.TestCase):
 
     def test_expandable_double(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content['_objects']['AppleCrate']['quantity'] = 'expandable'
+        schema_content["_objects"]["AppleCrate"]["quantity"] = "expandable"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -150,7 +144,7 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_object(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content['_objects']['AppleCrate']['variety'] = '$Unknown.object'
+        schema_content["_objects"]["AppleCrate"]["variety"] = "$Unknown.object"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -161,12 +155,11 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_property(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content['_objects']['AppleCrate']['variety'] = '$Apple.unknown'
+        schema_content["_objects"]["AppleCrate"]["variety"] = "$Apple.unknown"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
             DBSchemaError,
-            "Reference \$Apple.unknown to undefined SchemaApple object "
-            "property",
+            "Reference \$Apple.unknown to undefined SchemaApple object " "property",
         ):
             Schema(schema_loader, types_loader)

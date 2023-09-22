@@ -20,7 +20,5 @@ class SchemaDefinedType:
         regex = re.compile(self.pattern)
         match = regex.match(str(value))
         if match is None:
-            raise DBFormatError(
-                f"Unable to match {self} pattern with value {value}"
-            )
+            raise DBFormatError(f"Unable to match {self} pattern with value {value}")
         return match
