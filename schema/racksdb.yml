@@ -123,14 +123,14 @@ _objects:
     slot: rangeid # The slot in the rack used by the first node in this set.
     tags: optional list[str] # The list of tags associated to these nodes.
   StorageEquipment: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
-    name: expandable # The names of the storage equipments in this set.
+    name: key expandable # The names of the storage equipments in this set.
     infrastructure: ^Infrastructure # The infrastructure of these storage equipments.
     rack: ^InfrastructurePart.rack # The rack of these storage equipments.
     type: $StorageEquipmentType.id {} # The type of storage equipment unique identifier.
     slot: rangeid # The slot in the rack used by the first storage equipment in this set.
     tags: optional list[str] # The list of tags associated to these storage equipments.
   NetworkEquipment: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
-    name: expandable # The names of the network equipments in this set.
+    name: key expandable # The names of the network equipments in this set.
     infrastructure: ^Infrastructure # The infrastructure of these network equipments.
     rack: ^InfrastructurePart.rack # The rack of these network equipments.
     type: $NetworkEquipmentType.id # The type of network equipment unique identifier.

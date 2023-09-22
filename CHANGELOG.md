@@ -25,7 +25,7 @@ and this project adheres to
   potential conflict with Python standard library types module (#18).
 - cli: catch RacksDB internal errors to report in command output and exit with
   return code 1.
-
+- schema: add key attribute on {Network,Storage}Equipment.name property.
 
 ## [0.1.0~beta] - 2022-11-28
 
