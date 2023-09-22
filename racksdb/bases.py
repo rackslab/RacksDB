@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from .generic.db import DBList
+from .generic.db import DBList, DBDict
 
 
 class RacksDBDatacenterBase:
@@ -27,12 +27,12 @@ class RacksDBDatacenterBase:
 class RacksDBInfrastructureBase:
     @property
     def nodes(self):
-        result = DBList()
+        result = DBDict()
         for part in self.layout:
-            # Iterate over nodes to expand nodesets, instead of adding
-            # part.nodes to result.
-            for node in part.nodes:
-                result.append(node)
+            # Iterate over the keys of DBDict instead of the DBDict itself to
+            # avoid triggering expansion of expandable objects at this stage.
+            for key in part.nodes.keys():
+                result[key] = part.nodes[key]
         return result
 
     @property

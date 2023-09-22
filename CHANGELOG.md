@@ -17,6 +17,8 @@ and this project adheres to
 ### Changed
 - core: introduce DBDict objects that inherit from standard Python dict to
   handle list of objects with keys (#15).
+- lib: RacksDB.nodes and RacksDBInfrastructure.nodes attributes are now DBDict
+  of unexpanded nodes.
 - docs:
   - Present the supported Linux distributions with tabs in the quickstart
     guide.
