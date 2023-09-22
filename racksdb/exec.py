@@ -14,6 +14,7 @@ from .generic.errors import DBFormatError, DBSchemaError
 from .generic.dumper import DBDumper, SchemaDumper
 from . import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
+from .errors import RacksDBError
 
 logger = logging.getLogger(__name__)
 
@@ -218,8 +219,11 @@ class RacksDBExec:
             parser.print_usage()
             logger.error("The action argument must be given")
             sys.exit(1)
-
-        self.args.func()
+        try:
+            self.args.func()
+        except RacksDBError as err:
+            logger.critical(err)
+            sys.exit(1)
 
     def _setup_logger(self):
         if self.args.debug:
