@@ -81,6 +81,14 @@ of RacksDB is available online with complete database definition reference
 documentation, how-tos (extensions, positioning), CLI manpage and library API
 documentation.
 
+## Tests
+
+To run the unit tests, launch this command:
+
+```
+$ python3 -m unittest discover -v .
+```
+
 ## Authors
 
 RacksDB is developed and maintained by [Rackslab](https://rackslab.io). Please
