@@ -15,10 +15,12 @@ and this project adheres to
   - Add the _« Release notes »_ page based on the content of `CHANGELOG.md`.
 
 ### Changed
-- core: introduce DBDict objects that inherit from standard Python dict to
+- core: Introduce DBDict objects that inherit from standard Python dict to
   handle list of objects with keys (#15).
-- lib: RacksDB.nodes and RacksDBInfrastructure.nodes attributes are now DBDict
-  of unexpanded nodes.
+- lib:
+  - RacksDB.nodes and RacksDBInfrastructure.nodes attributes are now DBDict
+    of unexpanded nodes.
+  - Store datacenters, infrastructures and nodes tags in DBList objects.
 - docs:
   - Present the supported Linux distributions with tabs in the quickstart
     guide.
@@ -29,11 +31,11 @@ and this project adheres to
     changes on `DBList` class.
 
 ### Fixed
-- core: rename module that contains defined types definitions dtypes to avoid
+- core: Rename module that contains defined types definitions dtypes to avoid
   potential conflict with Python standard library types module (#18).
-- cli: catch RacksDB internal errors to report in command output and exit with
+- cli: Catch RacksDB internal errors to report in command output and exit with
   return code 1.
-- schema: add key attribute on {Network,Storage}Equipment.name property.
+- schema: Add key attribute on {Network,Storage}Equipment.name property.
 
 ## [0.1.0~beta] - 2022-11-28
 

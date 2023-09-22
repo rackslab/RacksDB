@@ -8,10 +8,6 @@ from .generic.db import DBList, DBDict
 
 
 class RacksDBDatacenterBase:
-    @property
-    def tags(self):
-        return [tag for tag in getattr(self, f"{self.LOADED_PREFIX}tags", [])]
-
     def _filter(self, name=None, tags=None):
         # filter by name
         if name is not None and name != self.name:
@@ -35,10 +31,6 @@ class RacksDBInfrastructureBase:
                 result[key] = part.nodes[key]
         return result
 
-    @property
-    def tags(self):
-        return [tag for tag in getattr(self, f"{self.LOADED_PREFIX}tags", [])]
-
     def _filter(self, name=None, tags=None):
         # filter by name
         if name is not None and name != self.name:
@@ -54,7 +46,7 @@ class RacksDBInfrastructureBase:
 class RacksDBNodeBase:
     @property
     def tags(self):
-        result = []
+        result = DBList()
         for tag in getattr(self._parent, "tags", []):
             result.append(tag)
         # RacksDBNodeBase loaded tags are renamed with loaded prefix to avoid
