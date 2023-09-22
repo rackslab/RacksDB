@@ -11,3 +11,7 @@ class DBSchemaError(Exception):
 
 class DBFormatError(Exception):
     pass
+
+
+class DBDumperError(Exception):
+    pass

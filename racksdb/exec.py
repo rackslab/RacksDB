@@ -11,7 +11,7 @@ from pathlib import Path
 
 from .version import get_version
 from .generic.errors import DBFormatError, DBSchemaError
-from .generic.dumper import DBDumper, SchemaDumper
+from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
 from .errors import RacksDBError
@@ -241,13 +241,13 @@ class RacksDBExec:
 
     def _run_schema(self):
         print(
-            SchemaDumper().dump(self.db._schema),
+            SchemaDumperFactory.get("yaml")().dump(self.db._schema),
             end="",
         )
 
     def _run_dump(self):
         print(
-            DBDumper().dump(self.db._loader.content),
+            DBDumperFactory.get("yaml")().dump(self.db._loader.content),
             end="",
         )
 
@@ -266,7 +266,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoomRow": "name",
             "RacksDBDatacenterRoomRack": "name",
         }
-        dumper = DBDumper(
+        dumper = DBDumperFactory.get("yaml")(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
@@ -293,7 +293,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoomRack": "name",
             "RacksDBInfrastructure": None,
         }
-        dumper = DBDumper(
+        dumper = DBDumperFactory.get("yaml")(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
@@ -320,7 +320,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoomRow": "name",
             "RacksDBInfrastructure": "name",
         }
-        dumper = DBDumper(
+        dumper = DBDumperFactory.get("yaml")(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
@@ -354,7 +354,7 @@ class RacksDBExec:
             "RacksDBNodeType": "id",
             "RacksDBInfrastructure": "name",
         }
-        dumper = DBDumper(
+        dumper = DBDumperFactory.get("yaml")(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )

@@ -9,14 +9,14 @@ import logging
 
 import yaml
 
-from .db import DBObject, DBObjectRange, DBObjectRangeId, DBList, DBDict
-from .schema import Schema, SchemaObject
-from .definedtype import SchemaDefinedType
+from ..db import DBObject, DBObjectRange, DBObjectRangeId, DBList, DBDict
+from ..schema import Schema, SchemaObject
+from ..definedtype import SchemaDefinedType
 
 logger = logging.getLogger(__name__)
 
 
-class DBDumper:
+class DBDumperYAML:
     def __init__(self, show_types=False, objects_map={}):
         self.show_types = show_types
         self.objects_map = objects_map
@@ -113,7 +113,7 @@ class DBDumper:
             return ""
 
 
-class SchemaDumper:
+class SchemaDumperYAML:
     def __init__(self):
         self._setup()
 
