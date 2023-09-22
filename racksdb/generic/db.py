@@ -201,6 +201,18 @@ class DBDict(dict):
                     return super().__getitem__(_key).getobject(key)
             raise KeyError(key)
 
+    def __len__(self):
+        """Return the number of values in the dictionnary. It counts the number of
+        values in expandable objects by counting the number of values in the rangeset
+        without requiring instanciating of objects in memory."""
+        values = 0
+        for key in self.keys():
+            if isinstance(key, DBObjectRange):
+                values += len(key.rangeset)
+            else:
+                values += 1
+        return values
+
     def first(self):
         """Return the first expanded object of the dictionnary."""
         return list(self)[0]  # list() calls __iter__()
