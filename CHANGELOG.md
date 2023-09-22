@@ -15,11 +15,13 @@ and this project adheres to
   - Add the _« Release notes »_ page based on the content of `CHANGELOG.md`.
 
 ### Changed
+- core: introduce DBDict objects that inherit from standard Python dict to
+  handle list of objects with keys (#15).
 - docs: present the supported Linux distributions with tabs in the quickstart
   guide.
 
 ### Fixed
-- Rename module that contains defined types definitions dtypes to avoid
+- core: rename module that contains defined types definitions dtypes to avoid
   potential conflict with Python standard library types module (#18).
 - cli: catch RacksDB internal errors to report in command output and exit with
   return code 1.

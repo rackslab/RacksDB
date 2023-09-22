@@ -27,12 +27,12 @@ class RacksDBDatacenterBase:
 class RacksDBInfrastructureBase:
     @property
     def nodes(self):
-        result = DBList([])
+        result = DBList()
         for part in self.layout:
             # Iterate over nodes to expand nodesets, instead of adding
             # part.nodes to result.
             for node in part.nodes:
-                result.items.append(node)
+                result.append(node)
         return result
 
     @property

@@ -185,7 +185,9 @@ class InfrastructureDrawer(Drawer):
         # draw equipments in rack
         for part in self.infrastructure.layout:
             if part.rack is rack:
-                for equipment in part.nodes + part.storage + part.network:
+                for equipment in (
+                    list(part.nodes) + list(part.storage) + list(part.network)
+                ):
                     self._draw_rack_equipment(row, rack, equipment)
 
     def _draw_rack_row(self, row):

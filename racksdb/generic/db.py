@@ -42,8 +42,9 @@ class DBObject:
 
 
 class DBExpandableObject(DBObject):
-    def objects(self):
-        result = []
+    def _attributes(self):
+        """Return the dict of stable attributes, range attribues and the pair of range
+        attribute and value."""
         stable_attributes = {}
         range_attribute = None
         rangeid_attributes = {}
@@ -59,43 +60,77 @@ class DBExpandableObject(DBObject):
                 rangeid_attributes[attribute] = value
             else:
                 stable_attributes[attribute] = value
+        return stable_attributes, range_attribute, rangeid_attributes
 
+    def _instanciate_obj(
+        self, index, value, range_attribute, rangeid_attributes, stable_attributes
+    ):
+        """Instanciate the object at the given index."""
+
+        _attributes = stable_attributes.copy()
+        _attributes[range_attribute[0]] = value
+        for rangeid_name, rangeid_value in rangeid_attributes.items():
+            _attributes[rangeid_name] = rangeid_value.index(index)
+
+        bases = [DBObject]
+        # Add provided module base if defined
+        try:
+            # Insert bases module class in the beginning of the list to make
+            # sure methods from this classes are called over the methods from
+            # DBObject.
+            bases.insert(
+                0,
+                getattr(
+                    self._db._bases,
+                    f"{self._db._prefix}{self._schema.name}Base",
+                ),
+            )
+        except AttributeError:
+            pass
+        obj = type(f"{self._db._prefix}{self._schema.name}", tuple(bases), dict())(
+            self._db, self._schema
+        )
+        for attr_name, attr_value in _attributes.items():
+            setattr(obj, attr_name, attr_value)
+            # Set object _key attribute if property is a key
+            prop = self._schema.prop(attr_name)
+            if prop is not None and prop.key:
+                setattr(obj, "_key", attr_value)
+        return obj
+
+    def objects(self):
+        """Return the list of all expanded objects."""
+        result = []
+        stable_attributes, range_attribute, rangeid_attributes = self._attributes()
         first = None
         for index, value in enumerate(range_attribute[1].expanded()):
-            _attributes = stable_attributes.copy()
-            _attributes[range_attribute[0]] = value
-            for rangeid_name, rangeid_value in rangeid_attributes.items():
-                _attributes[rangeid_name] = rangeid_value.index(index)
-
-            bases = [DBObject]
-            # Add provided module base if defined
-            try:
-                # Insert bases module class in the beginning of the list to make
-                # sure methods from this classes are called over the methods from
-                # DBObject.
-                bases.insert(
-                    0,
-                    getattr(
-                        self._db._bases,
-                        f"{self._db._prefix}{self._schema.name}Base",
-                    ),
-                )
-            except AttributeError:
-                pass
-            obj = type(f"{self._db._prefix}{self._schema.name}", tuple(bases), dict())(
-                self._db, self._schema
+            obj = self._instanciate_obj(
+                index, value, range_attribute, rangeid_attributes, stable_attributes
             )
-            for attr_name, attr_value in _attributes.items():
-                setattr(obj, attr_name, attr_value)
-                # Set object _key attribute if property is a key
-                prop = self._schema.prop(attr_name)
-                if prop is not None and prop.key:
-                    setattr(obj, "_key", attr_value)
-            result.append(obj)
             if first is None:
                 first = obj
             setattr(obj, "_first", first)
+            result.append(obj)
         return result
+
+    def getobject(self, key):
+        """Return an instance of the object with provided key. The first object is also
+        instanciated and linked in _first attribute."""
+        stable_attributes, range_attribute, rangeid_attributes = self._attributes()
+        first = None
+        for index, value in enumerate(range_attribute[1].expanded()):
+            if first and value != key:
+                continue
+            obj = self._instanciate_obj(
+                index, value, range_attribute, rangeid_attributes, stable_attributes
+            )
+            if first is None:
+                first = obj
+            setattr(obj, "_first", first)
+            if value == key:
+                return obj
+
+        raise KeyError(f"key '{key}' not found in {str(range_attribute[1])}")
 
 
 class DBObjectRange:
@@ -117,12 +152,37 @@ class DBObjectRangeId:
         return self.start + value
 
 
-class DBList:
-    def __init__(self, items: List):
-        self.items = items
+class DBList(list):
+    def __iter__(self):
+        for item in super().__iter__():
+            if isinstance(item, DBExpandableObject):
+                for expanded_item in item.objects():
+                    yield expanded_item
+            else:
+                yield item
+
+    def filter(self, **kwargs):
+        """Return a copy of the current DBList without values that do not match provided
+        filter criteria."""
+        result = DBList()
+        for item in self:
+            if item._filter(**kwargs):
+                result.append(item)
+        return result
+
+
+class DBDict(dict):
+    def filter(self, **kwargs):
+        """Return a copy of the current DBDict without key and values that do not match
+        provided filter criteria."""
+        result = DBDict()
+        for key, value in self.items():
+            if value._filter(**kwargs):
+                result[key] = value
+        return result
 
     def __iter__(self):
-        for item in self.items:
+        for item in self.values():
             if isinstance(item, DBExpandableObject):
                 for expanded_item in item.objects():
                     yield expanded_item
@@ -130,23 +190,20 @@ class DBList:
                 yield item
 
     def __getitem__(self, key):
-        for item in self.items:
-            if getattr(item, "_key", None) == key:
-                return item
-        raise KeyError(f"Key {key} not found")
+        # Try to get the item from parent dict. If the key cannot be found in dict,
+        # search for the key in all DBObjectRange keys. If found, return an instance
+        # of this particular expanded object.
+        try:
+            return super().__getitem__(key)
+        except KeyError:
+            for _key in self.keys():
+                if isinstance(_key, DBObjectRange) and key in _key.rangeset:
+                    return super().__getitem__(_key).getobject(key)
+            raise KeyError(key)
 
     def first(self):
-        return self.items[0]
-
-    def filter(self, **kwargs):
-        result = DBList([])
-        for item in self.items:
-            if item._filter(**kwargs):
-                result.items.append(item)
-        return result
-
-    def __add__(self, other):
-        return DBList(self.items + other.items)
+        """Return the first expanded object of the dictionnary."""
+        return list(self)[0]  # list() calls __iter__()
 
 
 class DBFileLoader:
@@ -483,10 +540,28 @@ class GenericDB(DBObject):
     def load_list(self, token, literal, schema_object: SchemaContainerList, parent):
         if type(literal) != list:
             raise DBFormatError(f"token {token} {schema_object} must be a list")
-        result = []
-        for item in literal:
-            result.append(self.load_type(token, item, schema_object.content, parent))
-        return DBList(result)
+        # Check if the contained object has a key property
+        has_key = False
+        if isinstance(schema_object.content, SchemaObject):
+            for prop in schema_object.content.properties:
+                if prop.key:
+                    has_key = True
+        # If the contained object has a key, instanciate and fill a DBDict that
+        # can be subscripted with the key.
+        if has_key:
+            result = DBDict()
+            for item in literal:
+                content = self.load_type(token, item, schema_object.content, parent)
+                result[content._key] = content
+            return result
+        # Otherwise, instanciated a simple DBList.
+        else:
+            result = DBList()
+            for item in literal:
+                result.append(
+                    self.load_type(token, item, schema_object.content, parent)
+                )
+            return result
 
     def load_expandable(self, literal):
         return type(f"{self._prefix}ExpandableRange", (DBObjectRange,), dict())(literal)

@@ -9,7 +9,7 @@ import logging
 
 import yaml
 
-from .db import DBObject, DBObjectRange, DBObjectRangeId, DBList
+from .db import DBObject, DBObjectRange, DBObjectRangeId, DBList, DBDict
 from .schema import Schema, SchemaObject
 from .definedtype import SchemaDefinedType
 
@@ -30,6 +30,15 @@ class DBDumper:
         value = []
         tag = "tag:yaml.org,2002:seq"
         for _object in data:
+            value.append(dumper.represent_data(_object))
+        return yaml.SequenceNode(tag, value)
+
+    def _represent_dict(self, dumper, data):
+        # DBDict are rendered like a list, as well as they are represented in
+        # database.
+        value = []
+        tag = "tag:yaml.org,2002:seq"
+        for _object in data.values():
             value.append(dumper.represent_data(_object))
         return yaml.SequenceNode(tag, value)
 
@@ -84,6 +93,7 @@ class DBDumper:
         return dumper.represent_data(data.start)
 
     def _setup(self):
+        yaml.add_representer(DBDict, self._represent_dict)
         yaml.add_representer(DBList, self._represent_list)
         yaml.add_multi_representer(DBObject, self._represent_dbobject)
         yaml.add_multi_representer(DBObjectRange, self._represent_dbobjectrange)

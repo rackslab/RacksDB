@@ -271,7 +271,7 @@ class RacksDBExec:
             objects_map=objects_map,
         )
         print(
-            dumper.dump([datacenter for datacenter in selected_datacenters]),
+            dumper.dump(selected_datacenters),
             end="",
         )
 
@@ -298,7 +298,7 @@ class RacksDBExec:
             objects_map=objects_map,
         )
         print(
-            dumper.dump([infrastructure for infrastructure in selected_infras]),
+            dumper.dump(selected_infras),
             end="",
         )
 

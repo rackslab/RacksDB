@@ -26,7 +26,7 @@ class RacksDB(GenericDB):
 
     @property
     def nodes(self):
-        result = DBList([])
+        result = DBList()
         for infrastructure in self.infrastructures:
             result += infrastructure.nodes
         return result
