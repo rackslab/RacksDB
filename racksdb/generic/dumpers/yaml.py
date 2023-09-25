@@ -106,7 +106,8 @@ class DBDumperYAML:
         noalias_dumper = yaml.dumper.Dumper
         noalias_dumper.ignore_aliases = lambda self, data: True
         try:
-            return yaml.dump(data, Dumper=noalias_dumper)
+            # Remove last newline to avoid double newline when printed by CLI.
+            return yaml.dump(data, Dumper=noalias_dumper).rstrip()
         except RecursionError:
             logger.error(
                 "Recursion loop detected during dump, last represented objects:"
@@ -145,8 +146,9 @@ class SchemaDumperYAML:
     def dump(self, schema):
         noalias_dumper = yaml.dumper.Dumper
         noalias_dumper.ignore_aliases = lambda self, data: True
-        # dump all Schema object content except _schema attribute
+        # Dump all Schema object content except _schema attribute. Remove last newline
+        # to avoid double newline when printed by CLI.
         return yaml.dump(
             {key: value for key, value in vars(schema).items() if key != "_schema"},
             Dumper=noalias_dumper,
-        )
+        ).rstrip()

@@ -287,16 +287,10 @@ class RacksDBExec:
         root_logger.addHandler(handler)
 
     def _run_schema(self):
-        print(
-            SchemaDumperFactory.get("yaml")().dump(self.db._schema),
-            end="",
-        )
+        print(SchemaDumperFactory.get("yaml")().dump(self.db._schema))
 
     def _run_dump(self):
-        print(
-            DBDumperFactory.get("yaml")().dump(self.db._loader.content),
-            end="",
-        )
+        print(DBDumperFactory.get("yaml")().dump(self.db._loader.content))
 
     def _run_datacenters(self):
         selected_datacenters = self.db.datacenters.filter(
@@ -318,10 +312,7 @@ class RacksDBExec:
             objects_map=objects_map,
             fold=self.args.fold,
         )
-        print(
-            dumper.dump(selected_datacenters),
-            end="",
-        )
+        print(dumper.dump(selected_datacenters))
 
     def _run_infras(self):
         selected_infras = self.db.infrastructures.filter(
@@ -346,10 +337,7 @@ class RacksDBExec:
             objects_map=objects_map,
             fold=self.args.fold,
         )
-        print(
-            dumper.dump(selected_infras),
-            end="",
-        )
+        print(dumper.dump(selected_infras))
 
     def _run_nodes(self):
 
@@ -374,7 +362,7 @@ class RacksDBExec:
             objects_map=objects_map,
             fold=self.args.fold,
         )
-        print(dumper.dump(selected_nodes), end="")
+        print(dumper.dump(selected_nodes))
 
     def _run_racks(self):
 
@@ -409,7 +397,7 @@ class RacksDBExec:
             objects_map=objects_map,
             fold=self.args.fold,
         )
-        print(dumper.dump(selected_racks), end="")
+        print(dumper.dump(selected_racks))
 
     def _run_draw(self):
         if self.args.entity == "infrastructure":
