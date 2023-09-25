@@ -12,8 +12,11 @@ and this project adheres to
 - core:
   - Add dumper for JSON format (#3).
   - Add possibility to keep expandable objects folded in dumpers.
-- cli: Add format option for datacenters, nodes, racks and infrastructures
-  subcommands to control output format.
+- cli:
+  - Add format option for datacenters, nodes, racks and infrastructures
+    subcommands to control output format.
+  - Add fold option to control folding of expandable objects in outputs of
+    datacenters, nodes, racks and infrastructures subcommands.
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.

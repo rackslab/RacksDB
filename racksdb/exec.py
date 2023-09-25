@@ -97,6 +97,11 @@ class RacksDBExec:
             action="store_true",
         )
         parser_datacenters.add_argument(
+            "--fold",
+            help="Fold expandable objects",
+            action="store_true",
+        )
+        parser_datacenters.add_argument(
             "--with-objects-types",
             help="Show object types in YAML dumps",
             action="store_true",
@@ -125,6 +130,11 @@ class RacksDBExec:
             "-l",
             "--list",
             help="List infrastructures names",
+            action="store_true",
+        )
+        parser_infras.add_argument(
+            "--fold",
+            help="Fold expandable objects",
             action="store_true",
         )
         parser_infras.add_argument(
@@ -159,6 +169,11 @@ class RacksDBExec:
             action="store_true",
         )
         parser_nodes.add_argument(
+            "--fold",
+            help="Fold expandable objects",
+            action="store_true",
+        )
+        parser_nodes.add_argument(
             "--with-objects-types",
             help="Show object types in YAML dumps",
             action="store_true",
@@ -189,6 +204,11 @@ class RacksDBExec:
             "-l",
             "--list",
             help="List racks names",
+            action="store_true",
+        )
+        parser_racks.add_argument(
+            "--fold",
+            help="Fold expandable objects",
             action="store_true",
         )
         parser_racks.add_argument(
@@ -296,6 +316,7 @@ class RacksDBExec:
         dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
+            fold=self.args.fold,
         )
         print(
             dumper.dump(selected_datacenters),
@@ -323,6 +344,7 @@ class RacksDBExec:
         dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
+            fold=self.args.fold,
         )
         print(
             dumper.dump(selected_infras),
@@ -350,6 +372,7 @@ class RacksDBExec:
         dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
+            fold=self.args.fold,
         )
         print(dumper.dump(selected_nodes), end="")
 
@@ -384,6 +407,7 @@ class RacksDBExec:
         dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
+            fold=self.args.fold,
         )
         print(dumper.dump(selected_racks), end="")
 
