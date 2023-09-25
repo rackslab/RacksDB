@@ -38,6 +38,7 @@ and this project adheres to
 - schema: Add key attribute on {Network,Storage}Equipment.name property.
 
 ### Removed
+- core: Drop support optional [] attribute suffix for expandable properties.
 - docs: Mention of `tags` attributes in library API reference on
   `RacksDBDatacenter`, `RacksDBDatacenter` and `RacksDBNode` classes
   specializations.

@@ -459,24 +459,10 @@ class GenericDB(DBObject):
     ) -> SchemaProperty:
         token_property = schema_object.prop(token)
         if token_property is None:
-            # try expandable
-            if token.endswith("[]"):
-                token_property = schema_object.prop(token[:-2])
-                if token_property is None:
-                    raise DBFormatError(
-                        f"Property {token} is not defined in schema for object "
-                        f"{schema_object}"
-                    )
-                if not isinstance(token_property.type, SchemaExpandable):
-                    raise DBFormatError(
-                        f"Property {token} is not expandable in schema for "
-                        f"object {schema_object}"
-                    )
-            else:
-                raise DBFormatError(
-                    f"Property {token} is not defined in schema for object "
-                    f"{schema_object}"
-                )
+            raise DBFormatError(
+                f"Property {token} is not defined in schema for object "
+                f"{schema_object}"
+            )
         return token_property
 
     def loadable_attribute(self, token, token_property, passes, obj):
