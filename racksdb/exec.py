@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 class RacksDBExec:
+    DEFAULT_FORMAT = "yaml"
+
     @classmethod
     def run(cls):
         cls()
@@ -109,8 +111,7 @@ class RacksDBExec:
         parser_datacenters.add_argument(
             "-f",
             "--format",
-            help="Format of output (default: %(default)s)",
-            default="yaml",
+            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
             choices=["yaml", "json"],
         )
         parser_datacenters.add_argument(
@@ -145,8 +146,7 @@ class RacksDBExec:
         parser_infras.add_argument(
             "-f",
             "--format",
-            help="Format of output (default: %(default)s)",
-            default="yaml",
+            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
             choices=["yaml", "json"],
         )
         parser_infras.add_argument(
@@ -181,8 +181,7 @@ class RacksDBExec:
         parser_nodes.add_argument(
             "-f",
             "--format",
-            help="Format of output (default: %(default)s)",
-            default="yaml",
+            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
             choices=["yaml", "json"],
         )
         parser_nodes.add_argument(
@@ -219,8 +218,7 @@ class RacksDBExec:
         parser_racks.add_argument(
             "-f",
             "--format",
-            help="Format of output (default: %(default)s)",
-            default="yaml",
+            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
             choices=["yaml", "json"],
         )
         parser_racks.add_argument(
@@ -299,9 +297,13 @@ class RacksDBExec:
         )
         # print list of datacenters
         if self.args.list:
+            if self.args.format is None:
+                self.args.format = "console"
             selected_datacenters = [
                 datacenter.name for datacenter in selected_datacenters
             ]
+        if self.args.format is None:
+            self.args.format = self.DEFAULT_FORMAT
         objects_map = {
             "RacksDBDatacenter": None,
             "RacksDBDatacenterRoom": "name",
@@ -323,9 +325,13 @@ class RacksDBExec:
 
         # print list of infrastructures
         if self.args.list:
+            if self.args.format is None:
+                self.args.format = "console"
             selected_infras = [
                 infrastructure.name for infrastructure in selected_infras
             ]
+        if self.args.format is None:
+            self.args.format = self.DEFAULT_FORMAT
         objects_map = {
             "RacksDBDatacenter": "name",
             "RacksDBDatacenterRoom": "name",
@@ -347,7 +353,11 @@ class RacksDBExec:
             tags=self.args.tags,
         )
         if self.args.list:
+            if self.args.format is None:
+                self.args.format = "console"
             selected_nodes = [node.name for node in selected_nodes]
+        if self.args.format is None:
+            self.args.format = self.DEFAULT_FORMAT
         objects_map = {
             "RacksDBGroupRack": "name",
             "RacksDBDatacenter": "name",
@@ -380,7 +390,11 @@ class RacksDBExec:
                         rack.nodes = part.nodes
 
         if self.args.list:
+            if self.args.format is None:
+                self.args.format = "console"
             selected_racks = [rack.name for rack in selected_racks]
+        if self.args.format is None:
+            self.args.format = self.DEFAULT_FORMAT
         objects_map = {
             "RacksDBDatacenter": "name",
             "RacksDBDatacenterRoom": "name",
