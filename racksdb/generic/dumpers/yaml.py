@@ -17,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 
 class DBDumperYAML:
-    def __init__(self, show_types=False, objects_map={}):
+    def __init__(self, show_types=False, objects_map={}, fold=True):
         self.show_types = show_types
         self.objects_map = objects_map
+        self.fold = fold
         self._setup()
         # refs to last represented objects, used to inform users in case of dump
         # recursion loops
@@ -27,19 +28,21 @@ class DBDumperYAML:
 
     def _represent_list(self, dumper, data):
 
-        value = []
         tag = "tag:yaml.org,2002:seq"
-        for _object in data:
-            value.append(dumper.represent_data(_object))
+        if self.fold:
+            value = [dumper.represent_data(_object) for _object in data.itervalues()]
+        else:
+            value = [dumper.represent_data(_object) for _object in data]
         return yaml.SequenceNode(tag, value)
 
     def _represent_dict(self, dumper, data):
         # DBDict are rendered like a list, as well as they are represented in
         # database.
-        value = []
         tag = "tag:yaml.org,2002:seq"
-        for _object in data.values():
-            value.append(dumper.represent_data(_object))
+        if self.fold:
+            value = [dumper.represent_data(_object) for _object in data.values()]
+        else:
+            value = [dumper.represent_data(_object) for _object in data]
         return yaml.SequenceNode(tag, value)
 
     def _represent_dbobject(self, dumper, data):

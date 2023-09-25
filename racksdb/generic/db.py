@@ -161,6 +161,12 @@ class DBList(list):
             else:
                 yield item
 
+    def itervalues(self):
+        """Additional iterators over the list values that does not trigger expansion of
+        DBExpandableObjects."""
+        for item in super().__iter__():
+            yield item
+
     def filter(self, **kwargs):
         """Return a copy of the current DBList without values that do not match provided
         filter criteria."""

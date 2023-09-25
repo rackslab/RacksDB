@@ -9,7 +9,9 @@ and this project adheres to
 ## [Unreleased]
 
 ### Added
-- core: Add dumper for JSON format (#3).
+- core:
+  - Add dumper for JSON format (#3).
+  - Add possibility to keep expandable objects folded in dumpers.
 - cli: Add format option for datacenters, nodes, racks and infrastructures
   subcommands to control output format.
 - docs:
