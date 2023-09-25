@@ -10,6 +10,8 @@ and this project adheres to
 
 ### Added
 - core: Add dumper for JSON format (#3).
+- cli: Add format option for datacenters, nodes, racks and infrastructures
+  subcommands to control output format.
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.

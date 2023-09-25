@@ -98,8 +98,15 @@ class RacksDBExec:
         )
         parser_datacenters.add_argument(
             "--with-objects-types",
-            help="Show object types in dumps",
+            help="Show object types in YAML dumps",
             action="store_true",
+        )
+        parser_datacenters.add_argument(
+            "-f",
+            "--format",
+            help="Format of output (default: %(default)s)",
+            default="yaml",
+            choices=["yaml", "json"],
         )
         parser_datacenters.add_argument(
             "--name",
@@ -122,8 +129,15 @@ class RacksDBExec:
         )
         parser_infras.add_argument(
             "--with-objects-types",
-            help="Show object types in dumps",
+            help="Show object types in YAML dumps",
             action="store_true",
+        )
+        parser_infras.add_argument(
+            "-f",
+            "--format",
+            help="Format of output (default: %(default)s)",
+            default="yaml",
+            choices=["yaml", "json"],
         )
         parser_infras.add_argument(
             "--name",
@@ -146,8 +160,15 @@ class RacksDBExec:
         )
         parser_nodes.add_argument(
             "--with-objects-types",
-            help="Show object types in dumps",
+            help="Show object types in YAML dumps",
             action="store_true",
+        )
+        parser_nodes.add_argument(
+            "-f",
+            "--format",
+            help="Format of output (default: %(default)s)",
+            default="yaml",
+            choices=["yaml", "json"],
         )
         parser_nodes.add_argument(
             "--name",
@@ -172,14 +193,20 @@ class RacksDBExec:
         )
         parser_racks.add_argument(
             "--with-objects-types",
-            help="Show object types in dumps",
+            help="Show object types in YAML dumps",
             action="store_true",
+        )
+        parser_racks.add_argument(
+            "-f",
+            "--format",
+            help="Format of output (default: %(default)s)",
+            default="yaml",
+            choices=["yaml", "json"],
         )
         parser_racks.add_argument(
             "--name",
             help="Filter racks by name",
         )
-
         parser_racks.set_defaults(func=self._run_racks)
 
         # Parser for the draw command
@@ -266,7 +293,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoomRow": "name",
             "RacksDBDatacenterRoomRack": "name",
         }
-        dumper = DBDumperFactory.get("yaml")(
+        dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
@@ -293,7 +320,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoomRack": "name",
             "RacksDBInfrastructure": None,
         }
-        dumper = DBDumperFactory.get("yaml")(
+        dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
@@ -320,7 +347,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoomRow": "name",
             "RacksDBInfrastructure": "name",
         }
-        dumper = DBDumperFactory.get("yaml")(
+        dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
@@ -354,7 +381,7 @@ class RacksDBExec:
             "RacksDBNodeType": "id",
             "RacksDBInfrastructure": "name",
         }
-        dumper = DBDumperFactory.get("yaml")(
+        dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
             objects_map=objects_map,
         )
