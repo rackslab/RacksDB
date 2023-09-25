@@ -13,7 +13,7 @@ rooms:
         width: 3m
         depth: 4m
       racks:
-      - name[]: R1-A[01-10]
+      - name: R1-A[01-10]
         type: standard
     - name: R2
       reversed: true
@@ -21,9 +21,9 @@ rooms:
         width: 3m
         depth: 6m
       racks:
-      - name[]: R2-A[01-02]
+      - name: R2-A[01-02]
         type: half
-      - name[]: R2-A[03-10]
+      - name: R2-A[03-10]
         type: standard
         slot: 2
     - name: R3
@@ -31,10 +31,10 @@ rooms:
         width: 3m
         depth: 9m
       racks:
-      - name[]: R3-A[01-05]
+      - name: R3-A[01-05]
         type: standard
         slot: 2
-      - name[]: R3-A[07-10]
+      - name: R3-A[07-10]
         type: standard
         slot: 9
     - name: R4
@@ -44,7 +44,7 @@ rooms:
         depth: 12m
         rotation: 90
       racks:
-      - name[]: R4-A[01-06]
+      - name: R4-A[01-06]
         type: standard
     - name: R5
       position:
@@ -52,7 +52,7 @@ rooms:
         depth: 12m
         rotation: 90
       racks:
-      - name[]: R5-A[01-06]
+      - name: R5-A[01-06]
         type: standard
     - name: R6
       position:
@@ -60,7 +60,7 @@ rooms:
         depth: 15m
         rotation: 60
       racks:
-      - name[]: R6-A[01-06]
+      - name: R6-A[01-06]
         type: standard
     - name: R7
       position:
@@ -68,5 +68,5 @@ rooms:
         depth: 20m
         rotation: 120
       racks:
-      - name[]: R7-A[01-06]
+      - name: R7-A[01-06]
         type: standard
