@@ -299,8 +299,9 @@ class RacksDBExec:
         )
         # print list of datacenters
         if self.args.list:
-            print("\n".join([datacenter.name for datacenter in selected_datacenters]))
-            return
+            selected_datacenters = [
+                datacenter.name for datacenter in selected_datacenters
+            ]
         objects_map = {
             "RacksDBDatacenter": None,
             "RacksDBDatacenterRoom": "name",
@@ -322,10 +323,9 @@ class RacksDBExec:
 
         # print list of infrastructures
         if self.args.list:
-            print(
-                "\n".join([infrastructure.name for infrastructure in selected_infras])
-            )
-            return
+            selected_infras = [
+                infrastructure.name for infrastructure in selected_infras
+            ]
         objects_map = {
             "RacksDBDatacenter": "name",
             "RacksDBDatacenterRoom": "name",
@@ -346,10 +346,8 @@ class RacksDBExec:
             infrastructure=self.args.infrastructure,
             tags=self.args.tags,
         )
-
         if self.args.list:
-            print("\n".join([str(node.name) for node in selected_nodes]))
-            return
+            selected_nodes = [node.name for node in selected_nodes]
         objects_map = {
             "RacksDBGroupRack": "name",
             "RacksDBDatacenter": "name",
@@ -382,8 +380,7 @@ class RacksDBExec:
                         rack.nodes = part.nodes
 
         if self.args.list:
-            print("\n".join([str(rack.name) for rack in selected_racks]))
-            return
+            selected_racks = [rack.name for rack in selected_racks]
         objects_map = {
             "RacksDBDatacenter": "name",
             "RacksDBDatacenterRoom": "name",

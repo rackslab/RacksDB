@@ -17,6 +17,8 @@ and this project adheres to
     subcommands to control output format.
   - Add fold option to control folding of expandable objects in outputs of
     datacenters, nodes, racks and infrastructures subcommands.
+  - Add possibility to select output format of the list of datacenters,
+    infrastructures, nodes and racks names.
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.
