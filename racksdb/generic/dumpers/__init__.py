@@ -6,11 +6,12 @@
 
 from .yaml import DBDumperYAML, SchemaDumperYAML
 from .json import DBDumperJSON
+from .console import DBDumperConsole
 from ..errors import DBDumperError
 
 
 class DBDumperFactory:
-    FORMATS = {"yaml": DBDumperYAML, "json": DBDumperJSON}
+    FORMATS = {"yaml": DBDumperYAML, "json": DBDumperJSON, "console": DBDumperConsole}
 
     @staticmethod
     def get(_format):
