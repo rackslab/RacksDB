@@ -5,11 +5,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from .yaml import DBDumperYAML, SchemaDumperYAML
+from .json import DBDumperJSON
 from ..errors import DBDumperError
 
 
 class DBDumperFactory:
-    FORMATS = {"yaml": DBDumperYAML}
+    FORMATS = {"yaml": DBDumperYAML, "json": DBDumperJSON}
 
     @staticmethod
     def get(_format):

@@ -9,6 +9,7 @@ and this project adheres to
 ## [Unreleased]
 
 ### Added
+- core: Add dumper for JSON format (#3).
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.
