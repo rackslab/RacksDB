@@ -309,6 +309,7 @@ class RacksDBExec:
             "RacksDBDatacenterRoom": "name",
             "RacksDBDatacenterRoomRow": "name",
             "RacksDBDatacenterRoomRack": "name",
+            "RacksDBDatacenterRoomRack.nodes": None,
         }
         dumper = DBDumperFactory.get(self.args.format)(
             show_types=self.args.with_objects_types,
