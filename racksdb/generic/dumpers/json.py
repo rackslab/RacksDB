@@ -8,15 +8,16 @@ from typing import Any
 import json
 import logging
 
+from ._common import MapperDumper
 from ...generic.db import DBObject, DBObjectRange, DBObjectRangeId, DBDict, DBList
 
 logger = logging.getLogger(__name__)
 
 
-class GenericJSONEncoder(json.JSONEncoder):
+class GenericJSONEncoder(json.JSONEncoder, MapperDumper):
     def __init__(self, objects_map={}, fold=True, **kwargs):
-        super().__init__(**kwargs)
-        self.objects_map = objects_map
+        json.JSONEncoder.__init__(self, **kwargs)
+        MapperDumper.__init__(self, objects_map)
         self.fold = fold
 
     def default(self, obj: Any) -> Any:
@@ -58,14 +59,9 @@ class GenericJSONEncoder(json.JSONEncoder):
                 if attribute.startswith(obj.LOADED_PREFIX):
                     attribute = attribute[len(obj.LOADED_PREFIX) :]
                     value = getattr(obj, attribute)
-                # Check the object is mapped to one of its attribute or None.
-                if value.__class__.__name__ in self.objects_map.keys():
-                    # If the object is mapped to None, discard the attribute and
-                    # continue to the next one.
-                    if self.objects_map[value.__class__.__name__] is None:
-                        continue
-                    # Else, map the object to one of its attribute.
-                    value = getattr(value, self.objects_map[value.__class__.__name__])
+                value = self.map(obj, prop, value)
+                if value is None:
+                    continue
                 if (
                     isinstance(value, DBObject)
                     or isinstance(value, DBDict)

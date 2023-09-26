@@ -9,6 +9,7 @@ import logging
 
 import yaml
 
+from ._common import MapperDumper
 from ..db import DBObject, DBObjectRange, DBObjectRangeId, DBList, DBDict
 from ..schema import Schema, SchemaObject
 from ..definedtype import SchemaDefinedType
@@ -16,10 +17,10 @@ from ..definedtype import SchemaDefinedType
 logger = logging.getLogger(__name__)
 
 
-class DBDumperYAML:
+class DBDumperYAML(MapperDumper):
     def __init__(self, show_types=False, objects_map={}, fold=True):
+        super().__init__(objects_map)
         self.show_types = show_types
-        self.objects_map = objects_map
         self.fold = fold
         self._setup()
         # refs to last represented objects, used to inform users in case of dump
@@ -74,15 +75,9 @@ class DBDumperYAML:
                 item_value = getattr(data, item_key)
             node_key = dumper.represent_data(item_key)
             # Check the object is mapped to one of its attribute or None.
-            if item_value.__class__.__name__ in self.objects_map.keys():
-                # If the object is mapped to None, discard the attribute and
-                # continue to the next one.
-                if self.objects_map[item_value.__class__.__name__] is None:
-                    continue
-                # Else, map the object to one of its attribute.
-                item_value = getattr(
-                    item_value, self.objects_map[item_value.__class__.__name__]
-                )
+            item_value = self.map(data, item_key, item_value)
+            if item_value is None:
+                continue
             node_value = dumper.represent_data(item_value)
 
             value.append((node_key, node_value))
