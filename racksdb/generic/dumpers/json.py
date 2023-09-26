@@ -20,6 +20,19 @@ class GenericJSONEncoder(json.JSONEncoder, MapperDumper):
         MapperDumper.__init__(self, objects_map)
         self.fold = fold
 
+    def _fill_obj_dict(self, result, obj, prop, value):
+        value = self.map(obj, prop, value)
+        if value is None:
+            return
+        if (
+            isinstance(value, DBObject)
+            or isinstance(value, DBDict)
+            or isinstance(value, DBList)
+        ):
+            result[prop] = self.default(value)
+        else:
+            result[prop] = value
+
     def default(self, obj: Any) -> Any:
         if isinstance(obj, DBObjectRange):
             return str(obj.rangeset)
@@ -59,17 +72,10 @@ class GenericJSONEncoder(json.JSONEncoder, MapperDumper):
                 if attribute.startswith(obj.LOADED_PREFIX):
                     attribute = attribute[len(obj.LOADED_PREFIX) :]
                     value = getattr(obj, attribute)
-                value = self.map(obj, prop, value)
-                if value is None:
-                    continue
-                if (
-                    isinstance(value, DBObject)
-                    or isinstance(value, DBDict)
-                    or isinstance(value, DBList)
-                ):
-                    result[attribute] = self.default(value)
-                else:
-                    result[attribute] = value
+                self._fill_obj_dict(result, obj, attribute, value)
+
+            for prop in obj._computed_props():
+                self._fill_obj_dict(result, obj, prop, getattr(obj, prop))
             return result
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)

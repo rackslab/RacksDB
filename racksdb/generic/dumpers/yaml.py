@@ -46,16 +46,23 @@ class DBDumperYAML(MapperDumper):
             value = [dumper.represent_data(_object) for _object in data]
         return yaml.SequenceNode(tag, value)
 
+    def _fill_obj_node_value(self, dumper, node_value, obj, prop, value):
+        # Check the object is mapped to one of its attribute or None.
+        value = self.map(obj, prop, value)
+        if value is None:
+            return
+        node_value.append((dumper.represent_data(prop), dumper.represent_data(value)))
+
     def _represent_dbobject(self, dumper, data):
 
         self._last_objs.append(type(data).__name__)
-        value = []
+        node_value = []
         if self.show_types:
             tag = f"{data.__class__.__name__}"
         else:
             tag = "tag:yaml.org,2002:map"  # YAML generic mapping type
 
-        node = yaml.MappingNode(tag, value)
+        node = yaml.MappingNode(tag, node_value)
 
         for item_key, item_value in vars(data).items():
             # skip special fields
@@ -73,15 +80,12 @@ class DBDumperYAML(MapperDumper):
             if item_key.startswith(data.LOADED_PREFIX):
                 item_key = item_key[len(data.LOADED_PREFIX) :]
                 item_value = getattr(data, item_key)
-            node_key = dumper.represent_data(item_key)
-            # Check the object is mapped to one of its attribute or None.
-            item_value = self.map(data, item_key, item_value)
-            if item_value is None:
-                continue
-            node_value = dumper.represent_data(item_value)
+            self._fill_obj_node_value(dumper, node_value, data, item_key, item_value)
 
-            value.append((node_key, node_value))
-
+        for prop in data._computed_props():
+            self._fill_obj_node_value(
+                dumper, node_value, data, prop, getattr(data, prop)
+            )
         return node
 
     def _represent_dbobjectrange(self, dumper, data):

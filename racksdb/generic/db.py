@@ -40,6 +40,12 @@ class DBObject:
         classes when filtering is needed."""
         return True
 
+    def _computed_props(self):
+        """Generator to iterate over the list of DBObject computed properties."""
+        if hasattr(self, "COMPUTED_PROPERTIES"):
+            for prop in self.COMPUTED_PROPERTIES:
+                yield prop
+
 
 class DBExpandableObject(DBObject):
     def _attributes(self):
