@@ -15,3 +15,7 @@ class DBFormatError(Exception):
 
 class DBDumperError(Exception):
     pass
+
+
+class DBViewError(Exception):
+    pass

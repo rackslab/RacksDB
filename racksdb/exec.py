@@ -15,6 +15,7 @@ from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
 from .errors import RacksDBError
+from .views import RacksDBViews
 
 logger = logging.getLogger(__name__)
 
@@ -88,144 +89,38 @@ class RacksDBExec:
         parser_dump = subparsers.add_parser("dump", help="Dump raw loaded DB")
         parser_dump.set_defaults(func=self._run_dump)
 
-        # Parser for the datacenters command
-        parser_datacenters = subparsers.add_parser(
-            "datacenters", help="Get informations about datacenters"
-        )
-        parser_datacenters.add_argument(
-            "-l",
-            "--list",
-            help="List datacenters",
-            action="store_true",
-        )
-        parser_datacenters.add_argument(
-            "--fold",
-            help="Fold expandable objects",
-            action="store_true",
-        )
-        parser_datacenters.add_argument(
-            "--with-objects-types",
-            help="Show object types in YAML dumps",
-            action="store_true",
-        )
-        parser_datacenters.add_argument(
-            "-f",
-            "--format",
-            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
-            choices=["yaml", "json"],
-        )
-        parser_datacenters.add_argument(
-            "--name",
-            help="Filter datacenter by name",
-        )
-        parser_datacenters.add_argument(
-            "--tags", help="Filter datacenter by tag", nargs="*"
-        )
-        parser_datacenters.set_defaults(func=self._run_datacenters)
-
-        # Parser for the infrastructures command
-        parser_infras = subparsers.add_parser(
-            "infrastructures", help="Get informations about infrastructures"
-        )
-        parser_infras.add_argument(
-            "-l",
-            "--list",
-            help="List infrastructures names",
-            action="store_true",
-        )
-        parser_infras.add_argument(
-            "--fold",
-            help="Fold expandable objects",
-            action="store_true",
-        )
-        parser_infras.add_argument(
-            "--with-objects-types",
-            help="Show object types in YAML dumps",
-            action="store_true",
-        )
-        parser_infras.add_argument(
-            "-f",
-            "--format",
-            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
-            choices=["yaml", "json"],
-        )
-        parser_infras.add_argument(
-            "--name",
-            help="Filter infrastructures by name",
-        )
-        parser_infras.add_argument(
-            "--tags", help="Filter infrastructures by tag", nargs="*"
-        )
-        parser_infras.set_defaults(func=self._run_infras)
-
-        # Parser for the nodes command
-        parser_nodes = subparsers.add_parser(
-            "nodes", help="Get informations about nodes"
-        )
-        parser_nodes.add_argument(
-            "-l",
-            "--list",
-            help="List nodes names",
-            action="store_true",
-        )
-        parser_nodes.add_argument(
-            "--fold",
-            help="Fold expandable objects",
-            action="store_true",
-        )
-        parser_nodes.add_argument(
-            "--with-objects-types",
-            help="Show object types in YAML dumps",
-            action="store_true",
-        )
-        parser_nodes.add_argument(
-            "-f",
-            "--format",
-            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
-            choices=["yaml", "json"],
-        )
-        parser_nodes.add_argument(
-            "--name",
-            help="Filter nodes by name",
-        )
-        parser_nodes.add_argument(
-            "--infrastructure",
-            help="Filter nodes by infrastructure",
-        )
-        parser_nodes.add_argument("--tags", help="Filter nodes by tag", nargs="*")
-        parser_nodes.set_defaults(func=self._run_nodes)
-
-        # Parser for the racks command
-        parser_racks = subparsers.add_parser(
-            "racks", help="Get informations about racks"
-        )
-        parser_racks.add_argument(
-            "-l",
-            "--list",
-            help="List racks names",
-            action="store_true",
-        )
-        parser_racks.add_argument(
-            "--fold",
-            help="Fold expandable objects",
-            action="store_true",
-        )
-        parser_racks.add_argument(
-            "--with-objects-types",
-            help="Show object types in YAML dumps",
-            action="store_true",
-        )
-        parser_racks.add_argument(
-            "-f",
-            "--format",
-            help=f"Format of output (default: {self.DEFAULT_FORMAT})",
-            choices=["yaml", "json"],
-        )
-        parser_racks.add_argument(
-            "--name",
-            help="Filter racks by name",
-        )
-        parser_racks.set_defaults(func=self._run_racks)
+        self.views = RacksDBViews()
+        for view in self.views:
+            subparser = subparsers.add_parser(view.content, help=view.description)
+            subparser.add_argument(
+                "-l",
+                "--list",
+                help="List datacenters",
+                action="store_true",
+            )
+            subparser.add_argument(
+                "--fold",
+                help="Fold expandable objects",
+                action="store_true",
+            )
+            subparser.add_argument(
+                "--with-objects-types",
+                help="Show object types in YAML dumps",
+                action="store_true",
+            )
+            subparser.add_argument(
+                "-f",
+                "--format",
+                help=f"Format of output (default: {self.DEFAULT_FORMAT})",
+                choices=["yaml", "json"],
+            )
+            for _filter in view.filters:
+                subparser.add_argument(
+                    f"--{_filter.name}",
+                    help=_filter.description,
+                    nargs=_filter.nargs,
+                )
+            subparser.set_defaults(func=self._dump_view)
 
         # Parser for the draw command
         parser_draw = subparsers.add_parser("draw", help="Draw DB components")
@@ -290,113 +185,36 @@ class RacksDBExec:
     def _run_dump(self):
         print(DBDumperFactory.get("yaml")().dump(self.db._loader.content))
 
-    def _run_datacenters(self):
-        selected_datacenters = self.db.datacenters.filter(
-            name=self.args.name,
-            tags=self.args.tags,
+    def _dump_view(self):
+        data = getattr(self.db, self.args.action)
+        view = self.views[self.args.action]
+        # Filter data with optional filters specified in arguments
+        data = data.filter(
+            **{
+                _filter.name: getattr(self.args, _filter.name)
+                for _filter in view.filters
+            }
         )
-        # print list of datacenters
+
+        # Select only the item names
         if self.args.list:
+            # When list option is select and no output format is specified, select the
+            # console dumper by default.
             if self.args.format is None:
                 self.args.format = "console"
-            selected_datacenters = [
-                datacenter.name for datacenter in selected_datacenters
-            ]
+            data = [item.name for item in data]
+
+        # If the output format is not defined at this stage, fallback to default.
         if self.args.format is None:
             self.args.format = self.DEFAULT_FORMAT
-        objects_map = {
-            "RacksDBDatacenter": None,
-            "RacksDBDatacenterRoom": "name",
-            "RacksDBDatacenterRoomRow": "name",
-            "RacksDBDatacenterRoomRack": "name",
-            "RacksDBDatacenterRoomRack.nodes": None,
-        }
-        dumper = DBDumperFactory.get(self.args.format)(
-            show_types=self.args.with_objects_types,
-            objects_map=objects_map,
-            fold=self.args.fold,
+
+        print(
+            DBDumperFactory.get(self.args.format)(
+                show_types=self.args.with_objects_types,
+                objects_map=view.objects_map,
+                fold=self.args.fold,
+            ).dump(data)
         )
-        print(dumper.dump(selected_datacenters))
-
-    def _run_infras(self):
-        selected_infras = self.db.infrastructures.filter(
-            name=self.args.name,
-            tags=self.args.tags,
-        )
-
-        # print list of infrastructures
-        if self.args.list:
-            if self.args.format is None:
-                self.args.format = "console"
-            selected_infras = [
-                infrastructure.name for infrastructure in selected_infras
-            ]
-        if self.args.format is None:
-            self.args.format = self.DEFAULT_FORMAT
-        objects_map = {
-            "RacksDBDatacenter": "name",
-            "RacksDBDatacenterRoom": "name",
-            "RacksDBDatacenterRoomRack": "name",
-            "RacksDBInfrastructure": None,
-        }
-        dumper = DBDumperFactory.get(self.args.format)(
-            show_types=self.args.with_objects_types,
-            objects_map=objects_map,
-            fold=self.args.fold,
-        )
-        print(dumper.dump(selected_infras))
-
-    def _run_nodes(self):
-
-        selected_nodes = self.db.nodes.filter(
-            name=self.args.name,
-            infrastructure=self.args.infrastructure,
-            tags=self.args.tags,
-        )
-        if self.args.list:
-            if self.args.format is None:
-                self.args.format = "console"
-            selected_nodes = [node.name for node in selected_nodes]
-        if self.args.format is None:
-            self.args.format = self.DEFAULT_FORMAT
-        objects_map = {
-            "RacksDBGroupRack": "name",
-            "RacksDBDatacenter": "name",
-            "RacksDBDatacenterRoom": "name",
-            "RacksDBDatacenterRoomRow": "name",
-            "RacksDBInfrastructure": "name",
-        }
-        dumper = DBDumperFactory.get(self.args.format)(
-            show_types=self.args.with_objects_types,
-            objects_map=objects_map,
-            fold=self.args.fold,
-        )
-        print(dumper.dump(selected_nodes))
-
-    def _run_racks(self):
-
-        selected_racks = self.db.racks.filter(name=self.args.name)
-
-        if self.args.list:
-            if self.args.format is None:
-                self.args.format = "console"
-            selected_racks = [rack.name for rack in selected_racks]
-        if self.args.format is None:
-            self.args.format = self.DEFAULT_FORMAT
-        objects_map = {
-            "RacksDBDatacenter": "name",
-            "RacksDBDatacenterRoom": "name",
-            "RacksDBDatacenterRoomRow": "name",
-            "RacksDBDatacenterRoomRack": None,
-            "RacksDBNodeType": "id",
-            "RacksDBInfrastructure": "name",
-        }
-        dumper = DBDumperFactory.get(self.args.format)(
-            show_types=self.args.with_objects_types,
-            objects_map=objects_map,
-            fold=self.args.fold,
-        )
-        print(dumper.dump(selected_racks))
 
     def _run_draw(self):
         if self.args.entity == "infrastructure":
