@@ -39,11 +39,6 @@ class RacksDB(GenericDB):
                 for row in room.rows:
                     for rack in row.racks:
                         result.append(rack)
-                        # add reference to infrastructures nodes
-                        for infrastructure in self.infrastructures:
-                            for part in infrastructure.layout:
-                                if rack.name == part.rack.name:
-                                    rack.nodes = part.nodes
         return result
 
     @classmethod

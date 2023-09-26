@@ -69,10 +69,24 @@ class RacksDBNodeBase:
                     return False
         return True
 
+
 class RacksDBDatacenterRoomRackBase:
+
+    COMPUTED_PROPERTIES = ["nodes"]
 
     def _filter(self, name=None):
         # filter by name
         if name is not None and name != self.name:
             return False
         return True
+
+    @property
+    def nodes(self):
+        result = DBList()
+        # add reference to infrastructures nodes
+        for infrastructure in self._db.infrastructures:
+            for part in infrastructure.layout:
+                if self.name == part.rack.name:
+                    for nodes in part.nodes.values():
+                        result.append(nodes)
+        return result
