@@ -374,20 +374,7 @@ class RacksDBExec:
 
     def _run_racks(self):
 
-        selected_racks = self.db.find_objects("DatacenterRoomRack", True)
-
-        # filter racks by name
-        if self.args.name is not None:
-            selected_racks = [
-                rack for rack in selected_racks if self.args.name == rack.name
-            ]
-
-        # add references to equipments
-        for rack in selected_racks:
-            for infrastructure in self.db.infrastructures:
-                for part in infrastructure.layout:
-                    if rack.name == part.rack.name:
-                        rack.nodes = part.nodes
+        selected_racks = self.db.racks.filter(name=self.args.name)
 
         if self.args.list:
             if self.args.format is None:
