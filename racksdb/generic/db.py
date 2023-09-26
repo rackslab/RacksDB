@@ -542,8 +542,24 @@ class GenericDB(DBObject):
             return parent
 
     def load_list(self, token, literal, schema_object: SchemaContainerList, parent):
+        # Check the literal is a valid list
         if type(literal) != list:
-            raise DBFormatError(f"token {token} {schema_object} must be a list")
+            # If it is not a list, it must be a dict and the contained object must have
+            # a key property. In this case, the literal is transformed into a list of
+            # dictionnaries augmented with object key property. Then it is loaded
+            # exactly the same way as if it was declared in database as a list with the
+            # key property.
+            if type(literal) == dict and schema_object.content.has_key():
+                logger.debug(
+                    "Transforming dictionnary into a list of %s with key property",
+                    schema_object.content,
+                )
+                literal = [
+                    {**{schema_object.content.key_property(): key}, **value}
+                    for key, value in literal.items()
+                ]
+            else:
+                raise DBFormatError(f"token {token} {schema_object} must be a list")
         # Check if the contained object has a key property
         has_key = False
         if isinstance(schema_object.content, SchemaObject):

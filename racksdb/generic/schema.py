@@ -124,6 +124,21 @@ class SchemaObject(SchemaGenericValueType):
                 return _prop
         return None
 
+    def has_key(self):
+        """Return True if the object has a key property or False otherwise."""
+        for prop in self.properties:
+            if prop.key:
+                return True
+        return False
+
+    def key_property(self):
+        """Return the name of object's key property. Raise DBSchemaError if key property
+        is not found."""
+        for prop in self.properties:
+            if prop.key:
+                return prop.name
+        raise DBSchemaError(f"Unable to find key property for object {self.name}")
+
 
 class SchemaContainerList(SchemaGenericValueType):
     def __init__(self, content):

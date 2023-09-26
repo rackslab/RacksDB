@@ -12,6 +12,8 @@ and this project adheres to
 - core:
   - Add dumper for JSON format (#3).
   - Add possibility to keep expandable objects folded in dumpers.
+  - Support loading sequence of objects with key property as a mapping whose
+    keys are the key property of the contained objects.
 - cli:
   - Add format option for datacenters, nodes, racks and infrastructures
     subcommands to control output format.
