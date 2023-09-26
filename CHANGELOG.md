@@ -26,6 +26,8 @@ and this project adheres to
     quickstart guide.
   - Add the _« Release notes »_ page based on the content of `CHANGELOG.md`.
   - Mention `--format` and `--fold` options in manpage.
+  - Update splitted database examples to demonstrate the possibility to declare
+    sequence of objects with key property as mappings.
 
 ### Changed
 - core: Introduce DBDict objects that inherit from standard Python dict to
