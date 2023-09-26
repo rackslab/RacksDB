@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Union
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
-from .generic.db import GenericDB, DBDict, DBFileLoader, DBSplittedFilesLoader
+from .generic.db import GenericDB, DBDict, DBList, DBFileLoader, DBSplittedFilesLoader
 from . import bases
 
 
@@ -29,6 +29,21 @@ class RacksDB(GenericDB):
         result = DBDict()
         for infrastructure in self.infrastructures:
             result.update(infrastructure.nodes)
+        return result
+
+    @property
+    def racks(self):
+        result = DBList()
+        for datacenter in self.datacenters:
+            for room in datacenter.rooms:
+                for row in room.rows:
+                    for rack in row.racks:
+                        result.append(rack)
+                        # add reference to infrastructures nodes
+                        for infrastructure in self.infrastructures:
+                            for part in infrastructure.layout:
+                                if rack.name == part.rack.name:
+                                    rack.nodes = part.nodes
         return result
 
     @classmethod

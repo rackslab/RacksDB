@@ -68,3 +68,11 @@ class RacksDBNodeBase:
                 if tag not in self.tags:
                     return False
         return True
+
+class RacksDBDatacenterRoomRackBase:
+
+    def _filter(self, name=None):
+        # filter by name
+        if name is not None and name != self.name:
+            return False
+        return True
