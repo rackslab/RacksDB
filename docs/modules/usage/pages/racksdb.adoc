@@ -73,7 +73,11 @@ All search commands accepts the following options:
   enabled (see below).
 
 [.cli-opt]#*-l, --list*#::
-  List names of selected entities, without detailed information.
+  List names of selected entities, without detailed information. When this
+  option is enabled, the default output format is the raw list of names with
+  one name per line. Alternative format can be selected with
+  [.cli-opt]#*--format*# option (see above). The list can also be folded with
+  [.cli-opt]#*--fold*# option (see above).
 
 [.cli-opt]#*--with-objects-types*#::
   Add object types names in detailed dumps. This option has no effect with
@@ -183,6 +187,12 @@ $ racksdb nodes --tags compute
 
 [.cli-example-desc]
 Dump information of all nodes that have the _compute_ tag.
+
+[source,console]
+$ racksdb nodes --tags compute --list --fold
+
+[.cli-example-desc]
+Folded names of all nodes that have the _compute_ tag.
 
 [source,console]
 $ racksdb nodes --infrastructure tiger --tags server --list --format json
