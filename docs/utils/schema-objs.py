@@ -118,7 +118,7 @@ def main():
     output = template.render(
         schema=db._schema,
         object_prefix="RacksDB",
-        deftype_prefix="racksdb.types.",
+        deftype_prefix="racksdb.dtypes.",
     )
     print(output)
 
