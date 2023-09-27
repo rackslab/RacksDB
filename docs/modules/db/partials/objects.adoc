@@ -339,7 +339,7 @@ NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how
 |===
 |Property|Description|Type|Required
 
-|name
+|name{nbsp}{symbol-key}
 |The names of the network equipments in this set.
 
 |expandable
@@ -734,7 +734,7 @@ NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how
 |===
 |Property|Description|Type|Required
 
-|name
+|name{nbsp}{symbol-key}
 |The names of the storage equipments in this set.
 
 |expandable

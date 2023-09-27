@@ -17,8 +17,11 @@ and this project adheres to
 ### Changed
 - core: introduce DBDict objects that inherit from standard Python dict to
   handle list of objects with keys (#15).
-- docs: present the supported Linux distributions with tabs in the quickstart
-  guide.
+- docs:
+  - Present the supported Linux distributions with tabs in the quickstart
+    guide.
+  - Mention key attribute on {Network,Storage}Equipment.name property in
+    structure reference.
 
 ### Fixed
 - core: rename module that contains defined types definitions dtypes to avoid
