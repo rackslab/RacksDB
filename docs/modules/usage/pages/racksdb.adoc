@@ -59,11 +59,14 @@ inside each group.
 
 === Search commands
 
-These commands are named after the entities to search in the database. By
-default, the output is a dump containing many information about the entities
-formatted in YAML.
+These commands are named after the entities to search in the database.
 
 All search commands accepts the following options:
+
+[.cli-opt]#*--format=*#[.cli-optval]##_FORMAT_##::
+  Select alternative format for command output. Possible values are *yaml* and
+  *json*. The default value is *yaml* except when *-l, --list* option is
+  enabled (see below).
 
 [.cli-opt]#*-l, --list*#::
   List names of selected entities, without detailed information.
@@ -136,13 +139,15 @@ This command accepts the following options:
 $ racksdb datacenters
 
 [.cli-example-desc]
-Dump information about all the datacenters with their rooms and racks.
+Dump information about all the datacenters with their rooms and racks in YAML
+format.
 
 [source,console]
-$ racksdb datacenters --tags tier2
+$ racksdb datacenters --tags tier2 --format json
 
 [.cli-example-desc]
-Dump information about all the datacenters that have the _tier2_ tag.
+Dump information about all the datacenters that have the _tier2_ tag in JSON
+format.
 
 [source,console]
 $ racksdb infrastructures
@@ -176,11 +181,11 @@ $ racksdb nodes --tags compute
 Dump information of all nodes that have the _compute_ tag.
 
 [source,console]
-$ racksdb nodes --infrastructure tiger --tags server --list
+$ racksdb nodes --infrastructure tiger --tags server --list --format json
 
 [.cli-example-desc]
-List names of all nodes in _tiger_ infrastructure that also have the _server_
-tag.
+List of names of all nodes in _tiger_ infrastructure that also have the _server_
+tag in JSON format.
 
 [source,console]
 $ racksdb racks
