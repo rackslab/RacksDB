@@ -16,7 +16,7 @@ RacksDB web site: https://github.com/rackslab/racksdb
 
 == Copying
 
-Copyright (C) 2022 {author}. +
+Copyright (C) 2022-2023 {author}. +
 
 RacksDB is distributed under the terms of the GNU General Public License v3.0
 or later (GPLv3+).
