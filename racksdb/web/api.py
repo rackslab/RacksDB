@@ -6,22 +6,29 @@
 
 import argparse
 from pathlib import Path
+import io
+import logging
 
-from flask import Flask, request, Response
+from flask import Flask, request, Response, send_file
 
 from .. import RacksDB
 from ..version import get_version
 from ..views import RacksDBViews
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
-
-import logging
+from ..drawers import InfrastructureDrawer, RoomDrawer
 
 logger = logging.getLogger(__name__)
 
 
 class RacksDBRESTAPI(Flask):
 
-    MIMETYPES = {"json": "application/json", "yaml": "application/x-yaml"}
+    MIMETYPES = {
+        "json": "application/json",
+        "yaml": "application/x-yaml",
+        "png": "image/png",
+        "svg": "image/svg+xml",
+        "pdf": "application/pdf",
+    }
 
     def __init__(self):
         super().__init__("RacksDB REST API server")
@@ -78,6 +85,11 @@ class RacksDBRESTAPI(Flask):
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
         self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
         self.add_url_rule("/<content>", view_func=self._dump_view, methods=["GET"])
+        self.add_url_rule(
+            "/draw/<entity>/<name>.<picture_format>",
+            view_func=self._draw,
+            methods=["GET"],
+        )
 
     def serve(self):
         logger.info("Running RacksDB REST API application")
@@ -121,6 +133,19 @@ class RacksDBRESTAPI(Flask):
         )
         return Response(
             response=dumper.dump(data), mimetype=self.MIMETYPES[dump_format]
+        )
+
+    def _draw(self, entity, name, picture_format):
+        file = io.BytesIO()
+        if entity == "infrastructure":
+            drawer = InfrastructureDrawer(self.db, name, file, picture_format)
+        elif entity == "room":
+            drawer = RoomDrawer(self.db, name, file, picture_format)
+        drawer.draw()
+        file.seek(0)
+        return send_file(
+            file,
+            mimetype=self.MIMETYPES[picture_format],
         )
 
     @classmethod
