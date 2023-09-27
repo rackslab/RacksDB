@@ -72,6 +72,9 @@ xref:#schema[schema].
 
 NOTE: This is particularly useful to facilitate selection of a particular object
 among a list in the xref:usage:api.adoc[library API].
+
+NOTE: Keys are also involved in xref:#equivalence[sequence/mapping equivalence]
+concept.
 --
 
 [#types]
@@ -200,3 +203,45 @@ It is eventually expanded by RacksDB into this sequence:
 - name: node03
   id: 12
 ----
+
+[#equivalence]
+== Sequence/mapping equivalence
+
+In RacksDB, a sequence (or list) of objects with a key property can
+alternatively be declared as a mapping (or hash table). In this case, the key of
+the mapping is considered as the value of the key property of the object.
+
+As an example, consider an object _Furniture_ with the following properties:
+
+* `id` of type _str_ with _key_ attribute,
+* `description` of type _str_
+* `width` of type _int_.
+
+List of this object can be declared as a sequence in database YAML files:
+
+[source,yaml]
+----
+- id: table
+  description: table for dinner
+  width: 180
+- id: chair
+  description: chair to sit
+  width: 32
+----
+
+Alternatively, RacksDB offers the possibility to declared this list as a mapping
+in YAML files:
+
+[source,yaml]
+----
+table:
+  description: table for dinner
+  width: 180
+chair:
+  description: chair to sit
+  width: 32
+----
+
+TIP: This feature is particulary convenient to declare list of objects in a
+xref:structure#splitted[tree of splitted YAML files] and use the filename as the
+value of the key property.

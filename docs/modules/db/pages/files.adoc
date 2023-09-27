@@ -10,6 +10,7 @@ condition of specifying the path in xref:usage:racksdb.adoc[`racksdb`
 command] options and xref:usage:api.adoc[library `load()`] arguments. For this
 reason, it is highly recommended to use the default path.
 
+[#splitted]
 == Files Tree
 
 RacksDB database can be stored in a single YAML file. However, for obvious

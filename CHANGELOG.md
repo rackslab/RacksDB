@@ -28,6 +28,8 @@ and this project adheres to
   - Mention `--format` and `--fold` options in manpage.
   - Update splitted database examples to demonstrate the possibility to declare
     sequence of objects with key property as mappings.
+  - Mention sequence/mapping equivalence for list of objects with keys in
+    concepts page.
 
 ### Changed
 - core: Introduce DBDict objects that inherit from standard Python dict to
