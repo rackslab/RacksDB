@@ -22,8 +22,8 @@ class RoomDrawer(Drawer):
     MARGIN_LEFT = 30
     RACK_DOOR_DEPTH = int(50 * SCALE)
 
-    def __init__(self, db, name, output_format):
-        super().__init__(db, name, output_format)
+    def __init__(self, db, name, file, output_format):
+        super().__init__(db, file, output_format)
         self.room = None
         for datacenter in self.db.datacenters:
             for room in datacenter.rooms:

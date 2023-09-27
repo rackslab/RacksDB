@@ -27,8 +27,8 @@ class InfrastructureDrawer(Drawer):
     RACK_PANE_WIDTH = 10
     RACK_SPACING = 3  # space between racks
 
-    def __init__(self, db, name, output_format):
-        super().__init__(db, name, output_format)
+    def __init__(self, db, name, file, output_format):
+        super().__init__(db, file, output_format)
         self.infrastructure = None
         for infrastructure in self.db.infrastructures:
             if infrastructure.name == name:

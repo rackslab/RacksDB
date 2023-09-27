@@ -217,8 +217,12 @@ class RacksDBExec:
         )
 
     def _run_draw(self):
+        file = f"{self.args.name}.{self.args.format}"
         if self.args.entity == "infrastructure":
-            drawer = InfrastructureDrawer(self.db, self.args.name, self.args.format)
+            drawer = InfrastructureDrawer(
+                self.db, self.args.name, file, self.args.format
+            )
         elif self.args.entity == "room":
-            drawer = RoomDrawer(self.db, self.args.name, self.args.format)
+            drawer = RoomDrawer(self.db, self.args.name, file, self.args.format)
         drawer.draw()
+        logger.info("Generated image file %s", file)
