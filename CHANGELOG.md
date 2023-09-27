@@ -37,6 +37,7 @@ and this project adheres to
     API reference.
   - Mention `nodes` computed property and filtering capability on
     `RacksDBDatacenterRoomRack` class specialization in library API reference.
+  - Mention available examples in database files page.
 
 ### Changed
 - core: Introduce DBDict objects that inherit from standard Python dict to

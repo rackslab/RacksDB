@@ -85,3 +85,14 @@ granny smith: 10
 golden: 20
 ----
 ====
+
+== Examples
+
+When RacksDB is installed, full examples of databases are available in path
+[.path]#`/usr/share/doc/racksdb/examples/db/`#. Database contained in a single
+YAML file and databases splitted in a tree of YAML files can be found in this
+folder.
+
+Examples are also available in
+https://github.com/rackslab/racksdb/blob/main/examples/[source code Git
+repository].
