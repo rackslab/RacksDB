@@ -1,0 +1,202 @@
+= Concepts
+
+This pages explains the few concepts and characteristics involved in RacksDB
+databases.
+
+== Introduction
+
+RacksDB is an *object-oriented database* organized in a *tree layout*. Objects
+are composed of set of named xref:#properties[*properties*].
+
+The various objects with their properties are defined in a
+xref:#schema[*schema*].
+
+Defining the content of the database basically consist of *declaring objects in
+YAML files* in conformity wtih the defined schema.
+
+[sidebar]
+.See also
+--
+icon:caret-right[] The xref:structure.adoc[structure reference] documents
+RacksDB schema with the expected tree of objects and their properties.
+
+icon:caret-right[] The xref:files.adoc[database files] page contains all details
+about the location of YAML files and the possibility to split them.
+--
+
+[#objects]
+== Objects
+
+Objects are a set of named xref:#properties[*properties*]. Multiple types of
+objects are involved in the database, all with their respective set of
+properties. The various objects are defined in the xref:#schema[*schema*].
+
+Objects are declared as _mappings_ (or hash tables) in the YAML files of the
+database. In these mappings, the keys are the name of the properties while the
+values are the values of the respective properties.
+
+[#properties]
+== Properties
+
+Properties have a name. Properties may have xref:#attributes[*attributes*] that
+defines their characteritics. All properties also have a
+xref:#types[*data type*] which can either be _native_ or _advanced_. All these
+concepts are explained in the sections below.
+
+[#attributes]
+== Attributes
+
+xref:#properties[Properties] may have various characteristics that are defined
+by their _attributes_. RacksDB supports the following attributes:
+
+[#sequence]
+sequence:: The property is list (or array) of values of the respective
+xref:#types[data type] (_ex:_ list of string or list of objects).
+
+[#optional]
+optional:: The property is optional, its declaration for the respective objects
+is not required in the database.
+
+[#default]
+default value:: When the property is not declared for the respective objects in
+database, it is assigned this default value.
+
+[#key]
+key:: The property is a key for the respective objects. When the object is
+contained in a xref:#sequence[sequence], the value of this property can be used
+to refer to the object.
++
+--
+CAUTION: An object cannot be defined with more than one key property in the
+xref:#schema[schema].
+
+NOTE: This is particularly useful to facilitate selection of a particular object
+among a list in the xref:usage:api.adoc[library API].
+--
+
+[#types]
+== Types
+
+xref:#properties[Properties] have a _data type_ that defines how RacksDB
+interpret their values. Data types are either _native_ or _advanced_.
+
+[#native]
+=== Native types
+
+RacksDB supports the following native types of properties:
+
+str:: Strings of characters.
+
+int:: Integer numbers.
+
+float:: Floating point numbers.
+
+bool:: Boolean value.
+
+[#advanced]
+=== Advanced types
+
+Beyond the native types, RacksDB supports a set of more advanced types:
+
+[#object]
+object:: The value is the declaration of another xref:#objects[*object*].
+
+[#reference]
+reference:: The value is a *reference* to another object attribute, declared
+elsewhere in the database.
++
+--
+NOTE: If the given attribute value cannot be found among the corresponding
+declared objects, RacksDB considers this reference cannot be solved and raises
+an error while loading the database.
+--
+
+[#backref]
+back reference:: The value is a parent object or one of its attributes.
++
+--
+CAUTION: The *back references* type _must not_ be defined in the database files.
+They are automatically defined and resolved by RacksDB when loading the
+database.
+
+NOTE: Back references are essentially used for convenience in the
+xref:usage:api.adoc[library API].
+--
+
+[#deftype]
+defined type:: The value is parsed by special bits of code provided by RacksDB,
+to match against special values or perform units conversions to convert them
+into xref:#native[native types]. The defined types available in RackDB are
+described in the xref:structure.adoc#deftype[defined types section] of the
+structure reference.
+
+[#expandable]
+expandable:: The value is a string representing a range of values that can be
+expanded into a list. For example, `node[01-03,05]` can be expanded into
+`node01`, `node02`, `node03` and `node05`. For more details about this syntax,
+please refer to the documentation of
+https://clustershell.readthedocs.io/en/latest/tools/nodeset.html[ClusterShell
+`nodeset` command].
+
+[#rangeid]
+rangeid:: The value is an integer number associated the first item of an
+xref:#expandable[_expandable_], automatically incremented for all the other
+items in the list.
+
+NOTE: The *expandable* and *rangeid* advanced types are notably used for
+xref:#expansion[automatic expansion] of factorized range of objects.
+
+[#schema]
+== Schema
+
+The _schema_ defines the *structure of the database* consisting of all objects
+with their properties in a tree layout.
+
+The schema is defined in a *YAML file*. Objects with their attributes and types
+are defined with a *dedicated syntax*. It is possible to define *schema
+extensions* to enrich the database with custom data.
+
+[sidebar]
+.See also
+--
+icon:caret-right[] The xref:structure.adoc[structure reference] documents
+RacksDB schema with the expected tree of objects and their properties.
+
+icon:caret-right[] The xref:schema.adoc[schema file] page contains all details
+about RacksDB schema file and its syntax.
+
+icon:caret-right[] The xref:ext.adoc[schema extension] page provides full
+explanations to define custom schema extensions.
+--
+
+[#expansion]
+== Automatic expansion
+
+In order to significantly reduce boilerplate when declaring numerous consecutive
+objects, RacksDB is able to automatically expand factorized range of objects.
+For this purpose, two additional data types are used in the database:
+
+As an example, consider an object with the following properties:
+
+* `name` of type _expandable_,
+* `id` of type _rangeid_.
+
+And the following content in database file:
+
+[source,yaml]
+----
+- name: node[01-03]
+  id: 10
+----
+
+It is eventually expanded by RacksDB into this sequence:
+
+[source,yaml]
+----
+- name: node01
+  id: 10
+- name: node02
+  id: 11
+- name: node03
+  id: 12
+----

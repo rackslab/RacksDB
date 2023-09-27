@@ -24,6 +24,7 @@ and this project adheres to
     guide.
   - Mention key attribute on {Network,Storage}Equipment.name property in
     structure reference.
+  - Move database concepts in a dedicated page.
 
 ### Fixed
 - core: rename module that contains defined types definitions dtypes to avoid
