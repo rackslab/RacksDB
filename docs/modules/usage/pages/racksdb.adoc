@@ -63,6 +63,10 @@ These commands are named after the entities to search in the database.
 
 All search commands accepts the following options:
 
+[.cli-opt]#*--fold*#::
+  Fold ranges of objects and names. By default, ranges objects and names are
+  expanded. This option produces more concise results.
+
 [.cli-opt]#*--format=*#[.cli-optval]##_FORMAT_##::
   Select alternative format for command output. Possible values are *yaml* and
   *json*. The default value is *yaml* except when *-l, --list* option is
@@ -192,8 +196,13 @@ $ racksdb racks
 
 [.cli-example-desc]
 Dump information about all racks with their equipments.
-====
 
+[source,console]
+$ racksdb racks --name R7-06 --fold
+
+[.cli-example-desc]
+Dump information about rack _R7-A06_ with folded node range.
+====
 
 [#draw]
 === Draw commands

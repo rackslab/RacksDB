@@ -21,7 +21,7 @@ and this project adheres to
   - Add installation method from sources intended to software developers in the
     quickstart guide.
   - Add the _« Release notes »_ page based on the content of `CHANGELOG.md`.
-  - Mention `--format` option in manpage.
+  - Mention `--format` and `--fold` options in manpage.
 
 ### Changed
 - core: Introduce DBDict objects that inherit from standard Python dict to
