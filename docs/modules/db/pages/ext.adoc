@@ -59,7 +59,7 @@ Here a simple example of an extension definition file:
 include::example$extensions.yml[]
 ----
 
-With this extensions:
+With this extension:
 
 * The `power` key is added at the root of RacksDB database structure. It can
   contain an optional list of `Ups` object.

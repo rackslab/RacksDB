@@ -60,6 +60,7 @@ and this project adheres to
 - cli: Catch RacksDB internal errors to report in command output and exit with
   return code 1.
 - schema: Add key attribute on {Network,Storage}Equipment.name property.
+- docs: Fix spelling in schema extension page.
 
 ### Removed
 - core: Drop support optional [] attribute suffix for expandable properties.
