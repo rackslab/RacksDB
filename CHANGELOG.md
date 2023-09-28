@@ -37,6 +37,11 @@ and this project adheres to
   return code 1.
 - schema: Add key attribute on {Network,Storage}Equipment.name property.
 
+### Removed
+- docs: Mention of `tags` attributes in library API reference on
+  `RacksDBDatacenter`, `RacksDBDatacenter` and `RacksDBNode` classes
+  specializations.
+
 ## [0.1.0~beta] - 2022-11-28
 
 [unreleased]: https://github.com/rackslab/racksdb/compare/v0.1.0-beta...HEAD
