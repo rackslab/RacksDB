@@ -25,6 +25,8 @@ and this project adheres to
   - Mention key attribute on {Network,Storage}Equipment.name property in
     structure reference.
   - Move database concepts in a dedicated page.
+  - Update library API reference and examples with new `DBDict` class and
+    changes on `DBList` class.
 
 ### Fixed
 - core: rename module that contains defined types definitions dtypes to avoid

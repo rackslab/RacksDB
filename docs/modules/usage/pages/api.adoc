@@ -82,7 +82,7 @@ The exceptions are raised with a detailed description of the error.
 [#model]
 == Generic Object Model
 
-The database is essentially composed of 2 types of Python objects, detailled in
+The database is essentially composed of 3 types of Python objects, detailled in
 the following subsections.
 
 === `DBObject`
@@ -106,7 +106,8 @@ True
 ----
 ====
 
-Every *objects properties* and *automatic back references* defined in
+Every xref:db:concepts.adoc#properties[*objects properties*] (including
+xref:db:concepts.adoc#backref[*automatic back references*]) defined in
 xref:db:structure.adoc#objects[database structure] can be directly accessed
 through the corresponding attribute.
 
@@ -128,13 +129,17 @@ True
 ----
 ====
 
-The type of the attributes depends on the type of the property:
+The type of the attributes depends on the
+xref:db:concepts.adoc#attributes[attributes] and the
+xref:db:concepts.adoc#types[data type] of the corresponding property:
 
-* For *sequences*, the attribute is a xref:#list[`DBList`] object. Please refer
-  to the following xref:#list[dedicated section] for more details.
+* For xref:db:concepts.adoc#sequence[*sequences*], the attribute is either a
+  xref:#list[`DBList`] or a xref:#dict[`DBDict`] object, depending on the
+  presence of a key property. Please refer to the following dedicated sections
+  for more details.
 
-* For *native types*, the attribute has the corresponding Python native type
-  (_ex:_ str or float).
+* For xref:db:concepts.adoc#native[*native types*], the attribute has the
+  corresponding Python native type (_ex:_ str or float).
 +
 --
 .Examples
@@ -158,8 +163,9 @@ object] is an integer, this is converted to a native Python _int_:
 ====
 --
 
-* For *references* and *back references*, the attribute is a reference the
-  corresponding object in database.
+* For xref:db:concepts.adoc#reference[*references*] and
+  xref:db:concepts.adoc#backref[*back references*], the attribute is a reference
+  to the corresponding object in the database.
 +
 --
 .Examples
@@ -188,7 +194,10 @@ True
 ====
 --
 
-* For *defined types*, the attribute has the resulting type of the defined type.
+* For xref:db:concepts.adoc#deftype[*defined types*], the attribute has the
+ resulting type of the defined type.
++
+--
 .Examples
 ====
 The `depth` property of
@@ -213,6 +222,7 @@ whose resulting type is a float. The attribute is a Python native _float_:
 <class 'float'>
 ----
 ====
+--
 
 [NOTE]
 ====
@@ -233,52 +243,58 @@ xref:db:structure.adoc#obj-root[database structure root].
 [#list]
 === `DBList`
 
-The object properties containing a list (_aka_. sequence) of objects are
-represented as `DBList` objects.
+The `DBList` class extends standard Python `list` type. It is generally used to
+represent values of properties with
+xref:db:concepts.adoc#sequence[sequence attribute] (except for objects with
+xref:db:concepts.adoc#key[key property] represented by xref:#dict[`DBDict`]).
 
 .Example
 ====
-The list of xref:db:structure.adoc#obj-datacenter[Datacenter] objects holded by
-the `datacenters` properties of xref:db:structure.adoc#obj-root[database root]
-object is a `DBList`:
+The list of xref:db:structure.adoc#obj-nodetypenetif[`NodeTypeNetif`] objects
+holded by the `netifs` property of xref:db:structure.adoc#obj-nodetype[`NodeType`]
+objects is represented by a `DBList`:
 
 [source,python]
 ----
->>> type(db.datacenters)
+>>> type(db.types.nodes.first().netifs)
 <class 'racksdb.generic.db.DBList'>
 ----
 ====
 
-==== Attributes
-
-The `DBList` objects have an `items` attribute. This is the list of all objects
-contained in the `DBList` object.
+Compared to standard Python `list` type, `DBList` class notably adds support of
+expandable objects. Typically, iterating over a `DBList` generates all objects
+in range of expandable objects.
 
 .Example
 ====
-Usage of `items` attribute on the datacenters `DBList`:
+The list of xref:db:structure.adoc#obj-datacenterroomrack[`DatacenterRoomRack`]
+objects holded by the `racks` property of
+xref:db:structure.adoc#obj-datacenterroomrow[`DatacenterRoomRow`] is a `DBList`.
+Even if the list actually contains a folded range of racks, iterating over the
+`DBList` generates all expanded members of the range:
 
 [source,python]
 ----
->>> type(db.datacenters.items)
-<class 'list'>
->>> db.datacenters.items
-[<racksdb.generic.db.RacksDBDatacenter object at 0x7f258b191b10>]
->>> len(db.datacenters.items)
+>>> racks = db.datacenters["paris"].rooms["noisy"].rows.first().racks
+>>> type(racks)
+<class 'racksdb.generic.db.DBList'>
+>>> len(racks)
 1
-----
-====
-
-This can notably be used to access an object by index.
-
-.Example
-====
-[source,python]
-----
->>> db.datacenters.items[0]
-<racksdb.generic.db.RacksDBDatacenter object at 0x7f258b191b10>
->>> db.datacenters.items[0].name
-'paris'
+>>> racks[0].name
+R1-A[01-10]
+>>> for rack in racks:
+...   print(rack.name)
+...
+R1-A01
+R1-A02
+R1-A03
+R1-A04
+R1-A05
+R1-A06
+R1-A07
+R1-A08
+R1-A09
+R1-A10
 ----
 ====
 
@@ -286,8 +302,136 @@ This can notably be used to access an object by index.
 
 The `DBList` objects provide 2 methods:
 
-* `first()` method returns the first object object contained in the `DBList`
-  object.
+* `filter()` method returns another `DBList` with a subset of all objects
+  contained in the list that satisfy the criteria in arguments. This method must
+  be supported by the specialized class to work properly or no filtering is
+  performed. Please refer to the
+  xref:#specializations[Classes Specializations section] to discover the
+  classes supporting filtering.
+* `itervalues()` method is a generator to iterate over folded values of the
+  `DBList` without triggering automatic expansion.
++
+--
+.Example
+====
+Considering the previous example with the list of
+xref:db:structure.adoc#obj-datacenterroomrack[`DatacenterRoomRack`], iterating
+over the `DBList` with `itervalues()` method generates only one folded object:
+
+[source,python]
+----
+>>> racks = db.datacenters["paris"].rooms["noisy"].rows.first().racks
+>>> for rack in racks.itervalues():
+...   print(rack.name)
+...
+R1-A[01-10]
+----
+====
+--
+
+[#dict]
+=== `DBDict`
+
+The `DBDict` class extends standard Python `dict`. It is generally used to
+represent values of properties with
+xref:db:concepts.adoc#sequence[sequence attribute] whose contained objects have
+xref:db:concepts.adoc#key[key property]. The values of the key properties are
+the keys of the `DBDict`.
+
+.Example
+====
+The list of xref:db:structure.adoc#obj-datacenter[Datacenter] objects holded by
+the `datacenters` property of xref:db:structure.adoc#obj-root[database root]
+object is represented by a `DBDict`:
+
+[source,python]
+----
+>>> type(db.datacenters)
+<class 'racksdb.generic.db.DBDict'>
+----
+====
+
+Compared to standard Python dictionnaries, `DBDict` class notably adds support
+of expandable objects. Typically, it is possible to use the subscript operator
+(ie. `[]`) on any member of a range, even when this member is not a key of the
+dictionnary.
+
+.Example
+====
+The list of xref:db:structure.adoc#obj-node[Node] objects holded by the `nodes`
+property of xref:#spec-racksdb[`RacksDB` class specialization] is a `DBDict`.
+Even if `mecn0002` is not in its keys, `DBDict` is capable to figure out it is
+a member the range `mecn[0001-0040]` and returns an instance of the appropriate
+object:
+
+[source,python]
+----
+>>> type(db.nodes)
+<class 'racksdb.generic.db.DBDict'>
+>>> db.nodes.keys()
+dict_keys([mecn[0001-0040], mecn0200, mecn[0041-0060], mecn[0061-0116], mesrv[0001-0004]])
+>>> db.nodes['mecn0002']
+<racksdb.generic.db.RacksDBNode object at 0x7fd763b40f7>
+>>> db.nodes['mecn0002'].type.id
+'sm220bt'
+----
+====
+
+While standard Python `dict` iterates over the list of keys, `DBDict` class
+iterates over the list of potentially expanded values.
+
+.Example
+====
+Considering the previous example with the `nodes` property of
+xref:#spec-racksdb[`RacksDB` class specialization], iterations over this
+`DBDict` generate the list of all expanded objects:
+
+[source,python]
+----
+>>> db.nodes.keys()
+dict_keys([mecn[0001-0040], mecn0200, mecn[0041-0060], mecn[0061-0116], mesrv[0001-0004]])
+>>> for node in db.nodes:
+...   print(node.name)
+... 
+mecn0001
+mecn0002
+mecn0003
+mecn0004
+mecn0005
+…
+----
+====
+
+Also, the `len()` function on a `DBDict` returns the number of potentially
+expanded objects, not the number of actual members of the dictionnary.
+
+.Example
+====
+Considering the previous example with the `nodes` property of
+xref:#spec-racksdb[`RacksDB` class specialization], the number of `DBDict`
+members as reported by `len()` is different of the number of keys:
+
+[source,python]
+----
+>>> len(db.nodes.keys())
+5
+>>> len(db.nodes)
+121
+----
+====
+
+==== Methods
+
+The `DBDict` objects provide 2 methods:
+
+* `filter()` method returns another `DBDict` with a subset of all objects
+  contained in the dictionnary that satisfy the criteria in arguments. This
+  method must be supported by the specialized class to work properly or no
+  filtering is performed. Please refer to the
+  xref:#specializations[Classes Specializations section] to discover the classes
+  supporting filtering.
+* `first()` method returns the first (potentially expanded) object contained in
+  the `DBDict` object.
 +
 --
 .Example
@@ -298,59 +442,11 @@ Get the first node type:
 ----
 >>> type(db.types.nodes.first())
 <class 'racksdb.generic.db.RacksDBNodeType'>
+>>> db.types.nodes.first().id
+'sm220bt'
 ----
 ====
 --
-* `filter()` method returns a subset of all objects contained in the list
-  matching the criteria in arguments. This method must be supported by the
-  specialized class to work properly or no filtering is performed. Please refer
-  to the xref:#specializations[Classes Specializations section] to discover the
-  classes supporting filtering.
-
-==== Iterations and Loops
-
-The `DBList` objects provide an iterator to loop easily over the objects
-contained in the list, in a memory efficient way.
-
-.Example
-====
-To iterate over the node types objects, run the following loop:
-
-[source,python]
-----
->>> for nodetype in db.types.nodes:
-...   print(nodetype.id)
-... 
-sm220bt
-sm610u
-hpesyn480
-dellr550
-----
-====
-
-[#subscript]
-==== Subscript Operator
-
-Some xref:db:structure.adoc#objects[objects in database] have a key property. In
-this case, it is possible to use the Python subscript operator (ie. `[]`) to
-select one particular object in the list.
-
-For example, the xref:db:structure.adoc#obj-infrastructure[Infrastructure]
-object has a key with the `name` property. Then, the subscript operator can be
-used on the `infrastructures` property of
-xref:db:structure.adoc#obj-root[database root] object to access a particular
-infrastructure by its name.
-
-.Example
-====
-[source,python]
-----
->>> type(db.infrastructures['tiger'])
-<class 'racksdb.generic.db.RacksDBInfrastructure'>
->>> db.infrastructures['tiger'].description
-'Tiger Hadoop cluster'
-----
-====
 
 [#specializations]
 == Classes Specializations
@@ -359,14 +455,15 @@ Some specialized `DBObject` subclasses provide additional methods and
 attributes, either for conveniency or to provide additional features. These
 specializations are documented for each class.
 
+[#spec-racksdb]
 === `RacksDB`
 
 ==== Attributes
 
 The `RacksDB` class provides the following specialized attribute:
 
-* `nodes`: the xref:#list[`DBList` object] containing all nodes of all
-  infrastructure defined in RacksDB database.
+* `nodes`: the xref:#dict[`DBDict` object] containing all nodes of all
+  infrastructures defined in RacksDB database.
 +
 --
 .Example
@@ -375,12 +472,13 @@ Count the total number of nodes in the database:
 
 [source,python]
 ----
->>> len(db.nodes.items)
+>>> len(db.nodes)
 196
 ----
 ====
 --
 
+[#spec-racksdbdatacenter]
 === `RacksDBDatacenter`
 
 ==== Attributes
@@ -413,7 +511,7 @@ the original value of the underlying property can be retrieved through the
 
 [source,python]
 ----
->>> db.datacenters['paris'].__loaded_tags.items
+>>> db.datacenters['paris'].__loaded_tags
 ['freecooling', 'tier2']
 ----
 ====
@@ -422,8 +520,8 @@ the original value of the underlying property can be retrieved through the
 ==== Filtering
 
 The `RacksDBDatacenter` class provides an implementation of the `_filter()`
-method, for easy filtering of xref:#list[`DBList`] containing
-`RacksDBDatacenter` objects. It accepts the following arguments:
+method, for easy filtering of xref:#list[`DBList`] and xref:#dict[`DBDict`]
+containing `RacksDBDatacenter` objects. It accepts the following arguments:
 
 * `name`: the name of an infrastructure
 * `tags`: a list of tags
@@ -449,13 +547,14 @@ Get all datacenters with tag _tier2_:
 ----
 ====
 
+[#spec-racksdbinfrastructure]
 === `RacksDBInfrastructure`
 
 ==== Attributes
 
 The `RacksDBInfrastructure` class provides the following specialized attribute:
 
-* `nodes`: the xref:#list[`DBList` object] containing all nodes of all layout
+* `nodes`: the xref:#dict[`DBDict` object] containing all nodes of all layout
   parts of the infrastructure.
 +
 --
@@ -465,7 +564,7 @@ Count the total number of nodes in the _tiger_ infrastructure:
 
 [source,python]
 ----
->>> len(db.infrastructures['tiger'].nodes.items)
+>>> len(db.infrastructures['tiger'].nodes)
 75
 ----
 ====
@@ -497,7 +596,7 @@ the original value of the underlying property can be retrieved through the
 
 [source,python]
 ----
->>> db.infrastructures['mercury'].__loaded_tags.items
+>>> db.infrastructures['mercury'].__loaded_tags
 ['hpc', 'cluster']
 ----
 ====
@@ -506,8 +605,8 @@ the original value of the underlying property can be retrieved through the
 ==== Filtering
 
 The `RacksDBInfrastructure` class provides an implementation of the `_filter()`
-method, for easy filtering of xref:#list[`DBList`] containing
-`RacksDBInfrastructure` objects. It accepts the following arguments:
+method, for easy filtering of xref:#list[`DBList`] and xref:#dict[`DBDict`]
+containing `RacksDBInfrastructure` objects. It accepts the following arguments:
 
 * `name`: the name of an infrastructure
 * `tags`: a list of tags
@@ -533,6 +632,7 @@ Get all infrastructures with tag _cluster_:
 ----
 ====
 
+[#spec-racksdbnode]
 === `RacksDBNode`
 
 ==== Attributes
@@ -561,7 +661,7 @@ original value of the underlying property can be retrieved through the
 
 [source,python]
 ----
->>> db.infrastructures['tiger'].nodes['srv001'].__loaded_tags.items
+>>> db.infrastructures['tiger'].nodes['srv001'].__loaded_tags
 ['servers']
 ----
 ====
@@ -570,8 +670,8 @@ original value of the underlying property can be retrieved through the
 ==== Filtering
 
 The `RacksDBNode` class provides an implementation of the `_filter()` method,
-for easy filtering of xref:#list[`DBList`] containing `RacksDBNode` objects. It
-accepts the following arguments:
+for easy filtering of xref:#list[`DBList`] and xref:#dict[`DBDict`] containing
+`RacksDBNode` objects. It accepts the following arguments:
 
 * `infrastructure`: the name of an infrastructure
 * `name`: the name of a node
