@@ -9,7 +9,7 @@ from pathlib import Path
 import io
 import logging
 
-from flask import Flask, request, Response, send_file
+from flask import Flask, Blueprint, Response, request, send_file
 
 from .. import RacksDB
 from ..version import get_version
@@ -20,8 +20,7 @@ from ..drawers import InfrastructureDrawer, RoomDrawer
 logger = logging.getLogger(__name__)
 
 
-class RacksDBRESTAPI(Flask):
-
+class RacksDBRESTAPIBlueprint(Blueprint):
     MIMETYPES = {
         "json": "application/json",
         "yaml": "application/x-yaml",
@@ -30,57 +29,14 @@ class RacksDBRESTAPI(Flask):
         "pdf": "application/pdf",
     }
 
-    def __init__(self):
-        super().__init__("RacksDB REST API server")
-        parser = argparse.ArgumentParser(description="Do something with RacksDB.")
-        parser.add_argument(
-            "-v",
-            "--version",
-            dest="version",
-            action="version",
-            version="RacksDB " + get_version(),
-        )
-        parser.add_argument(
-            "--debug",
-            dest="debug",
-            action="store_true",
-            help="Enable debug mode",
-        )
-        parser.add_argument(
-            "-s",
-            "--schema",
-            help="Schema to load (default: %(default)s)",
-            default=RacksDB.DEFAULT_SCHEMA,
-            type=Path,
-        )
-        parser.add_argument(
-            "-e",
-            "--ext",
-            help="Path to extensions of schema (default: %(default)s)",
-            default=RacksDB.DEFAULT_EXT,
-            type=Path,
-        )
-        parser.add_argument(
-            "-b",
-            "--db",
-            help="Database to load (default: %(default)s)",
-            default=RacksDB.DEFAULT_DB,
-            type=Path,
-        )
-        parser.add_argument(
-            "--host",
-            help="Binding interface for listening socket (default: %(default)s)",
-            default="localhost",
-        )
-        parser.add_argument(
-            "-p",
-            "--port",
-            help="TCP port for listening socket (default: %(default)s)",
-            default=5000,
-            type=int,
-        )
-        self.args = parser.parse_args()
-        self.db = RacksDB.load(self.args.schema, self.args.ext, self.args.db)
+    def __init__(
+        self,
+        schema=RacksDB.DEFAULT_SCHEMA,
+        ext=RacksDB.DEFAULT_EXT,
+        db=RacksDB.DEFAULT_DB,
+    ):
+        super().__init__("RacksDB REST API blueprint", __name__)
+        self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
         self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
@@ -89,14 +45,6 @@ class RacksDBRESTAPI(Flask):
             "/draw/<entity>/<name>.<picture_format>",
             view_func=self._draw,
             methods=["GET"],
-        )
-
-    def serve(self):
-        logger.info("Running RacksDB REST API application")
-        super().run(
-            host=self.args.host,
-            port=self.args.port,
-            debug=self.args.debug,
         )
 
     def _schema(self):
@@ -146,6 +94,71 @@ class RacksDBRESTAPI(Flask):
         return send_file(
             file,
             mimetype=self.MIMETYPES[picture_format],
+        )
+
+
+class RacksDBRESTAPIApp(Flask):
+    def __init__(self):
+        super().__init__("RacksDB REST API server")
+        parser = argparse.ArgumentParser(description="Do something with RacksDB.")
+        parser.add_argument(
+            "-v",
+            "--version",
+            dest="version",
+            action="version",
+            version="RacksDB " + get_version(),
+        )
+        parser.add_argument(
+            "--debug",
+            dest="debug",
+            action="store_true",
+            help="Enable debug mode",
+        )
+        parser.add_argument(
+            "-s",
+            "--schema",
+            help="Schema to load (default: %(default)s)",
+            default=RacksDB.DEFAULT_SCHEMA,
+            type=Path,
+        )
+        parser.add_argument(
+            "-e",
+            "--ext",
+            help="Path to extensions of schema (default: %(default)s)",
+            default=RacksDB.DEFAULT_EXT,
+            type=Path,
+        )
+        parser.add_argument(
+            "-b",
+            "--db",
+            help="Database to load (default: %(default)s)",
+            default=RacksDB.DEFAULT_DB,
+            type=Path,
+        )
+        parser.add_argument(
+            "--host",
+            help="Binding interface for listening socket (default: %(default)s)",
+            default="localhost",
+        )
+        parser.add_argument(
+            "-p",
+            "--port",
+            help="TCP port for listening socket (default: %(default)s)",
+            default=5000,
+            type=int,
+        )
+
+        self.args = parser.parse_args()
+        self.register_blueprint(
+            RacksDBRESTAPIBlueprint(self.args.schema, self.args.ext, self.args.db)
+        )
+
+    def serve(self):
+        logger.info("Running RacksDB REST API application")
+        super().run(
+            host=self.args.host,
+            port=self.args.port,
+            debug=self.args.debug,
         )
 
     @classmethod
