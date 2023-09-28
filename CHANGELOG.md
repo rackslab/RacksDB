@@ -33,6 +33,10 @@ and this project adheres to
     sequence of objects with key property as mappings.
   - Mention sequence/mapping equivalence for list of objects with keys in
     concepts page.
+  - Mention new `racks` attribute on `RacksDB` class specialization in library
+    API reference.
+  - Mention filtering capability on `RacksDBDatacenterRoomRack` class
+    specialization in library API reference.
 
 ### Changed
 - core: Introduce DBDict objects that inherit from standard Python dict to

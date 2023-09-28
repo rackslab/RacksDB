@@ -477,6 +477,30 @@ Count the total number of nodes in the database:
 ----
 ====
 --
+* `racks`: the xref:#list[`DBList` object] containing all racks of all
+  datacenter rooms defined in RacksDB database.
++
+--
+.Examples
+====
+Count the total number of racks in the database:
+
+[source,python]
+----
+>>> len(db.racks)
+53
+----
+
+Get the name of the first rack:
+
+[source,python]
+----
+>>> db.racks[0].name
+'R1-A01'
+----
+====
+--
+
 
 [#spec-racksdbdatacenter]
 === `RacksDBDatacenter`
@@ -594,6 +618,30 @@ Get all nodes of infrastructure _tiger_ with tag _compute_:
 [source,python]
 ----
 >>> db.nodes.filter(infrastructure='tiger', tags=['compute'])
+----
+====
+
+[#spec-racksdbdatacenteroomrack]
+=== `RacksDBDatacenterRoomRack`
+
+==== Filtering
+
+The `RacksDBDatacenterRoomRack` class provides an implementation of the
+`_filter()` method, for easy filtering of xref:#list[`DBList`] and
+xref:#dict[`DBDict`] containing `RacksDBDatacenterRoomRack` objects. It accepts
+the following arguments:
+
+* `name`: the name of a rack
+
+A rack is selected only if it matches the name criteria.
+
+.Example
+====
+Get rack named _R1-A02_:
+
+[source,python]
+----
+>>> db.racks.filter(name='R1-A02')
 ----
 ====
 
