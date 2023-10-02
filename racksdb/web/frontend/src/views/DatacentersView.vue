@@ -7,9 +7,10 @@
 
       <ul id="myUL" v-show="showList">
           <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)">
-            <li>{{datacenter.name}}</li></router-link>
+            <li>{{datacenter.name}}, {{ datacenter.zip_code }}</li></router-link>
       </ul> 
     </div>
+
   </div>
 </template>
 

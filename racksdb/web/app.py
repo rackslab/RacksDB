@@ -44,6 +44,7 @@ def get_datacenters():
         for room in datacenter.rooms:
             datacenter_info ={
                 'name': datacenter.name,
+                'zip_code': datacenter.zip_code,
             }
             datacenters.append(datacenter_info)
 
