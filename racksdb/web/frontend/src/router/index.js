@@ -20,17 +20,17 @@ const routes = [
   },
 
   {
-    path: '/datacenters/:datacenterName', // Use dynamic parameter
+    path: '/datacenters/:datacenterName',
     name: 'datacenterdetails', 
-    component: DatacenterDetailsView, // create a new component to display details of the datacenter
-    props: true, // allow you to pass parameters as props to the component
+    component: DatacenterDetailsView,
+    props: true,
   },
 
   {
-    path: '/datacenters/:datacenterName/:datacenterRoom', // Use dynamic parameter
+    path: '/datacenters/:datacenterName/:datacenterRoom',
     name: 'datacenterroom', 
-    component: DatacenterRoomView, // create a new component to display details of the datacenter
-    props: true, // allow you to pass parameters as props to the component
+    component: DatacenterRoomView,
+    props: true,
   },
 
   {
@@ -43,7 +43,7 @@ const routes = [
     path: '/infrastructures/:infrastructureName',
     name: 'infrastructuredetails',
     component: InfrastructureDetailsView,
-    props: true, // allow you to pass parameters as props to the component
+    props: true,
 
   },
 
