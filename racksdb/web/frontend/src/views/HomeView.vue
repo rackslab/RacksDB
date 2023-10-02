@@ -3,9 +3,9 @@
 
       <section class="slider">
         <div class="overlay"></div>
-        <div class="main-title">
-          <h1>Overview of your database</h1>
-        </div>
+          <div class="main-title">
+            <h1>Overview of your database</h1>
+          </div>
       </section>
 
       <div class="cards">

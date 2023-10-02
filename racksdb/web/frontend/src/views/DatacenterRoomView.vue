@@ -74,8 +74,6 @@ import axios from 'axios';
                 this.infrastructures = response.data.infrastructures;
                 this.racks = response.data.racks;
                 this.rackFillRate = response.data.rackFillRate;
-                console.log(this.rackFillRate)
-
 
                 this.show(this.datacenterRoom);
 
