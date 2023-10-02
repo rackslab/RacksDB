@@ -19,7 +19,7 @@
                     <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Depth</th>
-                    <th scope="col">width</th>
+                    <th scope="col">Width</th>
                     <th scope="col">Number of racks</th>
                     <th scope="col">Access to the room</th>
                     </tr>
@@ -39,7 +39,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </template>
   
