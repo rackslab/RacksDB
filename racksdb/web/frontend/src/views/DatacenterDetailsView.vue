@@ -54,6 +54,7 @@ import axios from 'axios';
         return {
             datacenters: [],
             racks: [],
+            fillRate:[],
             showList: false,
             selectedDatacenter: null,
         };
