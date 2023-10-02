@@ -50,6 +50,8 @@ export default {
 
     for (i = 0; i < li.length; i++) {
       txtValue = li[i].textContent || li[i].innerText;
+      console.log(txtValue)
+      console.log('.........')
 
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         li[i].style.display = "";
