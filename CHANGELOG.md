@@ -37,7 +37,7 @@ and this project adheres to
     concepts page.
   - Mention new `racks` attribute on `RacksDB` class specialization in library
     API reference.
-  - Mention `nodes` computed property and filtering capability on
+  - Mention `nodes`, `fillrate` computed property and filtering capability on
     `RacksDBDatacenterRoomRack` class specialization in library API reference.
   - Mention available examples in database files page.
 

@@ -659,6 +659,36 @@ R1-A10: []
 ----
 ====
 --
+* `fillrate`: a float representing the filling rate of the rack between 0
+  (empty) and 1 (full).
++
+--
+NOTE: This attribute is also a _computed property_ which means it is also
+visible in xref:usage:racksdb.adoc#_search_commands[RacksDB search dumps].
+
+.Example
+====
+Print the filling rate of every racks located in row _R1_ of room _noisy_ in
+datacenter _paris_:
+
+[source,python]
+----
+>>> for rack in db.datacenters["paris"].rooms["noisy"].rows["R1"].racks:
+...   print(f"{rack.name}: {rack.fillrate*100:.2f}%")
+...
+R1-A01: 97.62%
+R1-A02: 95.24%
+R1-A03: 0.00%
+R1-A04: 0.00%
+R1-A05: 0.00%
+R1-A06: 0.00%
+R1-A07: 0.00%
+R1-A08: 0.00%
+R1-A09: 0.00%
+R1-A10: 0.00%
+----
+====
+--
 
 ==== Filtering
 
