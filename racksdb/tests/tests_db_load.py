@@ -10,17 +10,41 @@ import unittest
 
 from racksdb import RacksDB
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-schema_path = Path(current_dir).joinpath("../../schema/racksdb.yml")
-db_path = Path(current_dir).joinpath("../../examples/db")
-
 
 class TestDBLoad(unittest.TestCase):
+    def setUp(self):
+        # Try relative path and system paths sequentially for both the schema
+        # and example database. If none of these paths exist, gently skip the
+        # test with meaningful message.
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        schema_paths = [
+            Path(current_dir).joinpath("../../schema/racksdb.yml"),
+            Path("/usr/share/racksdb/schema.yml"),
+        ]
+        self.schema_path = None
+        for schema_path in schema_paths:
+            if schema_path.exists():
+                self.schema_path = schema_path
+                break
+        if self.schema_path is None:
+            self.skipTest("Unable to find schema file to run test")
+        db_paths = [
+            Path(current_dir).joinpath("../../examples/db"),
+            Path("/usr/share/doc/racksdb/examples/db"),
+        ]
+        self.db_path = None
+        for db_path in db_paths:
+            if db_path.exists():
+                self.db_path = db_path
+                break
+        if self.db_path is None:
+            self.skipTest("Unable to find db file to run test")
+
     def test_load(self):
-        db = RacksDB.load(schema=schema_path, db=db_path)
+        db = RacksDB.load(schema=self.schema_path, db=self.db_path)
 
     def test_content(self):
-        db = RacksDB.load(schema=schema_path, db=db_path)
+        db = RacksDB.load(schema=self.schema_path, db=self.db_path)
         self.assertEqual(type(db), RacksDB)
         self.assertEqual(len(db.infrastructures), 1)
         # Thanks to lazy loading, just a few expandable object are loaded, much
