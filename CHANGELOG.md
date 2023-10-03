@@ -25,6 +25,7 @@ and this project adheres to
 - lib:
   - Add RacksDB.racks property to get the full list of racks.
   - Add possibility to filter list DatacenterRoomRack by name.
+  - Add RacksDBDatacenterRoomRack.fillrate computed property.
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.

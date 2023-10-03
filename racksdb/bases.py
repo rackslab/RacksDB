@@ -72,13 +72,28 @@ class RacksDBNodeBase:
 
 class RacksDBDatacenterRoomRackBase:
 
-    COMPUTED_PROPERTIES = ["nodes"]
+    COMPUTED_PROPERTIES = ["nodes", "fillrate"]
 
     def _filter(self, name=None):
         # filter by name
         if name is not None and name != self.name:
             return False
         return True
+
+    @property
+    def fillrate(self):
+        """Return the fill rate of the rack as a float normalized between 0 and 1."""
+        occupied = 0.0
+        for infrastructure in self._db.infrastructures:
+            for part in infrastructure.layout:
+                if self.name == part.rack.name:
+                    for equipment in part.nodes:
+                        occupied += equipment.type.height * equipment.type.width
+                    for equipment in part.storage:
+                        occupied += equipment.type.height * equipment.type.width
+                    for equipment in part.network:
+                        occupied += equipment.type.height * equipment.type.width
+        return occupied / self.type.slots
 
     @property
     def nodes(self):
