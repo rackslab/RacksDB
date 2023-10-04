@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import DatacentersView from '../views/DatacentersView.vue'
+import DatacenterDetailsView from '../views/DatacenterDetailsView.vue'
+import DatacenterRoomView from '../views/DatacenterRoomView.vue'
+import InfrastructuresView from '../views/InfrastructuresView.vue'
+import InfrastructureDetailsView from '../views/InfrastructureDetailsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,14 +14,41 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
+    
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/datacenters',
+      name: 'datacenters',
+      component: DatacentersView
+    },
+    
+    {
+      path: '/datacenters/:datacenterName',
+      name: 'datacenterdetails',
+      component: DatacenterDetailsView,
+      props: true,
+    },
+
+    {
+      path: '/datacenters/:datacenterName/:datacenterRoom',
+      name: 'datacenterroom',
+      component: DatacenterRoomView,
+      props: true,
+    },
+
+    {
+      path: '/infrastructures',
+      name: 'infrastructures',
+      component: InfrastructuresView,
+    },
+
+    {
+      path: '/infrastructures/:infrastructureName',
+      name: 'infrastructuresdetails',
+      component: InfrastructureDetailsView,
+      props: true,
+    },
+
+    
   ]
 })
 
