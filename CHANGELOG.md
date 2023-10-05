@@ -56,6 +56,7 @@ and this project adheres to
   - Move database concepts in a dedicated page.
   - Update library API reference and examples with new `DBDict` class and
     changes on `DBList` class.
+  - Load of extension example due to missing rack type.
 
 ### Fixed
 - core: Rename module that contains defined types definitions dtypes to avoid
