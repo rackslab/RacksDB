@@ -6,3 +6,5 @@
 
 from .room import RoomDrawer
 from .infrastructure import InfrastructureDrawer
+
+__all__ = ["RoomDrawer", "InfrastructureDrawer"]

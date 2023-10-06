@@ -8,7 +8,6 @@ from typing import Any
 
 from ClusterShell.NodeSet import NodeSet
 
-from ...generic.db import DBObject, DBObjectRange, DBObjectRangeId, DBDict, DBList
 from ..errors import DBDumperError
 
 

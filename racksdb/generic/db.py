@@ -4,9 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import re
 import logging
-from typing import List
 
 import yaml
 from ClusterShell.NodeSet import NodeSet
@@ -301,13 +299,13 @@ class GenericDB(DBObject):
         elif isinstance(schema_type, SchemaDefinedType):
             return self.load_defined_type(literal, schema_type)
         elif isinstance(schema_type, SchemaExpandable):
-            if type(literal) != str:
+            if not isinstance(literal, str):
                 DBFormatError(
                     f"token {token} of {schema_type} is not a valid expandable str"
                 )
             return self.load_expandable(literal)
         elif isinstance(schema_type, SchemaRangeId):
-            if type(literal) != int:
+            if not isinstance(literal, int):
                 DBFormatError(
                     f"token {token} of {schema_type} is not a valid rangeid integer"
                 )
@@ -549,13 +547,13 @@ class GenericDB(DBObject):
 
     def load_list(self, token, literal, schema_object: SchemaContainerList, parent):
         # Check the literal is a valid list
-        if type(literal) != list:
+        if not isinstance(literal, list):
             # If it is not a list, it must be a dict and the contained object must have
             # a key property. In this case, the literal is transformed into a list of
             # dictionnaries augmented with object key property. Then it is loaded
             # exactly the same way as if it was declared in database as a list with the
             # key property.
-            if type(literal) == dict and schema_object.content.has_key():
+            if isinstance(literal, dict) and schema_object.content.has_key():
                 logger.debug(
                     "Transforming dictionnary into a list of %s with key property",
                     schema_object.content,

@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from racksdb.generic.definedtype import SchemaDefinedType
+from racksdb.generic.errors import DBFormatError
 
 
 class SchemaDefinedTypeAngle(SchemaDefinedType):

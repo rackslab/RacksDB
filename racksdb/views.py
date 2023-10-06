@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from .generic.views import DBViewSet, DBView, DBViewFilter
-from .errors import RacksDBError
 
 
 class RacksDBViews(DBViewSet):

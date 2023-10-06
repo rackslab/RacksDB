@@ -41,7 +41,7 @@ class TestDBLoad(unittest.TestCase):
             self.skipTest("Unable to find db file to run test")
 
     def test_load(self):
-        db = RacksDB.load(schema=self.schema_path, db=self.db_path)
+        RacksDB.load(schema=self.schema_path, db=self.db_path)
 
     def test_content(self):
         db = RacksDB.load(schema=self.schema_path, db=self.db_path)

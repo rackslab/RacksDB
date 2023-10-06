@@ -150,12 +150,12 @@ class SchemaContainerList(SchemaGenericValueType):
 
 class SchemaExpandable(SchemaGenericValueType):
     def __str__(self):
-        return f"expandable"
+        return "expandable"
 
 
 class SchemaRangeId(SchemaGenericValueType):
     def __str__(self):
-        return f"rangeid"
+        return "rangeid"
 
 
 class SchemaReference(SchemaGenericValueType):

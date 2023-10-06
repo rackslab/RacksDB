@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Union
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
-from .generic.db import GenericDB, DBDict, DBList, DBFileLoader, DBSplittedFilesLoader
+from .generic.db import GenericDB, DBDict, DBList, DBSplittedFilesLoader
 from . import bases
 
 

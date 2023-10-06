@@ -11,7 +11,7 @@ import yaml
 
 from ._common import MapperDumper
 from ..db import DBObject, DBObjectRange, DBObjectRangeId, DBList, DBDict
-from ..schema import Schema, SchemaObject
+from ..schema import SchemaObject
 from ..definedtype import SchemaDefinedType
 
 logger = logging.getLogger(__name__)
