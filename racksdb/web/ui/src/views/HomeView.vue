@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// import {ref, onMounted } from 'vue'
+// import {useConfig } from '../plugins/config-plugin' 
+
+// const {config} = useConfig();
 
 </script>
 

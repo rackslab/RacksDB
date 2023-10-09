@@ -3,5 +3,7 @@
 </script>
 
 <template>
-    <div>DatacenterRoomView</div>
+    <div>
+        <h1 class="text-5xl font-medium flex justify-center py-20">DatacenterRoomView</h1>
+    </div>
 </template>
