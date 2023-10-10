@@ -16,6 +16,7 @@ dependencies = [
     "PyYAML",
     "ClusterShell",
     "Flask",
+    "Flask-Cors",
     "pycairo",
 ]
 readme = "README.md"

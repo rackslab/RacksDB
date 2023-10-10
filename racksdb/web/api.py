@@ -147,6 +147,11 @@ class RacksDBRESTAPIApp(Flask):
             default=5000,
             type=int,
         )
+        parser.add_argument(
+            "--cors",
+            action="store_true",
+            help="Enable CORS headers",
+        )
 
         self.args = parser.parse_args()
         self.register_blueprint(
@@ -155,6 +160,10 @@ class RacksDBRESTAPIApp(Flask):
 
     def serve(self):
         logger.info("Running RacksDB REST API application")
+        if self.args.cors:
+            from flask_cors import CORS
+
+            CORS(self)
         super().run(
             host=self.args.host,
             port=self.args.port,
