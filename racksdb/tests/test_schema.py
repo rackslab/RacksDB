@@ -25,24 +25,62 @@ class FakeTypesLoader:
 VALID_SCHEMA = {
     "_version": "1",
     "_content": {
-        "apples": "list[:Apple]",
-        "pear": ":Pear",
-        "bananas": "optional list[:Banana]",
-        "stock": "list[:AppleCrate]",
+        "properties": {
+            "apples": {"type": "list[:Apple]"},
+            "pear": {"type": ":Pear"},
+            "bananas": {"type": "list[:Banana]", "optional": True},
+            "stock": {
+                "type": "list[:AppleCrate]",
+            },
+        }
     },
     "_objects": {
         "Apple": {
-            "color": "str",
-            "weight": "~weight",
-            "variety": "str",
+            "properties": {
+                "color": {
+                    "type": "str",
+                },
+                "weight": {"type": "~weight"},
+                "variety": {
+                    "type": "str",
+                },
+            }
         },
-        "Pear": {"color": "str", "weight": "~weight", "variety": "str"},
-        "Banana": {"origin": "str"},
+        "Pear": {
+            "properties": {
+                "color": {
+                    "type": "str",
+                },
+                "weight": {
+                    "type": "~weight",
+                },
+                "variety": {
+                    "type": "str",
+                },
+            }
+        },
+        "Banana": {
+            "properties": {
+                "origin": {
+                    "type": "str",
+                }
+            }
+        },
         "AppleCrate": {
-            "name": "expandable",
-            "id": "rangeid",
-            "variety": "$Apple.variety",
-            "quantity": "int",
+            "properties": {
+                "name": {
+                    "type": "expandable",
+                },
+                "id": {
+                    "type": "rangeid",
+                },
+                "variety": {
+                    "type": "$Apple.variety",
+                },
+                "quantity": {
+                    "type": "int",
+                },
+            }
         },
     },
 }
@@ -64,7 +102,9 @@ class TestSchema(unittest.TestCase):
             Schema(schema_loader, types_loader)
 
     def test_minimal_schema(self):
-        schema_loader = FakeSchemaLoader({"_version": "0", "_content": {}})
+        schema_loader = FakeSchemaLoader(
+            {"_version": "0", "_content": {"properties": {}}}
+        )
         types_loader = FakeTypesLoader({})
         schema = Schema(schema_loader, types_loader)
         self.assertEqual(schema.version, "0")
@@ -112,7 +152,7 @@ class TestSchema(unittest.TestCase):
 
     def test_invalid_type(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["Apple"]["color"] = "fail"
+        schema_content["_objects"]["Apple"]["properties"]["color"]["type"] = "fail"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(DBSchemaError, "Unable to parse value type 'fail'"):
@@ -120,7 +160,7 @@ class TestSchema(unittest.TestCase):
 
     def test_expandable_not_in_list(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_content"]["stock"] = ":AppleCrate"
+        schema_content["_content"]["properties"]["stock"]["type"] = ":AppleCrate"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -132,7 +172,9 @@ class TestSchema(unittest.TestCase):
 
     def test_expandable_double(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["quantity"] = "expandable"
+        schema_content["_objects"]["AppleCrate"]["properties"]["quantity"][
+            "type"
+        ] = "expandable"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -144,7 +186,9 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_object(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["variety"] = "$Unknown.object"
+        schema_content["_objects"]["AppleCrate"]["properties"]["variety"][
+            "type"
+        ] = "$Unknown.object"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -155,7 +199,9 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_property(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["variety"] = "$Apple.unknown"
+        schema_content["_objects"]["AppleCrate"]["properties"]["variety"][
+            "type"
+        ] = "$Apple.unknown"
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
