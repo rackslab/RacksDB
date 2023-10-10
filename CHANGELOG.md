@@ -42,8 +42,10 @@ and this project adheres to
   - Mention available examples in database files page.
 
 ### Changed
-- core: Introduce DBDict objects that inherit from standard Python dict to
-  handle list of objects with keys (#15).
+- core:
+  - Introduce DBDict objects that inherit from standard Python dict to handle
+    list of objects with keys (#15).
+  - New schema format with properties specifications as mapping/hash
 - lib:
   - RacksDB.nodes and RacksDBInfrastructure.nodes attributes are now DBDict
     of unexpanded nodes.

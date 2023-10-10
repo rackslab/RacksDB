@@ -103,8 +103,9 @@ class SchemaNativeType(SchemaGenericValueType):
 
 
 class SchemaObject(SchemaGenericValueType):
-    def __init__(self, name):
+    def __init__(self, name, description):
         self.name = name
+        self.description = description
         self.properties = []  # list of SchemaProperty
         self.expandable = False
         # Set of SchemaObject attached to this object properties, recursively.
@@ -180,12 +181,13 @@ class SchemaBackReference(SchemaGenericValueType):
 
 
 class SchemaProperty:
-    def __init__(self, name, required, key, default, value_type):
+    def __init__(self, name, required, key, default, value_type, description):
         self.name = name
         self.required = required
         self.key = key
         self.default = default
         self.type = value_type
+        self.description = description
 
     def __str__(self):
         if self.required:
@@ -227,26 +229,27 @@ class Schema:
     def prop_spec(self, name, spec):
         # check optional
         required = True
-        if spec.startswith("optional "):
+        if "optional" in spec and spec["optional"] is True:
             required = False
-            spec = spec[9:]  # remove optional key
 
         # check key
         key = False
-        if spec.startswith("key "):
+        if "key" in spec and spec["key"] is True:
             key = True
-            spec = spec[4:]  # remove keyword
 
         # check default
         default = None
-        if spec.startswith("default "):
+        if "default" in spec:
             required = False
-            items = spec.split(" ")
-            # The default value is loaded using the yaml library to convert the
-            # value to the appropriate Python type.
-            default = yaml.safe_load(items[1])
-            spec = items[2]
-        return SchemaProperty(name, required, key, default, self.value_type(spec))
+            default = spec["default"]
+        return SchemaProperty(
+            name,
+            required,
+            key,
+            default,
+            self.value_type(spec["type"]),
+            spec.get("description"),
+        )
 
     def value_type(self, spec):
         # parse native types
@@ -291,7 +294,7 @@ class Schema:
     def parse_obj(self, object_id, objdef):
         logger.debug("Loading class of %s", object_id)
 
-        obj = SchemaObject(object_id)
+        obj = SchemaObject(object_id, objdef.get("description"))
         # The new SchemaObject must be added soon in objects hash to avoid
         # recursion loop in the following calls to prop_keys(), calling
         # value_type() → find_obj() → parse_obj() with back references.
@@ -302,7 +305,7 @@ class Schema:
 
         has_key = False  # flag to check key property uniquess
 
-        for key, spec in objdef.items():
+        for key, spec in objdef["properties"].items():
             prop = self.prop_spec(key, spec)
             if isinstance(prop.type, SchemaObject) and prop.type.expandable:
                 raise DBSchemaError(

@@ -1,138 +1,436 @@
 # RacksDB database schema
-#
-# CAUTION: The in-line comments after objects and attributes declarations are
-# extracted by tools to generate the reference documentation of database
-# structure. These comments MUST NOT be wrapped over multiple lines or tools are
-# unable to extract these comments properly.
 
-_version: 0.1.0
+_version: 0.2.0
 
 _content:
-  types: :Types # Datacenter equipments types definitions.
-  datacenters: list[:Datacenter] # List of datacenters definitions.
-  infrastructures: list[:Infrastructure] # List of infrastructures definitions.
+  properties:
+    types:
+      type: :Types
+      description: Datacenter equipments types definitions.
+    datacenters:
+      type: list[:Datacenter]
+      description: List of datacenters definitions.
+    infrastructures:
+      type: list[:Infrastructure]
+      description: List of infrastructures definitions.
 
 _objects:
   Types:
-    nodes: default [] list[:NodeType] # List of nodes types definitions.
-    storage: default [] list[:StorageEquipmentType] # List of storage equipments types definitions.
-    network: default [] list[:NetworkEquipmentType] # List of network equipments types definitions.
-    racks: list[:RackType] # List of (empty) racks types definitions.
+    properties:
+      nodes:
+        type: list[:NodeType]
+        description: List of nodes types definitions.
+        default: []
+      storage:
+        type: list[:StorageEquipmentType]
+        description: List of storage equipments types definitions.
+        default: []
+      network:
+        type: list[:NetworkEquipmentType]
+        description: List of network equipments types definitions.
+        default: []
+      racks:
+        type: list[:RackType]
+        description: List of (empty) racks types definitions.
   NodeType:
-    id: key str # Unique identifier of node type.
-    model: str # Node type model name.
-    height: ~rack_height # Height of the node.
-    width: ~rack_width # Width of the node.
-    specs: optional str # URL to node specsheet.
-    cpu: :NodeTypeCpu # CPU configuration of the node.
-    ram: :NodeTypeRam # RAM configuration of the node.
-    storage: optional list[:NodeTypeStorage] # List of storage devices of the node.
-    netifs: optional list[:NodeTypeNetif] # List of network interfaces of the node.
+    properties:
+      id:
+        type: str
+        description: Unique identifier of node type.
+        key: true
+      model:
+        type: str
+        description: Node type model name.
+      height:
+        type: ~rack_height
+        description: Height of the node.
+      width:
+        type: ~rack_width
+        description: Width of the node.
+      specs:
+        type: str
+        description: URL to node specsheet.
+        optional: true
+      cpu:
+        type: :NodeTypeCpu
+        description: CPU configuration of the node.
+      ram:
+        type: :NodeTypeRam
+        description: RAM configuration of the node.
+      storage:
+        type: list[:NodeTypeStorage]
+        description: List of storage devices of the node.
+        optional: true
+      netifs:
+        type: list[:NodeTypeNetif]
+        description: List of network interfaces of the node.
+        optional: true
   NodeTypeCpu:
-    model: str # The CPU model name.
-    specs: optional str # URL to CPU specsheet.
-    sockets: int # The number of sockets.
-    cores: int # The number of cores per socket.
+    properties:
+      model:
+        type: str
+        description: The CPU model name.
+      specs:
+        type: str
+        description: URL to CPU specsheet.
+        optional: true
+      sockets:
+        type: int
+        description: The number of sockets.
+      cores:
+        type: int
+        description: The number of cores per socket.
   NodeTypeRam:
-    dimm: int # The number of DIMMs.
-    size: ~bytes # The storage capacity of each DIMM.
+    properties:
+      dimm:
+        type: int
+        description: The number of DIMMs.
+      size:
+        type: ~bytes
+        description: The storage capacity of each DIMM.
   NodeTypeStorage:
-    type: ~storage_type # The type of storage device.
-    size: ~bytes # The storage capacity of the storage device.
-    model: optional str # The model name of the storage device.
+    properties:
+      type:
+        type: ~storage_type
+        description: The type of storage device.
+      size:
+        type: ~bytes
+        description: The storage capacity of the storage device.
+      model:
+        type: str
+        description: The model name of the storage device.
+        optional: true
   NodeTypeNetif:
-    type: ~netif_type # The type of network interface.
-    bandwidth: ~bytes # The bandwidth (per second) of the network interface.
+    properties:
+      type:
+        type: ~netif_type
+        description: The type of network interface.
+      bandwidth:
+        type: ~bytes
+        description: The bandwidth (per second) of the network interface.
   StorageEquipmentType:
-    id: key str # Unique identifier of storage equipment type.
-    model: str # Storage equipment model name.
-    height: ~rack_height # Height of storage equipment.
-    width: default full ~rack_width # Width of storage equipment.
-    specs: optional str # URL to storage equipment specsheet.
-    disks: optional list[:StorageEquipmentTypeDisk] # List of storage devices in the storage equipment.
-    netifs: optional list[:StorageEquipmentTypeNetif] # List of network devices in the storage equipment.
+    properties:
+      id:
+        type: str
+        description: Unique identifier of storage equipment type.
+        key: true
+      model:
+        type: str
+        description: Storage equipment model name.
+      height:
+        type: ~rack_height
+        description: Height of storage equipment.
+      width:
+        type: ~rack_width
+        description: Width of storage equipment.
+        default: full
+      specs:
+        type: str
+        description: URL to storage equipment specsheet.
+        optional: true
+      disks:
+        type: list[:StorageEquipmentTypeDisk]
+        description: List of storage devices in the storage equipment.
+        optional: true
+      netifs:
+        type: list[:StorageEquipmentTypeNetif]
+        description: List of network devices in the storage equipment.
+        optional: true
   StorageEquipmentTypeDisk:
-    type: ~storage_type # The type of storage device.
-    size: ~bytes # The storage capacity of the storage device.
-    model: optional str # The model name of the storage device.
-    number: int # The number of this storage device available in the storage equipment.
+    properties:
+      type:
+        type: ~storage_type
+        description: The type of storage device.
+      size:
+        type: ~bytes
+        description: The storage capacity of the storage device.
+      model:
+        type: str
+        description: The model name of the storage device.
+        optional: true
+      number:
+        type: int
+        description: >-
+          The number of this storage device available in the storage equipment.
   StorageEquipmentTypeNetif:
-    type: ~netif_type # The type of network interface.
-    bandwidth: ~bytes # The bandwidth (per second) of the network interface.
+    properties:
+      type:
+        type: ~netif_type
+        description: The type of network interface.
+      bandwidth:
+        type: ~bytes
+        description: The bandwidth (per second) of the network interface.
   NetworkEquipmentType:
-    id: key str # Unique identifier of the network equipment type.
-    model: str # Network equipment model name.
-    height: ~rack_height # Height of network equipment.
-    width: default full ~rack_width # Width of network equipment.
-    specs: optional str # URL to network equipment specsheet.
-    netifs: optional list[:NetworkEquipmentTypeNetif] # List of network interfaces on this network equipment.
+    properties:
+      id:
+        type: str
+        description: Unique identifier of the network equipment type.
+        key: true
+      model:
+        type: str
+        description: Network equipment model name.
+      height:
+        type: ~rack_height
+        description: Height of network equipment.
+      width:
+        type: ~rack_width
+        description: Width of network equipment.
+        default: full
+      specs:
+        type: str
+        description: URL to network equipment specsheet.
+        optional: true
+      netifs:
+        type: list[:NetworkEquipmentTypeNetif]
+        description: List of network interfaces on this network equipment.
+        optional: true
   NetworkEquipmentTypeNetif:
-    type: ~netif_type # The type of network interface.
-    bandwidth: ~bytes # The bandwidth (per second) of the network interface.
-    number: int # The number of this network interface available in the network equipment.
+    properties:
+      type:
+        type: ~netif_type
+        description: The type of network interface.
+      bandwidth:
+        type: ~bytes
+        description: The bandwidth (per second) of the network interface.
+      number:
+        type: int
+        description: >-
+          The number of this network interface available in the network
+          equipment.
   RackType:
-    id: key str # Unique identifier of the rack type.
-    height: ~dimension # Height of the rack.
-    width: ~dimension # Width of the rack.
-    depth: ~dimension # Depth of the rack.
-    slots: ~rack_height # Number of U slots available in the rack.
+    properties:
+      id:
+        type: str
+        description: Unique identifier of the rack type.
+        key: true
+      height:
+        type: ~dimension
+        description: Height of the rack.
+      width:
+        type: ~dimension
+        description: Width of the rack.
+      depth:
+        type: ~dimension
+        description: Depth of the rack.
+      slots:
+        type: ~rack_height
+        description: Number of U slots available in the rack.
   Datacenter:
-    name: key str # Unique name of the datacenter.
-    rooms: list[:DatacenterRoom] # List of rooms in this datacenter.
-    tags: optional list[str] # The list of tags associated to this datacenter.
+    properties:
+      name:
+        type: str
+        description: Unique name of the datacenter.
+        key: true
+      rooms:
+        type: list[:DatacenterRoom]
+        description: List of rooms in this datacenter.
+      tags:
+        type: list[str]
+        description: The list of tags associated to this datacenter.
+        optional: true
   DatacenterRoom:
-    name: key str # Unique name of the room in this datacenter.
-    dimensions: :DatacenterRoomDimensions # Dimensions of this room.
-    rows: optional list[:DatacenterRoomRow] # List of racks rows on this room.
-    datacenter: ^Datacenter # Back reference to the datacenter where this room is located.
+    properties:
+      name:
+        type: str
+        description: Unique name of the room in this datacenter.
+        key: true
+      dimensions:
+        type: :DatacenterRoomDimensions
+        description: Dimensions of this room.
+      rows:
+        type: list[:DatacenterRoomRow]
+        description: List of racks rows on this room.
+        optional: true
+      datacenter:
+        type: ^Datacenter
+        description: >-
+          Back reference to the datacenter where this room is located.
   DatacenterRoomDimensions:
-    width: ~dimension # Width of datacenter room.
-    depth: ~dimension # Depth of datacenter room.
+    properties:
+      width:
+        type: ~dimension
+        description: Width of datacenter room.
+      depth:
+        type: ~dimension
+        description: Depth of datacenter room.
   DatacenterRoomRow:
-    name: key str # Unique name of the racks row.
-    position: :DatacenterRoomPosition # The position of the racks row in the room.
-    racks: list[:DatacenterRoomRack] # The list of (empty) racks in the room.
-    reversed: default false bool # Boolean to control the side of the racks doors in the racks row. When reversed is true, the doors are on the top.
-  DatacenterRoomPosition: # NOTE: Please refer to xref:positioning-racks.adoc[racks positioning how-to] for more details.
-    width: ~dimension # The position of the top-left corner of the racks row in the width axis of the room.
-    depth: ~dimension # The position of the top-left corner of the racks row in the depth axis of the room.
-    rotation: default 0 ~angle # The rotation angle of the racks row clockwise compared to the width axis of the room (ie. an horizontal line).
+    properties:
+      name:
+        type: str
+        description: Unique name of the racks row.
+        key: true
+      position:
+        type: :DatacenterRoomPosition
+        description: The position of the racks row in the room.
+      racks:
+        type: list[:DatacenterRoomRack]
+        description: The list of (empty) racks in the room.
+      reversed:
+        type: bool
+        description: >-
+          Boolean to control the side of the racks doors in the racks row. When
+          reversed is true, the doors are on the top.
+        default: false
+  DatacenterRoomPosition:
+    description: >-
+      NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
+      how-to] for more details.
+    properties:
+      width:
+        type: ~dimension
+        description: >-
+          The position of the top-left corner of the racks row in the width axis
+          of the room.
+      depth:
+        type: ~dimension
+        description: >-
+          The position of the top-left corner of the racks row in the depth axis
+          of the room.
+      rotation:
+        type: ~angle
+        description: >-
+          The rotation angle of the racks row clockwise compared to the width
+          axis of the room (ie. an horizontal line).
+        default: 0
   DatacenterRoomRack:
-    name: expandable # The names of the racks in this set.
-    slot: default 0 rangeid # The first slot used by this set of racks.
-    type: $RackType.id # The unique ID of rack type of this racks set.
-    datacenter: ^Datacenter # The datacenter where this rack is located.
-    room: ^DatacenterRoom # The datacenter room where this rack is located.
-    row: ^DatacenterRoomRow # The racks row of this rack.
+    properties:
+      name:
+        type: expandable
+        description: The names of the racks in this set.
+      slot:
+        type: rangeid
+        description: The first slot used by this set of racks.
+        default: 0
+      type:
+        type: $RackType.id
+        description: The unique ID of rack type of this racks set.
+      datacenter:
+        type: ^Datacenter
+        description: The datacenter where this rack is located.
+      room:
+        type: ^DatacenterRoom
+        description: The datacenter room where this rack is located.
+      row:
+        type: ^DatacenterRoomRow
+        description: The racks row of this rack.
   Infrastructure:
-    name: key str # The name of the infrastructure.
-    description: str # Text description of the infrastructure.
-    layout: list[:InfrastructurePart] # The list of parts composing the infrastructure.
-    tags: optional list[str] # List of tags associated to the infrastructure.
-  InfrastructurePart: # This represents all the equipments of an infrastructure in one particular datacenter rack.
-    rack: $DatacenterRoomRack.name # The name of the rack.
-    nodes: default [] list[:Node] # The list of nodes of the infrastructure in this rack.
-    storage: default [] list[:StorageEquipment] # The list of storage equipments of the infrastructure in this rack.
-    network: default [] list[:NetworkEquipment] # The list of network equipments of the infrastructure in this rack.
-    tags: optional list[str] # The list of tags associated to the equipments of the infrastructure in this rack.
-  Node: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
-    name: key expandable # The names of the nodes in this set.
-    infrastructure: ^Infrastructure # The infrastructure of these nodes.
-    rack: ^InfrastructurePart.rack # The rack of these nodes.
-    type: $NodeType.id # The type of nodes unique identifier.
-    slot: rangeid # The slot in the rack used by the first node in this set.
-    tags: optional list[str] # The list of tags associated to these nodes.
-  StorageEquipment: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
-    name: key expandable # The names of the storage equipments in this set.
-    infrastructure: ^Infrastructure # The infrastructure of these storage equipments.
-    rack: ^InfrastructurePart.rack # The rack of these storage equipments.
-    type: $StorageEquipmentType.id {} # The type of storage equipment unique identifier.
-    slot: rangeid # The slot in the rack used by the first storage equipment in this set.
-    tags: optional list[str] # The list of tags associated to these storage equipments.
-  NetworkEquipment: # NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
-    name: key expandable # The names of the network equipments in this set.
-    infrastructure: ^Infrastructure # The infrastructure of these network equipments.
-    rack: ^InfrastructurePart.rack # The rack of these network equipments.
-    type: $NetworkEquipmentType.id # The type of network equipment unique identifier.
-    slot: rangeid # The slot in the rack used by the first network equipment in this set.
-    tags: optional list[str] # The list of tags associated to these network equipments.
+    properties:
+      name:
+        type: str
+        description: The name of the infrastructure.
+        key: true
+      description:
+        type: str
+        description: Text description of the infrastructure.
+      layout:
+        type: list[:InfrastructurePart]
+        description: The list of parts composing the infrastructure.
+      tags:
+        type: list[str]
+        description: List of tags associated to the infrastructure.
+        optional: true
+  InfrastructurePart:
+    description: >-
+      This represents all the equipments of an infrastructure in one particular
+      datacenter rack.
+    properties:
+      rack:
+        type: $DatacenterRoomRack.name
+        description: The name of the rack.
+      nodes:
+        type: list[:Node]
+        description: The list of nodes of the infrastructure in this rack.
+        default: []
+      storage:
+        type: list[:StorageEquipment]
+        description: >-
+          The list of storage equipments of the infrastructure in this rack.
+        default: []
+      network:
+        type: list[:NetworkEquipment]
+        description: >-
+          The list of network equipments of the infrastructure in this rack.
+        default: []
+      tags:
+        type: list[str]
+        description: >-
+          The list of tags associated to the equipments of the infrastructure in
+          this rack.
+        optional: true
+  Node:
+    description: >-
+      NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+      positioning how-to] for more details.
+    properties:
+      name:
+        type: expandable
+        description: The names of the nodes in this set.
+        key: true
+      infrastructure:
+        type: ^Infrastructure
+        description: The infrastructure of these nodes.
+      rack:
+        type: ^InfrastructurePart.rack
+        description: The rack of these nodes.
+      type:
+        type: $NodeType.id
+        description: The type of nodes unique identifier.
+      slot:
+        type: rangeid
+        description: The slot in the rack used by the first node in this set.
+      tags:
+        type: list[str]
+        description: The list of tags associated to these nodes.
+        optional: true
+  StorageEquipment:
+    description: >-
+      NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+      positioning how-to] for more details.
+    properties:
+      name:
+        type: expandable
+        description: The names of the storage equipments in this set.
+        key: true
+      infrastructure:
+        type: ^Infrastructure
+        description: The infrastructure of these storage equipments.
+      rack:
+        type: ^InfrastructurePart.rack
+        description: The rack of these storage equipments.
+      type:
+        type: $StorageEquipmentType.id
+        description: The type of storage equipment unique identifier.
+      slot:
+        type: rangeid
+        description: >-
+          The slot in the rack used by the first storage equipment in this set.
+      tags:
+        type: list[str]
+        description: The list of tags associated to these storage equipments.
+        optional: true
+  NetworkEquipment:
+    description: >-
+      NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+      positioning how-to] for more details.
+    properties:
+      name:
+        type: expandable
+        description: The names of the network equipments in this set.
+        key: true
+      infrastructure:
+        type: ^Infrastructure
+        description: The infrastructure of these network equipments.
+      rack:
+        type: ^InfrastructurePart.rack
+        description: The rack of these network equipments.
+      type:
+        type: $NetworkEquipmentType.id
+        description: The type of network equipment unique identifier.
+      slot:
+        type: rangeid
+        description: >-
+          The slot in the rack used by the first network equipment in this set.
+      tags:
+        type: list[str]
+        description: The list of tags associated to these network equipments.
+        optional: true
