@@ -1,44 +1,106 @@
 <script setup lang="ts">
-// import {ref, onMounted } from 'vue'
-// import {useConfig } from '../plugins/config-plugin' 
+import { useHttp } from '@/plugins/http';
+import { ref, onMounted} from 'vue'
+import type { Ref } from 'vue'
 
-// const {config} = useConfig();
+
+const http = useHttp()
+const datacenters: Ref<Array<Datacenter>> = ref([])
+const infrastructures: Ref<Array<Infrastructure>> = ref([])
+
+async function getDatacenters(){
+    try {
+        const resp = await http.get('datacenters')
+        datacenters.value = resp.data as Datacenter[]
+    } catch (error) {
+        console.error('Erreur lors de la récupératuon des données des datacenters', error)
+    }
+}
+
+async function getInfrastructures(){
+    try {
+        const resp = await http.get('infrastructures')
+        infrastructures.value = resp.data as Infrastructure[]
+    } catch (error) {
+        console.error('Erreur lors de la récupératuon des données des datacenters', error)
+    }
+}
+
+function getDatacenterDetailsRoute(datacenterName: string){
+    return `/datacenters/${encodeURIComponent(datacenterName)}`
+}
+
+function getInfrastructureDetailsRoute(infrastructureName: string){
+    return `/infrastructures/${encodeURIComponent(infrastructureName)}`
+}
+
+onMounted(() => {
+    getDatacenters()
+    getInfrastructures()
+})
+
+
+
+export interface Datacenter {
+  name: string
+  tags: any
+}
+
+export interface Infrastructure {
+  name: string
+  description: string
+}
 
 </script>
 
 <template>
 
     <section>
-        <h1 class="text-5xl font-medium flex justify-center py-20">Overview of your database</h1>
+        <!--
+        <div class="bg-racks_black"></div>
+        <div class="relative bg-[url('/assets/racks_black.jpg')]"></div>
+        -->
+        <div>
+            <h1 class="text-5xl font-medium flex justify-center py-20">Overview of your database</h1>
+
+        </div>
     </section>
 
     <div class="cards flex justify-around">
-        <div class="datacener_card w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-            <h2 class="text-2xl font-semibold flex justify-center">??? Datacenters</h2>
+        <div v-for="datacenter in datacenters" :key="datacenter.name" class="datacenter_card w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <router-link to="/datacenters">
+                <h2 class="text-2xl font-semibold flex justify-center text-purple-700">{{ datacenters.length }} Datacenter
+                    <span v-if="datacenters.length > 1">s</span>
+                </h2>
+            </router-link>
+
             <ul role="list" class="space-y-5 my-7">
                 <li class="flex space-x-3 items-center">
-                    <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">Paris, freecooling tier2</span>
+                    <router-link :to="getDatacenterDetailsRoute(datacenter.name)">
+                        <span class="text-base font-normal leading-tight  dark:text-gray-400 capitalize text-purple-700">{{ datacenter.name }},</span>
+                    </router-link>
+                    <span class="lowercase italic text-gray-500">{{ datacenter.tags.join(' ') }}</span>
                 </li>
             </ul>
-            <button type="button" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
-                Choose plan</button>
+        </div>
+
+        <div v-for="infrastructure in infrastructures" :key="infrastructure.name" class="datacener_card w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <router-link to="/infrastructures">
+                <h2 class="text-2xl font-semibold flex justify-center text-purple-700">{{ infrastructures.length }} Infrastructure
+                    <span v-if="datacenters.length > 1">s</span>
+                </h2>
+            </router-link>
+
+            <ul role="list" class="space-y-5 my-7">
+                <li class="flex space-x-3 items-center">
+                    <router-link :to="getInfrastructureDetailsRoute(infrastructure.name)">
+                        <span class="text-base font-normal leading-tight  dark:text-gray-400 capitalize text-purple-700">{{ infrastructure.name }},</span>
+                    </router-link>
+                    <span class="lowercase italic text-gray-500">{{ infrastructure.description }}</span>
+                </li>
+            </ul>
         </div>
     
-        <div class="infrastructure_card">
-            <div class="datacener_card w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h2 class="text-2xl font-semibold flex justify-center">??? Infrastructures</h2>
-                <ul role="list" class="space-y-5 my-7">
-                    <li class="flex space-x-3 items-center">
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">Mercury, Mercury HPC cluster</span>
-                    </li>
-                </ul>
-                <button type="button" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
-                    Choose plan</button>
-            </div>
-        </div>
     </div>
-
-
-
 
 </template>
