@@ -1,7 +1,7 @@
 import type { App, Plugin } from 'vue'
-import type { AxiosInstance } from 'axios'
 import { inject } from 'vue'
 import axios from 'axios'
+import type { AxiosInstance } from 'axios'
 
 const injectionKey = Symbol('http')
 
