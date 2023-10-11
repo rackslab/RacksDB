@@ -14,6 +14,7 @@ and this project adheres to
   - Add possibility to keep expandable objects folded in dumpers.
   - Support loading sequence of objects with key property as a mapping whose
     keys are the key property of the contained objects.
+  - Add examples for some properties in schema.
 - cli:
   - Add format option for datacenters, nodes, racks and infrastructures
     subcommands to control output format.

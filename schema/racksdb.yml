@@ -38,19 +38,24 @@ _objects:
         type: str
         description: Unique identifier of node type.
         key: true
+        example: server
       model:
         type: str
         description: Node type model name.
+        example: 2U edge server
       height:
         type: ~rack_height
         description: Height of the node.
+        example: 2u
       width:
         type: ~rack_width
         description: Width of the node.
+        example: 0.5
       specs:
         type: str
         description: URL to node specsheet.
         optional: true
+        example: https://github.com/opencomputeproject/
       cpu:
         type: :NodeTypeCpu
         description: CPU configuration of the node.
@@ -70,64 +75,80 @@ _objects:
       model:
         type: str
         description: The CPU model name.
+        example: SiPearl Rhea1
       specs:
         type: str
         description: URL to CPU specsheet.
         optional: true
+        example: https://sipearl.com/en
       sockets:
         type: int
         description: The number of sockets.
+        example: 2
       cores:
         type: int
         description: The number of cores per socket.
+        examples: 96
   NodeTypeRam:
     properties:
       dimm:
         type: int
         description: The number of DIMMs.
+        example: 8
       size:
         type: ~bytes
         description: The storage capacity of each DIMM.
+        examples: 32GB
   NodeTypeStorage:
     properties:
       type:
         type: ~storage_type
         description: The type of storage device.
+        example: nvme
       size:
         type: ~bytes
         description: The storage capacity of the storage device.
+        example: 2TB
       model:
         type: str
         description: The model name of the storage device.
         optional: true
+        example: NVMe M.2 PCIe 5.0
   NodeTypeNetif:
     properties:
       type:
         type: ~netif_type
         description: The type of network interface.
+        example: infiniband
       bandwidth:
         type: ~bytes
         description: The bandwidth (per second) of the network interface.
+        example: 100Gb
   StorageEquipmentType:
     properties:
       id:
         type: str
         description: Unique identifier of storage equipment type.
         key: true
+        example: nas
       model:
         type: str
         description: Storage equipment model name.
+        example: 24x2.5 disks
       height:
         type: ~rack_height
         description: Height of storage equipment.
+        example: 3u
       width:
         type: ~rack_width
         description: Width of storage equipment.
         default: full
+        example: full
       specs:
         type: str
         description: URL to storage equipment specsheet.
         optional: true
+        example: https://github.com/opencomputeproject/
       disks:
         type: list[:StorageEquipmentTypeDisk]
         description: List of storage devices in the storage equipment.
@@ -141,45 +162,56 @@ _objects:
       type:
         type: ~storage_type
         description: The type of storage device.
+        example: disk
       size:
         type: ~bytes
         description: The storage capacity of the storage device.
+        example: 4TB
       model:
         type: str
         description: The model name of the storage device.
         optional: true
+        example: 4TB SATA 7200RPM
       number:
         type: int
         description: >-
           The number of this storage device available in the storage equipment.
+        example: 24
   StorageEquipmentTypeNetif:
     properties:
       type:
         type: ~netif_type
         description: The type of network interface.
+        example: ethernet
       bandwidth:
         type: ~bytes
         description: The bandwidth (per second) of the network interface.
+        example: 2.5Gb
   NetworkEquipmentType:
     properties:
       id:
         type: str
         description: Unique identifier of the network equipment type.
         key: true
+        example: switch48
       model:
         type: str
         description: Network equipment model name.
+        example: Manageable Ethernet switch 48x1Gbe 4xSFP
       height:
         type: ~rack_height
         description: Height of network equipment.
+        example: 1u
       width:
         type: ~rack_width
         description: Width of network equipment.
         default: full
+        example: full
       specs:
         type: str
         description: URL to network equipment specsheet.
         optional: true
+        example: https://github.com/opencomputeproject/
       netifs:
         type: list[:NetworkEquipmentTypeNetif]
         description: List of network interfaces on this network equipment.
@@ -189,38 +221,47 @@ _objects:
       type:
         type: ~netif_type
         description: The type of network interface.
+        example: ethernet
       bandwidth:
         type: ~bytes
         description: The bandwidth (per second) of the network interface.
+        example: 1Gb
       number:
         type: int
         description: >-
           The number of this network interface available in the network
           equipment.
+        example: 48
   RackType:
     properties:
       id:
         type: str
         description: Unique identifier of the rack type.
         key: true
+        example: standard
       height:
         type: ~dimension
         description: Height of the rack.
+        example:  1867mm
       width:
         type: ~dimension
         description: Width of the rack.
+        example: 600mm
       depth:
         type: ~dimension
         description: Depth of the rack.
+        example: 914mm
       slots:
         type: ~rack_height
         description: Number of U slots available in the rack.
+        example: 42u
   Datacenter:
     properties:
       name:
         type: str
         description: Unique name of the datacenter.
         key: true
+        example: north
       rooms:
         type: list[:DatacenterRoom]
         description: List of rooms in this datacenter.
@@ -234,6 +275,7 @@ _objects:
         type: str
         description: Unique name of the room in this datacenter.
         key: true
+        example: noisy
       dimensions:
         type: :DatacenterRoomDimensions
         description: Dimensions of this room.
@@ -250,15 +292,18 @@ _objects:
       width:
         type: ~dimension
         description: Width of datacenter room.
+        example: 10m
       depth:
         type: ~dimension
         description: Depth of datacenter room.
+        example: 15m
   DatacenterRoomRow:
     properties:
       name:
         type: str
         description: Unique name of the racks row.
         key: true
+        example: computeA
       position:
         type: :DatacenterRoomPosition
         description: The position of the racks row in the room.
@@ -271,6 +316,7 @@ _objects:
           Boolean to control the side of the racks doors in the racks row. When
           reversed is true, the doors are on the top.
         default: false
+        example: true
   DatacenterRoomPosition:
     description: >-
       NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
@@ -281,26 +327,31 @@ _objects:
         description: >-
           The position of the top-left corner of the racks row in the width axis
           of the room.
+        example: 2m
       depth:
         type: ~dimension
         description: >-
           The position of the top-left corner of the racks row in the depth axis
           of the room.
+        example: 3m
       rotation:
         type: ~angle
         description: >-
           The rotation angle of the racks row clockwise compared to the width
           axis of the room (ie. an horizontal line).
         default: 0
+        example: 90
   DatacenterRoomRack:
     properties:
       name:
         type: expandable
         description: The names of the racks in this set.
+        example: A[01-10]
       slot:
         type: rangeid
         description: The first slot used by this set of racks.
         default: 0
+        example: 2
       type:
         type: $RackType.id
         description: The unique ID of rack type of this racks set.
@@ -319,9 +370,11 @@ _objects:
         type: str
         description: The name of the infrastructure.
         key: true
+        example: mercury
       description:
         type: str
         description: Text description of the infrastructure.
+        example: HPC cluster
       layout:
         type: list[:InfrastructurePart]
         description: The list of parts composing the infrastructure.
@@ -329,6 +382,7 @@ _objects:
         type: list[str]
         description: List of tags associated to the infrastructure.
         optional: true
+        example: ["hpc"]
   InfrastructurePart:
     description: >-
       This represents all the equipments of an infrastructure in one particular
@@ -357,6 +411,7 @@ _objects:
           The list of tags associated to the equipments of the infrastructure in
           this rack.
         optional: true
+        example: ["compute"]
   Node:
     description: >-
       NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -366,6 +421,7 @@ _objects:
         type: expandable
         description: The names of the nodes in this set.
         key: true
+        example: cn[001-0040]
       infrastructure:
         type: ^Infrastructure
         description: The infrastructure of these nodes.
@@ -378,10 +434,12 @@ _objects:
       slot:
         type: rangeid
         description: The slot in the rack used by the first node in this set.
+        example: 10
       tags:
         type: list[str]
         description: The list of tags associated to these nodes.
         optional: true
+        example: ["compute", "standard"]
   StorageEquipment:
     description: >-
       NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -391,6 +449,7 @@ _objects:
         type: expandable
         description: The names of the storage equipments in this set.
         key: true
+        example: nas[01-04]
       infrastructure:
         type: ^Infrastructure
         description: The infrastructure of these storage equipments.
@@ -404,10 +463,12 @@ _objects:
         type: rangeid
         description: >-
           The slot in the rack used by the first storage equipment in this set.
+        example: 20
       tags:
         type: list[str]
         description: The list of tags associated to these storage equipments.
         optional: true
+        example: ["storage", "nas"]
   NetworkEquipment:
     description: >-
       NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -417,6 +478,7 @@ _objects:
         type: expandable
         description: The names of the network equipments in this set.
         key: true
+        example: ethsw[01-10]
       infrastructure:
         type: ^Infrastructure
         description: The infrastructure of these network equipments.
@@ -430,7 +492,9 @@ _objects:
         type: rangeid
         description: >-
           The slot in the rack used by the first network equipment in this set.
+        example: 30
       tags:
         type: list[str]
         description: The list of tags associated to these network equipments.
         optional: true
+        example: ["ethernet", "switch"]

@@ -181,13 +181,14 @@ class SchemaBackReference(SchemaGenericValueType):
 
 
 class SchemaProperty:
-    def __init__(self, name, required, key, default, value_type, description):
+    def __init__(self, name, required, key, default, value_type, description, example):
         self.name = name
         self.required = required
         self.key = key
         self.default = default
         self.type = value_type
         self.description = description
+        self.example = example
 
     def __str__(self):
         if self.required:
@@ -249,6 +250,7 @@ class Schema:
             default,
             self.value_type(spec["type"]),
             spec.get("description"),
+            spec.get("example"),
         )
 
     def value_type(self, spec):
