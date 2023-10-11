@@ -55,18 +55,14 @@ export interface Infrastructure {
 
 <template>
 
-    <section>
-        <!--
-        <div class="bg-racks_black"></div>
-        <div class="relative bg-[url('/assets/racks_black.jpg')]"></div>
-        -->
-        <div>
-            <h1 class="text-5xl font-medium flex justify-center py-20">Overview of your database</h1>
-
+    <section class="relative w-screen bg-cover bg-center h-72 mt-6" style="background-image: url('/assets/racks_black.jpg');">
+        <div class="absolute top-0 left-0 w-full h-72 bg-purple-700 bg-opacity-20"></div>
+        <div class="flex justify-center items-center w-full h-full text-white">
+            <h1 class="text-5xl font-medium flex justify-center py-20 z-10">Overview of your database</h1>
         </div>
     </section>
 
-    <div class="cards flex justify-around">
+    <div class="cards flex justify-around pt-32 px-32 ">
         <div v-for="datacenter in datacenters" :key="datacenter.name" class="datacenter_card w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
             <router-link to="/datacenters">
                 <h2 class="text-2xl font-semibold flex justify-center text-purple-700">{{ datacenters.length }} Datacenter
