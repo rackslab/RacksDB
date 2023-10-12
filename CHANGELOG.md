@@ -15,6 +15,8 @@ and this project adheres to
   - Support loading sequence of objects with key property as a mapping whose
     keys are the key property of the contained objects.
   - Add examples for some properties in schema.
+  - Add native class property on all SchemaDefinedTypes to declare the native
+    type returned by the defined type after parsing.
 - cli:
   - Add format option for datacenters, nodes, racks and infrastructures
     subcommands to control output format.

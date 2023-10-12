@@ -10,6 +10,7 @@ from racksdb.generic.definedtype import SchemaDefinedType
 class SchemaDefinedTypeBytes(SchemaDefinedType):
 
     pattern = r"(\d+(.\d+)?)(TB|Tb|GB|Gb|MB|Mb)"
+    native = int
 
     def parse(self, value):
         match = self._match(value)

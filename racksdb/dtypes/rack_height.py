@@ -10,6 +10,7 @@ from racksdb.generic.definedtype import SchemaDefinedType
 class SchemaDefinedTypeRackHeight(SchemaDefinedType):
 
     pattern = r"(\d+)u"
+    native = int
 
     def parse(self, value):
         match = self._match(value)

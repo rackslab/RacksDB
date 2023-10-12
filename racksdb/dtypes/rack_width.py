@@ -10,6 +10,7 @@ from racksdb.generic.definedtype import SchemaDefinedType
 class SchemaDefinedTypeRackWidth(SchemaDefinedType):
 
     pattern = r"full|(\d+)(/\d+)?"
+    native = float
 
     def parse(self, value):
         match = self._match(value)

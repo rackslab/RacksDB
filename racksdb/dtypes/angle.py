@@ -11,6 +11,7 @@ from racksdb.generic.errors import DBFormatError
 class SchemaDefinedTypeAngle(SchemaDefinedType):
 
     pattern = r"\d+"
+    native = int
 
     def parse(self, value):
         match = self._match(value)

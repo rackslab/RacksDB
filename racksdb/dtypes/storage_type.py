@@ -10,6 +10,7 @@ from racksdb.generic.definedtype import SchemaDefinedType
 class SchemaDefinedTypeStorageType(SchemaDefinedType):
 
     pattern = r"(ssd|disk|nvme)"
+    native = str
 
     def parse(self, value):
         self._match(value)  # just check it matches
