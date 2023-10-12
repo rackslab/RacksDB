@@ -47,6 +47,8 @@ and this project adheres to
   - Introduce DBDict objects that inherit from standard Python dict to handle
     list of objects with keys (#15).
   - New schema format with properties specifications as mapping/hash
+  - Schema dumps are now the raw data loaded in schema YAML files and defined
+    types instead of an interpreted output.
 - lib:
   - RacksDB.nodes and RacksDBInfrastructure.nodes attributes are now DBDict
     of unexpanded nodes.

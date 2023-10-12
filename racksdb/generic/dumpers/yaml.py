@@ -120,26 +120,12 @@ class SchemaDumperYAML:
     def __init__(self):
         self._setup()
 
-    def _represent_schemaobject(self, dumper, data):
-        value = []
-        tag = "tag:yaml.org,2002:map"  # YAML generic mapping type
-        node = yaml.MappingNode(tag, value)
-        for prop in data.properties:
-            value.append(
-                (
-                    dumper.represent_str(prop.name),
-                    dumper.represent_str(str(prop)),
-                )
-            )
-        return node
-
     def _represent_schemadefinedtype(self, dumper, data):
         tag = "tag:yaml.org,2002:str"  # YAML generic string type
         node = yaml.ScalarNode(tag, data.pattern)
         return node
 
     def _setup(self):
-        yaml.add_representer(SchemaObject, self._represent_schemaobject)
         yaml.add_multi_representer(SchemaDefinedType, self._represent_schemadefinedtype)
 
     def dump(self, schema):
@@ -148,6 +134,6 @@ class SchemaDumperYAML:
         # Dump all Schema object content except _schema attribute. Remove last newline
         # to avoid double newline when printed by CLI.
         return yaml.dump(
-            {key: value for key, value in vars(schema).items() if key != "_schema"},
+            {**schema._schema, **{"_types": schema.types}},
             Dumper=noalias_dumper,
         ).rstrip()
