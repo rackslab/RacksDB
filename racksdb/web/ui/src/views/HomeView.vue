@@ -2,6 +2,7 @@
 import { useHttp } from '@/plugins/http';
 import { ref, onMounted} from 'vue'
 import type { Ref } from 'vue'
+import BannerHomeView from '../components/BannerHomeView.vue';
 
 
 const http = useHttp()
@@ -39,8 +40,6 @@ onMounted(() => {
     getInfrastructures()
 })
 
-
-
 export interface Datacenter {
   name: string
   tags: any
@@ -55,12 +54,7 @@ export interface Infrastructure {
 
 <template>
 
-    <section class="relative w-screen bg-cover bg-center h-72 mt-6" style="background-image: url('/assets/racks_black.jpg');">
-        <div class="absolute top-0 left-0 w-full h-72 bg-purple-700 bg-opacity-20"></div>
-        <div class="flex justify-center items-center w-full h-full text-white">
-            <h1 class="text-5xl font-medium flex justify-center py-20 z-10">Overview of your database</h1>
-        </div>
-    </section>
+    <BannerHomeView />
 
     <div class="cards flex justify-around pt-32 px-32 ">
         <div v-for="datacenter in datacenters" :key="datacenter.name" class="datacenter_card w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
