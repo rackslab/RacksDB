@@ -17,6 +17,7 @@ and this project adheres to
   - Add examples for some properties in schema.
   - Add native class property on all SchemaDefinedTypes to declare the native
     type returned by the defined type after parsing.
+  - Report defined type native type in schema dumps.
 - cli:
   - Add format option for datacenters, nodes, racks and infrastructures
     subcommands to control output format.

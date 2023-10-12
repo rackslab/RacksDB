@@ -122,7 +122,7 @@ class SchemaDumperYAML:
 
     def _represent_schemadefinedtype(self, dumper, data):
         tag = "tag:yaml.org,2002:str"  # YAML generic string type
-        node = yaml.ScalarNode(tag, data.pattern)
+        node = yaml.ScalarNode(tag, f"{data.pattern} [{data.native.__name__}]")
         return node
 
     def _setup(self):
