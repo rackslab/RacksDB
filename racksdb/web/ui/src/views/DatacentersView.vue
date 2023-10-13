@@ -17,13 +17,8 @@ async function getDatacenters(){
     }
 }
 
-function getDatacenterDetailsRoute(datacenterName: string) {
-    return `/datacenters/${encodeURIComponent(datacenterName)}`
-}
-
 function searchDatacenter() {
   const filter = input.value.toUpperCase();
-  const ul = document.getElementById('myUL')
   const li = document.getElementsByTagName('li')
 
   for (var i = 0; i < li.length; i++) {
@@ -71,7 +66,7 @@ export interface Datacenter {
         </div>
 
         <ul id="myUL" v-show="showList" class="flex justify-center">
-            <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="getDatacenterDetailsRoute(datacenter.name)">
+            <router-link v-for="datacenter in datacenters" :key="datacenter.name" :to="{name: 'datacenterdetails', params: { datacenterName: datacenter.name}}">
               <li class="capitalize">{{datacenter.name}}</li></router-link>
         </ul> 
 
