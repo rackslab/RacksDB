@@ -31,6 +31,7 @@ and this project adheres to
   - Add possibility to filter list DatacenterRoomRack by name.
   - Add RacksDBDatacenterRoomRack.fillrate computed property.
   - Add support for len(DBList).
+  - Add RacksDBDatacenterRoomRow.nbracks computed property.
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.

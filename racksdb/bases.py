@@ -105,3 +105,13 @@ class RacksDBDatacenterRoomRackBase:
                     for nodes in part.nodes.values():
                         result.append(nodes)
         return result
+
+
+class RacksDBDatacenterRoomRowBase:
+
+    COMPUTED_PROPERTIES = ["nbracks"]
+
+    @property
+    def nbracks(self):
+        """Return the number of racks in the row."""
+        return len(self.racks)
