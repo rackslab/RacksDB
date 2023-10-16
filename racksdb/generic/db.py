@@ -165,6 +165,10 @@ class DBList(list):
             else:
                 yield item
 
+    def __len__(self):
+        """Return the number of values in the list."""
+        return len([value for value in self])
+
     def itervalues(self):
         """Additional iterators over the list values that does not trigger expansion of
         DBExpandableObjects."""
