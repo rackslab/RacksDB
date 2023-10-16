@@ -30,6 +30,39 @@ class DBViewFilter:
         self.nargs = nargs
 
 
+class DBAction:
+    def __init__(self, name, path, description, args=[], responses=[]):
+        self.name = name
+        self.path = path
+        self.description = description
+        self.args = args
+        self.responses = responses
+
+
+class DBActionArgument:
+    def __init__(
+        self,
+        name,
+        description,
+        positional=False,
+        required=False,
+        choices=None,
+        default=None,
+    ):
+        self.name = name
+        self.description = description
+        self.positional = positional
+        self.required = required
+        self.choices = choices
+        self.default = default
+
+
+class DBActionResponse:
+    def __init__(self, mimetype, binary=False):
+        self.mimetype = mimetype
+        self.binary = binary
+
+
 class DBView:
     def __init__(
         self,
@@ -52,6 +85,10 @@ class DBViewSet:
     def parameters(self):
         for parameter in self.PARAMETERS:
             yield parameter
+
+    def actions(self):
+        for action in self.ACTIONS:
+            yield action
 
     def __getitem__(self, key):
         for view in self.VIEWS:

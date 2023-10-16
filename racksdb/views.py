@@ -4,7 +4,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from .generic.views import DBViewSet, DBView, DBViewFilter, DBViewParameter
+from .generic.views import (
+    DBViewSet,
+    DBView,
+    DBViewFilter,
+    DBViewParameter,
+    DBAction,
+    DBActionArgument,
+    DBActionResponse,
+)
 
 
 class RacksDBViews(DBViewSet):
@@ -90,4 +98,31 @@ class RacksDBViews(DBViewSet):
             _type="string",
             choices=["yaml", "json"],
         ),
+    ]
+    ACTIONS = [
+        DBAction(
+            name="draw",
+            path="/draw/<entity>/<name>.<format>",
+            description="Draw an entity",
+            args=[
+                DBActionArgument(
+                    "entity",
+                    description="Type of entity to draw",
+                    choices=["infrastructure", "room"],
+                    positional=True,
+                ),
+                DBActionArgument("name", description="Name of entity", required=True),
+                DBActionArgument(
+                    "format",
+                    description="Format of the generated image",
+                    choices=["png", "svg", "pdf"],
+                    default="png",
+                ),
+            ],
+            responses=[
+                DBActionResponse("image/png", binary=True),
+                DBActionResponse("image/svg+xml"),
+                DBActionResponse("application/pdf", binary=True),
+            ],
+        )
     ]

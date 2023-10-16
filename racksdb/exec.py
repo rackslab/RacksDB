@@ -117,24 +117,23 @@ class RacksDBExec:
             subparser.set_defaults(func=self._dump_view)
 
         # Parser for the draw command
-        parser_draw = subparsers.add_parser("draw", help="Draw DB components")
-        parser_draw.add_argument(
-            "entity",
-            choices=["room", "infrastructure"],
-            help="Entity to draw",
-        )
-        parser_draw.add_argument(
-            "--name",
-            help="Name of entity to draw",
-            required=True,
-        )
-        parser_draw.add_argument(
-            "--format",
-            help="Format of output image (default: %(default)s)",
-            choices=["png", "svg", "pdf"],
-            default="png",
-        )
-        parser_draw.set_defaults(func=self._run_draw)
+        for action in self.views.actions():
+            subparser = subparsers.add_parser(action.name, help=action.description)
+            for arg in action.args:
+                if arg.positional:
+                    args = (arg.name,)
+                else:
+                    args = (f"--{arg.name}",)
+                kwargs = {"help": arg.description}
+                if arg.choices is not None:
+                    kwargs["choices"] = arg.choices
+                if arg.default is not None:
+                    kwargs["default"] = arg.default
+                    kwargs["help"] += " (default: %(default)s)"
+                if arg.required:
+                    kwargs["required"] = True
+                subparser.add_argument(*args, **kwargs)
+                subparser.set_defaults(func=self._run_action)
 
         self.args = parser.parse_args()
 
@@ -209,6 +208,12 @@ class RacksDBExec:
                 fold=self.args.fold,
             ).dump(data)
         )
+
+    def _run_action(self):
+        if self.args.action == "draw":
+            self._run_draw()
+        else:
+            raise RacksDBError(f"Unsupported action {self.args.action}")
 
     def _run_draw(self):
         file = f"{self.args.name}.{self.args.format}"
