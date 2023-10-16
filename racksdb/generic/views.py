@@ -9,6 +9,18 @@ from typing import List, Dict, Union
 from .errors import DBViewError
 
 
+class DBViewParameter:
+    def __init__(
+        self, name, description, short=None, _type=None, default=None, choices=None
+    ):
+        self.name = name
+        self.description = description
+        self.short = short
+        self.type = _type
+        self.default = default
+        self.choices = choices
+
+
 class DBViewFilter:
     def __init__(
         self, name: str, description: str, nargs: Union[str, int, None] = None
@@ -36,6 +48,10 @@ class DBViewSet:
     def __iter__(self):
         for view in self.VIEWS:
             yield view
+
+    def parameters(self):
+        for parameter in self.PARAMETERS:
+            yield parameter
 
     def __getitem__(self, key):
         for view in self.VIEWS:

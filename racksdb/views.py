@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from .generic.views import DBViewSet, DBView, DBViewFilter
+from .generic.views import DBViewSet, DBView, DBViewFilter, DBViewParameter
 
 
 class RacksDBViews(DBViewSet):
@@ -76,5 +76,18 @@ class RacksDBViews(DBViewSet):
                 "RacksDBNodeType": "id",
                 "RacksDBInfrastructure": "name",
             },
+        ),
+    ]
+    PARAMETERS = [
+        DBViewParameter(
+            "list", "Get list of object names instead of full objects", short="l"
+        ),
+        DBViewParameter("fold", "Fold expandable objects", short="f"),
+        DBViewParameter("with_objects_types", "Report object types in YAML dumps"),
+        DBViewParameter(
+            "format",
+            "Select response format",
+            _type="string",
+            choices=["yaml", "json"],
         ),
     ]

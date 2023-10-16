@@ -90,30 +90,24 @@ class RacksDBExec:
         parser_dump.set_defaults(func=self._run_dump)
 
         self.views = RacksDBViews()
+
         for view in self.views:
             subparser = subparsers.add_parser(view.content, help=view.description)
-            subparser.add_argument(
-                "-l",
-                "--list",
-                help="List datacenters",
-                action="store_true",
-            )
-            subparser.add_argument(
-                "--fold",
-                help="Fold expandable objects",
-                action="store_true",
-            )
-            subparser.add_argument(
-                "--with-objects-types",
-                help="Show object types in YAML dumps",
-                action="store_true",
-            )
-            subparser.add_argument(
-                "-f",
-                "--format",
-                help=f"Format of output (default: {self.DEFAULT_FORMAT})",
-                choices=["yaml", "json"],
-            )
+            for parameter in self.views.parameters():
+                args = [f"--{parameter.name.replace('_','-')}"]
+                if parameter.short is not None:
+                    args.insert(0, f"-{parameter.short}")
+                kwargs = {
+                    "help": parameter.description,
+                }
+                if parameter.type is None:
+                    kwargs["action"] = "store_true"
+                if parameter.default is not None:
+                    kwargs["default"] = parameter.default
+                    kwargs["help"] += " (default: %(default)s)"
+                if parameter.choices is not None:
+                    kwargs["choices"] = parameter.choices
+                subparser.add_argument(*args, **kwargs)
             for _filter in view.filters:
                 subparser.add_argument(
                     f"--{_filter.name}",
