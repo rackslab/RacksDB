@@ -31,6 +31,7 @@ class OpenAPIGenerator:
             "paths": {},
         }
 
+        # views
         for view in self.views:
             result["paths"][f"/{view.content}"] = {
                 "get": {"description": view.description}
@@ -55,6 +56,24 @@ class OpenAPIGenerator:
         result["components"] = {"schemas": {}}
         for _type in self.db._schema.objects.values():
             result["components"]["schemas"][_type.name] = self._object_schema(_type)
+
+        # actions
+        for action in self.views.actions():
+            result["paths"][action.path] = {"get": {"description": action.description}}
+            action_schema = result["paths"][action.path]["get"]
+            if len(action.args):
+                action_schema["parameters"] = []
+            for arg in action.args:
+                action_schema["parameters"].append(
+                    self._action_argument_description(arg)
+                )
+            action_schema["responses"] = {
+                "200": {"description": "successful operation", "content": {}}
+            }
+            for response in action.responses:
+                action_schema["responses"]["200"]["content"].update(
+                    self._action_reponse_description(response)
+                )
 
         return result
 
@@ -109,6 +128,28 @@ class OpenAPIGenerator:
             result["schema"].update({"default": parameter.default})
         if parameter.choices is not None:
             result["schema"].update({"enum": parameter.choices})
+        return result
+
+    def _action_argument_description(self, arg):
+        """Return the OpenAPI description of a DBActionArgument."""
+        result = {
+            "name": arg.name,
+            "in": "path",
+            "description": arg.description,
+            "required": True,
+            "schema": {
+                "type": "string",
+            },
+        }
+        if arg.choices is not None:
+            result["schema"].update({"enum": arg.choices})
+        return result
+
+    def _action_reponse_description(self, response):
+        """Return the OpenAPI description of a DBActionResponse."""
+        result = {response.mimetype: {"schema": {"type": "string"}}}
+        if response.binary:
+            result[response.mimetype]["schema"]["format"] = "binary"
         return result
 
     def _view_response(self, content):
