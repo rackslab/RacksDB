@@ -41,11 +41,14 @@ class RacksDBRESTAPIBlueprint(Blueprint):
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
         self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
         self.add_url_rule("/<content>", view_func=self._dump_view, methods=["GET"])
-        self.add_url_rule(
-            "/draw/<entity>/<name>.<picture_format>",
-            view_func=self._draw,
-            methods=["GET"],
-        )
+
+        for action in self.views.actions():
+            # add path with generic action
+            self.add_url_rule(
+                action.path,
+                view_func=getattr(self, f"_{action.name}"),
+                methods=["GET"],
+            )
 
     def _schema(self):
         return Response(
@@ -83,17 +86,17 @@ class RacksDBRESTAPIBlueprint(Blueprint):
             response=dumper.dump(data), mimetype=self.MIMETYPES[dump_format]
         )
 
-    def _draw(self, entity, name, picture_format):
+    def _draw(self, entity, name, format):
         file = io.BytesIO()
         if entity == "infrastructure":
-            drawer = InfrastructureDrawer(self.db, name, file, picture_format)
+            drawer = InfrastructureDrawer(self.db, name, file, format)
         elif entity == "room":
-            drawer = RoomDrawer(self.db, name, file, picture_format)
+            drawer = RoomDrawer(self.db, name, file, format)
         drawer.draw()
         file.seek(0)
         return send_file(
             file,
-            mimetype=self.MIMETYPES[picture_format],
+            mimetype=self.MIMETYPES[format],
         )
 
 
