@@ -46,6 +46,7 @@ and this project adheres to
   - Mention `nodes`, `fillrate` computed property and filtering capability on
     `RacksDBDatacenterRoomRack` class specialization in library API reference.
   - Mention available examples in database files page.
+  - Add REST API reference documentation based on OpenAPI specification.
 
 ### Changed
 - core:

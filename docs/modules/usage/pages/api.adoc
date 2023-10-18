@@ -1,4 +1,4 @@
-= Library API
+= Python Library API
 
 :!example-caption:
 

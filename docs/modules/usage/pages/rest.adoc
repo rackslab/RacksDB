@@ -1,0 +1,22 @@
+= REST API
+
+++++
+<style>
+/*
+ * Overwrite parent antora article section max-width to force full width and
+ * maximize readability since there is no section and left menu in this page.
+ */
+article.doc { max-width: 100% !important;}
+</style>
+<rapi-doc
+  spec-url = "/racksdb/beta/usage/_attachments/openapi.yml"
+  show-header = "false"
+  show-info = "false"
+  allow-try = "false"
+  allow-authentication = 'false'
+  allow-server-selection = 'false'
+  allow-api-list-style-selection = "false"
+  render-style = "view"
+  layout = "column"
+  bg-color = "#fff" style="height: unset;"> </rapi-doc>
+++++

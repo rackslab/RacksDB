@@ -14,6 +14,11 @@ ref: modules/db/partials/objects.adoc
 modules/db/partials/objects.adoc: ../schema/racksdb.yml
 	python3 utils/schema-objs.py > $@
 
+openapi: modules/usage/attachments/openapi.yml
+
+modules/usage/attachments/openapi.yml: ../schema/racksdb.yml
+	python3 utils/gen-openapi.py > $@
+
 SVGS := $(shell find . -name '*.svg')
 
 .PHONY: optim

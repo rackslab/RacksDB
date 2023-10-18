@@ -17,6 +17,14 @@ documentation, run this command:
 make gen
 ```
 
+## Update OpenAPI description
+
+To update reference OpenAPI description of RacksDB REST API, run this command:
+
+```sh
+make openapi
+```
+
 ## Optimize SVG images
 
 To optimize the SVG images in documentation, run this command:

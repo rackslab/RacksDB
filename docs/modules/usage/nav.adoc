@@ -1,2 +1,3 @@
 * xref:racksdb.adoc[]
 * xref:api.adoc[]
+* xref:rest.adoc[]

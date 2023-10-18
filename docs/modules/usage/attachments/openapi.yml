@@ -1,0 +1,799 @@
+components:
+  schemas:
+    Datacenter:
+      properties:
+        name:
+          description: Unique name of the datacenter.
+          example: north
+          type: string
+        rooms:
+          description: List of rooms in this datacenter.
+          items:
+            $ref: '#/components/schemas/DatacenterRoom'
+          type: array
+        tags:
+          description: The list of tags associated to this datacenter.
+          items:
+            type: string
+          type: array
+      type: object
+    DatacenterRoom:
+      properties:
+        datacenter:
+          $ref: '#/components/schemas/Datacenter'
+          description: Back reference to the datacenter where this room is located.
+        dimensions:
+          $ref: '#/components/schemas/DatacenterRoomDimensions'
+          description: Dimensions of this room.
+        name:
+          description: Unique name of the room in this datacenter.
+          example: noisy
+          type: string
+        rows:
+          description: List of racks rows on this room.
+          items:
+            $ref: '#/components/schemas/DatacenterRoomRow'
+          type: array
+      type: object
+    DatacenterRoomDimensions:
+      properties:
+        depth:
+          description: Depth of datacenter room.
+          example: 15000
+          type: integer
+        width:
+          description: Width of datacenter room.
+          example: 10000
+          type: integer
+      type: object
+    DatacenterRoomPosition:
+      description: 'NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
+        how-to] for more details.'
+      properties:
+        depth:
+          description: The position of the top-left corner of the racks row in the
+            depth axis of the room.
+          example: 3000
+          type: integer
+        rotation:
+          description: The rotation angle of the racks row clockwise compared to the
+            width axis of the room (ie. an horizontal line).
+          example: 90
+          type: integer
+        width:
+          description: The position of the top-left corner of the racks row in the
+            width axis of the room.
+          example: 2000
+          type: integer
+      type: object
+    DatacenterRoomRack:
+      properties:
+        datacenter:
+          $ref: '#/components/schemas/Datacenter'
+          description: The datacenter where this rack is located.
+        name:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        room:
+          $ref: '#/components/schemas/DatacenterRoom'
+          description: The datacenter room where this rack is located.
+        row:
+          $ref: '#/components/schemas/DatacenterRoomRow'
+          description: The racks row of this rack.
+        slot:
+          description: The first slot used by this set of racks.
+          example: 2
+          type: integer
+        type:
+          description: Unique identifier of the rack type.
+          example: standard
+          type: string
+      type: object
+    DatacenterRoomRow:
+      properties:
+        name:
+          description: Unique name of the racks row.
+          example: computeA
+          type: string
+        position:
+          $ref: '#/components/schemas/DatacenterRoomPosition'
+          description: The position of the racks row in the room.
+        racks:
+          description: The list of (empty) racks in the room.
+          items:
+            $ref: '#/components/schemas/DatacenterRoomRack'
+          type: array
+        reversed:
+          description: Boolean to control the side of the racks doors in the racks
+            row. When reversed is true, the doors are on the top.
+          example: true
+          type: boolean
+      type: object
+    Infrastructure:
+      properties:
+        description:
+          description: Text description of the infrastructure.
+          example: HPC cluster
+          type: string
+        layout:
+          description: The list of parts composing the infrastructure.
+          items:
+            $ref: '#/components/schemas/InfrastructurePart'
+          type: array
+        name:
+          description: The name of the infrastructure.
+          example: mercury
+          type: string
+        tags:
+          description: List of tags associated to the infrastructure.
+          example:
+          - hpc
+          items:
+            type: string
+          type: array
+      type: object
+    InfrastructurePart:
+      description: This represents all the equipments of an infrastructure in one
+        particular datacenter rack.
+      properties:
+        network:
+          description: The list of network equipments of the infrastructure in this
+            rack.
+          items:
+            $ref: '#/components/schemas/NetworkEquipment'
+          type: array
+        nodes:
+          description: The list of nodes of the infrastructure in this rack.
+          items:
+            $ref: '#/components/schemas/Node'
+          type: array
+        rack:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        storage:
+          description: The list of storage equipments of the infrastructure in this
+            rack.
+          items:
+            $ref: '#/components/schemas/StorageEquipment'
+          type: array
+        tags:
+          description: The list of tags associated to the equipments of the infrastructure
+            in this rack.
+          example:
+          - compute
+          items:
+            type: string
+          type: array
+      type: object
+    NetworkEquipment:
+      description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+        positioning how-to] for more details.'
+      properties:
+        infrastructure:
+          $ref: '#/components/schemas/Infrastructure'
+          description: The infrastructure of these network equipments.
+        name:
+          description: The names of the network equipments in this set.
+          example: ethsw[01-10]
+          type: string
+        rack:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        slot:
+          description: The slot in the rack used by the first network equipment in
+            this set.
+          example: 30
+          type: integer
+        tags:
+          description: The list of tags associated to these network equipments.
+          example:
+          - ethernet
+          - switch
+          items:
+            type: string
+          type: array
+        type:
+          description: Unique identifier of the network equipment type.
+          example: switch48
+          type: string
+      type: object
+    NetworkEquipmentType:
+      properties:
+        height:
+          description: Height of network equipment.
+          example: 1
+          type: integer
+        id:
+          description: Unique identifier of the network equipment type.
+          example: switch48
+          type: string
+        model:
+          description: Network equipment model name.
+          example: Manageable Ethernet switch 48x1Gbe 4xSFP
+          type: string
+        netifs:
+          description: List of network interfaces on this network equipment.
+          items:
+            $ref: '#/components/schemas/NetworkEquipmentTypeNetif'
+          type: array
+        specs:
+          description: URL to network equipment specsheet.
+          example: https://github.com/opencomputeproject/
+          type: string
+        width:
+          description: Width of network equipment.
+          example: 1.0
+          type: number
+      type: object
+    NetworkEquipmentTypeNetif:
+      properties:
+        bandwidth:
+          description: The bandwidth (per second) of the network interface.
+          example: 125000000
+          type: integer
+        number:
+          description: The number of this network interface available in the network
+            equipment.
+          example: 48
+          type: integer
+        type:
+          description: The type of network interface.
+          example: ethernet
+          type: string
+      type: object
+    Node:
+      description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+        positioning how-to] for more details.'
+      properties:
+        infrastructure:
+          $ref: '#/components/schemas/Infrastructure'
+          description: The infrastructure of these nodes.
+        name:
+          description: The names of the nodes in this set.
+          example: cn[001-0040]
+          type: string
+        rack:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        slot:
+          description: The slot in the rack used by the first node in this set.
+          example: 10
+          type: integer
+        tags:
+          description: The list of tags associated to these nodes.
+          example:
+          - compute
+          - standard
+          items:
+            type: string
+          type: array
+        type:
+          description: Unique identifier of node type.
+          example: server
+          type: string
+      type: object
+    NodeType:
+      properties:
+        cpu:
+          $ref: '#/components/schemas/NodeTypeCpu'
+          description: CPU configuration of the node.
+        height:
+          description: Height of the node.
+          example: 2
+          type: integer
+        id:
+          description: Unique identifier of node type.
+          example: server
+          type: string
+        model:
+          description: Node type model name.
+          example: 2U edge server
+          type: string
+        netifs:
+          description: List of network interfaces of the node.
+          items:
+            $ref: '#/components/schemas/NodeTypeNetif'
+          type: array
+        ram:
+          $ref: '#/components/schemas/NodeTypeRam'
+          description: RAM configuration of the node.
+        specs:
+          description: URL to node specsheet.
+          example: https://github.com/opencomputeproject/
+          type: string
+        storage:
+          description: List of storage devices of the node.
+          items:
+            $ref: '#/components/schemas/NodeTypeStorage'
+          type: array
+        width:
+          description: Width of the node.
+          example: 0.0
+          type: number
+      type: object
+    NodeTypeCpu:
+      properties:
+        cores:
+          description: The number of cores per socket.
+          type: integer
+        model:
+          description: The CPU model name.
+          example: SiPearl Rhea1
+          type: string
+        sockets:
+          description: The number of sockets.
+          example: 2
+          type: integer
+        specs:
+          description: URL to CPU specsheet.
+          example: https://sipearl.com/en
+          type: string
+      type: object
+    NodeTypeNetif:
+      properties:
+        bandwidth:
+          description: The bandwidth (per second) of the network interface.
+          example: 12500000000
+          type: integer
+        type:
+          description: The type of network interface.
+          example: infiniband
+          type: string
+      type: object
+    NodeTypeRam:
+      properties:
+        dimm:
+          description: The number of DIMMs.
+          example: 8
+          type: integer
+        size:
+          description: The storage capacity of each DIMM.
+          type: integer
+      type: object
+    NodeTypeStorage:
+      properties:
+        model:
+          description: The model name of the storage device.
+          example: NVMe M.2 PCIe 5.0
+          type: string
+        size:
+          description: The storage capacity of the storage device.
+          example: 2199023255552
+          type: integer
+        type:
+          description: The type of storage device.
+          example: nvme
+          type: string
+      type: object
+    RackType:
+      properties:
+        depth:
+          description: Depth of the rack.
+          example: 914
+          type: integer
+        height:
+          description: Height of the rack.
+          example: 1867
+          type: integer
+        id:
+          description: Unique identifier of the rack type.
+          example: standard
+          type: string
+        slots:
+          description: Number of U slots available in the rack.
+          example: 42
+          type: integer
+        width:
+          description: Width of the rack.
+          example: 600
+          type: integer
+      type: object
+    StorageEquipment:
+      description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+        positioning how-to] for more details.'
+      properties:
+        infrastructure:
+          $ref: '#/components/schemas/Infrastructure'
+          description: The infrastructure of these storage equipments.
+        name:
+          description: The names of the storage equipments in this set.
+          example: nas[01-04]
+          type: string
+        rack:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        slot:
+          description: The slot in the rack used by the first storage equipment in
+            this set.
+          example: 20
+          type: integer
+        tags:
+          description: The list of tags associated to these storage equipments.
+          example:
+          - storage
+          - nas
+          items:
+            type: string
+          type: array
+        type:
+          description: Unique identifier of storage equipment type.
+          example: nas
+          type: string
+      type: object
+    StorageEquipmentType:
+      properties:
+        disks:
+          description: List of storage devices in the storage equipment.
+          items:
+            $ref: '#/components/schemas/StorageEquipmentTypeDisk'
+          type: array
+        height:
+          description: Height of storage equipment.
+          example: 3
+          type: integer
+        id:
+          description: Unique identifier of storage equipment type.
+          example: nas
+          type: string
+        model:
+          description: Storage equipment model name.
+          example: 24x2.5 disks
+          type: string
+        netifs:
+          description: List of network devices in the storage equipment.
+          items:
+            $ref: '#/components/schemas/StorageEquipmentTypeNetif'
+          type: array
+        specs:
+          description: URL to storage equipment specsheet.
+          example: https://github.com/opencomputeproject/
+          type: string
+        width:
+          description: Width of storage equipment.
+          example: 1.0
+          type: number
+      type: object
+    StorageEquipmentTypeDisk:
+      properties:
+        model:
+          description: The model name of the storage device.
+          example: 4TB SATA 7200RPM
+          type: string
+        number:
+          description: The number of this storage device available in the storage
+            equipment.
+          example: 24
+          type: integer
+        size:
+          description: The storage capacity of the storage device.
+          example: 4398046511104
+          type: integer
+        type:
+          description: The type of storage device.
+          example: disk
+          type: string
+      type: object
+    StorageEquipmentTypeNetif:
+      properties:
+        bandwidth:
+          description: The bandwidth (per second) of the network interface.
+          example: 312500000
+          type: integer
+        type:
+          description: The type of network interface.
+          example: ethernet
+          type: string
+      type: object
+    Types:
+      properties:
+        network:
+          description: List of network equipments types definitions.
+          items:
+            $ref: '#/components/schemas/NetworkEquipmentType'
+          type: array
+        nodes:
+          description: List of nodes types definitions.
+          items:
+            $ref: '#/components/schemas/NodeType'
+          type: array
+        racks:
+          description: List of (empty) racks types definitions.
+          items:
+            $ref: '#/components/schemas/RackType'
+          type: array
+        storage:
+          description: List of storage equipments types definitions.
+          items:
+            $ref: '#/components/schemas/StorageEquipmentType'
+          type: array
+      type: object
+info:
+  title: RacksDB REST API
+  version: 0.0.2a1
+openapi: 3.0.0
+paths:
+  /datacenters:
+    get:
+      description: Get information about datacenters
+      parameters:
+      - description: Filter datacenters by name
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - description: Filter datacenters by tag
+        explode: false
+        in: query
+        name: tags
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - allowEmptyValue: true
+        description: Get list of object names instead of full objects
+        in: query
+        name: list
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Fold expandable objects
+        in: query
+        name: fold
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Report object types in YAML dumps
+        in: query
+        name: with_objects_types
+        required: false
+        schema: {}
+      - description: Select response format
+        in: query
+        name: format
+        required: false
+        schema:
+          enum: &id001
+          - yaml
+          - json
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Datacenter'
+                type: array
+            application/x-yaml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Datacenter'
+                type: array
+          description: successful operation
+  /draw/<entity>/<name>.<format>:
+    get:
+      description: Draw an entity
+      parameters:
+      - description: Type of entity to draw
+        in: path
+        name: entity
+        required: true
+        schema:
+          enum:
+          - infrastructure
+          - room
+          type: string
+      - description: Name of entity
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Format of the generated image
+        in: path
+        name: format
+        required: true
+        schema:
+          default: png
+          enum:
+          - png
+          - svg
+          - pdf
+          type: string
+      responses:
+        '200':
+          content:
+            application/pdf:
+              schema:
+                format: binary
+                type: string
+            image/png:
+              schema:
+                format: binary
+                type: string
+            image/svg+xml:
+              schema:
+                type: string
+          description: successful operation
+  /infrastructures:
+    get:
+      description: Get information about infrastructures
+      parameters:
+      - description: Filter infrastructures by name
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - description: Filter infrastructures by tag
+        explode: false
+        in: query
+        name: tags
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - allowEmptyValue: true
+        description: Get list of object names instead of full objects
+        in: query
+        name: list
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Fold expandable objects
+        in: query
+        name: fold
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Report object types in YAML dumps
+        in: query
+        name: with_objects_types
+        required: false
+        schema: {}
+      - description: Select response format
+        in: query
+        name: format
+        required: false
+        schema:
+          enum: *id001
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Infrastructure'
+                type: array
+            application/x-yaml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Infrastructure'
+                type: array
+          description: successful operation
+  /nodes:
+    get:
+      description: Get information about nodes
+      parameters:
+      - description: Filter nodes by name
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - description: Filter nodes by infrastructure
+        in: query
+        name: infrastructure
+        required: false
+        schema:
+          type: string
+      - description: Filter nodes by tag
+        explode: false
+        in: query
+        name: tags
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - allowEmptyValue: true
+        description: Get list of object names instead of full objects
+        in: query
+        name: list
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Fold expandable objects
+        in: query
+        name: fold
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Report object types in YAML dumps
+        in: query
+        name: with_objects_types
+        required: false
+        schema: {}
+      - description: Select response format
+        in: query
+        name: format
+        required: false
+        schema:
+          enum: *id001
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Node'
+                type: array
+            application/x-yaml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Node'
+                type: array
+          description: successful operation
+  /racks:
+    get:
+      description: Get information about racks
+      parameters:
+      - description: Filter racks by name
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - allowEmptyValue: true
+        description: Get list of object names instead of full objects
+        in: query
+        name: list
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Fold expandable objects
+        in: query
+        name: fold
+        required: false
+        schema: {}
+      - allowEmptyValue: true
+        description: Report object types in YAML dumps
+        in: query
+        name: with_objects_types
+        required: false
+        schema: {}
+      - description: Select response format
+        in: query
+        name: format
+        required: false
+        schema:
+          enum: *id001
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DatacenterRoomRack'
+                type: array
+            application/x-yaml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DatacenterRoomRack'
+                type: array
+          description: successful operation
+
