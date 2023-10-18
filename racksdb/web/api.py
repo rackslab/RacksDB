@@ -14,6 +14,7 @@ from flask import Flask, Blueprint, Response, request, send_file
 from .. import RacksDB
 from ..version import get_version
 from ..views import RacksDBViews
+from ..generic.openapi import OpenAPIGenerator
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from ..drawers import InfrastructureDrawer, RoomDrawer
 
@@ -34,12 +35,15 @@ class RacksDBRESTAPIBlueprint(Blueprint):
         schema=RacksDB.DEFAULT_SCHEMA,
         ext=RacksDB.DEFAULT_EXT,
         db=RacksDB.DEFAULT_DB,
+        openapi=False,
     ):
         super().__init__("RacksDB REST API blueprint", __name__)
         self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
         self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
+        if openapi:
+            self.add_url_rule("/openapi.yaml", view_func=self._openapi, methods=["GET"])
         self.add_url_rule("/<content>", view_func=self._dump_view, methods=["GET"])
 
         for action in self.views.actions():
@@ -99,6 +103,11 @@ class RacksDBRESTAPIBlueprint(Blueprint):
             mimetype=self.MIMETYPES[format],
         )
 
+    def _openapi(self):
+        dumper = DBDumperFactory.get("yaml")()
+        data = OpenAPIGenerator(self.db, self.views).generate()
+        return Response(response=dumper.dump(data), mimetype=self.MIMETYPES["yaml"])
+
 
 class RacksDBRESTAPIApp(Flask):
     def __init__(self):
@@ -155,10 +164,17 @@ class RacksDBRESTAPIApp(Flask):
             action="store_true",
             help="Enable CORS headers",
         )
+        parser.add_argument(
+            "--openapi",
+            action="store_true",
+            help="Enable OpenAPI route",
+        )
 
         self.args = parser.parse_args()
         self.register_blueprint(
-            RacksDBRESTAPIBlueprint(self.args.schema, self.args.ext, self.args.db)
+            RacksDBRESTAPIBlueprint(
+                self.args.schema, self.args.ext, self.args.db, self.args.openapi
+            )
         )
 
     def serve(self):
