@@ -7,6 +7,8 @@
 import argparse
 import sys
 import logging
+from itertools import chain
+
 from pathlib import Path
 
 from .version import get_version
@@ -91,49 +93,32 @@ class RacksDBExec:
 
         self.views = RacksDBViews()
 
-        for view in self.views:
-            subparser = subparsers.add_parser(view.content, help=view.description)
-            for parameter in self.views.parameters():
-                args = [f"--{parameter.name.replace('_','-')}"]
-                if parameter.short is not None:
-                    args.insert(0, f"-{parameter.short}")
-                kwargs = {
-                    "help": parameter.description,
-                }
-                if parameter.type is None:
+        # Generate subcommands for all declared views (converted to actions) and
+        # all declared actions with their parameters.
+        for action in chain(self.views.views_actions(), self.views.actions()):
+            subparser = subparsers.add_parser(action.name, help=action.description)
+            for parameter in action.parameters:
+                if parameter.positional:
+                    args = (parameter.name,)
+                else:
+                    args = [f"--{parameter.name.replace('_','-')}"]
+                    if parameter.short is not None:
+                        args.insert(0, f"-{parameter.short}")
+
+                kwargs = {"help": parameter.description}
+                if parameter.nargs == 0:
                     kwargs["action"] = "store_true"
+                else:
+                    kwargs["nargs"] = parameter.nargs
+                if parameter.choices is not None:
+                    kwargs["choices"] = parameter.choices
                 if parameter.default is not None:
                     kwargs["default"] = parameter.default
                     kwargs["help"] += " (default: %(default)s)"
-                if parameter.choices is not None:
-                    kwargs["choices"] = parameter.choices
-                subparser.add_argument(*args, **kwargs)
-            for _filter in view.filters:
-                subparser.add_argument(
-                    f"--{_filter.name}",
-                    help=_filter.description,
-                    nargs=_filter.nargs,
-                )
-            subparser.set_defaults(func=self._dump_view)
-
-        # Parser for the draw command
-        for action in self.views.actions():
-            subparser = subparsers.add_parser(action.name, help=action.description)
-            for arg in action.args:
-                if arg.positional:
-                    args = (arg.name,)
-                else:
-                    args = (f"--{arg.name}",)
-                kwargs = {"help": arg.description}
-                if arg.choices is not None:
-                    kwargs["choices"] = arg.choices
-                if arg.default is not None:
-                    kwargs["default"] = arg.default
-                    kwargs["help"] += " (default: %(default)s)"
-                if arg.required:
+                if parameter.required:
                     kwargs["required"] = True
                 subparser.add_argument(*args, **kwargs)
-                subparser.set_defaults(func=self._run_action)
+                subparser.set_defaults(func=getattr(self, f"_run_{action.name}"))
 
         self.args = parser.parse_args()
 
@@ -178,6 +163,18 @@ class RacksDBExec:
     def _run_dump(self):
         print(DBDumperFactory.get("yaml")().dump(self.db._loader.content))
 
+    def _run_racks(self):
+        self._dump_view()
+
+    def _run_datacenters(self):
+        self._dump_view()
+
+    def _run_nodes(self):
+        self._dump_view()
+
+    def _run_infrastructures(self):
+        self._dump_view()
+
     def _dump_view(self):
         data = getattr(self.db, self.args.action)
         view = self.views[self.args.action]
@@ -208,12 +205,6 @@ class RacksDBExec:
                 fold=self.args.fold,
             ).dump(data)
         )
-
-    def _run_action(self):
-        if self.args.action == "draw":
-            self._run_draw()
-        else:
-            raise RacksDBError(f"Unsupported action {self.args.action}")
 
     def _run_draw(self):
         file = f"{self.args.name}.{self.args.format}"
