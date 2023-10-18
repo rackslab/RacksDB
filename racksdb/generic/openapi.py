@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from itertools import chain
+
 from .schema import (
     SchemaObject,
     SchemaContainerList,
@@ -31,41 +33,15 @@ class OpenAPIGenerator:
             "paths": {},
         }
 
-        # views
-        for view in self.views:
-            result["paths"][f"/{view.content}"] = {
-                "get": {"description": view.description}
-            }
-            view_path = result["paths"][f"/{view.content}"]["get"]
-            if len(view.filters):
-                view_path["parameters"] = []
-
-            for _filter in view.filters:
-                view_path["parameters"].append(
-                    self._filter_parameter_description(_filter)
-                )
-                view_path["responses"] = self._view_response(view.content)
-
-            # generic view parameters
-            for parameter in self.views.parameters():
-                view_path["parameters"].append(
-                    self._generic_parameter_description(parameter)
-                )
-
-        # components
-        result["components"] = {"schemas": {}}
-        for _type in self.db._schema.objects.values():
-            result["components"]["schemas"][_type.name] = self._object_schema(_type)
-
-        # actions
-        for action in self.views.actions():
+        # actions including views
+        for action in chain(self.views.views_actions(), self.views.actions()):
             result["paths"][action.path] = {"get": {"description": action.description}}
             action_schema = result["paths"][action.path]["get"]
-            if len(action.args):
+            if len(action.parameters):
                 action_schema["parameters"] = []
-            for arg in action.args:
+            for parameter in action.parameters:
                 action_schema["parameters"].append(
-                    self._action_argument_description(arg)
+                    self._action_argument_description(action, parameter)
                 )
             action_schema["responses"] = {
                 "200": {"description": "successful operation", "content": {}}
@@ -75,17 +51,24 @@ class OpenAPIGenerator:
                     self._action_reponse_description(response)
                 )
 
+        # components
+        result["components"] = {"schemas": {}}
+        for _type in self.db._schema.objects.values():
+            result["components"]["schemas"][_type.name] = self._object_schema(_type)
+
         return result
 
-    def _filter_parameter_description(self, _filter):
-        """Return the OpenAPI description of a DBView filter."""
+    def _action_argument_description(self, action, parameter):
+        """Return the OpenAPI description of a DBActionArgument."""
         result = {
-            "name": _filter.name,
-            "in": "query",
-            "description": _filter.description,
-            "required": False,
+            "name": parameter.name,
+            "in": "path" if action.inpath(parameter) else "query",
+            "description": parameter.description,
+            "required": parameter.required or action.inpath(parameter),
         }
-        if _filter.nargs == "*":
+        if parameter.nargs == 0:
+            result.update({"schema": {}, "allowEmptyValue": True})
+        elif parameter.nargs == "*":
             result.update(
                 {
                     "schema": {
@@ -104,85 +87,29 @@ class OpenAPIGenerator:
                     }
                 }
             )
-        return result
-
-    def _generic_parameter_description(self, parameter):
-        """Return the OpenAPI description of a DBViews generic parameter."""
-        result = {
-            "name": parameter.name,
-            "in": "query",
-            "description": parameter.description,
-            "required": False,
-        }
-        if parameter.type is None:
-            result.update({"schema": {}, "allowEmptyValue": True})
-        else:
-            result.update(
-                {
-                    "schema": {
-                        "type": "string",
-                    }
-                }
-            )
         if parameter.default is not None:
             result["schema"].update({"default": parameter.default})
         if parameter.choices is not None:
             result["schema"].update({"enum": parameter.choices})
         return result
 
-    def _action_argument_description(self, arg):
-        """Return the OpenAPI description of a DBActionArgument."""
-        result = {
-            "name": arg.name,
-            "in": "path",
-            "description": arg.description,
-            "required": True,
-            "schema": {
-                "type": "string",
-            },
-        }
-        if arg.choices is not None:
-            result["schema"].update({"enum": arg.choices})
-        return result
-
     def _action_reponse_description(self, response):
-        """Return the OpenAPI description of a DBActionResponse."""
-        result = {response.mimetype: {"schema": {"type": "string"}}}
+        """Return the OpenAPI description of a DBActionResponse with its content."""
         if response.binary:
-            result[response.mimetype]["schema"]["format"] = "binary"
-        return result
-
-    def _view_response(self, content):
-        """Return the OpenAPI response description of a DBView and its content."""
-        view_content = getattr(self.db, content)
-        # select 1st object returned in view to get its type
-        if isinstance(view_content, DBList):
-            view_object_type = view_content[0]._schema.name
-        elif isinstance(view_content, DBDict):
-            view_object_type = view_content.first()._schema.name
-        return {
-            "200": {
-                "description": "successful operation",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": f"#/components/schemas/{view_object_type}"
-                            },
-                        }
-                    },
-                    "application/x-yaml": {
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": f"#/components/schemas/{view_object_type}"
-                            },
-                        }
-                    },
-                },
+            return {
+                response.mimetype: {"schema": {"type": "string", "format": "binary"}}
             }
-        }
+        elif response.object is not None:
+            return {
+                response.mimetype: {
+                    "schema": {
+                        "type": "array",
+                        "items": {"$ref": f"#/components/schemas/{response.object}"},
+                    }
+                }
+            }
+        else:
+            return {response.mimetype: {"schema": {"type": "string"}}}
 
     def _object_schema(self, _type):
         """Return the OpenAPI schema corresponding to an object."""
