@@ -298,6 +298,32 @@ R1-A10
 ----
 ====
 
+Also, the `len()` function on a `DBList` returns the number of potentially
+expanded objects, not the number of actual members of the list.
+
+.Example
+====
+Considering the previous example with the `racks` property of
+xref:db:structure.adoc#obj-datacenterroomrow[`DatacenterRoomRow`], the length of
+`DBList` as reported by `len()` is different of the actual number of values in
+the list:
+
+[source,python]
+----
+>>> racks[0].name
+R1-A[01-10]
+>>> type(racks)
+<class 'racksdb.generic.db.DBList'>
+>>> purelist = racks.copy()
+>>> type(purelist)
+<class 'list'>
+>>> len(purelist)
+1
+>>> len(racks)
+10
+----
+====
+
 ==== Methods
 
 The `DBList` objects provide 2 methods:
