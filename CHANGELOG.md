@@ -25,7 +25,7 @@ and this project adheres to
     datacenters, nodes, racks and infrastructures subcommands.
   - Add possibility to select output format of the list of datacenters,
     infrastructures, nodes and racks names.
-- web: New executable racksdb-rest-api to serve HTTP REST API.
+- web: New executable `racksdb-rest-api` to serve HTTP REST API.
 - lib:
   - Add RacksDB.racks property to get the full list of racks.
   - Add possibility to filter list DatacenterRoomRack by name.
@@ -47,6 +47,7 @@ and this project adheres to
     `RacksDBDatacenterRoomRack` class specialization in library API reference.
   - Mention available examples in database files page.
   - Add REST API reference documentation based on OpenAPI specification.
+  - Add manpage for `racksdb-rest-api(1)`.
 
 ### Changed
 - core:

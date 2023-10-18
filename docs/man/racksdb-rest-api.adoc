@@ -1,0 +1,22 @@
+= racksdb-rest-api(1)
+Rackslab: https://rackslab.io
+:doctype: manpage
+:manmanual: racksdb-rest-api
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+
+racksdb-rest-api - HTTP REST API server for RacksDB
+
+include::../modules/usage/pages/racksdb-rest-api.adoc[]
+
+== Resources
+
+RacksDB web site: https://github.com/rackslab/racksdb
+
+== Copying
+
+Copyright (C) 2022-2023 {author}. +
+
+RacksDB is distributed under the terms of the GNU General Public License v3.0
+or later (GPLv3+).

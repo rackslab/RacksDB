@@ -1,3 +1,5 @@
-* xref:racksdb.adoc[]
+* CLI manpages
+** xref:racksdb.adoc[`racksdb`]
+** xref:racksdb-rest-api.adoc[`racksdb-rest-api`]
 * xref:api.adoc[]
 * xref:rest.adoc[]
