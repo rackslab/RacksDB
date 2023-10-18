@@ -10,7 +10,7 @@ from .generic.views import (
     DBViewFilter,
     DBViewParameter,
     DBAction,
-    DBActionArgument,
+    DBActionParameter,
     DBActionResponse,
 )
 
@@ -19,6 +19,7 @@ class RacksDBViews(DBViewSet):
     VIEWS = [
         DBView(
             content="datacenters",
+            objects_name="Datacenter",
             description="Get information about datacenters",
             filters=[
                 DBViewFilter(name="name", description="Filter datacenters by name"),
@@ -36,6 +37,7 @@ class RacksDBViews(DBViewSet):
         ),
         DBView(
             content="infrastructures",
+            objects_name="Infrastructure",
             description="Get information about infrastructures",
             filters=[
                 DBViewFilter(name="name", description="Filter infrastructures by name"),
@@ -54,6 +56,7 @@ class RacksDBViews(DBViewSet):
         ),
         DBView(
             content="nodes",
+            objects_name="Node",
             description="Get information about nodes",
             filters=[
                 DBViewFilter(name="name", description="Filter nodes by name"),
@@ -74,6 +77,7 @@ class RacksDBViews(DBViewSet):
         ),
         DBView(
             content="racks",
+            objects_name="DatacenterRoomRack",
             description="Get information about racks",
             filters=[DBViewFilter(name="name", description="Filter racks by name")],
             objects_map={
@@ -88,14 +92,18 @@ class RacksDBViews(DBViewSet):
     ]
     PARAMETERS = [
         DBViewParameter(
-            "list", "Get list of object names instead of full objects", short="l"
+            "list",
+            "Get list of object names instead of full objects",
+            short="l",
+            nargs=0,
         ),
-        DBViewParameter("fold", "Fold expandable objects", short="f"),
-        DBViewParameter("with_objects_types", "Report object types in YAML dumps"),
+        DBViewParameter("fold", "Fold expandable objects", short="f", nargs=0),
+        DBViewParameter(
+            "with_objects_types", "Report object types in YAML dumps", nargs=0
+        ),
         DBViewParameter(
             "format",
-            "Select response format",
-            _type="string",
+            "Select output format",
             choices=["yaml", "json"],
         ),
     ]
@@ -104,15 +112,15 @@ class RacksDBViews(DBViewSet):
             name="draw",
             path="/draw/<entity>/<name>.<format>",
             description="Draw an entity",
-            args=[
-                DBActionArgument(
+            parameters=[
+                DBActionParameter(
                     "entity",
                     description="Type of entity to draw",
                     choices=["infrastructure", "room"],
                     positional=True,
                 ),
-                DBActionArgument("name", description="Name of entity", required=True),
-                DBActionArgument(
+                DBActionParameter("name", description="Name of entity", required=True),
+                DBActionParameter(
                     "format",
                     description="Format of the generated image",
                     choices=["png", "svg", "pdf"],
