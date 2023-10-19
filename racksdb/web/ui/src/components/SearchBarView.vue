@@ -52,7 +52,7 @@ function search() {
         </div>
 
         <ul id="myUL" v-show="showList" v-for="item in matchingItems" :key="item.name" class="flex justify-center">
-            <router-link :to="{name: searchedItem + 'details', params: { name: item.name}}">
+            <router-link :to="{name: searchedItem + 'details', params: { name: item.name }}">
             <li ref="li" class="capitalize">{{item.name}}</li></router-link>
         </ul> 
     </div>
