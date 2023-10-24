@@ -15,8 +15,6 @@ authors = [
 dependencies = [
     "PyYAML",
     "ClusterShell",
-    "Flask",
-    "Flask-Cors",
     "pycairo",
 ]
 readme = "README.md"
@@ -28,6 +26,12 @@ classifiers = [
     "Topic :: Database :: Database Engines/Servers",
     "Topic :: System :: Clustering",
     "Topic :: System :: Systems Administration",
+]
+
+[project.optional-dependencies]
+web = [
+    "Flask",
+    "Flask-Cors",
 ]
 
 [project.scripts]
