@@ -49,7 +49,7 @@ and this project adheres to
     specialization in library API reference.
   - Mention available examples in database files page.
   - Add REST API reference documentation based on OpenAPI specification.
-  - Add manpage for `racksdb-rest-api(1)`.
+  - Add manpage for `racksdb-web(1)`.
 
 ### Changed
 - core:

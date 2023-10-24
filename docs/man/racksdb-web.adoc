@@ -1,14 +1,14 @@
-= racksdb-rest-api(1)
+= racksdb-web(1)
 Rackslab: https://rackslab.io
 :doctype: manpage
-:manmanual: racksdb-rest-api
+:manmanual: racksdb-web
 :man-linkstyle: pass:[blue R < >]
 
 == Name
 
-racksdb-rest-api - HTTP REST API server for RacksDB
+racksdb-web - RacksDB web application with REST API
 
-include::../modules/usage/pages/racksdb-rest-api.adoc[]
+include::../modules/usage/pages/racksdb-web.adoc[]
 
 == Resources
 

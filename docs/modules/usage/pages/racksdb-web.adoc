@@ -1,9 +1,8 @@
 ifeval::["{backend}" != "manpage"]
-= `racksdb-rest-api` CLI manpage
+= `racksdb-web` CLI manpage
 
-This section explains all `racksdb-rest-api` command options available. The
-content of the page this also available in `racksdb-rest-api(1)` manpage after
-installation.
+This section explains all `racksdb-web` command options available. The content
+of the page this also available in `racksdb-web(1)` manpage after installation.
 
 endif::[]
 
@@ -11,7 +10,7 @@ endif::[]
 
 == Synopsis
 
-[.cli-opt]#*racksdb-rest-api*# `[_OPTIONS_]`
+[.cli-opt]#*racksdb-web*# `[_OPTIONS_]`
 
 == Options
 
@@ -56,7 +55,7 @@ endif::[]
 == Exit status
 
 *0*::
-  `racksdb-rest-api` has processed command with success.
+  `racksdb-web` has processed command with success.
 
 *1*::
-  `racksdb-rest-api` encountered an error.
+  `racksdb-web` encountered an error.

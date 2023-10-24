@@ -4,7 +4,7 @@ REVNUMBER := $(shell python3 -c "import tomli; content = tomli.load(open('../pyp
 
 all: man ref
 
-man: man/racksdb.1 man/racksdb-rest-api.1
+man: man/racksdb.1 man/racksdb-web.1
 
 man/%.1: man/%.adoc modules/usage/pages/%.adoc
 	$(BIN) $(MAN_OPTS) --attribute mansource="RacksDB v$(REVNUMBER)" $<
