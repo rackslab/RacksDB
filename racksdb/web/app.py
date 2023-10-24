@@ -21,7 +21,7 @@ from ..drawers import InfrastructureDrawer, RoomDrawer
 logger = logging.getLogger(__name__)
 
 
-class RacksDBRESTAPIBlueprint(Blueprint):
+class RacksDBWebBlueprint(Blueprint):
     MIMETYPES = {
         "json": "application/json",
         "yaml": "application/x-yaml",
@@ -37,7 +37,7 @@ class RacksDBRESTAPIBlueprint(Blueprint):
         db=RacksDB.DEFAULT_DB,
         openapi=False,
     ):
-        super().__init__("RacksDB REST API blueprint", __name__)
+        super().__init__("RacksDB web blueprint", __name__)
         self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
@@ -109,10 +109,10 @@ class RacksDBRESTAPIBlueprint(Blueprint):
         return Response(response=dumper.dump(data), mimetype=self.MIMETYPES["yaml"])
 
 
-class RacksDBRESTAPIApp(Flask):
+class RacksDBWebApp(Flask):
     def __init__(self):
-        super().__init__("RacksDB REST API server")
-        parser = argparse.ArgumentParser(description="Do something with RacksDB.")
+        super().__init__("RacksDB web application")
+        parser = argparse.ArgumentParser(description="RacksDB web application")
         parser.add_argument(
             "-v",
             "--version",
@@ -172,13 +172,13 @@ class RacksDBRESTAPIApp(Flask):
 
         self.args = parser.parse_args()
         self.register_blueprint(
-            RacksDBRESTAPIBlueprint(
+            RacksDBWebBlueprint(
                 self.args.schema, self.args.ext, self.args.db, self.args.openapi
             )
         )
 
     def serve(self):
-        logger.info("Running RacksDB REST API application")
+        logger.info("Running RacksDB web application")
         if self.args.cors:
             from flask_cors import CORS
 

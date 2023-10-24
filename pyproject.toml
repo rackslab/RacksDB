@@ -32,7 +32,7 @@ classifiers = [
 
 [project.scripts]
 racksdb = "racksdb.exec:RacksDBExec.run"
-racksdb-rest-api = "racksdb.web.api:RacksDBRESTAPIApp.run"
+racksdb-web = "racksdb.web.app:RacksDBWebApp.run"
 
 [tool.setuptools.packages.find]
 include = ['racksdb*']
