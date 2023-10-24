@@ -8,6 +8,8 @@ import InfrastructureCards from '@/components/InfrastructureCards.vue';
 const http = useHttp()
 var infrastructures: Ref<Array<Infrastructure>> = ref([])
 var infrastructureDetails: Ref<Array<Infrastructure>> = ref([])
+var cardsView = ref(true)
+var tableView = ref(false)
 
 
 async function getInfrastructure(){
@@ -24,13 +26,32 @@ onMounted(() => {
     getInfrastructure()
 })
 
+function choseView(){
+    if(cardsView.value){
+        cardsView.value = !cardsView.value
+        tableView.value = !tableView.value 
+    }else{
+        tableView.value = !tableView.value
+        cardsView.value = !cardsView.value
+    }
+}
+
 export interface Infrastructure {
   name: string
   layout: [{
     rack: string
 
-    nodes: [{
-        type: {
+    nodes: [NodeEquipment]
+
+    network: [NetworkEquipment]
+
+    storage: [StorageEquipment]
+
+}]
+}
+
+export interface NodeEquipment{
+    type: {
             id: string
             model: string
             height: number
@@ -43,7 +64,7 @@ export interface Infrastructure {
                 cores: number
             }
             ram: {
-                dim: number
+                dimm: number
                 size: number
             }
             storage: [{
@@ -59,10 +80,11 @@ export interface Infrastructure {
         rack: string
         name: string
         slot: number
-    }]
+    
+}
 
-    network: [{
-        type: {
+export interface NetworkEquipment{
+    type: {
             id: string
             model: string
             height: number
@@ -78,10 +100,11 @@ export interface Infrastructure {
         rack: string
         name: string
         slot: number
-    }]
 
-    storage: [{
-        type: {
+}
+
+export interface StorageEquipment{
+    type: {
             id: string
             model: string
             height: number
@@ -98,9 +121,6 @@ export interface Infrastructure {
         name: string
         slot: number
 
-    }]
-
-}]
 }
 
 const props = defineProps({
@@ -117,10 +137,21 @@ const props = defineProps({
     />
 
     <h2 class="text-3xl font-medium flex justify-center capitalize py-16">{{ name }} Infrastructure</h2>
+    
+    <div class="flex justify-end mr-36">
+        <img @click="choseView()" src="/assets/cards.svg" alt="">
+        <img @click="choseView()" src="/assets/table.svg" alt="">
 
-    <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="nodes" />
-    <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="storage" />
-    <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="network" />
+    </div>
 
+    <div v-show="cardsView">
+        <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="nodes" />
+        <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="storage" />
+        <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="network" />
+    </div>
+
+    <div v-show="tableView">
+        <h1>hello</h1>
+    </div>
 
 </template>
