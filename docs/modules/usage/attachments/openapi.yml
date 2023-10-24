@@ -32,7 +32,7 @@ components:
         rows:
           description: List of racks rows on this room.
           items:
-            $ref: '#/components/schemas/DatacenterRoomRow'
+            $ref: '#/components/schemas/RacksRow'
           type: array
       type: object
     DatacenterRoomDimensions:
@@ -45,70 +45,6 @@ components:
           description: Width of datacenter room.
           example: 10000
           type: integer
-      type: object
-    DatacenterRoomPosition:
-      description: 'NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
-        how-to] for more details.'
-      properties:
-        depth:
-          description: The position of the top-left corner of the racks row in the
-            depth axis of the room.
-          example: 3000
-          type: integer
-        rotation:
-          description: The rotation angle of the racks row clockwise compared to the
-            width axis of the room (ie. an horizontal line).
-          example: 90
-          type: integer
-        width:
-          description: The position of the top-left corner of the racks row in the
-            width axis of the room.
-          example: 2000
-          type: integer
-      type: object
-    DatacenterRoomRack:
-      properties:
-        datacenter:
-          $ref: '#/components/schemas/Datacenter'
-          description: The datacenter where this rack is located.
-        name:
-          description: The names of the racks in this set.
-          example: A[01-10]
-          type: string
-        room:
-          $ref: '#/components/schemas/DatacenterRoom'
-          description: The datacenter room where this rack is located.
-        row:
-          $ref: '#/components/schemas/DatacenterRoomRow'
-          description: The racks row of this rack.
-        slot:
-          description: The first slot used by this set of racks.
-          example: 2
-          type: integer
-        type:
-          description: Unique identifier of the rack type.
-          example: standard
-          type: string
-      type: object
-    DatacenterRoomRow:
-      properties:
-        name:
-          description: Unique name of the racks row.
-          example: computeA
-          type: string
-        position:
-          $ref: '#/components/schemas/DatacenterRoomPosition'
-          description: The position of the racks row in the room.
-        racks:
-          description: The list of (empty) racks in the room.
-          items:
-            $ref: '#/components/schemas/DatacenterRoomRack'
-          type: array
-        reversed:
-          description: Boolean to control the side of the racks doors in the racks
-            row. When reversed is true, the doors are on the top.
-          example: true
-          type: boolean
       type: object
     Infrastructure:
       properties:
@@ -369,6 +305,30 @@ components:
           example: nvme
           type: string
       type: object
+    Rack:
+      properties:
+        datacenter:
+          $ref: '#/components/schemas/Datacenter'
+          description: The datacenter where this rack is located.
+        name:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        room:
+          $ref: '#/components/schemas/DatacenterRoom'
+          description: The datacenter room where this rack is located.
+        row:
+          $ref: '#/components/schemas/RacksRow'
+          description: The racks row of this rack.
+        slot:
+          description: The first slot used by this set of racks.
+          example: 2
+          type: integer
+        type:
+          description: Unique identifier of the rack type.
+          example: standard
+          type: string
+      type: object
     RackType:
       properties:
         depth:
@@ -390,6 +350,46 @@ components:
         width:
           description: Width of the rack.
           example: 600
+          type: integer
+      type: object
+    RacksRow:
+      properties:
+        name:
+          description: Unique name of the racks row.
+          example: computeA
+          type: string
+        position:
+          $ref: '#/components/schemas/RacksRowPosition'
+          description: The position of the racks row in the room.
+        racks:
+          description: The list of (empty) racks in the room.
+          items:
+            $ref: '#/components/schemas/Rack'
+          type: array
+        reversed:
+          description: Boolean to control the side of the racks doors in the racks
+            row. When reversed is true, the doors are on the top.
+          example: true
+          type: boolean
+      type: object
+    RacksRowPosition:
+      description: 'NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
+        how-to] for more details.'
+      properties:
+        depth:
+          description: The position of the top-left corner of the racks row in the
+            depth axis of the room.
+          example: 3000
+          type: integer
+        rotation:
+          description: The rotation angle of the racks row clockwise compared to the
+            width axis of the room (ie. an horizontal line).
+          example: 90
+          type: integer
+        width:
+          description: The position of the top-left corner of the racks row in the
+            width axis of the room.
+          example: 2000
           type: integer
       type: object
     StorageEquipment:
@@ -555,7 +555,7 @@ paths:
         name: with_objects_types
         required: false
         schema: {}
-      - description: Select response format
+      - description: Select output format
         in: query
         name: format
         required: false
@@ -661,7 +661,7 @@ paths:
         name: with_objects_types
         required: false
         schema: {}
-      - description: Select response format
+      - description: Select output format
         in: query
         name: format
         required: false
@@ -726,7 +726,7 @@ paths:
         name: with_objects_types
         required: false
         schema: {}
-      - description: Select response format
+      - description: Select output format
         in: query
         name: format
         required: false
@@ -775,7 +775,7 @@ paths:
         name: with_objects_types
         required: false
         schema: {}
-      - description: Select response format
+      - description: Select output format
         in: query
         name: format
         required: false
@@ -788,12 +788,12 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DatacenterRoomRack'
+                  $ref: '#/components/schemas/Rack'
                 type: array
             application/x-yaml:
               schema:
                 items:
-                  $ref: '#/components/schemas/DatacenterRoomRack'
+                  $ref: '#/components/schemas/Rack'
                 type: array
           description: successful operation
 

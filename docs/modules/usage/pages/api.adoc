@@ -267,11 +267,10 @@ in range of expandable objects.
 
 .Example
 ====
-The list of xref:db:structure.adoc#obj-datacenterroomrack[`DatacenterRoomRack`]
-objects holded by the `racks` property of
-xref:db:structure.adoc#obj-datacenterroomrow[`DatacenterRoomRow`] is a `DBList`.
-Even if the list actually contains a folded range of racks, iterating over the
-`DBList` generates all expanded members of the range:
+The list of xref:db:structure.adoc#obj-rack[`Rack`] objects holded by the
+`racks` property of xref:db:structure.adoc#obj-racksrow[`RacksRow`] is a
+`DBList`. Even if the list actually contains a folded range of racks, iterating
+over the `DBList` generates all expanded members of the range:
 
 [source,python]
 ----
@@ -304,9 +303,8 @@ expanded objects, not the number of actual members of the list.
 .Example
 ====
 Considering the previous example with the `racks` property of
-xref:db:structure.adoc#obj-datacenterroomrow[`DatacenterRoomRow`], the length of
-`DBList` as reported by `len()` is different of the actual number of values in
-the list:
+xref:db:structure.adoc#obj-racksrow[`RacksRow`], the length of `DBList` as
+reported by `len()` is different of the actual number of values in the list:
 
 [source,python]
 ----
@@ -341,8 +339,8 @@ The `DBList` objects provide 2 methods:
 .Example
 ====
 Considering the previous example with the list of
-xref:db:structure.adoc#obj-datacenterroomrack[`DatacenterRoomRack`], iterating
-over the `DBList` with `itervalues()` method generates only one folded object:
+xref:db:structure.adoc#obj-rack[`Rack`], iterating over the `DBList` with
+`itervalues()` method generates only one folded object:
 
 [source,python]
 ----
@@ -647,13 +645,12 @@ Get all nodes of infrastructure _tiger_ with tag _compute_:
 ----
 ====
 
-[#spec-racksdbdatacenteroomrack]
-=== `RacksDBDatacenterRoomRack`
+[#spec-racksdbrack]
+=== `RacksDBRack`
 
 ==== Attributes
 
-The `RacksDBDatacenterRoomRack` class provides the following specialized
-attribute:
+The `RacksDBRack` class provides the following specialized attribute:
 
 * `nodes`: xref:#list[`DBList`] object containing all nodes located in this
   rack.
@@ -718,10 +715,9 @@ R1-A10: 0.00%
 
 ==== Filtering
 
-The `RacksDBDatacenterRoomRack` class provides an implementation of the
-`_filter()` method, for easy filtering of xref:#list[`DBList`] and
-xref:#dict[`DBDict`] containing `RacksDBDatacenterRoomRack` objects. It accepts
-the following arguments:
+The `RacksDBRack` class provides an implementation of the `_filter()` method,
+for easy filtering of xref:#list[`DBList`] and xref:#dict[`DBDict`] containing
+`RacksDBRack` objects. It accepts the following arguments:
 
 * `name`: the name of a rack
 
@@ -737,13 +733,12 @@ Get rack named _R1-A02_:
 ----
 ====
 
-[#spec-racksdbdatacenteroomrow]
-=== `RacksDBDatacenterRoomRow`
+[#spec-racksdbracksrow]
+=== `RacksDBRacksRow`
 
 ==== Attributes
 
-The `RacksDBDatacenterRoomRow` class provides the following specialized
-attribute:
+The `RacksDBRacksRow` class provides the following specialized attribute:
 
 * `nbracks`: an integer representing the number of racks in the row.
 +

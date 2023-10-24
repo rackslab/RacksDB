@@ -83,7 +83,7 @@ include::example$datacenter.yml[tag=row-r1]
 
 The distances between the reference point and the _top-left_ corner of the room
 is reported in the `position` property of
-xref:structure.adoc#obj-datacenterroomrow[DatacenterRoomRow] object.
+xref:structure.adoc#obj-racksrow[RacksRow] object.
 --
 
 * row {R2}:
@@ -97,8 +97,8 @@ include::example$datacenter.yml[tag=row-r2]
 ----
 
 The row is marked as _reversed_, using the `reversed` boolean property
-xref:structure.adoc#obj-datacenterroomrow[DatacenterRoomRow] object, to
-orientate the rack doors to the top of the room.
+xref:structure.adoc#obj-racksrow[RacksRow] object, to orientate the rack doors
+to the top of the room.
 --
 
 * row {R3}:
@@ -113,8 +113,8 @@ include::example$datacenter.yml[tag=row-r3]
 
 This row has a set of 6 racks. The rotation is expressed in the optional
 `rotation` property of
-xref:structure.adoc#obj-datacenterroomrow[DatacenterRoomRow] object, with a
-value of 30° using the xref:structure.adoc#deftype-angle[~angle] defined type.
+xref:structure.adoc#obj-racksrow[RacksRow] object, with a value of 30° using the
+xref:structure.adoc#deftype-angle[~angle] defined type.
 --
 
 * row {R4}:

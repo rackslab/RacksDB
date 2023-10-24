@@ -93,7 +93,7 @@ Library class type: `RacksDBDatacenterRoom`
 |rows
 |List of racks rows on this room.
 
-|{symbol-seq}{nbsp}xref:#obj-datacenterroomrow[{symbol-obj}{nbsp}DatacenterRoomRow]
+|{symbol-seq}{nbsp}xref:#obj-racksrow[{symbol-obj}{nbsp}RacksRow]
 |[.grey]#-#
 |===
 
@@ -128,122 +128,6 @@ Library class type: `RacksDBDatacenterRoomDimensions`
 
 |xref:#deftype-dimension[{symbol-deftype}{nbsp}~dimension]
 |[.green]#icon:check[]#
-|===
-
-[#obj-datacenterroomposition]
-=== DatacenterRoomPosition
-
-Library class type: `RacksDBDatacenterRoomPosition`
-
-NOTE: Please refer to xref:positioning-racks.adoc[racks positioning how-to] for more details.
-
-.Properties
-[cols="{tbl-obj-props-cols-specs}"]
-|===
-|Property|Description|Type|Required
-
-|width
-|The position of the top-left corner of the racks row in the width axis of the room.
-
-|xref:#deftype-dimension[{symbol-deftype}{nbsp}~dimension]
-|[.green]#icon:check[]#
-
-|depth
-|The position of the top-left corner of the racks row in the depth axis of the room.
-
-|xref:#deftype-dimension[{symbol-deftype}{nbsp}~dimension]
-|[.green]#icon:check[]#
-
-|rotation
-|The rotation angle of the racks row clockwise compared to the width axis of the room (ie. an horizontal line).
-
-*Default value:* `0`
-|xref:#deftype-angle[{symbol-deftype}{nbsp}~angle]
-|[.grey]#-#
-|===
-
-[#obj-datacenterroomrack]
-=== DatacenterRoomRack
-
-Library class type: `RacksDBDatacenterRoomRack`
-
-.Properties
-[cols="{tbl-obj-props-cols-specs}"]
-|===
-|Property|Description|Type|Required
-
-|name
-|The names of the racks in this set.
-
-|expandable
-|[.green]#icon:check[]#
-
-|slot
-|The first slot used by this set of racks.
-
-*Default value:* `0`
-|rangeid
-|[.grey]#-#
-
-|type
-|The unique ID of rack type of this racks set.
-
-|{symbol-ref}{nbsp}xref:#obj-racktype[{symbol-obj}{nbsp}RackType].id
-|[.green]#icon:check[]#
-|===
-
-.Automatic back references
-[cols="{tbl-obj-backrefs-cols-specs}"]
-|===
-|Property|Description|Type
-
-|datacenter
-|The datacenter where this rack is located.
-|{symbol-backref}{nbsp}xref:#obj-datacenter[{symbol-obj}{nbsp}Datacenter]
-
-|room
-|The datacenter room where this rack is located.
-|{symbol-backref}{nbsp}xref:#obj-datacenterroom[{symbol-obj}{nbsp}DatacenterRoom]
-
-|row
-|The racks row of this rack.
-|{symbol-backref}{nbsp}xref:#obj-datacenterroomrow[{symbol-obj}{nbsp}DatacenterRoomRow]
-|===
-
-[#obj-datacenterroomrow]
-=== DatacenterRoomRow
-
-Library class type: `RacksDBDatacenterRoomRow`
-
-.Properties
-[cols="{tbl-obj-props-cols-specs}"]
-|===
-|Property|Description|Type|Required
-
-|name{nbsp}{symbol-key}
-|Unique name of the racks row.
-
-|str
-|[.green]#icon:check[]#
-
-|position
-|The position of the racks row in the room.
-
-|xref:#obj-datacenterroomposition[{symbol-obj}{nbsp}DatacenterRoomPosition]
-|[.green]#icon:check[]#
-
-|racks
-|The list of (empty) racks in the room.
-
-|{symbol-seq}{nbsp}xref:#obj-datacenterroomrack[{symbol-obj}{nbsp}DatacenterRoomRack]
-|[.green]#icon:check[]#
-
-|reversed
-|Boolean to control the side of the racks doors in the racks row. When reversed is true, the doors are on the top.
-
-*Default value:* `False`
-|bool
-|[.grey]#-#
 |===
 
 [#obj-infrastructure]
@@ -296,7 +180,7 @@ This represents all the equipments of an infrastructure in one particular datace
 |rack
 |The name of the rack.
 
-|{symbol-ref}{nbsp}xref:#obj-datacenterroomrack[{symbol-obj}{nbsp}DatacenterRoomRack].name
+|{symbol-ref}{nbsp}xref:#obj-rack[{symbol-obj}{nbsp}Rack].name
 |[.green]#icon:check[]#
 
 |nodes
@@ -678,6 +562,122 @@ Library class type: `RacksDBNodeTypeStorage`
 |The model name of the storage device.
 
 |str
+|[.grey]#-#
+|===
+
+[#obj-rack]
+=== Rack
+
+Library class type: `RacksDBRack`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|name
+|The names of the racks in this set.
+
+|expandable
+|[.green]#icon:check[]#
+
+|slot
+|The first slot used by this set of racks.
+
+*Default value:* `0`
+|rangeid
+|[.grey]#-#
+
+|type
+|The unique ID of rack type of this racks set.
+
+|{symbol-ref}{nbsp}xref:#obj-racktype[{symbol-obj}{nbsp}RackType].id
+|[.green]#icon:check[]#
+|===
+
+.Automatic back references
+[cols="{tbl-obj-backrefs-cols-specs}"]
+|===
+|Property|Description|Type
+
+|datacenter
+|The datacenter where this rack is located.
+|{symbol-backref}{nbsp}xref:#obj-datacenter[{symbol-obj}{nbsp}Datacenter]
+
+|room
+|The datacenter room where this rack is located.
+|{symbol-backref}{nbsp}xref:#obj-datacenterroom[{symbol-obj}{nbsp}DatacenterRoom]
+
+|row
+|The racks row of this rack.
+|{symbol-backref}{nbsp}xref:#obj-racksrow[{symbol-obj}{nbsp}RacksRow]
+|===
+
+[#obj-racksrow]
+=== RacksRow
+
+Library class type: `RacksDBRacksRow`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|name{nbsp}{symbol-key}
+|Unique name of the racks row.
+
+|str
+|[.green]#icon:check[]#
+
+|position
+|The position of the racks row in the room.
+
+|xref:#obj-racksrowposition[{symbol-obj}{nbsp}RacksRowPosition]
+|[.green]#icon:check[]#
+
+|racks
+|The list of (empty) racks in the room.
+
+|{symbol-seq}{nbsp}xref:#obj-rack[{symbol-obj}{nbsp}Rack]
+|[.green]#icon:check[]#
+
+|reversed
+|Boolean to control the side of the racks doors in the racks row. When reversed is true, the doors are on the top.
+
+*Default value:* `False`
+|bool
+|[.grey]#-#
+|===
+
+[#obj-racksrowposition]
+=== RacksRowPosition
+
+Library class type: `RacksDBRacksRowPosition`
+
+NOTE: Please refer to xref:positioning-racks.adoc[racks positioning how-to] for more details.
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|width
+|The position of the top-left corner of the racks row in the width axis of the room.
+
+|xref:#deftype-dimension[{symbol-deftype}{nbsp}~dimension]
+|[.green]#icon:check[]#
+
+|depth
+|The position of the top-left corner of the racks row in the depth axis of the room.
+
+|xref:#deftype-dimension[{symbol-deftype}{nbsp}~dimension]
+|[.green]#icon:check[]#
+
+|rotation
+|The rotation angle of the racks row clockwise compared to the width axis of the room (ie. an horizontal line).
+
+*Default value:* `0`
+|xref:#deftype-angle[{symbol-deftype}{nbsp}~angle]
 |[.grey]#-#
 |===
 

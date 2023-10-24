@@ -44,8 +44,8 @@ and this project adheres to
   - Mention new `racks` attribute on `RacksDB` class specialization in library
     API reference.
   - Mention `nodes`, `fillrate` computed property and filtering capability on
-    `RacksDBDatacenterRoomRack` class specialization in library API reference.
-  - Mention `nbracks` computed property on `RacksDBDatacenterRoomRow` class
+    `RacksDBRack` class specialization in library API reference.
+  - Mention `nbracks` computed property on `RacksDBRacksRow` class
     specialization in library API reference.
   - Mention available examples in database files page.
   - Add REST API reference documentation based on OpenAPI specification.
