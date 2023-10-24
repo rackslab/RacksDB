@@ -5,7 +5,7 @@ import ContentCard from './ContentCard.vue';
 
 
 var infrastructureDetails: Ref<Array<Infrastructure>> = ref([])
-    
+
 const props = defineProps({
     cardTitle: String,
     searchItem: String,
@@ -22,8 +22,17 @@ export interface Infrastructure {
   layout: [{
     rack: string
 
-    nodes: [{
-        type: {
+    nodes: [NodeEquipment]
+
+    network: [NetworkEquipment]
+
+    storage: [StorageEquipment]
+
+}]
+}
+
+export interface NodeEquipment{
+    type: {
             id: string
             model: string
             height: number
@@ -36,7 +45,7 @@ export interface Infrastructure {
                 cores: number
             }
             ram: {
-                dim: number
+                dimm: number
                 size: number
             }
             storage: [{
@@ -52,10 +61,11 @@ export interface Infrastructure {
         rack: string
         name: string
         slot: number
-    }]
+    
+}
 
-    network: [{
-        type: {
+export interface NetworkEquipment{
+    type: {
             id: string
             model: string
             height: number
@@ -71,10 +81,11 @@ export interface Infrastructure {
         rack: string
         name: string
         slot: number
-    }]
 
-    storage: [{
-        type: {
+}
+
+export interface StorageEquipment{
+    type: {
             id: string
             model: string
             height: number
@@ -91,10 +102,8 @@ export interface Infrastructure {
         name: string
         slot: number
 
-    }]
-
-}]
 }
+
 
 onMounted(() => {
     infrastructureDetails.value = props.items
@@ -108,7 +117,7 @@ onMounted(() => {
         <div v-for="rack in infrastructure.layout" :key="rack.rack">
             <div v-if="searchItem === 'nodes'">
                 <div v-for="item in rack.nodes" :key="item.name">
-                    <ContentCard :rack="item.rack" tag="node" :name="item.name" :id="item.type.id"/>
+                    <ContentCard :rack="item.rack" tag="node" :name="item.name" :id="item.type.id" :items="infrastructureDetails"/>
                 </div>
             </div>
             
