@@ -1,5 +1,10 @@
 = REST API
 
+RacksDB provides a REST API to request database content and draw diagrams of
+datacenter rooms and infrastructures racks. This REST API is served by
+xref:racksdb-web.adoc[`racksdb-web` command]. This page contains the reference
+documentation of this API.
+
 ++++
 <style>
 /*
