@@ -70,7 +70,7 @@ class RacksDBNodeBase:
         return True
 
 
-class RacksDBDatacenterRoomRackBase:
+class RacksDBRackBase:
 
     COMPUTED_PROPERTIES = ["nodes", "fillrate"]
 
@@ -107,7 +107,7 @@ class RacksDBDatacenterRoomRackBase:
         return result
 
 
-class RacksDBDatacenterRoomRowBase:
+class RacksDBRacksRowBase:
 
     COMPUTED_PROPERTIES = ["nbracks"]
 

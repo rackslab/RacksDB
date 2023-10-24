@@ -28,10 +28,10 @@ and this project adheres to
 - web: New executable `racksdb-web` to serve HTTP REST API.
 - lib:
   - Add RacksDB.racks property to get the full list of racks.
-  - Add possibility to filter list DatacenterRoomRack by name.
-  - Add RacksDBDatacenterRoomRack.fillrate computed property.
+  - Add possibility to filter list Racks by name.
+  - Add RacksDBRack.fillrate computed property.
   - Add support for len(DBList).
-  - Add RacksDBDatacenterRoomRow.nbracks computed property.
+  - Add RacksDBRacksRow.nbracks computed property.
 - docs:
   - Add installation method from sources intended to software developers in the
     quickstart guide.
