@@ -280,7 +280,7 @@ _objects:
         type: :DatacenterRoomDimensions
         description: Dimensions of this room.
       rows:
-        type: list[:DatacenterRoomRow]
+        type: list[:RacksRow]
         description: List of racks rows on this room.
         optional: true
       datacenter:
@@ -297,7 +297,7 @@ _objects:
         type: ~dimension
         description: Depth of datacenter room.
         example: 15m
-  DatacenterRoomRow:
+  RacksRow:
     properties:
       name:
         type: str
@@ -305,10 +305,10 @@ _objects:
         key: true
         example: computeA
       position:
-        type: :DatacenterRoomPosition
+        type: :RacksRowPosition
         description: The position of the racks row in the room.
       racks:
-        type: list[:DatacenterRoomRack]
+        type: list[:Rack]
         description: The list of (empty) racks in the room.
       reversed:
         type: bool
@@ -317,7 +317,7 @@ _objects:
           reversed is true, the doors are on the top.
         default: false
         example: true
-  DatacenterRoomPosition:
+  RacksRowPosition:
     description: >-
       NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
       how-to] for more details.
@@ -341,7 +341,7 @@ _objects:
           axis of the room (ie. an horizontal line).
         default: 0
         example: 90
-  DatacenterRoomRack:
+  Rack:
     properties:
       name:
         type: expandable
@@ -362,7 +362,7 @@ _objects:
         type: ^DatacenterRoom
         description: The datacenter room where this rack is located.
       row:
-        type: ^DatacenterRoomRow
+        type: ^RacksRow
         description: The racks row of this rack.
   Infrastructure:
     properties:
@@ -389,7 +389,7 @@ _objects:
       datacenter rack.
     properties:
       rack:
-        type: $DatacenterRoomRack.name
+        type: $Rack.name
         description: The name of the rack.
       nodes:
         type: list[:Node]

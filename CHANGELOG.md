@@ -52,6 +52,11 @@ and this project adheres to
   - Add manpage for `racksdb-web(1)`.
 
 ### Changed
+- schema:
+  - Rename objects:
+    - `DatacenterRoomRack` → `Rack`
+    - `DatacenterRoomRow` → `RacksRow`
+    - `DatacenterRoomPosition` → `RacksRowPosition`
 - core:
   - Introduce DBDict objects that inherit from standard Python dict to handle
     list of objects with keys (#15).
