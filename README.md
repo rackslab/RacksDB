@@ -56,12 +56,13 @@ solutions are the following:
   extensions can be defined to store specific data.
 
 RacksDB provides multiple interfaces to request the database with its
-[CLI tool](https://docs.rackslab.io/racksdb/beta/usage/racksdb.html)
-and a [library API](https://docs.rackslab.io/racksdb/beta/usage/api.html).
+[CLI tool](https://docs.rackslab.io/racksdb/beta/usage/racksdb.html), a
+[Python library](https://docs.rackslab.io/racksdb/beta/usage/api.html) and a
+[REST API](https://docs.rackslab.io/racksdb/beta/usage/rest.html).
 
 For more details, read the
-[full description](https://docs.rackslab.io/racksdb/betaoverview/what.html) of
-RacksDB.
+[full description](https://docs.rackslab.io/racksdb/beta/overview/overview.html)
+of RacksDB.
 
 ## Status
 
