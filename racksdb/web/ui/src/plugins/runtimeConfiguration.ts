@@ -15,7 +15,7 @@ export const runtimeConfiguration: Plugin = {
 }
 
 export const initRuntimeConfiguration = async (): Promise<RuntimeConfiguration> => {
-    const resp = await fetch('config.json')
+    const resp = await fetch('/config.json')
     const value = await resp.json()
 
     return {
