@@ -3,6 +3,7 @@
 
 This quickstart guide provides the first steps to get RacksDB up and ready!
 
+[#install]
 == Installation
 
 Several installation methods are supported for RacksDB. It is recommended to use
@@ -100,6 +101,14 @@ Install RacksDB packages and dependencies:
 # apt install racksdb
 ----
 
+Optionally, you can also install RacksDB web application to access the
+xref:#restapi[REST API]:
+
+[source,console]
+----
+# apt install racksdb-web
+----
+
 [#rpm]
 ==== RPM (RHEL, CentOS, Rocky Linux, Fedora)
 
@@ -185,6 +194,14 @@ Install RacksDB packages:
 # dnf install racksdb
 ----
 
+Optionally, you can also install RacksDB web application to access the
+xref:#restapi[REST API]:
+
+[source,console]
+----
+# dnf install racksdb-web
+----
+
 [#pypi]
 === PyPI
 
@@ -253,7 +270,7 @@ To install RacksDB from sources, run this command in the source tree directory:
 
 [source,console]
 ----
-$ python3 setup.py install
+$ pip install .
 ----
 
 [#examples]
@@ -273,10 +290,15 @@ Run this command to copy a complete example database:
 $ sudo cp -r /usr/share/doc/racksdb/examples/db/* /var/lib/racksdb/
 ----
 
-== Explore example database
+== Explore content
 
-The database is boostraped with fake example data, you can explore its content
-with some commands, for example:
+Now that the database is boostraped with fake example data, you can explore its
+content with all RacksDB interfaces: command line (CLI), Python library and REST
+API. The following subsections provide usage examples of these interfaces.
+
+=== CLI
+
+The database can be explored with xref:usage:racksdb.adoc[`racksdb`] command.
 
 * Get datacenters information:
 
@@ -285,11 +307,11 @@ with some commands, for example:
 $ racksdb datacenters
 ----
 
-* Get the content of a rack:
+* Get the content of a rack in JSON format:
 
 [source,console]
 ----
-$ racksdb racks --name R1-A01
+$ racksdb racks --name R1-A01 --format json
 ----
 
 * Get the list of compute nodes in an infrastructure:
@@ -306,6 +328,57 @@ manpage].
 --
 .More links
 * xref:usage:racksdb.adoc[`racksdb`(1) command manpage]
+--
+
+=== Python Library
+
+RacksDB provides a Python library to explore the content of the database:
+
+[source,python]
+----
+>>> from racksdb import RacksDB
+>>> db = RacksDB.load()
+>>> for infrastructure in db.infrastructures:
+...     print(f"{infrastructure.name} ({infrastructure.description}): {infrastructure.tags}")
+...
+mercury (Mercury HPC cluster): ['hpc', 'cluster']
+----
+
+[sidebar]
+--
+.More links
+* xref:usage:api.adoc[Python Library reference documentation]
+--
+
+[#restapi]
+=== REST API
+
+RacksDB includes a web application that provides a REST API. This web
+application can be launched with xref:usage:racksdb-web.adoc[`racksdb-web`]
+command:
+
+[source,python]
+----
+$ racksdb-web
+----
+
+CAUTION: The `racksdb-web` command must be installed with the additional package
+`racksdb-web`. Please refer to the xref:#install[installation section] for more
+details.
+
+The REST API can then be requested with any HTTP clients such as `curl`:
+
+[source,console]
+----
+$ curl http://localhost:5000/infrastructures?list
+["mercury"]
+----
+
+[sidebar]
+--
+.More links
+* xref:usage:racksdb-web.adoc[`racksdb-web`(1) command manpage]
+* xref:usage:rest.adoc[REST API reference documentation]
 --
 
 == Define real database

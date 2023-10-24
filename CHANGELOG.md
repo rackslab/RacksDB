@@ -71,6 +71,7 @@ and this project adheres to
   - Update library API reference and examples with new `DBDict` class and
     changes on `DBList` class.
   - Load of extension example due to missing rack type.
+  - Update quickstart guide to mention Python library and REST API.
 
 ### Fixed
 - core: Rename module that contains defined types definitions dtypes to avoid
