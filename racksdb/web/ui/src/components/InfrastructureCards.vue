@@ -113,21 +113,21 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-for="infrastructure in infrastructureDetails" :key="infrastructure.name">
-        <div v-for="rack in infrastructure.layout" :key="rack.rack">
-            <div v-if="searchItem === 'nodes'">
+    <div v-for="infrastructure in infrastructureDetails" :key="infrastructure.name" >
+        <div v-for="rack in infrastructure.layout" :key="rack.rack" >
+            <div v-if="searchItem === 'nodes'" class="flex justify-center px-0 flex-wrap">
                 <div v-for="item in rack.nodes" :key="item.name">
                     <ContentCard :rack="item.rack" tag="node" :name="item.name" :id="item.type.id" :items="infrastructureDetails"/>
                 </div>
             </div>
             
-            <div v-else-if="searchItem === 'storage'">
+            <div v-else-if="searchItem === 'storage'" class="flex justify-center px-0 flex-wrap">
                 <div v-for="item in rack.storage" :key="item.name">
                     <ContentCard :rack="item.rack" tag="storage" :name="item.name" :id="item.type.id"/>
                 </div>
                 
             </div>
-            <div v-else>
+            <div v-else class="flex justify-center px-0 flex-wrap">
                 <div v-for="item in rack.network" :key="item.name">
                     <ContentCard :rack="item.rack" tag="network" :name="item.name" :id="item.type.id"/>
                 </div>
