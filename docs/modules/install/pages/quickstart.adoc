@@ -213,8 +213,20 @@ the following command:
 $ pip install racksdb
 ----
 
-This can be installed with basic user permissions by using a
+This automatically installs RacksDB Python package and its dependencies.
+
+TIP: You can install Python packages with basic user permissions by using a
 {venv-doc}[Python virtual environment].
+
+Additional dependencies are required by
+xref:usage:racksdb-web.adoc[`racksdb-web` command] and the
+xref:usage:rest.adoc[REST API]. These dependencies can be installed with the
+`web` extra by this command:
+
+[source,console]
+----
+$ pip install racksdb[web]
+----
 
 [#sources]
 === From Sources

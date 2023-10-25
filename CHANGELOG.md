@@ -8,6 +8,9 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+- docs: Mention web extra package installation from PyPI in quickstart guide.
+
 ### Changed
 - docs: Update supported Linux distributions in quickstart guide.
 
