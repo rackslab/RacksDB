@@ -68,18 +68,18 @@ class SchemaFileLoader:
                 raise DBSchemaError(err)
         if "_content" in extensions:
             logger.debug("Updating schema with additional content found in extension")
-            result["_content"].update(extensions["_content"])
+            result["_content"]["properties"].update(extensions["_content"]["properties"])
         if "_objects" in extensions:
-            for obj, properties in extensions["_objects"].items():
+            for obj, definition in extensions["_objects"].items():
                 if obj in result["_objects"]:
                     logger.debug(
                         "Updating object class %s with properties found in extension",
                         obj,
                     )
-                    result["_objects"][obj].update(properties)
+                    result["_objects"][obj]["properties"].update(definition["properties"])
                 else:
                     logger.debug("Additional object class %s found in extension", obj)
-                    result["_objects"][obj] = properties
+                    result["_objects"][obj] = definition
         return result
 
 
