@@ -514,7 +514,7 @@ components:
       type: object
 info:
   title: RacksDB REST API
-  version: 0.0.2a1
+  version: 0.2.0
 openapi: 3.0.0
 paths:
   /datacenters:
