@@ -1,8 +1,16 @@
 _content:
-  power: optional list[:Ups]
+  properties:
+    power:
+      type: list[:Ups]
+      optional: true
 
 _objects:
   Ups:
-    capacity: int
+    properties:
+      capacity:
+        type: int
   RackType:
-    weight: optional int
+    properties:
+      weight:
+        type: int
+        optional: true
