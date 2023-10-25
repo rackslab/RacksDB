@@ -14,9 +14,7 @@ from .schema import (
     SchemaRangeId,
     SchemaReference,
 )
-from .db import DBDict, DBList
 from .definedtype import SchemaDefinedType
-from .errors import DBOpenAPIGenerationError
 from ..version import get_version
 
 
