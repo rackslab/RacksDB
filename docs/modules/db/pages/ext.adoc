@@ -63,3 +63,101 @@ With this extension:
   structure. This object contains an integer property named `capacity`.
 * The xref:structure.adoc#obj-racktype[RackType] object is extended with an
   optional `weight` integer attribute.
+
+== Data Visibility
+
+NOTE: When RacksDB is
+xref:install:quickstart.adoc#_distribution_packages[installed with packages],
+this example extension is installed in path
+[.path]#`/usr/share/doc/racksdb/examples/extensions`# with fake values. This
+example is used to illustrate data visibility of custom extensions.
+
+The custom objects and properties data can then be explored with RacksDB
+interfaces:
+
+* xref:usage:racksdb.adoc[CLI]:
+
+[source,console]
+----
+$ racksdb --db /usr/share/doc/racksdb/examples/extensions/db \
+          --ext /usr/share/doc/racksdb/examples/extensions/extensions.yml \
+          racks --format json | \
+          jq  '.[] | { name: .name, weight: .type.weight}'
+----
+
+This reports the _weight_ of every racks:
+
+[source,json]
+----
+{
+  "name": "R1-A01",
+  "weight": 128
+}
+{
+  "name": "R1-A02",
+  "weight": 128
+}
+{
+  "name": "R1-A03",
+  "weight": 128
+}
+…
+----
+
+* xref:usage:racksdb.adoc[Python library]:
+
+Print the _capacity_ of every UPS :
+
+[source,python]
+----
+>>> from racksdb import RacksDB
+>>> db = RacksDB.load(
+...          db="/usr/share/doc/racksdb/examples/extensions/db",
+...          ext="/usr/share/doc/racksdb/examples/extensions/extensions.yml"
+...      )
+>>> db.power
+[<racksdb.generic.db.RacksDBUps object at 0x7f7c3e7c2bf0>,
+ <racksdb.generic.db.RacksDBUps object at 0x7f7c3e7c2c50>]
+>>> for power in db.power:
+...     print(f"capacity: {power.capacity}")
+...
+capacity: 600
+capacity: 900
+----
+
+* xref:usage:rest.adoc[REST API]:
+
+Launch xref:usage:racksdb-web.adoc[`racksdb-web`] to get REST API server:
+
+[source,console]
+----
+$ racksdb-web --db /usr/share/doc/racksdb/examples/extensions/db \
+              --ext /usr/share/doc/racksdb/examples/extensions/extensions.yml
+----
+
+Request with HTTP client:
+
+[source,console]
+----
+$ curl http://localhost:5000/racks | \
+  jq  '.[] | { name: .name, weight: .type.weight}'
+----
+
+This reports the _weight_ of every racks:
+
+[source,json]
+----
+{
+  "name": "R1-A01",
+  "weight": 128
+}
+{
+  "name": "R1-A02",
+  "weight": 128
+}
+{
+  "name": "R1-A03",
+  "weight": 128
+}
+…
+----

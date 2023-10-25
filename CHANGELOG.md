@@ -50,6 +50,7 @@ and this project adheres to
   - Mention available examples in database files page.
   - Add REST API reference documentation based on OpenAPI specification.
   - Add manpage for `racksdb-web(1)`.
+  - Add _Data Visibility_ section to illustrate custom data in extension page.
 
 ### Changed
 - schema:
