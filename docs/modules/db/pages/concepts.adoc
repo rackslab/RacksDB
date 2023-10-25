@@ -71,7 +71,7 @@ CAUTION: An object cannot be defined with more than one key property in the
 xref:#schema[schema].
 
 NOTE: This is particularly useful to facilitate selection of a particular object
-among a list in the xref:usage:api.adoc[library API].
+among a list in the xref:usage:lib.adoc[Python library].
 
 NOTE: Keys are also involved in xref:#equivalence[sequence/mapping equivalence]
 concept.
@@ -123,7 +123,7 @@ They are automatically defined and resolved by RacksDB when loading the
 database.
 
 NOTE: Back references are essentially used for convenience in the
-xref:usage:api.adoc[library API].
+xref:usage:lib.adoc[Python library].
 --
 
 [#deftype]

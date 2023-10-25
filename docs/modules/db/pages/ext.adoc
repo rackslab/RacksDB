@@ -9,8 +9,8 @@ respect the structure defined by the combination of the vendor schema and the
 defined extensions.
 
 The additional data is automatically available through the
-xref:usage:racksdb.adoc[CLI] and xref:usage:api.adoc[library API],
-without further modification.
+xref:usage:racksdb.adoc[CLI], xref:usage:lib.adoc[Python library] and
+xref:usage:rest.adoc[REST API] without further modification.
 
 This feature can be used to enrich RacksDB database with data useful to your
 applications without requiring another data source, with the advantage of being
@@ -26,7 +26,7 @@ silently ignores it and just loads the built-in schema without modification.
 
 NOTE: RacksDB can load extensions at the path of your choice, at the condition
 of specifying this path in xref:usage:racksdb.adoc[`racksdb`
-command] options and xref:usage:api.adoc[library `load()`] arguments. For this
+command] options and xref:usage:lib.adoc[library `load()`] arguments. For this
 reason, it is highly recommended to use the default path.
 
 == Content

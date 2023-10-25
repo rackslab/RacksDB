@@ -18,6 +18,6 @@ Advanced detailed informations are available:
 [no-bullet]
 * icon:database[] xref:db:def.adoc[Database schema reference documentation]
 * icon:terminal[] xref:usage:racksdb.adoc[`racksdb` command manpage]
-* icon:code[] xref:usage:api.adoc[Python Library] and
+* icon:code[] xref:usage:lib.adoc[Python Library] and
   xref:usage:rest.adoc[REST API] reference documentations
 * icon:maximize[] xref:db:ext.adoc[Schema extension howto]

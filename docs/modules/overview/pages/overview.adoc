@@ -55,7 +55,7 @@ image::overview:racksdb_interfaces.svg[RacksDB Interfaces,400]
 Once the database is defined, data can be searched and extracted using the
 xref:usage:racksdb.adoc[`racksdb` CLI].
 
-For full integration with your software, a xref:usage:api.adoc[Python library
+For full integration with your software, a xref:usage:lib.adoc[Python library
 ] and a xref:usage:rest.adoc[REST API] can also be used to stay continuously
 synchronized with database content.
 
@@ -63,7 +63,7 @@ synchronized with database content.
 --
 .More links
 * xref:usage:racksdb.adoc[`racksdb` command manual]
-* xref:usage:api.adoc[Python Library reference] documentation with examples
+* xref:usage:lib.adoc[Python Library reference] documentation with examples
 * xref:usage:rest.adoc[REST API reference] documentation with examples
 --
 

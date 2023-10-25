@@ -347,7 +347,7 @@ mercury (Mercury HPC cluster): ['hpc', 'cluster']
 [sidebar]
 --
 .More links
-* xref:usage:api.adoc[Python Library reference documentation]
+* xref:usage:lib.adoc[Python Library reference documentation]
 --
 
 [#restapi]

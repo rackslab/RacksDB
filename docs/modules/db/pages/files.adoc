@@ -7,7 +7,7 @@ By default, RacksDB expects the database to be located in
 
 NOTE: RacksDB can load databases at the location of your choice, at the
 condition of specifying the path in xref:usage:racksdb.adoc[`racksdb`
-command] options and xref:usage:api.adoc[library `load()`] arguments. For this
+command] options and xref:usage:lib.adoc[library `load()`] arguments. For this
 reason, it is highly recommended to use the default path.
 
 [#splitted]
