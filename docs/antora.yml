@@ -1,6 +1,6 @@
 name: racksdb
 title: RacksDB
-version: beta
+version: ~
 start_page: overview:start.adoc
 asciidoc:
   attributes:
