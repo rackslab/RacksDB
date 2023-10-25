@@ -1,5 +1,37 @@
-* a native type (_ex:_ _str_ or _int_)
-* another object or a list of another object, prefixed by `:`
-* a reference to another object property, prefixed by `$`
-* a back reference to a parent object or one of its properties, prefixed by `^`
-* a xref:structure.adoc#deftypes[defined type], prefixed by `~`
+[#object]
+== Objects Definitions
+
+Objects definitions are mappings with the following expected keys:
+
+`description` _(optional)_:: String to describe the purpose of the object.
+`properties`:: Mapping of objects properties. The keys are the names of the
+properties. The values are mapping with the following expected keys:
+`type`::: The xref:#type[property type], as described below.
+`description`::: String to describe the purpose and content of the property.
+`key` _(optional)_::: Boolean to determine if the property is a
+xref:concepts.adoc#key[key]. Default value is _false_.
+`default` _(optional)_::: Default value of the property.
+`example` _(optional)_::: Example value of the property.
+`optional` _(optional)_::: Boolean to determine if property is optional.
+   Default value is _false_.
+
+[#type]
+== Properties Type
+
+The xref:concepts.adoc#types[properties types] are expressed with the following
+notation:
+
+* xref:concepts.adoc#native[native types] are expressed by their name +
+  _ex:_ _str_ or _int_
+* xref:concepts.adoc#object [objects] are prefixed by `:` +
+  _ex:_ `:DatacenterRoomDimensions`
+* xref:concepts.adoc#sequence[sequences] (or lists) are noted `list[<content>]` +
+  _ex:_ `list[str]` or `list[:Infrastructure]`
+* xref:concepts.adoc#reference[reference to other objects properties] are
+  prefixed by `$` +
+  _ex:_ `$NodeType.id`
+* xref:concepts.adoc#backref[back references] to a parent objects or one of
+  their properties are prefixed by `^` +
+  _ex:_ `^Datacenter` or `^InfrastructurePart.rack`
+* xref:structure.adoc#deftypes[defined types] are prefixed by `~` +
+  _ex:_ `~dimension`

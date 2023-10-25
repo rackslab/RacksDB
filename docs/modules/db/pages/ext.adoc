@@ -1,12 +1,12 @@
-= Schema Extensions
+= Extensions
 
 == Purpose
 
 RacksDB offers the possibility to define custom extensions of
-xref:schema.adoc[vendor database schema] with additional objects or additional
-properties to existing objects. RacksDB ensures at load time the database
-content fully respect the structure defined by the combination of the
-vendor schema and the defined extensions.
+xref:schema.adoc[vendor schema] with additional objects or additional properties
+to existing objects. RacksDB ensures at load time the database content fully
+respect the structure defined by the combination of the vendor schema and the
+defined extensions.
 
 The additional data is automatically available through the
 xref:usage:racksdb.adoc[CLI] and xref:usage:api.adoc[library API],
@@ -16,7 +16,7 @@ This feature can be used to enrich RacksDB database with data useful to your
 applications without requiring another data source, with the advantage of being
 fully integrated with the other data defined in RacksDB.
 
-== Definition file
+== Path
 
 The extensions must be defined in a plain file formated in YAML language.
 
@@ -29,30 +29,26 @@ of specifying this path in xref:usage:racksdb.adoc[`racksdb`
 command] options and xref:usage:api.adoc[library `load()`] arguments. For this
 reason, it is highly recommended to use the default path.
 
-== Extension definition
+== Content
 
 The syntax of the extension file is roughly similar to the
 xref:schema.adoc[schema file].
 
 The YAML extension file can contain 2 keys at its root:
 
-* `pass:[_content]`: This is a map (_aka_: hash or dict) to add keys at the root
-  of database structure.
-* `pass:[_objects]`: This is a map to define new objects or modify properties of
-  existing objects. The key is the name the object, the value is the map of
-  object properties. If the object is already defined in RacksDB vendor
-  structure, this object is modified with the provided properties. Otherwise, a
-  new object is defined.
+`_content`:: Mapping (_aka_: hash or associative array) to extend the
+definition of the object at database root.
+`_objects`:: Mapping to extend the objects definitions.
 
-In the properties map, the keys are the name of the properties, the values are
-an optional set of attributes such as a default value or an optional flag, and a
-data type. The type can either be:
+The format of `_content` is an xref:#object[object definition]. The format of
+`_objects` is a mapping whose keys are objects names and values are
+xref:#object[objects definitions].
 
 include::partial$prop-types.adoc[]
 
 == Example
 
-Here a simple example of an extension definition file:
+This is a simple example of an extension definition file:
 
 [source,yaml]
 ----

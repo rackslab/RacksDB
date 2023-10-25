@@ -77,6 +77,7 @@ and this project adheres to
     changes on `DBList` class.
   - Load of extension example due to missing rack type.
   - Update quickstart guide to mention Python library and REST API.
+  - Update schema and extensions pages to document new schema file format.
 
 ### Fixed
 - core: Rename module that contains defined types definitions dtypes to avoid
