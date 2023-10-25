@@ -30,20 +30,6 @@ Create `/etc/apt/sources.list.d/rackslab.list` with this content:
 
 [tabs]
 ======
-Debian 11 _« bullseye »_::
-+
-====
-[source]
-----
-Types: deb
-URIs: https://pkgs.rackslab.io/deb
-Suites: bullseye
-Components: main
-Architectures: amd64
-Signed-By: /usr/share/keyrings/rackslab.gpg
-----
-====
-
 Debian 12 _« bookworm »_::
 +
 ====
@@ -52,6 +38,20 @@ Debian 12 _« bookworm »_::
 Types: deb
 URIs: https://pkgs.rackslab.io/deb
 Suites: bookworm
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/rackslab.gpg
+----
+====
+
+Debian 13 _« trixie »_::
++
+====
+[source]
+----
+Types: deb
+URIs: https://pkgs.rackslab.io/deb
+Suites: trixie
 Components: main
 Architectures: amd64
 Signed-By: /usr/share/keyrings/rackslab.gpg
@@ -156,21 +156,6 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
 ====
 
-Fedora 36::
-+
-====
-[source]
-----
-[rackslab]
-name=Rackslab
-baseurl=https://pkgs.rackslab.io/rpm/fc36/main/$basearch/
-gpgcheck=1
-enabled=1
-countme=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
-----
-====
-
 Fedora 37::
 +
 ====
@@ -179,6 +164,21 @@ Fedora 37::
 [rackslab]
 name=Rackslab
 baseurl=https://pkgs.rackslab.io/rpm/fc37/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+====
+
+Fedora 38::
++
+====
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/fc38/main/$basearch/
 gpgcheck=1
 enabled=1
 countme=1
