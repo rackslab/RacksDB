@@ -56,12 +56,12 @@ solutions are the following:
   extensions can be defined to store specific data.
 
 RacksDB provides multiple interfaces to request the database with its
-[CLI tool](https://docs.rackslab.io/racksdb/beta/usage/racksdb.html), a
-[Python library](https://docs.rackslab.io/racksdb/beta/usage/api.html) and a
-[REST API](https://docs.rackslab.io/racksdb/beta/usage/rest.html).
+[CLI tool](https://docs.rackslab.io/racksdb/usage/racksdb.html), a
+[Python library](https://docs.rackslab.io/racksdb/usage/api.html) and a
+[REST API](https://docs.rackslab.io/racksdb/usage/rest.html).
 
 For more details, read the
-[full description](https://docs.rackslab.io/racksdb/beta/overview/overview.html)
+[full description](https://docs.rackslab.io/racksdb/overview/overview.html)
 of RacksDB.
 
 ## Status
@@ -71,11 +71,11 @@ RacksDB is considered stable and ready for production.
 ## Quickstart
 
 To install and start using RacksDB in a few steps, follow the
-[quickstart guide](https://docs.rackslab.io/racksdb/beta/install/quickstart.html)!
+[quickstart guide](https://docs.rackslab.io/racksdb/install/quickstart.html)!
 
 ## Documentation
 
-The [full documentation](https://docs.rackslab.io/racksdb/beta/)
+The [full documentation](https://docs.rackslab.io/racksdb/)
 of RacksDB is available online with complete database definition reference
 documentation, how-tos (extensions, positioning), CLI manpage and library API
 documentation.
