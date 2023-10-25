@@ -57,7 +57,7 @@ solutions are the following:
 
 RacksDB provides multiple interfaces to request the database with its
 [CLI tool](https://docs.rackslab.io/racksdb/usage/racksdb.html), a
-[Python library](https://docs.rackslab.io/racksdb/usage/api.html) and a
+[Python library](https://docs.rackslab.io/racksdb/usage/lib.html) and a
 [REST API](https://docs.rackslab.io/racksdb/usage/rest.html).
 
 For more details, read the
