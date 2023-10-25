@@ -19,7 +19,7 @@ dependencies = [
 ]
 readme = "README.md"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: System Administrators",
     "Topic :: Software Development :: Libraries :: Python Modules",

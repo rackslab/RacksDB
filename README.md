@@ -66,9 +66,7 @@ of RacksDB.
 
 ## Status
 
-RacksDB is currently in _beta_. It is totally ready to use but we expect more
-feedback from real users (database structure, API, CLI) before considering a
-stable release.
+RacksDB is considered stable and ready for production.
 
 ## Quickstart
 
