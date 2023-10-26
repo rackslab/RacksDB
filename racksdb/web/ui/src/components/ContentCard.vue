@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Ref } from 'vue'
-import type { Infrastructure, NodeEquipment, NetworkEquipment, StorageEquipment } from './InfrastructureCards.vue';
+import type { Ref, PropType } from 'vue'
+import type { Infrastructure, NodeEquipment, NetworkEquipment, StorageEquipment } from '@/views/InfrastructureDetailsView.vue'
 
 var showPopUp = ref(false)
 var popUpContent: Ref<NodeEquipment | NetworkEquipment | StorageEquipment | undefined > = ref()
@@ -10,36 +10,34 @@ var popUpContent: Ref<NodeEquipment | NetworkEquipment | StorageEquipment | unde
     
 const props = defineProps({
     rack: String,
-    tag: String,
+    equipment: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true
     },
     id: String,
-    items: {
-        type: Array<Infrastructure>,
-            default() {
-                return []
-            }
+    infrastructure: {
+        type: Object as PropType<Infrastructure>,
+        required: true
     }
 })
         
-function popUp(name: string){
+function popUp(name: string, equipment: "nodes" | "storage" | "network"){
     if(showPopUp.value){
         showPopUp.value = !showPopUp.value
     } else {
-        for(var i=0; i < props.items.length; i++){
-            var layout = props.items[i].layout
+            var layout = props.infrastructure.layout
 
             for(var y=0; y < layout.length; y++){
-                if (layout[y].nodes.find(node => node.name === name)){
-                    popUpContent.value = layout[y].nodes.find(node => node.name === name)
+                var result = layout[y][equipment].find(item => item.name === name)
+                if (result){
+                    popUpContent.value = result
                     break
                 }
-
             }
-
-        }
         showPopUp.value = true      
     }
 }
@@ -48,7 +46,6 @@ function closePopUp(){
     showPopUp.value = !showPopUp.value
 }
 
-
 </script>
 
 <template>
@@ -56,7 +53,7 @@ function closePopUp(){
 <div class="w-full max-w-lg pt-32 px-32">
     <div class="w-60 p-6 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 transition-transform hover:scale-105">
         <h2 class="text-2xl font-semibold flex justify-center text-purple-700 capitalize"> {{ rack }} </h2>
-            <h3 class="flex justify-center text-purple-700 capitalize">{{ tag }}</h3>
+            <h3 class="flex justify-center text-purple-700 capitalize">{{ equipment }}</h3>
                     
                 <ul role="list" class="space-y-5 my-7">
                     <li class="flex space-x-3 items-center">
@@ -64,7 +61,7 @@ function closePopUp(){
                     </li>                                
                                     
                     <li class="flex space-x-3 items-center">
-                        <span class="text-base font-normal leading-tight  dark:text-gray-400 capitalize text-purple-700 cursor-pointer" @click="popUp(name)">{{ id }}</span>
+                        <span class="text-base font-normal leading-tight  dark:text-gray-400 capitalize text-purple-700 cursor-pointer" @click="popUp(name, equipment)">{{ id }}</span>
                     </li>
                 </ul>
     </div>
@@ -90,7 +87,26 @@ function closePopUp(){
             </div>
     
             <div v-else-if="'disks' in popUpContent['type']">
-                <p>{{ popUpContent.name}}</p>
+                <p>ID: {{ popUpContent.type.id }}</p>
+                <p>Model: {{ popUpContent.type.model }}</p>
+                <p>Height: {{ popUpContent.type.height }}</p>
+                <p>Disks:</p>
+                <p>Type: {{ popUpContent.type.disks.type }}</p>
+                <p>Size: {{ popUpContent.type.disks.size }}</p>
+                <p>Model: {{ popUpContent.type.disks.model }}</p>
+                <p>Number: {{ popUpContent.type.disks.number }}</p>
+    
+            </div>
+
+            <div v-else-if="'netifs' in popUpContent['type']">
+                <p>ID: {{ popUpContent.type.id }}</p>
+                <p>Model: {{ popUpContent.type.model }}</p>
+                <p>Height: {{ popUpContent.type.height }}</p>
+                <p>Width: {{  popUpContent.type.width }}</p>
+                <p>Netif:</p>
+                <p>Type: {{ popUpContent.type.netifs.type }}</p>
+                <p>Bandwidth: {{ popUpContent.type.netifs.bandwidth }}</p>
+                <p>Number: {{ popUpContent.type.netifs.number }}</p>
     
             </div>
 
