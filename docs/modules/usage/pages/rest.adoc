@@ -14,7 +14,7 @@ documentation of this API.
 article.doc { max-width: 100% !important;}
 </style>
 <rapi-doc
-  spec-url = "/racksdb/beta/usage/_attachments/openapi.yml"
+  spec-url = "/racksdb/usage/_attachments/openapi.yml"
   show-header = "false"
   show-info = "false"
   allow-try = "false"
