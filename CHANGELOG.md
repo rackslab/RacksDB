@@ -14,6 +14,9 @@ and this project adheres to
 ### Changed
 - docs: Update supported Linux distributions in quickstart guide.
 
+### Fixed
+- docs: Fix URLs to defined types in structure reference after module rename.
+
 ## [0.2.0] - 2023-10-25
 
 ### Added
