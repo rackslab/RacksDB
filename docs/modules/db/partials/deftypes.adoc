@@ -1,7 +1,7 @@
 [#deftype]
 == Defined Types
 
-:url-deftypes: https://github.com/rackslab/racksdb/blob/main/racksdb/types
+:url-deftypes: https://github.com/rackslab/racksdb/blob/main/racksdb/dtypes
 
 [cols="2a,2a,1l,3a"]
 |===
