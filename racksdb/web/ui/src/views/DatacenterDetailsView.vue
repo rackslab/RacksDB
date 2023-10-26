@@ -80,15 +80,17 @@ var datacenterDetails: Ref<Array<Datacenter>> = ref([])
         </thead>
 
         <tbody v-for="datacenter in datacenterDetails" :key="datacenter.name">
-            <tr v-for="room in datacenter.rooms" :key="room.name" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr v-for="room in datacenter.rooms" :key="room.name" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-black">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     <span>{{ room.name }} </span>
                 </th>
 
                 <td class="px-6 py-4">
-                    {{ room.dimensions.width * room.dimensions.depth / 10**6 }}m²
-                    width: {{ room.dimensions.width / 10**3 }}m
-                    depth: {{ room.dimensions.depth / 10**3}}m 
+                    <span class="text-black">{{ room.dimensions.width * room.dimensions.depth / 10**6 }}m²</span><br>
+                    <div class="italic text-gray-500 text-xs">
+                        width: {{ room.dimensions.width / 10**3 }}m<br>
+                        depth: {{ room.dimensions.depth / 10**3}}m
+                    </div>
                 </td>
 
                 <td class="px-6 py-4">
