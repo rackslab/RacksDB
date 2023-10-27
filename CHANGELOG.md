@@ -20,6 +20,9 @@ and this project adheres to
 
 ### Changed
 - docs: Update supported Linux distributions in quickstart guide.
+- schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
+  _StorageEquipmentTypeNetif_ and _NetworkEquipmentTypeNetif_ bandwidth
+  properties (#21).
 
 ### Fixed
 - docs:

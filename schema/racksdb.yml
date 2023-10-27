@@ -125,7 +125,7 @@ _objects:
         description: The type of network interface.
         example: infiniband
       bandwidth:
-        type: ~bytes
+        type: ~bits
         description: The bandwidth (per second) of the network interface.
         example: 100Gb
   NodeTypeGpu:
@@ -203,7 +203,7 @@ _objects:
         description: The type of network interface.
         example: ethernet
       bandwidth:
-        type: ~bytes
+        type: ~bits
         description: The bandwidth (per second) of the network interface.
         example: 2.5Gb
   NetworkEquipmentType:
@@ -242,7 +242,7 @@ _objects:
         description: The type of network interface.
         example: ethernet
       bandwidth:
-        type: ~bytes
+        type: ~bits
         description: The bandwidth (per second) of the network interface.
         example: 1Gb
       number:
