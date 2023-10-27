@@ -16,7 +16,8 @@ and this project adheres to
 
 ### Fixed
 - docs:
-  - Fix URLs to defined types in structure reference after module rename.
+  - Fix URLs to defined types in structure reference after module rename (from
+    @btravouillon).
   - Add missing properties examples in OpenAPI specification.
 - schema: Fix typo on example attributes on some properties eventually.
 
