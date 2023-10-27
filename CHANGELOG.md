@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 - schema: Add support of optional list of GPU on _NodeType_ (from
   @btravouillon).
+- core: Add `bits` defined type.
 - docs:
   - Mention web extra package installation from PyPI in quickstart guide.
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
@@ -26,6 +27,10 @@ and this project adheres to
     @btravouillon).
   - Add missing properties examples in OpenAPI specification.
 - schema: Fix typo on example attributes on some properties eventually.
+
+### Removed
+- core: Remove support of bits (`[MBG]b`) suffix on `bytes` defined type in
+  favor of new `bits` defined type.
 
 ## [0.2.0] - 2023-10-25
 
