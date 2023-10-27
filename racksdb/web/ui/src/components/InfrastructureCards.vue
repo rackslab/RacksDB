@@ -15,25 +15,24 @@ const props = defineProps({
 </script>
 
 <template>
-        <div v-for="rack in props.infrastructure.layout" :key="rack.rack" >
-            <div v-if="searchItem === 'nodes'" class="flex justify-center px-0 flex-wrap">
-                <div v-for="item in rack.nodes" :key="item.name">
-                    <ContentCard :rack="item.rack" equipment="nodes" :name="item.name" :id="item.type.id" :infrastructure="props.infrastructure"/>
-                </div>
-            </div>
-            
-            <div v-else-if="searchItem === 'storage'" class="flex justify-center px-0 flex-wrap">
-                <div v-for="item in rack.storage" :key="item.name">
-                    <ContentCard :rack="item.rack" equipment="storage" :name="item.name" :id="item.type.id" :infrastructure="props.infrastructure"/>
-                </div>
-                
-            </div>
-            <div v-else class="flex justify-center px-0 flex-wrap">
-                <div v-for="item in rack.network" :key="item.name">
-                    <ContentCard :rack="item.rack" equipment="network" :name="item.name" :id="item.type.id" :infrastructure="props.infrastructure"/>
-                </div>
-
-            </div>
+    <div v-for="rack in props.infrastructure.layout" :key="rack.rack">
+      <div v-if="searchItem === 'nodes'" class="flex flex-wrap justify-center">
+        <div v-for="item in rack.nodes" :key="item.name">
+          <ContentCard :rack="item.rack" equipment="nodes" :name="item.name" :id="item.type.id" :infrastructure="props.infrastructure" />
         </div>
-
-</template>
+      </div>
+  
+      <div v-else-if="searchItem === 'storage'" class="flex flex-wrap justify-center">
+        <div v-for="item in rack.storage" :key="item.name">
+          <ContentCard :rack="item.rack" equipment="storage" :name="item.name" :id="item.type.id" :infrastructure="props.infrastructure" />
+        </div>
+      </div>
+  
+      <div v-else class="flex flex-wrap justify-center pb-10">
+        <div v-for="item in rack.network" :key="item.name">
+          <ContentCard :rack="item.rack" equipment="network" :name="item.name" :id="item.type.id" :infrastructure="props.infrastructure" />
+        </div>
+      </div>
+    </div>
+  </template>
+  
