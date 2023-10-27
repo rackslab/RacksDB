@@ -88,7 +88,7 @@ _objects:
       cores:
         type: int
         description: The number of cores per socket.
-        examples: 96
+        example: 96
   NodeTypeRam:
     properties:
       dimm:
@@ -98,7 +98,7 @@ _objects:
       size:
         type: ~bytes
         description: The storage capacity of each DIMM.
-        examples: 32GB
+        example: 32GB
   NodeTypeStorage:
     properties:
       type:

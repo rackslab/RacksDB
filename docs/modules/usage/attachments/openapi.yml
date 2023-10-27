@@ -255,6 +255,7 @@ components:
       properties:
         cores:
           description: The number of cores per socket.
+          example: 96
           type: integer
         model:
           description: The CPU model name.
@@ -288,6 +289,7 @@ components:
           type: integer
         size:
           description: The storage capacity of each DIMM.
+          example: 34359738368
           type: integer
       type: object
     NodeTypeStorage:
