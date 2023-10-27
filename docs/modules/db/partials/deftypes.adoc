@@ -15,10 +15,17 @@
 |The resulting value is angle in *degrees*. RacksDB does not accept values below
 0 or above 360.
 
+|[#deftype-bits]`~bits`
+{url-deftypes}/bits.py[icon:code[]]
+|* `1.2Gb`
+* `3Mb`
+|int
+|The resulting value is the *number of bits*.
+
 |[#deftype-bytes]`~bytes`
 {url-deftypes}/bytes.py[icon:code[]]
-|* `1.2Gb`
-* `3MB`
+|* `32GB`
+* `8TB`
 |int
 |The resulting value is the *number of bytes*.
 
