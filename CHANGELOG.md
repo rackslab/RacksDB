@@ -15,6 +15,7 @@ and this project adheres to
   - Mention web extra package installation from PyPI in quickstart guide.
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
     specification and structure reference documentation (from @btravouillon).
+  - Add nodetype with GPU in examples databases.
 
 ### Changed
 - docs: Update supported Linux distributions in quickstart guide.

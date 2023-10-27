@@ -1,0 +1,26 @@
+model: BullSequana X410 A5
+height: 2u
+width: full
+specs: https://atos.net/wp-content/uploads/2023/04/BullSequana-X400-series_Factsheet.pdf
+cpu:
+  sockets: 2
+  model: AMD EPYC 7773X
+  specs: https://www.amd.com/en/products/cpu/amd-epyc-7773x
+  cores: 64
+ram:
+  dimm: 16
+  size: 32GB
+gpu:
+- model: A100
+  memory: 40GB
+- model: A100
+  memory: 40GB
+- model: A100
+  memory: 40GB
+- model: A100
+  memory: 40GB
+netifs:
+- type: ethernet
+  bandwidth: 10Gb
+- type: ethernet
+  bandwidth: 10Gb
