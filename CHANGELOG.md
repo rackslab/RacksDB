@@ -9,7 +9,12 @@ and this project adheres to
 ## Unreleased
 
 ### Added
-- docs: Mention web extra package installation from PyPI in quickstart guide.
+- schema: Add support of optional list of GPU on _NodeType_ (from
+  @btravouillon).
+- docs:
+  - Mention web extra package installation from PyPI in quickstart guide.
+  - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
+    specification and structure reference documentation (from @btravouillon).
 
 ### Changed
 - docs: Update supported Linux distributions in quickstart guide.
