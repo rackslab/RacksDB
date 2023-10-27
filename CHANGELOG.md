@@ -17,6 +17,7 @@ and this project adheres to
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
     specification and structure reference documentation (from @btravouillon).
   - Add nodetype with GPU in examples databases.
+  - Mention new `~bits` defined type.
 
 ### Changed
 - docs: Update supported Linux distributions in quickstart guide.
