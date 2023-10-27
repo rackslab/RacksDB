@@ -453,6 +453,12 @@ Library class type: `RacksDBNodeType`
 
 |{symbol-seq}{nbsp}xref:#obj-nodetypenetif[{symbol-obj}{nbsp}NodeTypeNetif]
 |[.grey]#-#
+
+|gpu
+|List of GPUs of the node.
+
+|{symbol-seq}{nbsp}xref:#obj-nodetypegpu[{symbol-obj}{nbsp}NodeTypeGpu]
+|[.grey]#-#
 |===
 
 [#obj-nodetypecpu]
@@ -487,6 +493,35 @@ Library class type: `RacksDBNodeTypeCpu`
 |The number of cores per socket.
 
 |int
+|[.green]#icon:check[]#
+|===
+
+[#obj-nodetypegpu]
+=== NodeTypeGpu
+
+Library class type: `RacksDBNodeTypeGpu`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|model
+|The GPU model name.
+
+|str
+|[.green]#icon:check[]#
+
+|specs
+|URL to GPU specsheet.
+
+|str
+|[.grey]#-#
+
+|memory
+|The amount of memory per GPU.
+
+|xref:#deftype-bytes[{symbol-deftype}{nbsp}~bytes]
 |[.green]#icon:check[]#
 |===
 

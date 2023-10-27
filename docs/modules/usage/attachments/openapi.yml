@@ -217,6 +217,9 @@ components:
         cpu:
           $ref: '#/components/schemas/NodeTypeCpu'
           description: CPU configuration of the node.
+        gpu:
+          $ref: '#/components/schemas/NodeTypeGpu'
+          description: List of GPUs of the node.
         height:
           description: Height of the node.
           example: 2
@@ -267,6 +270,21 @@ components:
         specs:
           description: URL to CPU specsheet.
           example: https://sipearl.com/en
+          type: string
+      type: object
+    NodeTypeGpu:
+      properties:
+        memory:
+          description: The amount of memory per GPU.
+          example: 137438953472
+          type: integer
+        model:
+          description: The GPU model name.
+          example: AMD Instinct MI250
+          type: string
+        specs:
+          description: URL to GPU specsheet.
+          example: https://www.amd.com/fr/products/server-accelerators/instinct-mi250
           type: string
       type: object
     NodeTypeNetif:

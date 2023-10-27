@@ -70,6 +70,10 @@ _objects:
         type: list[:NodeTypeNetif]
         description: List of network interfaces of the node.
         optional: true
+      gpu:
+        type: list[:NodeTypeGpu]
+        description: List of GPUs of the node.
+        optional: true
   NodeTypeCpu:
     properties:
       model:
@@ -124,6 +128,21 @@ _objects:
         type: ~bytes
         description: The bandwidth (per second) of the network interface.
         example: 100Gb
+  NodeTypeGpu:
+    properties:
+      model:
+        type: str
+        description: The GPU model name.
+        example: AMD Instinct MI250
+      specs:
+        type: str
+        description: URL to GPU specsheet.
+        optional: true
+        example: https://www.amd.com/fr/products/server-accelerators/instinct-mi250
+      memory:
+        type: ~bytes
+        description: The amount of memory per GPU.
+        examples: 128GB
   StorageEquipmentType:
     properties:
       id:
