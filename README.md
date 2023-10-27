@@ -94,9 +94,10 @@ RacksDB is developed and maintained by [Rackslab](https://rackslab.io). Please
 [contact us](https://rackslab.io/en/contact/) for any questions or professionnal
 services.
 
-RacksDB has also received external contributions from great people:
+The project has also received external contributions from great people:
 
-* @btravouillon ([Mila](https://mila.quebec/en/))
+* [@btravouillon](https://github.com/btravouillon)
+  ([Mila](https://mila.quebec/en/))
 
 ## License
 
