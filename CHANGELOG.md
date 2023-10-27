@@ -20,10 +20,13 @@ and this project adheres to
   - Mention new `~bits` defined type.
 
 ### Changed
-- docs: Update supported Linux distributions in quickstart guide.
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
   _StorageEquipmentTypeNetif_ and _NetworkEquipmentTypeNetif_ bandwidth
   properties (#21).
+- docs:
+  - Update supported Linux distributions in quickstart guide.
+  - Update structure reference documentation and OpenAPI specification after
+    bandwidths defined type changed from `~bytes` to `~bits`.
 
 ### Fixed
 - docs:
