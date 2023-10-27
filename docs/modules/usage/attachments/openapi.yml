@@ -168,7 +168,7 @@ components:
       properties:
         bandwidth:
           description: The bandwidth (per second) of the network interface.
-          example: 125000000
+          example: 1000000000
           type: integer
         number:
           description: The number of this network interface available in the network
@@ -294,7 +294,7 @@ components:
       properties:
         bandwidth:
           description: The bandwidth (per second) of the network interface.
-          example: 12500000000
+          example: 100000000000
           type: integer
         type:
           description: The type of network interface.
@@ -504,7 +504,7 @@ components:
       properties:
         bandwidth:
           description: The bandwidth (per second) of the network interface.
-          example: 312500000
+          example: 2500000000
           type: integer
         type:
           description: The type of network interface.

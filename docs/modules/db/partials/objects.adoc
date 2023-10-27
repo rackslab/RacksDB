@@ -329,7 +329,7 @@ Library class type: `RacksDBNetworkEquipmentTypeNetif`
 |bandwidth
 |The bandwidth (per second) of the network interface.
 
-|xref:#deftype-bytes[{symbol-deftype}{nbsp}~bytes]
+|xref:#deftype-bits[{symbol-deftype}{nbsp}~bits]
 |[.green]#icon:check[]#
 
 |number
@@ -544,7 +544,7 @@ Library class type: `RacksDBNodeTypeNetif`
 |bandwidth
 |The bandwidth (per second) of the network interface.
 
-|xref:#deftype-bytes[{symbol-deftype}{nbsp}~bytes]
+|xref:#deftype-bits[{symbol-deftype}{nbsp}~bits]
 |[.green]#icon:check[]#
 |===
 
@@ -916,7 +916,7 @@ Library class type: `RacksDBStorageEquipmentTypeNetif`
 |bandwidth
 |The bandwidth (per second) of the network interface.
 
-|xref:#deftype-bytes[{symbol-deftype}{nbsp}~bytes]
+|xref:#deftype-bits[{symbol-deftype}{nbsp}~bits]
 |[.green]#icon:check[]#
 |===
 
