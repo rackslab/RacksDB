@@ -68,7 +68,11 @@ class RoomDrawer(Drawer):
         rack_width = int(rack.type.width * self.SCALE)
         rack_height = int(rack.type.depth * self.SCALE)
         # draw rack frame
-        self.ctx.set_source_rgb(0.4, 0.4, 0.4)  # grey
+        self.ctx.set_source_rgb(
+            rack.type.color[0]/255,
+            rack.type.color[1]/255,
+            rack.type.color[2]/255
+        )
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,

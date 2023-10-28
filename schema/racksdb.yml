@@ -74,6 +74,11 @@ _objects:
         type: list[:NodeTypeGpu]
         description: List of GPUs of the node.
         optional: true
+      color:
+        type: list[int]
+        description: Equipment background [red, green, blue]
+        default: [153,153,153]
+        example: [255,122,0]
   NodeTypeCpu:
     properties:
       model:
@@ -176,6 +181,11 @@ _objects:
         type: list[:StorageEquipmentTypeNetif]
         description: List of network devices in the storage equipment.
         optional: true
+      color:
+        type: list[int]
+        description: Equipment background [red, green, blue]
+        default: [153,153,153]
+        example: [255,122,0]
   StorageEquipmentTypeDisk:
     properties:
       type:
@@ -235,6 +245,11 @@ _objects:
         type: list[:NetworkEquipmentTypeNetif]
         description: List of network interfaces on this network equipment.
         optional: true
+      color:
+        type: list[int]
+        description: Equipment background [red, green, blue]
+        default: [153,153,153]
+        example: [255,122,0]
   NetworkEquipmentTypeNetif:
     properties:
       type:
@@ -274,6 +289,11 @@ _objects:
         type: ~rack_height
         description: Number of U slots available in the rack.
         example: 42u
+      color:
+        type: list[int]
+        description: Rack background [red, green, blue]
+        default: [51,51,51]
+        example: [255,122,0]
   Datacenter:
     properties:
       name:

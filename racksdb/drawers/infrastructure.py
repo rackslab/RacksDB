@@ -109,7 +109,11 @@ class InfrastructureDrawer(Drawer):
         equipment_height = int(equipment.type.height * self.RACK_U_HEIGHT)
 
         # draw equipment background
-        self.ctx.set_source_rgb(0.6, 0.6, 0.6)  # grey
+        self.ctx.set_source_rgb(
+            equipment.type.color[0]/255,
+            equipment.type.color[1]/255,
+            equipment.type.color[2]/255
+        )
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,
@@ -167,7 +171,11 @@ class InfrastructureDrawer(Drawer):
         self.ctx.stroke()
 
         # draw rack panes
-        self.ctx.set_source_rgb(0, 0, 0)  # black
+        self.ctx.set_source_rgb(
+            rack.type.color[0]/255,
+            rack.type.color[1]/255,
+            rack.type.color[2]/255
+        )
         self.ctx.rectangle(
             dl.x,
             dl.y - rack_height,
