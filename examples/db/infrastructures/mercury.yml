@@ -38,7 +38,7 @@ layout:
     type: dellr550
     slot: 8
     tags: [servers]
-  - name: megpu[0001-008]
+  - name: megpu[0001-0008]
     type: bullsx440a5
     slot: 20
     tags: [ia, gpu]
