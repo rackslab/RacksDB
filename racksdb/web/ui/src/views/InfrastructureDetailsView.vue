@@ -1,38 +1,28 @@
 <script setup lang="ts">
-import { useHttp } from '@/plugins/http';
+import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import SearchBarView from '@/components/SearchBarView.vue';
-import InfrastructureCards from '@/components/InfrastructureCards.vue';
+import SearchBarView from '@/components/SearchBarView.vue'
+import InfrastructureCards from '@/components/InfrastructureCards.vue'
 
 const http = useHttp()
 var infrastructures: Ref<Array<Infrastructure>> = ref([])
-var infrastructureDetails: Ref<Array<Infrastructure>> = ref([])
-var cardsView = ref(true)
-var tableView = ref(false)
+const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
+const rack = ref()
+const cardsView = ref(true)
+const tableView = ref(false)
+const showRack = ref(false)
 
-var showContentRack = ref(false)
-var text = ref()
-var rackDetails: Ref<Array<Infrastructure>> = ref([])
+var showInfrastructureRacks = ref(true)
 
+function rackDetails(rackName: string){
+    showRack.value = true
+    showInfrastructureRacks.value = false
+    var layout = infrastructureDetails.value?.layout
 
-function showRack(rack: string){
-    showContentRack.value = true
-    text.value= rack
-
-
-    for (let index = 0; index < infrastructureDetails.value.length; index++) {
-        const element = infrastructureDetails.value[index];
-        for (let y = 0; y < infrastructureDetails.value[index].layout.length; y++) {
-            const element = infrastructureDetails.value[index].layout[y].rack;
-            console.log(element)    
-        }
-        
+    for (let index = 0; index < layout!.length; index++) {
+        rack.value = layout!.filter(rack => rack.rack === rackName)
     }
-
-
-    //console.log(rackDetails.value)
-
 }
 
 
@@ -40,8 +30,7 @@ async function getInfrastructure(){
     try {
         const resp = await http.get('infrastructures')
         infrastructures.value = resp.data as Infrastructure[]
-        infrastructureDetails.value = infrastructures.value.filter((infrastructure) => infrastructure.name === props.name)
-
+        infrastructureDetails.value = infrastructures.value.filter((infrastructure) => infrastructure.name === props.name)[0]
     } catch (error) {
         console.error('Error during infrastructure data recovery', error)
     }
@@ -156,36 +145,33 @@ const props = defineProps({
 
 <template>
     <SearchBarView 
-    v-if="infrastructures.length"
-        viewTitle="Infrastructure Details"    
-        searchedItem="infrastructure" 
-        :items="infrastructures"
-    />
+        v-if="infrastructures.length"
+            viewTitle="Infrastructure Details"    
+            searchedItem="infrastructure" 
+            :items="infrastructures"/>
 
     <h2 class="text-3xl font-medium flex justify-center capitalize py-16">{{ name }} Infrastructure</h2>
     
     <div class="flex justify-end mr-36">
         <img @click="choseView()" src="/assets/cards.svg" alt="">
         <img @click="choseView()" src="/assets/table.svg" alt="">
-
     </div>
 
     <div v-show="cardsView">
-        <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="nodes" />
-        <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="storage" />
-        <InfrastructureCards v-if="infrastructures.length" :items="infrastructures" searchItem="network" />
+        <InfrastructureCards v-if="infrastructureDetails" :infrastructure="infrastructureDetails" searchItem="nodes" />
+        <InfrastructureCards v-if="infrastructureDetails" :infrastructure="infrastructureDetails" searchItem="storage" />
+        <InfrastructureCards v-if="infrastructureDetails" :infrastructure="infrastructureDetails" searchItem="network" />
     </div>
 
-    <div v-show="tableView">
-        <div class="flex justify-center" v-for="infrastructure in infrastructures" :key="infrastructure.name">
+    <div v-show="tableView" class="pb-10">
+        <div class="flex justify-center pb-28" v-for="infrastructure in infrastructures" :key="infrastructure.name">
             <div v-for="rack in infrastructure.layout" :key="rack.rack">
-                <button @click="showRack(rack.rack)" type="button" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <button type="button" @click="rackDetails(rack.rack)" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                     {{rack.rack}}</button>
             </div>
         </div>
 
-        <div v-show="showContentRack">
-            {{ text }}
+        <div v-show="showInfrastructureRacks">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -195,17 +181,62 @@ const props = defineProps({
                     </tr>
                 </thead>
 
-                <tbody>
-                    <tr>
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Un nom</th>
-                        <td class="px-6 py-4">un equipement</td>
-                        <td class="px-6 py-4">un ID</td>
+                <template v-for="layout in infrastructureDetails?.layout" :key="layout.rack">
+                    <tr v-for="node in layout.nodes" :key="node.name">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ node.name }}</td>
+                        <td class="px-6 py-4">Node {{ node.rack }}</td>
+                        <td class="px-6 py-4 capitalize">{{ node.type.id }}</td>
+ 
                     </tr>
-                </tbody>
-            </table>
 
+                    <tr v-for="storage in layout.storage" :key="storage.name">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ storage.name }}</td>
+                        <td class="px-6 py-4">Storage {{ storage.rack }}</td>
+                        <td class="px-6 py-4 capitalize">{{ storage.type.id }}</td>
+                    </tr>
+
+                    <tr v-for="network in layout.network" :key="network.name">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ network.name }}</td>
+                        <td class="px-6 py-4">Network {{ network.rack }}</td>
+                        <td class="px-6 py-4 capitalize">{{ network.type.id }}</td>
+                    </tr>
+                </template>
+            </table>
         </div>
 
+        <div v-show="showRack">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Name</th>
+                        <th scope="col" class="px-6 py-3">Equipment</th>
+                        <th scope="col" class="px-6 py-3">ID</th>
+                    </tr>
+                </thead>
+
+                <template v-for="layout in rack" :key="layout.rack">
+                    <tr v-for="node in layout.nodes" :key="node.name">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ node.name }}</td>
+                        <td class="px-6 py-4">Node {{ node.rack }}</td>
+                        <td class="px-6 py-4 capitalize">{{ node.type.id }}</td>
+ 
+                    </tr>
+
+                    <tr v-for="storage in layout.storage" :key="storage.name">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ storage.name }}</td>
+                        <td class="px-6 py-4">Storage {{ storage.rack }}</td>
+                        <td class="px-6 py-4 capitalize">{{ storage.type.id }}</td>
+                    </tr>
+
+                    <tr v-for="network in layout.network" :key="network.name">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ network.name }}</td>
+                        <td class="px-6 py-4">Network {{ network.rack }}</td>
+                        <td class="px-6 py-4 capitalize">{{ network.type.id }}</td>
+                    </tr>
+                </template>
+            </table>
+        </div>
     </div>
 
+    
 </template>
