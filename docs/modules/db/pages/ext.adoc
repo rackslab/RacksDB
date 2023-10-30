@@ -60,7 +60,8 @@ With this extension:
 * The `power` key is added at the root of RacksDB database structure. It can
   contain an optional list of `Ups` object.
 * The new `Ups` object is defined, as it does not exist in RacksDB vendor
-  structure. This object contains an integer property named `capacity`.
+  structure. This object contains a property named `capacity` using the
+  xref:structure.adoc#deftype-watts[~watts] defined type.
 * The xref:structure.adoc#obj-racktype[RackType] object is extended with an
   optional `weight` integer attribute.
 
@@ -121,8 +122,8 @@ Print the _capacity_ of every UPS :
 >>> for power in db.power:
 ...     print(f"capacity: {power.capacity}")
 ...
-capacity: 600
-capacity: 900
+capacity: 250000
+capacity: 1600000
 ----
 
 * xref:usage:rest.adoc[REST API]:

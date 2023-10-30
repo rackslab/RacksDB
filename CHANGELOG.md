@@ -19,7 +19,7 @@ and this project adheres to
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
     specification and structure reference documentation (from @btravouillon).
   - Add nodetype with GPU in examples databases.
-  - Mention new `~bits` defined type.
+  - Mention new `~bits` and `~watts` defined types.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
@@ -29,7 +29,7 @@ and this project adheres to
   - Update supported Linux distributions in quickstart guide.
   - Update structure reference documentation and OpenAPI specification after
     bandwidths defined type changed from `~bytes` to `~bits`.
-  - Use `~watts` defined type in example extension.
+  - Use `~watts` defined type in example extension and extension documentation.
 
 ### Fixed
 - schema: Fix typo on example attributes on some properties eventually.

@@ -70,4 +70,10 @@ is equals to 1.
 |str
 |The resulting value is the *name of storage device type*.
 
+|[#deftype-watts]`~watts`
+{url-deftypes}/watts.py[icon:code[]]
+|* `800W`
+* `1.5KW`
+|int
+|The resulting value is the *number of watts*.
 |===
