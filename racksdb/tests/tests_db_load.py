@@ -51,15 +51,15 @@ class TestDBLoad(unittest.TestCase):
         # fewer than the number of nodes. The number of potentially expanded
         # objects is reported correctly by len(). However, it must be much lower
         # than the actual number of keys/values in the dictionnary.
-        self.assertEqual(len(db.nodes.keys()), 5)
-        self.assertEqual(len(db.nodes), 121)
+        self.assertEqual(len(db.nodes.keys()), 6)
+        self.assertEqual(len(db.nodes), 129)
         self.assertEqual(
             type(db.infrastructures.first()).__name__, "RacksDBInfrastructure"
         )
         self.assertEqual(db.infrastructures.first().name, "mercury")
         self.assertEqual(db.infrastructures["mercury"].name, "mercury")
-        self.assertEqual(len(db.infrastructures["mercury"].nodes.keys()), 5)
-        self.assertEqual(len(db.infrastructures["mercury"].nodes), 121)
+        self.assertEqual(len(db.infrastructures["mercury"].nodes.keys()), 6)
+        self.assertEqual(len(db.infrastructures["mercury"].nodes), 129)
         self.assertEqual(len(db.infrastructures["mercury"].layout[0].nodes), 61)
         self.assertEqual(
             type(db.infrastructures["mercury"].nodes["mecn0001"]).__name__,
