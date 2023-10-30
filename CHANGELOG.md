@@ -29,6 +29,7 @@ and this project adheres to
   - Update supported Linux distributions in quickstart guide.
   - Update structure reference documentation and OpenAPI specification after
     bandwidths defined type changed from `~bytes` to `~bits`.
+  - Use `~watts` defined type in example extension.
 
 ### Fixed
 - schema: Fix typo on example attributes on some properties eventually.

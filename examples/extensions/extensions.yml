@@ -8,7 +8,7 @@ _objects:
   Ups:
     properties:
       capacity:
-        type: int
+        type: ~watts
   RackType:
     properties:
       weight:
