@@ -17,9 +17,9 @@ class SchemaDefinedTypeBits(SchemaDefinedType):
         quantity = float(match.group(1))
         unit = match.group(3)
         if unit == "Mb":
-            quantity *= (10 ** 6)
+            quantity *= 10 ** 6
         elif unit == "Gb":
-            quantity *= (10 ** 9)
+            quantity *= 10 ** 9
         elif unit == "Tb":
-            quantity *= (10 ** 12)
+            quantity *= 10 ** 12
         return int(quantity)
