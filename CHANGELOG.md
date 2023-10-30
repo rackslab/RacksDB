@@ -11,7 +11,9 @@ and this project adheres to
 ### Added
 - schema: Add support of optional list of GPU on _NodeType_ (from
   @btravouillon).
-- core: Add `bits` defined type.
+- core:
+  - Add `bits` defined type.
+  - Add `watts` defined type (#23).
 - docs:
   - Mention web extra package installation from PyPI in quickstart guide.
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
