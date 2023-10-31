@@ -88,19 +88,40 @@ This logic is represented in this schema:
 
 image:equipments_positioning_expansion.svg[Equipments positioning expansion,500]
 
-In RackDB, racks slots are numbered *from bottom to top*, starting from *0*.
+In RackDB, racks slots are numbered *from bottom to top*, starting from *1* by
+default.
 
 In rack *R01*:
 
-* In {set1}, the 1^st^ equipment is located in slot 2.
-* In {set2}, the 1^st^ equipment is located in slot 24. 
-* In {set3}, the 1^st^ equipment is located in slot 30
+* In {set1}, the 1^st^ equipment is located in slot 3,
+* In {set2}, the 1^st^ equipment is located in slot 25,
+* In {set3}, the 1^st^ equipment is located in slot 31.
 
 In rack *R02*:
 
-* In {set4}, the 1^st^ equipment is located in slot 2
-* In {set5}, the 1^st^ equipment is located in slot 26
-* In {set6}, the 1^st^ equipment is located in slot 35
+* In {set4}, the 1^st^ equipment is located in slot 3,
+* In {set5}, the 1^st^ equipment is located in slot 27,
+* In {set6}, the 1^st^ equipment is located in slot 36.
+
+[TIP]
+====
+While racks slots are numbered starting from 1 by default, it can be changed by
+setting the index of the _initial_ slot in the
+xref:structure.adoc#obj-racktype[RackType objects]. For example, with an initial
+index set to 0:
+
+[source,yaml]
+----
+types:
+  racks:
+  - id: standard
+    height: 1867mm
+    width: 600mm
+    depth: 914mm
+    slots: 42u
+    initial: 0  # default: 1
+----
+====
 
 In RacksDB database, this infrastructure layout can be declared this way, for
 rack *R1-01*:

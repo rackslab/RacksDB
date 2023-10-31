@@ -365,6 +365,10 @@ components:
           description: Unique identifier of the rack type.
           example: standard
           type: string
+        initial:
+          description: Index of initial slot in the rack
+          example: 1
+          type: integer
         slots:
           description: Number of U slots available in the rack.
           example: 42

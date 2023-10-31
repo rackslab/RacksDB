@@ -12,26 +12,26 @@ layout:
   nodes:
   - name: cn[001-040] # *set 1*: 40 *denses* nodes starting from slot *2*
     type: dense
-    slot: 2
+    slot: 3
   - name: cn[100-104] # *set 2*: 4 *classic* nodes starting from slot *24*
     type: classic
-    slot: 24
+    slot: 25
   - name: srv[001-002] # *set 3*: 2 *fat* nodes starting from slot *30*
     type: fat
-    slot: 30
+    slot: 31
 # end::rack-1[]
 # tag::rack-2[]
 - rack: R02 # 2^nd^ rack
   nodes:
   - name: cn[201-228] # *set 4*: 28 *blade* nodes starting from slot *2*
     type: blade
-    slot: 2
+    slot: 3
   network:
   - name: sw[001-004] # *set 5*: 4 rack switches starting from slot *26*
     type: racksw
-    slot: 26
+    slot: 27
   storage:
   - name: nas001 # *set 6*: 1 NAS in slot *35*
     type: nas
-    slot: 35
+    slot: 36
 # end::rack-2[]

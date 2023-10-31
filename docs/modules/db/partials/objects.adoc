@@ -755,6 +755,13 @@ Library class type: `RacksDBRackType`
 
 |xref:#deftype-rack_height[{symbol-deftype}{nbsp}~rack_height]
 |[.green]#icon:check[]#
+
+|initial
+|Index of initial slot in the rack
+
+*Default value:* `1`
+|int
+|[.grey]#-#
 |===
 
 [#obj-storageequipment]

@@ -21,6 +21,8 @@ and this project adheres to
     specification and structure reference documentation (from @btravouillon).
   - Add nodetype with GPU in examples databases.
   - Mention new `~bits` and `~watts` defined types.
+  - Mention new optional _initial_ property on _RackType_ in structure reference
+    documentation and OpenAPI specification.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
@@ -34,6 +36,8 @@ and this project adheres to
     bandwidths defined type changed from `~bytes` to `~bits`.
   - Use `~watts` defined type in example extension and extension documentation.
   - Update examples database to new rack type initial slot index value set to 1.
+  - Update equipments positionning howto to mention new default initial slot 1
+    and possibility to change it in database.
 
 ### Fixed
 - schema: Fix typo on example attributes on some properties eventually.
