@@ -1,11 +1,11 @@
-import type { App, Plugin } from 'vue'
+import type { App, InjectionKey, Plugin } from 'vue'
 import { inject } from 'vue'
 
 export interface RuntimeConfiguration {
     api_server: string
 }
 
-const injectionKey = Symbol('rc')
+export const injectionKey = Symbol('rc') as InjectionKey<RuntimeConfiguration>
 
 export const runtimeConfiguration: Plugin = {
     install: (app: App, configuration: RuntimeConfiguration) => {
