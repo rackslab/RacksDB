@@ -1,19 +1,27 @@
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import type { Ref } from 'vue'
 import SearchBarView from '@/components/SearchBarView.vue'
 import InfrastructureCards from '@/components/InfrastructureCards.vue'
+import { injectionKey } from '@/plugins/runtimeConfiguration';
+
 
 const http = useHttp()
 var infrastructures: Ref<Array<Infrastructure>> = ref([])
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
+const showFullImg = ref(false)
 const rack = ref()
 const cardsView = ref(true)
 const tableView = ref(false)
 const showRack = ref(false)
 
 var showInfrastructureRacks = ref(true)
+
+function openImg(){
+    showFullImg.value = !showFullImg.value
+}
+
 
 function rackDetails(rackName: string){
     showRack.value = true
@@ -151,6 +159,13 @@ const props = defineProps({
             :items="infrastructures"/>
 
     <h2 class="text-3xl font-medium flex justify-center capitalize py-16">{{ name }} Infrastructure</h2>
+
+    <img :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${ props.name }.svg`" alt="" @click="openImg()" class="h-96 max-w-500 mx-auto p-10">
+    
+    <div v-show="showFullImg" class="fixed top-0 left-0 flex flex-col items-center justify-center w-screen h-screen bg-gray-300 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 backdrop-blur-md z-50">
+        <img :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${ props.name }.svg`" alt="" @click="openImg()" class="h-screen max-w-full bg-white" >
+
+    </div>
     
     <div class="flex justify-end mr-36">
         <img @click="choseView()" src="/assets/cards.svg" alt="">
