@@ -73,6 +73,12 @@ components:
       description: This represents all the equipments of an infrastructure in one
         particular datacenter rack.
       properties:
+        misc:
+          description: The list of miscellaneous equipments of the infrastructure
+            in this rack.
+          items:
+            $ref: '#/components/schemas/MiscEquipment'
+          type: array
         network:
           description: The list of network equipments of the infrastructure in this
             rack.
@@ -102,6 +108,62 @@ components:
           items:
             type: string
           type: array
+      type: object
+    MiscEquipment:
+      description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+        positioning how-to] for more details.'
+      properties:
+        infrastructure:
+          $ref: '#/components/schemas/Infrastructure'
+          description: The infrastructure of these miscellaneous equipments.
+        name:
+          description: The names of the miscellaneous equipments in this set.
+          example: kvm[01-02]
+          type: string
+        rack:
+          description: The names of the racks in this set.
+          example: A[01-10]
+          type: string
+        slot:
+          description: The slot in the rack used by the first miscellaneous equipment
+            in this set.
+          example: 30
+          type: integer
+        tags:
+          description: The list of tags associated to these miscellaneous equipments.
+          example:
+          - kvm
+          - keyboard
+          items:
+            type: string
+          type: array
+        type:
+          description: Unique identifier of the miscellaneous equipment type.
+          example: kvmconsole
+          type: string
+      type: object
+    MiscEquipmentType:
+      properties:
+        height:
+          description: Height of miscellaneous equipment.
+          example: 1
+          type: integer
+        id:
+          description: Unique identifier of the miscellaneous equipment type.
+          example: kvmconsole
+          type: string
+        model:
+          description: Miscellaneous equipment model name.
+          example: "19\u201C KVM console"
+          type: string
+        specs:
+          description: URL to miscellaneous equipment specsheet.
+          example: https://github.com/opencomputeproject/
+          type: string
+        width:
+          description: Width of miscellaneous equipment.
+          example: 1.0
+          type: number
       type: object
     NetworkEquipment:
       description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -517,6 +579,11 @@ components:
       type: object
     Types:
       properties:
+        misc:
+          description: List of miscellaneous equipments types definitions.
+          items:
+            $ref: '#/components/schemas/MiscEquipmentType'
+          type: array
         network:
           description: List of network equipments types definitions.
           items:

@@ -113,15 +113,16 @@ through the corresponding attribute.
 
 .Example
 ====
-The `RacksDBTypes` object has attributes `nodes`, `network`, `storage` and
-`racks` corresponding to the properties of
+The `RacksDBTypes` object has attributes `nodes`, `network`, `storage`, `misc`
+and `racks` corresponding to the properties of
 xref:db:structure.adoc#obj-types[Types object]:
 
 [source,python]
 ----
->>> for prop in ['nodes', 'network', 'storage', 'racks']:
+>>> for prop in ['nodes', 'network', 'storage', 'misc', 'racks']:
 ...   hasattr(db.types, prop)
 ... 
+True
 True
 True
 True

@@ -204,10 +204,110 @@ This represents all the equipments of an infrastructure in one particular datace
 |{symbol-seq}{nbsp}xref:#obj-networkequipment[{symbol-obj}{nbsp}NetworkEquipment]
 |[.grey]#-#
 
+|misc
+|The list of miscellaneous equipments of the infrastructure in this rack.
+
+*Default value:* `[]`
+|{symbol-seq}{nbsp}xref:#obj-miscequipment[{symbol-obj}{nbsp}MiscEquipment]
+|[.grey]#-#
+
 |tags
 |The list of tags associated to the equipments of the infrastructure in this rack.
 
 |{symbol-seq}{nbsp}str
+|[.grey]#-#
+|===
+
+[#obj-miscequipment]
+=== MiscEquipment
+
+Library class type: `RacksDBMiscEquipment`
+
+NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how-to] for more details.
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|name{nbsp}{symbol-key}
+|The names of the miscellaneous equipments in this set.
+
+|expandable
+|[.green]#icon:check[]#
+
+|type
+|The type of miscellaneous equipment unique identifier.
+
+|{symbol-ref}{nbsp}xref:#obj-miscequipmenttype[{symbol-obj}{nbsp}MiscEquipmentType].id
+|[.green]#icon:check[]#
+
+|slot
+|The slot in the rack used by the first miscellaneous equipment in this set.
+
+|rangeid
+|[.green]#icon:check[]#
+
+|tags
+|The list of tags associated to these miscellaneous equipments.
+
+|{symbol-seq}{nbsp}str
+|[.grey]#-#
+|===
+
+.Automatic back references
+[cols="{tbl-obj-backrefs-cols-specs}"]
+|===
+|Property|Description|Type
+
+|infrastructure
+|The infrastructure of these miscellaneous equipments.
+|{symbol-backref}{nbsp}xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+
+|rack
+|The rack of these miscellaneous equipments.
+|{symbol-backref}{nbsp}xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+|===
+
+[#obj-miscequipmenttype]
+=== MiscEquipmentType
+
+Library class type: `RacksDBMiscEquipmentType`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|id{nbsp}{symbol-key}
+|Unique identifier of the miscellaneous equipment type.
+
+|str
+|[.green]#icon:check[]#
+
+|model
+|Miscellaneous equipment model name.
+
+|str
+|[.green]#icon:check[]#
+
+|height
+|Height of miscellaneous equipment.
+
+|xref:#deftype-rack_height[{symbol-deftype}{nbsp}~rack_height]
+|[.green]#icon:check[]#
+
+|width
+|Width of miscellaneous equipment.
+
+*Default value:* `full`
+|xref:#deftype-rack_width[{symbol-deftype}{nbsp}~rack_width]
+|[.grey]#-#
+
+|specs
+|URL to miscellaneous equipment specsheet.
+
+|str
 |[.grey]#-#
 |===
 
@@ -956,6 +1056,13 @@ Library class type: `RacksDBTypes`
 
 *Default value:* `[]`
 |{symbol-seq}{nbsp}xref:#obj-networkequipmenttype[{symbol-obj}{nbsp}NetworkEquipmentType]
+|[.grey]#-#
+
+|misc
+|List of miscellaneous equipments types definitions.
+
+*Default value:* `[]`
+|{symbol-seq}{nbsp}xref:#obj-miscequipmenttype[{symbol-obj}{nbsp}MiscEquipmentType]
 |[.grey]#-#
 
 |racks

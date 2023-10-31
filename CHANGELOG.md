@@ -25,6 +25,8 @@ and this project adheres to
   - Mention new `~bits` and `~watts` defined types.
   - Mention new optional _initial_ property on _RackType_ in structure reference
     documentation and OpenAPI specification.
+  - Mention new _MiscEquipmentType_ and _MiscEquipment_ objects in OpenAPI
+    specification and structure reference documentation.
   - Add miscellaneous equipment in example database.
 
 ### Changed
