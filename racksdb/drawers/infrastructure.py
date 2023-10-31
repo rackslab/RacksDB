@@ -60,13 +60,13 @@ class InfrastructureDrawer(Drawer):
 
         # Sum the width of all racks in row before the current rack
         if rack.row.reversed:
-          for row_rack in rack.row.racks:
-              if row_rack.slot > rack.slot:
-                  dl.x += int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
+            for row_rack in rack.row.racks:
+                if row_rack.slot > rack.slot:
+                    dl.x += int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
         else:
-          for row_rack in rack.row.racks:
-              if row_rack.slot < rack.slot:
-                  dl.x += int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
+            for row_rack in rack.row.racks:
+                if row_rack.slot < rack.slot:
+                    dl.x += int(row_rack.type.width * self.SCALE) + self.RACK_SPACING
         dl.y += self.RACK_LABEL_OFFSET + self.RACK_OFFSET
         return dl
 
