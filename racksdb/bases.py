@@ -93,6 +93,8 @@ class RacksDBRackBase:
                         occupied += equipment.type.height * equipment.type.width
                     for equipment in part.network:
                         occupied += equipment.type.height * equipment.type.width
+                    for equipment in part.misc:
+                        occupied += equipment.type.height * equipment.type.width
         return occupied / self.type.slots
 
     @property
