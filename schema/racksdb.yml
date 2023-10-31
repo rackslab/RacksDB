@@ -274,6 +274,11 @@ _objects:
         type: ~rack_height
         description: Number of U slots available in the rack.
         example: 42u
+      initial:
+        type: int
+        description: Index of initial slot in the rack
+        default: 1
+        example: 1
   Datacenter:
     properties:
       name:

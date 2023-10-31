@@ -9,8 +9,9 @@ and this project adheres to
 ## Unreleased
 
 ### Added
-- schema: Add support of optional list of GPU on _NodeType_ (from
-  @btravouillon).
+- schema:
+  - Add support of optional list of GPU on _NodeType_ (from @btravouillon).
+  - Add optional _initial_ property on _RackType_ to define initial slot index.
 - core:
   - Add `bits` defined type.
   - Add `watts` defined type (#23).
