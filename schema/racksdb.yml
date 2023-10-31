@@ -29,6 +29,10 @@ _objects:
         type: list[:NetworkEquipmentType]
         description: List of network equipments types definitions.
         default: []
+      misc:
+        type: list[:MiscEquipmentType]
+        description: List of miscellaneous equipments types definitions.
+        default: []
       racks:
         type: list[:RackType]
         description: List of (empty) racks types definitions.
@@ -251,6 +255,31 @@ _objects:
           The number of this network interface available in the network
           equipment.
         example: 48
+  MiscEquipmentType:
+    properties:
+      id:
+        type: str
+        description: Unique identifier of the miscellaneous equipment type.
+        key: true
+        example: kvmconsole
+      model:
+        type: str
+        description: Miscellaneous equipment model name.
+        example: 19“ KVM console
+      height:
+        type: ~rack_height
+        description: Height of miscellaneous equipment.
+        example: 1u
+      width:
+        type: ~rack_width
+        description: Width of miscellaneous equipment.
+        default: full
+        example: full
+      specs:
+        type: str
+        description: URL to miscellaneous equipment specsheet.
+        optional: true
+        example: https://github.com/opencomputeproject/
   RackType:
     properties:
       id:
@@ -429,6 +458,12 @@ _objects:
         description: >-
           The list of network equipments of the infrastructure in this rack.
         default: []
+      misc:
+        type: list[:MiscEquipment]
+        description: >-
+          The list of miscellaneous equipments of the infrastructure in this
+          rack.
+        default: []
       tags:
         type: list[str]
         description: >-
@@ -522,3 +557,34 @@ _objects:
         description: The list of tags associated to these network equipments.
         optional: true
         example: ["ethernet", "switch"]
+  MiscEquipment:
+    description: >-
+      NOTE: Please refer to xref:positioning-equipments.adoc[equipment
+      positioning how-to] for more details.
+    properties:
+      name:
+        type: expandable
+        description: The names of the miscellaneous equipments in this set.
+        key: true
+        example: kvm[01-02]
+      infrastructure:
+        type: ^Infrastructure
+        description: The infrastructure of these miscellaneous equipments.
+      rack:
+        type: ^InfrastructurePart.rack
+        description: The rack of these miscellaneous equipments.
+      type:
+        type: $MiscEquipmentType.id
+        description: The type of miscellaneous equipment unique identifier.
+      slot:
+        type: rangeid
+        description: >-
+          The slot in the rack used by the first miscellaneous equipment in this
+          set.
+        example: 30
+      tags:
+        type: list[str]
+        description: >-
+          The list of tags associated to these miscellaneous equipments.
+        optional: true
+        example: ["kvm", "keyboard"]

@@ -12,6 +12,8 @@ and this project adheres to
 - schema:
   - Add support of optional list of GPU on _NodeType_ (from @btravouillon).
   - Add optional _initial_ property on _RackType_ to define initial slot index.
+  - Add support of miscellaneous equipments with _MiscEquipmentType_ and
+    _MiscEquipment_ objects (#29).
 - core:
   - Add `bits` defined type.
   - Add `watts` defined type (#23).
