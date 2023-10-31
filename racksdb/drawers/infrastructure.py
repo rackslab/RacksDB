@@ -75,6 +75,7 @@ class InfrastructureDrawer(Drawer):
 
         equipment_height_slot = (
             equipment._first.slot
+            - rack.type.initial
             + math.floor(
                 (equipment.slot - equipment._first.slot) * equipment.type.width
             )

@@ -26,6 +26,8 @@ and this project adheres to
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
   _StorageEquipmentTypeNetif_ and _NetworkEquipmentTypeNetif_ bandwidth
   properties (#21).
+- draw: Start rack slot numbering from rack type initial index (1 by default)
+  instead of hard-coded 0 in infrastructure graphical representations (#24).
 - docs:
   - Update supported Linux distributions in quickstart guide.
   - Update structure reference documentation and OpenAPI specification after
