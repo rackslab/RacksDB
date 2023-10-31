@@ -29,11 +29,13 @@ and this project adheres to
     bandwidths defined type changed from `~bytes` to `~bits`.
 
 ### Fixed
+- schema: Fix typo on example attributes on some properties eventually.
+- draw: Fix inverted represention of reversed racks row in infrastructures (#27)
+  (from @btravouillon)
 - docs:
   - Fix URLs to defined types in structure reference after module rename (from
     @btravouillon).
   - Add missing properties examples in OpenAPI specification.
-- schema: Fix typo on example attributes on some properties eventually.
 
 ### Removed
 - core: Remove support of bits (`[MBG]b`) suffix on `bytes` defined type in
