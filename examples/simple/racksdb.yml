@@ -67,7 +67,7 @@ infrastructures:
     - compute
     nodes:
     - name: ticn[0001-0040]
-      slot: 0
+      slot: 1
       type: sm220bt
   - rack: R1-A02
     tags:
@@ -75,12 +75,12 @@ infrastructures:
     network:
     - type: cisco3650
       name: tisw[01-02]
-      slot: 8
+      slot: 10
       tags:
       - network
     storage:
     - name: tinas01
-      slot: 12
+      slot: 14
       tags:
       - storage
       type: qnaph1277

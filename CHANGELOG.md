@@ -33,6 +33,7 @@ and this project adheres to
   - Update structure reference documentation and OpenAPI specification after
     bandwidths defined type changed from `~bytes` to `~bits`.
   - Use `~watts` defined type in example extension and extension documentation.
+  - Update examples database to new rack type initial slot index value set to 1.
 
 ### Fixed
 - schema: Fix typo on example attributes on some properties eventually.

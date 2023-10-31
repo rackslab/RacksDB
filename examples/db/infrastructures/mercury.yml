@@ -8,37 +8,37 @@ layout:
   nodes:
   - name: mecn[0001-0040]
     type: sm220bt
-    slot: 0
+    slot: 1
   - name: mecn0200
     type: sm610u
-    slot: 21
+    slot: 22
   - name: mecn[0041-0060]
     type: sm610u
-    slot: 22
+    slot: 23
 - rack: R1-A02
   tags: [compute]
   nodes:
   - name: mecn[0061-0116]
     type: hpesyn480
-    slot: 2
+    slot: 3
 - rack: R2-A02
   network:
   - name: mesw[01-04]
     type: cisco3650
-    slot: 8
+    slot: 9
     tags: [network]
   storage:
   - name: swnas01
     type: qnaph1277
-    slot: 12
+    slot: 13
     tags: [storage]
 - rack: R2-A03
   nodes:
   - name: mesrv[0001-0004]
     type: dellr550
-    slot: 8
+    slot: 9
     tags: [servers]
   - name: megpu[0001-0008]
     type: bullsx440a5
-    slot: 20
+    slot: 21
     tags: [ia, gpu]
