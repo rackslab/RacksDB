@@ -42,3 +42,7 @@ layout:
     type: bullsx440a5
     slot: 21
     tags: [ia, gpu]
+  misc:
+  - name: mekvm01
+    type: kvm
+    slot: 18
