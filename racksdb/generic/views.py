@@ -21,6 +21,7 @@ class DBActionParameter:
         required=False,
         choices=None,
         default=None,
+        _type=None,
     ):
         self.name = name
         self.description = description
@@ -30,6 +31,7 @@ class DBActionParameter:
         self.required = required
         self.choices = choices
         self.default = default
+        self.type = _type
 
 
 class DBActionResponse:

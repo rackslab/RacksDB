@@ -117,6 +117,8 @@ class RacksDBExec:
                     kwargs["help"] += " (default: %(default)s)"
                 if parameter.required:
                     kwargs["required"] = True
+                if parameter.type:
+                    kwargs["type"] = parameter.type
                 subparser.add_argument(*args, **kwargs)
                 subparser.set_defaults(func=getattr(self, f"_run_{action.name}"))
 
