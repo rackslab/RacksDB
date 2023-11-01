@@ -264,7 +264,7 @@ class DBSplittedFilesLoader:
 
 
 class GenericDB(DBObject):
-    def __init__(self, prefix, schema, bases):
+    def __init__(self, prefix, schema, bases=None):
         super().__init__(self, schema)
         self._prefix = prefix
         # Module of base classes for instanciated DB objects
@@ -414,7 +414,13 @@ class GenericDB(DBObject):
 
     def load_object_attributes(self, obj, content, schema_object: SchemaObject):
 
-        _content = content.copy()
+        try:
+            _content = content.copy()
+        except AttributeError:
+            raise DBFormatError(
+                f"Unable to copy object {obj.__class__.__name__} attributes "
+                f"({type(content)})"
+            )
         passes = 0
 
         while len(_content):
