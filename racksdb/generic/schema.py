@@ -35,7 +35,7 @@ class SchemaDefinedTypeLoader:
 
 
 class SchemaFileLoader:
-    def __init__(self, path, extensions):
+    def __init__(self, path, extensions=None):
         self.path = path
         self.extensions = extensions
 
@@ -53,7 +53,7 @@ class SchemaFileLoader:
         return result
 
     def load_extensions(self, result):
-        if not self.extensions.exists():
+        if self.extensions is None or not self.extensions.exists():
             logger.debug(
                 "Schema extensions file %s not found, skipping extensions",
                 self.extensions,
