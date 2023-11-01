@@ -22,7 +22,14 @@ class SchemaDefinedTypeLoader:
     @property
     def content(self):
         results = {}
-        base_module = importlib.import_module(self.path)
+        try:
+            base_module = importlib.import_module(self.path)
+        except ModuleNotFoundError:
+            logger.warning(
+                "Unable to find defined type module %s, skipping defined type load",
+                self.path,
+            )
+            return results
         logger.debug("Searching module in %s", base_module.__path__)
         for importer, modname, _ in pkgutil.iter_modules(base_module.__path__):
             logger.debug("Loading module %s/%s", modname, importer)

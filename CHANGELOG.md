@@ -45,6 +45,8 @@ and this project adheres to
     and possibility to change it in database.
 
 ### Fixed
+- core: Warn with message instead of failing with stack trace when defined type
+  module cannot be loaded.
 - schema: Fix typo on example attributes on some properties eventually.
 - draw: Fix inverted represention of reversed racks row in infrastructures (#27)
   (from @btravouillon)
