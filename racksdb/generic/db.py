@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import sys
 import logging
 
 import yaml
@@ -261,6 +262,36 @@ class DBSplittedFilesLoader:
             for item in path.iterdir():
                 logger.debug("Loading DB directory %s", path)
                 self.content[item.stem] = DBSplittedFilesLoader(item).content
+
+
+class DBEmptyLoader:
+    """Loader that loads nothing, just define an empty database with an optional
+    initial content. It is designed to be used to load optional database files
+    when schema defines enough default values to operate or when initial data
+    is loaded by other mean."""
+
+    def __init__(self, initial={}):
+        self.content = initial
+
+
+class DBStdinLoader:
+    """Load YAML database provided in program's standard input."""
+
+    def __init__(self):
+        try:
+            self.content = yaml.safe_load(sys.stdin.read())
+        except yaml.composer.ComposerError as err:
+            raise DBFormatError(err)
+
+
+class DBStringLoader:
+    """Load YAML database provided in a string."""
+
+    def __init__(self, content):
+        try:
+            self.content = yaml.safe_load(content)
+        except yaml.composer.ComposerError as err:
+            raise DBFormatError(err)
 
 
 class GenericDB(DBObject):
