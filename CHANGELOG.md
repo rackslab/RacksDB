@@ -14,6 +14,8 @@ and this project adheres to
   - Add optional _initial_ property on _RackType_ to define initial slot index.
   - Add support of miscellaneous equipments with _MiscEquipmentType_ and
     _MiscEquipment_ objects (#29).
+  - Add support of `:recursive` object default to make the property default the
+    corresponding object with all its defaults properties recursively.
 - core:
   - Add `bits` defined type.
   - Add `watts` defined type (#23).

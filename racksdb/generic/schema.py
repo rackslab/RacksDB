@@ -8,6 +8,7 @@ import re
 import importlib
 import pkgutil
 import yaml
+import copy
 import logging
 
 from .errors import DBSchemaError
@@ -151,6 +152,15 @@ class SchemaObject(SchemaGenericValueType):
                 return prop.name
         raise DBSchemaError(f"Unable to find key property for object {self.name}")
 
+    def recursive_defaults(self):
+        result = {}
+        for prop in self.properties:
+            if prop.default is not None:
+                # The property default is copied to avoid repeated nodes due to
+                # references the same objects in YAML dumps.
+                result[prop.name] = copy.deepcopy(prop.default)
+        return result
+
 
 class SchemaContainerList(SchemaGenericValueType):
     def __init__(self, content):
@@ -249,17 +259,23 @@ class Schema:
         if "key" in spec and spec["key"] is True:
             key = True
 
+        # value type
+        value_type = self.value_type(spec["type"])
+
         # check default
         default = None
         if "default" in spec:
             required = False
             default = spec["default"]
+        if isinstance(value_type, SchemaObject) and default == ":recursive":
+            default = value_type.recursive_defaults()
+
         return SchemaProperty(
             name,
             required,
             key,
             default,
-            self.value_type(spec["type"]),
+            value_type,
             spec.get("description"),
             spec.get("example"),
         )
