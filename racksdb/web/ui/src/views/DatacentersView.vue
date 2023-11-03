@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useHttp } from '@/plugins/http';
+import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
+import SearchBarView from '@/components/SearchBarView.vue'
 import type { Ref } from 'vue'
-import SearchBarView from '@/components/SearchBarView.vue';
 
-var datacenters: Ref<Array<Datacenter>> = ref([])
+const datacenters: Ref<Array<Datacenter>> = ref([])
 const http = useHttp()
 
 async function getDatacenters(){
@@ -21,13 +21,28 @@ onMounted(() => {
 })
 
 export interface Datacenter {
-  name: string
+    name: string,
+    rooms: Array<DatacenterRoom>
+    tags: any
 }
 
+export interface DatacenterRoom {
+    name: string
+    dimensions: {
+        width: number
+        depth: number
+    }
+    rows: [{
+        racks: [{
+            name: string,
+            fillrate: Number,
+        }]
+        nbracks: number
+    }]       
+}
 </script>
 
 <template>
-
     <SearchBarView 
         v-if="datacenters.length"
         viewTitle="Datacenter View"    
@@ -35,5 +50,6 @@ export interface Datacenter {
         :items="datacenters"
     />
 
+    <!-- map code will be here -->
 
 </template>
