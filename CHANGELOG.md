@@ -19,6 +19,7 @@ and this project adheres to
 - core:
   - Add `bits` defined type.
   - Add `watts` defined type (#23).
+- draw: Add schema for drawing parameters.
 - docs:
   - Mention web extra package installation from PyPI in quickstart guide.
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI

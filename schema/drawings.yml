@@ -1,0 +1,83 @@
+# RacksDB drawing parameters schema
+
+_version: 0.2.0
+
+_content:
+  properties:
+    room:
+      type: :Room
+      description: Rooms graphical representation settings
+      default: :recursive
+    infrastructure:
+      type: :Infrastructure
+      description: Infrastructures graphical representation settings
+      default: :recursive
+    margin:
+      type: :Margin
+      description: Graphical representation margins
+      default: :recursive
+    rack:
+      type: :Rack
+      description: Rack graphical representation settings
+      default: :recursive
+    row:
+      type: :Row
+      description: Rack row graphical representation settings
+      default: :recursive
+
+_objects:
+  Room:
+    properties:
+      scale:
+        type: float
+        description: Scale of 1mm in pixels in rooms graphical representations
+        default: 0.07
+  Infrastructure:
+    properties:
+      scale:
+        type: float
+        description: >-
+          Scale of 1mm in pixels in Infrastructures graphical representations
+        default: 0.40
+  Margin:
+    properties:
+      top:
+        type: int
+        description: Margin at the top of graphical representations.
+        default: 30
+      left:
+        type: int
+        description: Margin on the left of graphical representations.
+        default: 30
+  Rack:
+    properties:
+      label_offset:
+        type: int
+        description: Space between row labels and racks labels in infrastructures graphical representations
+        default: 20
+      offset:
+        type: int
+        description: Space between racks labels and racks in infrastructures graphical representations
+        default: 20
+      u_height:
+        type: float
+        description: The height of a rack unit in millimeters
+        default: 44.45
+      pane_width:
+        type: int
+        description: Width of racks pane in infrastructures graphical representations
+        default: 10
+      spacing:
+        type: int
+        description: Space between racks in infrastructures graphical representations
+        default: 3
+      door_depth:
+        type: int
+        description: The depth of a door in millimeters in rooms graphical representations
+        default: 50
+  Row:
+    properties:
+      label_offset:
+        type: int
+        description: Space above row labels in infrastructure graphical representations
+        default: 20
