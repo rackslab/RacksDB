@@ -22,7 +22,6 @@ function listInfrastructures(){
     for (let index = 0; index < rack.length; index++) {
         return rack[index].infrastructure
     }
-
 }
 
 async function getRacks(){
@@ -67,7 +66,7 @@ interface Rack {
 
 <template>
 
-    <SearchBarView 
+    <SearchBar 
         v-if="datacenters.length"
         viewTitle="Datacenter Room"    
         searchedItem="datacenter" 
@@ -96,7 +95,7 @@ interface Rack {
                     <tbody>
                         <tr>
                             <td>{{ rack.name }}</td>
-                            <td>{{ rack.fillrate }}</td>
+                            <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
                             <td>{{ listInfrastructures()}}</td>
                         </tr>
                     </tbody>  
