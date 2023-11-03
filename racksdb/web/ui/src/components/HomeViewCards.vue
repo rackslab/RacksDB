@@ -1,26 +1,21 @@
 <script setup lang="ts">
-
 defineProps({
     title: {
         type: String,
         default: 'default title'
     },
-
     route: {
         type: String,
         default: 'default title'
     },
-
     body: {
         type: String,
         default: 'default body'
     },
-
     complement: {
         type: String,
         default: 'default complement'
     },
-
     array: {
         type: Array,
         default() {
@@ -28,7 +23,6 @@ defineProps({
         }
     },
 })
-
 </script>
 
 <template>

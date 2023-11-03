@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted} from 'vue'
-import CardsHomeView from '@/components/CardsHomeView.vue'
+import HomeViewCards from '@/components/HomeViewCards.vue'
 import type { Ref } from 'vue'
 import type { Datacenter } from './DatacentersView.vue'
 import type { Infrastructure } from './InfrastructuresView.vue'
@@ -43,7 +43,7 @@ onMounted(() => {
     </section>
 
     <div class="flex justify-around pt-32 px-32">
-        <CardsHomeView 
+        <HomeViewCards 
             v-for="datacenter in datacenters" 
             :key="datacenter.name" 
             title="datacenter" 
@@ -53,7 +53,7 @@ onMounted(() => {
             :array=datacenters
         />
     
-        <CardsHomeView 
+        <HomeViewCards
             v-for="infrastructure in infrastructures" 
             :key="infrastructure.name" 
             title="infrastructure" 
@@ -62,6 +62,5 @@ onMounted(() => {
             :complement=infrastructure.name
             :array=infrastructures
         />
-
     </div>
 </template>
