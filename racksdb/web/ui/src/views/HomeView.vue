@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useHttp } from '@/plugins/http';
+import { useHttp } from '@/plugins/http'
 import { ref, onMounted} from 'vue'
+import CardsHomeView from '@/components/CardsHomeView.vue'
 import type { Ref } from 'vue'
-import BannerHomeView from '../components/BannerHomeView.vue';
-import CardsHomeView from '@/components/CardsHomeView.vue';
+import type { Datacenter } from './DatacentersView.vue'
+import type { Infrastructure } from './InfrastructuresView.vue'
 
 const http = useHttp()
 const datacenters: Ref<Array<Datacenter>> = ref([])
@@ -27,29 +28,19 @@ async function getInfrastructures(){
     }
 }
 
-
-
 onMounted(() => {
     getDatacenters()
     getInfrastructures()
 })
-
-export interface Datacenter {
-  name: string
-  tags: any
-}
-
-export interface Infrastructure {
-  name: string
-  description: string
-}
-
 </script>
 
 <template>
-
-    <BannerHomeView />
-
+    <section class="relative w-screen bg-cover bg-center h-72 mt-6" style="background-image: url('/assets/racks_black.jpg');">
+        <div class="absolute top-0 left-0 w-full h-72 bg-purple-700 bg-opacity-20"></div>
+            <div class="flex justify-center items-center w-full h-full text-white">
+                <h1 class="text-5xl font-medium flex justify-center py-20 z-10">Overview of your database</h1>
+            </div>
+    </section>
 
     <div class="flex justify-around pt-32 px-32">
         <CardsHomeView 
@@ -68,10 +59,9 @@ export interface Infrastructure {
             title="infrastructure" 
             route="infrastructures"
             :body=infrastructure.name 
-            :complement=infrastructure.description
+            :complement=infrastructure.name
             :array=infrastructures
         />
 
     </div>
-
 </template>
