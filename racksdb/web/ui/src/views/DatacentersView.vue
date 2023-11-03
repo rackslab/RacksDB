@@ -35,7 +35,7 @@ export interface DatacenterRoom {
     rows: [{
         racks: [{
             name: string,
-            fillrate: Number,
+            fillrate: number,
         }]
         nbracks: number
     }]       
