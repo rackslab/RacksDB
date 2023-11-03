@@ -13,9 +13,15 @@ from pathlib import Path
 
 from .version import get_version
 from .generic.errors import DBFormatError, DBSchemaError
+from .generic.db import (
+    DBSplittedFilesLoader,
+    DBEmptyLoader,
+    DBStdinLoader,
+)
 from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
 from .drawers import InfrastructureDrawer, RoomDrawer
+from .drawers.parameters import DrawingParameters
 from .errors import RacksDBError
 from .views import RacksDBViews
 
@@ -212,11 +218,28 @@ class RacksDBExec:
 
     def _run_draw(self):
         file = f"{self.args.name}.{self.args.format}"
+        try:
+            if self.args.parameters is None:
+                db_loader = DBEmptyLoader()
+            elif isinstance(self.args.parameters, str):
+                if self.args.parameters == "-":
+                    db_loader = DBStdinLoader()
+                else:
+                    db_loader = DBSplittedFilesLoader(Path(self.args.parameters))
+            parameters = DrawingParameters.load(db_loader, self.args.drawings_schema)
+        except DBSchemaError as err:
+            logger.critical("Unable to load drawing parameters schema: %s", str(err))
+            sys.exit(1)
+        except DBFormatError as err:
+            logger.critical("Unable to load drawing parameters: %s", str(err))
+            sys.exit(1)
         if self.args.entity == "infrastructure":
             drawer = InfrastructureDrawer(
-                self.db, self.args.name, file, self.args.format
+                self.db, self.args.name, file, self.args.format, parameters
             )
         elif self.args.entity == "room":
-            drawer = RoomDrawer(self.db, self.args.name, file, self.args.format)
+            drawer = RoomDrawer(
+                self.db, self.args.name, file, self.args.format, parameters
+            )
         drawer.draw()
         logger.info("Generated image file %s", file)

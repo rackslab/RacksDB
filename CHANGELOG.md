@@ -19,7 +19,13 @@ and this project adheres to
 - core:
   - Add `bits` defined type.
   - Add `watts` defined type (#23).
-- draw: Add schema for drawing parameters.
+- cli: Add `--parameters` and `--drawings-schema` options to _draw_ subcommands
+  to specify paths to respectively drawing parameters database and drawing
+  parameters schema in YAML format.
+- draw:
+  - Add schema for drawing parameters.
+  - Add possibility to tune drawings settings (eg. margin, spacing, etc) with
+    drawings parameters.
 - docs:
   - Mention web extra package installation from PyPI in quickstart guide.
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
@@ -38,7 +44,10 @@ and this project adheres to
   properties (#21).
 - draw: Start rack slot numbering from rack type initial index (1 by default)
   instead of hard-coded 0 in infrastructure graphical representations (#24).
-- web: Return REST API errors in JSON object.
+- web:
+  - Return REST API errors in JSON object.
+  - Changed /draw route method from GET to POST with optional JSON or YAML
+    drawing parameters in request body.
 - docs:
   - Update supported Linux distributions in quickstart guide.
   - Update structure reference documentation and OpenAPI specification after

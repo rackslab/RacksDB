@@ -9,14 +9,18 @@ from pathlib import Path
 import io
 import logging
 
-from flask import Flask, Blueprint, Response, request, send_file, jsonify
+from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
 
 from .. import RacksDB
 from ..version import get_version
 from ..views import RacksDBViews
+from ..generic.db import DBEmptyLoader, DBStringLoader
 from ..generic.openapi import OpenAPIGenerator
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
+from ..generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
+from ..generic.errors import DBSchemaError, DBFormatError
 from ..drawers import InfrastructureDrawer, RoomDrawer
+from ..drawers.parameters import DrawingParameters
 
 logger = logging.getLogger(__name__)
 
@@ -35,11 +39,13 @@ class RacksDBWebBlueprint(Blueprint):
         schema=RacksDB.DEFAULT_SCHEMA,
         ext=RacksDB.DEFAULT_EXT,
         db=RacksDB.DEFAULT_DB,
+        drawings_schema_path=DrawingParameters.DEFAULT_SCHEMA,
         openapi=False,
     ):
         super().__init__("RacksDB web blueprint", __name__)
         self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
+        self.drawings_schema_path = drawings_schema_path
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
         self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
         if openapi:
@@ -99,11 +105,25 @@ class RacksDBWebBlueprint(Blueprint):
         )
 
     def _draw(self, entity, name, format):
+        if not len(request.data):
+            db_loader = DBEmptyLoader()
+        elif request.is_json:
+            db_loader = DBEmptyLoader(request.get_json())
+        elif request.content_type == "application/x-yaml":
+            db_loader = DBStringLoader(request.data.decode())
+        else:
+            abort(415, "Unsupported request body format")
+        try:
+            parameters = DrawingParameters.load(db_loader, self.drawings_schema_path)
+        except DBSchemaError as err:
+            abort(415, f"Unable to load drawing parameters schema: {str(err)}")
+        except DBFormatError as err:
+            abort(415, f"Unable to load drawing parameters: {str(err)}")
         file = io.BytesIO()
         if entity == "infrastructure":
-            drawer = InfrastructureDrawer(self.db, name, file, format)
+            drawer = InfrastructureDrawer(self.db, name, file, format, parameters)
         elif entity == "room":
-            drawer = RoomDrawer(self.db, name, file, format)
+            drawer = RoomDrawer(self.db, name, file, format, parameters)
         drawer.draw()
         file.seek(0)
         return send_file(
@@ -112,9 +132,13 @@ class RacksDBWebBlueprint(Blueprint):
         )
 
     def _openapi(self):
+        _drawings_schema = Schema(
+            SchemaFileLoader(self.drawings_schema),
+            SchemaDefinedTypeLoader(DrawingParameters.DEFINED_TYPES_MODULE),
+        )
         data = OpenAPIGenerator(
             self.db._prefix,
-            {"RacksDB": self.db._schema},
+            {"RacksDB": self.db._schema, "Drawings": _drawings_schema},
             self.views,
         ).generate()
         dumper = DBDumperFactory.get("yaml")()
@@ -172,6 +196,12 @@ class RacksDBWebApp(Flask):
             type=int,
         )
         parser.add_argument(
+            "--drawings-schema",
+            help="Schema of drawing parameters (default: %(default)s)",
+            default=DrawingParameters.DEFAULT_SCHEMA,
+            type=Path,
+        )
+        parser.add_argument(
             "--cors",
             action="store_true",
             help="Enable CORS headers",
@@ -185,7 +215,11 @@ class RacksDBWebApp(Flask):
         self.args = parser.parse_args()
         self.register_blueprint(
             RacksDBWebBlueprint(
-                self.args.schema, self.args.ext, self.args.db, self.args.openapi
+                self.args.schema,
+                self.args.ext,
+                self.args.db,
+                self.args.drawings_schema,
+                self.args.openapi,
             )
         )
 

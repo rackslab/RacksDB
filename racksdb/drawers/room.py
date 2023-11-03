@@ -16,14 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class RoomDrawer(Drawer):
-
-    SCALE = 0.07  # 1mm to pixel
-    MARGIN_TOP = 30
-    MARGIN_LEFT = 30
-    RACK_DOOR_DEPTH = int(50 * SCALE)
-
-    def __init__(self, db, name, file, output_format):
-        super().__init__(db, file, output_format)
+    def __init__(self, db, name, file, output_format, parameters):
+        super().__init__(db, file, output_format, parameters)
         self.room = None
         for datacenter in self.db.datacenters:
             for room in datacenter.rooms:
@@ -34,8 +28,10 @@ class RoomDrawer(Drawer):
 
     def _racks_row_tl(self, row):
         return ImagePoint(
-            self.MARGIN_LEFT + int(row.position.width * self.SCALE),
-            self.MARGIN_TOP + int(row.position.depth * self.SCALE),
+            self.parameters.margin.left
+            + int(row.position.width * self.parameters.room.scale),
+            self.parameters.margin.top
+            + int(row.position.depth * self.parameters.room.scale),
         )
 
     def _rack_tl(self, rack):
@@ -46,7 +42,7 @@ class RoomDrawer(Drawer):
         filled_slots = {}
         for row_rack in rack.row.racks:
             if row_rack.slot < rack.slot:
-                tl.x += int(row_rack.type.width * self.SCALE)
+                tl.x += int(row_rack.type.width * self.parameters.room.scale)
                 filled_slots[row_rack.slot] = row_rack
         # filling empty slots with previous rack width
         for slot in range(rack.slot):
@@ -60,13 +56,13 @@ class RoomDrawer(Drawer):
                         break
                 if not (last_rack_width):
                     last_rack_width = self.db.types.racks.first().width
-                tl.x += int(last_rack_width * self.SCALE)
+                tl.x += int(last_rack_width * self.parameters.room.scale)
         return tl
 
     def _draw_rack(self, rack):
         tl = self._rack_tl(rack)
-        rack_width = int(rack.type.width * self.SCALE)
-        rack_height = int(rack.type.depth * self.SCALE)
+        rack_width = int(rack.type.width * self.parameters.room.scale)
+        rack_height = int(rack.type.depth * self.parameters.room.scale)
         # draw rack frame
         self.ctx.set_source_rgb(0.4, 0.4, 0.4)  # grey
         self.ctx.set_line_width(1)
@@ -84,14 +80,16 @@ class RoomDrawer(Drawer):
                 tl.x,
                 tl.y,
                 rack_width,
-                self.RACK_DOOR_DEPTH,
+                (self.parameters.rack.door_depth * self.parameters.room.scale),
             )
         else:
             self.ctx.rectangle(
                 tl.x,
-                tl.y + rack_height - self.RACK_DOOR_DEPTH,
+                tl.y
+                + rack_height
+                - (self.parameters.rack.door_depth * self.parameters.room.scale),
                 rack_width,
-                self.RACK_DOOR_DEPTH,
+                (self.parameters.rack.door_depth * self.parameters.room.scale),
             )
         self.ctx.fill()
 
@@ -118,19 +116,19 @@ class RoomDrawer(Drawer):
             self._draw_rack(rack)
 
     def draw(self):
-        room_width = int(self.room.dimensions.width * self.SCALE)
-        room_depth = int(self.room.dimensions.depth * self.SCALE)
+        room_width = int(self.room.dimensions.width * self.parameters.room.scale)
+        room_depth = int(self.room.dimensions.depth * self.parameters.room.scale)
 
-        width = room_width + 2 * self.MARGIN_LEFT
-        height = room_depth + 2 * self.MARGIN_TOP
+        width = room_width + 2 * self.parameters.margin.left
+        height = room_depth + 2 * self.parameters.margin.top
         self.init_ctx(width, height)
 
         # draw room frame
         self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            self.MARGIN_LEFT,
-            self.MARGIN_TOP,
+            self.parameters.margin.left,
+            self.parameters.margin.top,
             room_width,
             room_depth,
         )
@@ -142,7 +140,9 @@ class RoomDrawer(Drawer):
             "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
         )
         self.ctx.set_font_size(14)
-        self.ctx.move_to(self.MARGIN_LEFT + 2, self.MARGIN_TOP + 15)
+        self.ctx.move_to(
+            self.parameters.margin.left + 2, self.parameters.margin.top + 15
+        )
         self.ctx.show_text(
             f"Datacenter {self.room.datacenter.name} room {self.room.name}"
         )

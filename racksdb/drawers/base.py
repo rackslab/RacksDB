@@ -18,10 +18,11 @@ class ImagePoint:
 
 
 class Drawer:
-    def __init__(self, db, file, output_format):
+    def __init__(self, db, file, output_format, parameters):
         self.db = db
         self.file = file
         self.output_format = output_format
+        self.parameters = parameters
         self.surface = None
         self.ctx = None
 

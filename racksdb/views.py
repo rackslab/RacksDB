@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from pathlib import Path
+
+from .drawers.parameters import DrawingParameters
 from .generic.views import (
     DBViewSet,
     DBView,
@@ -112,6 +115,7 @@ class RacksDBViews(DBViewSet):
             name="draw",
             path="/draw/<entity>/<name>.<format>",
             description="Draw an entity",
+            method="post",
             parameters=[
                 DBActionParameter(
                     "entity",
@@ -125,6 +129,18 @@ class RacksDBViews(DBViewSet):
                     description="Format of the generated image",
                     choices=["png", "svg", "pdf"],
                     default="png",
+                ),
+                DBActionParameter(
+                    "parameters",
+                    description="Drawing parameters",
+                    body="Drawings_content",
+                ),
+                DBActionParameter(
+                    "drawings_schema",
+                    description="Schema of drawing parameters",
+                    _type=Path,
+                    default=DrawingParameters.DEFAULT_SCHEMA,
+                    specific="cli",
                 ),
             ],
             responses=[
