@@ -45,6 +45,8 @@ and this project adheres to
   - Update examples database to new rack type initial slot index value set to 1.
   - Update equipments positionning howto to mention new default initial slot 1
     and possibility to change it in database.
+  - Report default value as example in REST API reference documentation when
+    example is not defined in schema.
 
 ### Fixed
 - core:

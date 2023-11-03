@@ -145,11 +145,17 @@ class OpenAPIGenerator:
         an example in schema, it checks whether the property a reference or a back
         reference and tries to retrieve the example value on this referenced
         property."""
-        if prop.example is not None:
+        # If the property does not have an example but a default value, use this default
+        # value as an example.
+        if prop.example is None and prop.default is not None:
+            example = prop.default
+        else:
+            example = prop.example
+        if example is not None:
             if isinstance(prop.type, SchemaDefinedType):
-                return prop.type.parse(prop.example)
+                return prop.type.parse(example)
             else:
-                return prop.example
+                return example
         else:
             if isinstance(prop.type, SchemaReference):
                 return self._property_example(prop.type.obj.prop(prop.type.prop))
