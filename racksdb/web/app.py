@@ -51,7 +51,7 @@ class RacksDBWebBlueprint(Blueprint):
             self.add_url_rule(
                 action.path,
                 view_func=getattr(self, f"_{action.name}"),
-                methods=["GET"],
+                methods=[action.method.upper()],
             )
 
     def _schema(self):

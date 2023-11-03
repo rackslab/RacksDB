@@ -33,8 +33,10 @@ class OpenAPIGenerator:
 
         # actions including views
         for action in chain(self.views.views_actions(), self.views.actions()):
-            result["paths"][action.path] = {"get": {"description": action.description}}
-            action_schema = result["paths"][action.path]["get"]
+            result["paths"][action.path] = {
+                action.method: {"description": action.description}
+            }
+            action_schema = result["paths"][action.path][action.method]
             if len(action.parameters):
                 action_schema["parameters"] = []
             for parameter in action.parameters:

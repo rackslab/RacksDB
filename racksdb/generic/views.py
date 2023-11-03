@@ -44,10 +44,13 @@ class DBActionResponse:
 
 
 class DBAction:
-    def __init__(self, name, path, description, parameters=[], responses=[]):
+    def __init__(
+        self, name, path, description, method="get", parameters=[], responses=[]
+    ):
         self.name = name
         self.path = path
         self.description = description
+        self.method = method
         self.parameters = parameters
         self.responses = responses
 
