@@ -1,27 +1,35 @@
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted, inject } from 'vue'
-import type { Ref } from 'vue'
 import SearchBarView from '@/components/SearchBarView.vue'
 import InfrastructureCards from '@/components/InfrastructureCards.vue'
 import { injectionKey } from '@/plugins/runtimeConfiguration';
-
+import type { Ref } from 'vue'
+import type { Infrastructure } from '@/views/InfrastructuresView.vue'
 
 const http = useHttp()
-var infrastructures: Ref<Array<Infrastructure>> = ref([])
+const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
 const showFullImg = ref(false)
 const rack = ref()
 const cardsView = ref(true)
 const tableView = ref(false)
 const showRack = ref(false)
+const showInfrastructureRacks = ref(true)
 
-var showInfrastructureRacks = ref(true)
+function choseView(){
+    if(cardsView.value){
+        cardsView.value = !cardsView.value
+        tableView.value = !tableView.value 
+    }else{
+        tableView.value = !tableView.value
+        cardsView.value = !cardsView.value
+    }
+}
 
 function openImg(){
     showFullImg.value = !showFullImg.value
 }
-
 
 function rackDetails(rackName: string){
     showRack.value = true
@@ -32,7 +40,6 @@ function rackDetails(rackName: string){
         rack.value = layout!.filter(rack => rack.rack === rackName)
     }
 }
-
 
 async function getInfrastructure(){
     try {
@@ -47,104 +54,6 @@ async function getInfrastructure(){
 onMounted(() => {
     getInfrastructure()
 })
-
-function choseView(){
-    if(cardsView.value){
-        cardsView.value = !cardsView.value
-        tableView.value = !tableView.value 
-    }else{
-        tableView.value = !tableView.value
-        cardsView.value = !cardsView.value
-    }
-}
-
-
-export interface Infrastructure {
-  name: string
-  layout: [{
-    rack: string
-
-    nodes: [NodeEquipment]
-
-    network: [NetworkEquipment]
-
-    storage: [StorageEquipment]
-
-}]
-}
-
-export interface NodeEquipment{
-    type: {
-            id: string
-            model: string
-            height: number
-            width: number
-            specs: string
-            cpu: {
-                sockets: number
-                model: string
-                specs: string
-                cores: number
-            }
-            ram: {
-                dimm: number
-                size: number
-            }
-            storage: [{
-                type: string
-                model: string
-                size: number
-            }]
-            netifs: [{
-                type: string
-                bandwidth: number
-            }]
-        }
-        rack: string
-        name: string
-        slot: number
-    
-}
-
-export interface NetworkEquipment{
-    type: {
-            id: string
-            model: string
-            height: number
-            width: number
-            netifs:[{
-                type: string
-                bandwidth: number
-                number: number
-
-            }]
-        }
-        tags: []
-        rack: string
-        name: string
-        slot: number
-
-}
-
-export interface StorageEquipment{
-    type: {
-            id: string
-            model: string
-            height: number
-            width: number
-            disks: [{
-                type: string
-                size: number
-                model: string
-                number: number
-            }]
-        }
-        tags: []
-        rack: string
-        name: string
-        slot: number
-
-}
 
 const props = defineProps({
     name: String
@@ -163,8 +72,7 @@ const props = defineProps({
     <img :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${ props.name }.svg`" alt="" @click="openImg()" class="h-96 max-w-500 mx-auto p-10">
     
     <div v-show="showFullImg" class="fixed top-0 left-0 flex flex-col items-center justify-center w-screen h-screen bg-gray-300 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 backdrop-blur-md z-50">
-        <img :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${ props.name }.svg`" alt="" @click="openImg()" class="h-screen max-w-full bg-white" >
-
+        <img :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${ props.name }.svg`" alt="" @click="openImg()" class="h-screen max-w-full bg-white">
     </div>
     
     <div class="flex justify-end mr-36">
@@ -201,7 +109,6 @@ const props = defineProps({
                         <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ node.name }}</td>
                         <td class="px-6 py-4">Node {{ node.rack }}</td>
                         <td class="px-6 py-4 capitalize">{{ node.type.id }}</td>
- 
                     </tr>
 
                     <tr v-for="storage in layout.storage" :key="storage.name">
@@ -234,7 +141,6 @@ const props = defineProps({
                         <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white capitalize">{{ node.name }}</td>
                         <td class="px-6 py-4">Node {{ node.rack }}</td>
                         <td class="px-6 py-4 capitalize">{{ node.type.id }}</td>
- 
                     </tr>
 
                     <tr v-for="storage in layout.storage" :key="storage.name">
@@ -252,6 +158,4 @@ const props = defineProps({
             </table>
         </div>
     </div>
-
-    
 </template>
