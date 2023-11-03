@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
-import SearchBarView from '@/components/SearchBarView.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Datacenter, DatacenterRoom } from './DatacentersView.vue'
 
@@ -33,7 +33,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <SearchBarView 
+    <SearchBar 
         v-if="datacenters.length"
         viewTitle="Datacenter Details"    
         searchedItem="datacenter" 

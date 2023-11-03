@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted, inject } from 'vue'
-import SearchBarView from '@/components/SearchBarView.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import InfrastructureCards from '@/components/InfrastructureCards.vue'
 import { injectionKey } from '@/plugins/runtimeConfiguration';
 import type { Ref } from 'vue'
@@ -61,7 +61,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <SearchBarView 
+    <SearchBar 
         v-if="infrastructures.length"
             viewTitle="Infrastructure Details"    
             searchedItem="infrastructure" 

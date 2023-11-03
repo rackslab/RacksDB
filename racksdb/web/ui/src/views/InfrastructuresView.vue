@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
-import SearchBarView from '@/components/SearchBarView.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
@@ -103,7 +103,7 @@ export interface StorageEquipment{
 </script>
 
 <template>
-    <SearchBarView 
+    <SearchBar 
         v-if="infrastructures.length"
         viewTitle="Infrastructure View"    
         searchedItem="infrastructure" 
