@@ -112,8 +112,12 @@ class RacksDBWebBlueprint(Blueprint):
         )
 
     def _openapi(self):
+        data = OpenAPIGenerator(
+            self.db._prefix,
+            {"RacksDB": self.db._schema},
+            self.views,
+        ).generate()
         dumper = DBDumperFactory.get("yaml")()
-        data = OpenAPIGenerator(self.db, self.views).generate()
         return Response(response=dumper.dump(data), mimetype=self.MIMETYPES["yaml"])
 
 

@@ -19,7 +19,7 @@ class RacksDBViews(DBViewSet):
     VIEWS = [
         DBView(
             content="datacenters",
-            objects_name="Datacenter",
+            objects_name="RacksDBDatacenter",
             description="Get information about datacenters",
             filters=[
                 DBViewFilter(name="name", description="Filter datacenters by name"),
@@ -37,7 +37,7 @@ class RacksDBViews(DBViewSet):
         ),
         DBView(
             content="infrastructures",
-            objects_name="Infrastructure",
+            objects_name="RacksDBInfrastructure",
             description="Get information about infrastructures",
             filters=[
                 DBViewFilter(name="name", description="Filter infrastructures by name"),
@@ -56,7 +56,7 @@ class RacksDBViews(DBViewSet):
         ),
         DBView(
             content="nodes",
-            objects_name="Node",
+            objects_name="RacksDBNode",
             description="Get information about nodes",
             filters=[
                 DBViewFilter(name="name", description="Filter nodes by name"),
@@ -77,7 +77,7 @@ class RacksDBViews(DBViewSet):
         ),
         DBView(
             content="racks",
-            objects_name="Rack",
+            objects_name="RacksDBRack",
             description="Get information about racks",
             filters=[DBViewFilter(name="name", description="Filter racks by name")],
             objects_map={

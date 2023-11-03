@@ -7,17 +7,22 @@ import yaml
 
 from racksdb import RacksDB
 from racksdb.views import RacksDBViews
+from racksdb.generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from racksdb.generic.openapi import OpenAPIGenerator
 
 
 def main():
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    schema_path = Path(current_dir).joinpath("../../schema/racksdb.yml")
-    db_path = Path(current_dir).joinpath("../../examples/db")
-    db = RacksDB.load(db=db_path, schema=schema_path)
+    racksdb_schema_path = Path(current_dir).joinpath("../../schema/racksdb.yml")
+    racksdb_schema = Schema(
+        SchemaFileLoader(racksdb_schema_path),
+        SchemaDefinedTypeLoader(RacksDB.DEFINED_TYPES_MODULE),
+    )
     views = RacksDBViews()
-    openapi = OpenAPIGenerator(db, views)
+    openapi = OpenAPIGenerator(
+        "RacksDB", {"RacksDB": racksdb_schema}, views
+    )
     print(yaml.dump(openapi.generate()))
 
 

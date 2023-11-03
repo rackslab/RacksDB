@@ -19,15 +19,16 @@ from ..version import get_version
 
 
 class OpenAPIGenerator:
-    def __init__(self, db, views):
-        self.db = db
+    def __init__(self, prefix, schemas, views):
+        self.prefix = prefix
+        self.schemas = schemas
         self.views = views
 
     def generate(self):
         """Generate an OpenAPI schema of a GenericDB and its DBViews."""
         result = {
             "openapi": "3.0.0",
-            "info": {"title": f"{self.db.PREFIX} REST API", "version": get_version()},
+            "info": {"title": f"{self.prefix} REST API", "version": get_version()},
             "paths": {},
         }
 
@@ -69,8 +70,13 @@ class OpenAPIGenerator:
 
         # components
         result["components"] = {"schemas": {}}
-        for _type in self.db._schema.objects.values():
-            result["components"]["schemas"][_type.name] = self._object_schema(_type)
+        for schema in self.schemas.keys():
+            for _type in list(self.schemas[schema].objects.values()) + [
+                self.schemas[schema].content
+            ]:
+                result["components"]["schemas"][
+                    f"{schema}{_type.name}"
+                ] = self._object_schema(schema, _type)
 
         return result
 
@@ -127,7 +133,7 @@ class OpenAPIGenerator:
         else:
             return {response.mimetype: {"schema": {"type": "string"}}}
 
-    def _object_schema(self, _type):
+    def _object_schema(self, schema, _type):
         """Return the OpenAPI schema corresponding to an object."""
         result = {
             "type": "object",
@@ -136,7 +142,7 @@ class OpenAPIGenerator:
         if _type.description is not None:
             result["description"] = _type.description
         for prop in _type.properties:
-            result["properties"][prop.name] = self._property_schema(prop)
+            result["properties"][prop.name] = self._property_schema(schema, prop)
         return result
 
     def _property_example(self, prop):
@@ -177,7 +183,7 @@ class OpenAPIGenerator:
         elif property_type is bool:
             return {"type": "boolean"}
 
-    def _property_schema(self, prop):
+    def _property_schema(self, schema, prop):
         """Return the OpenAPI schema of an object property, depending on its type."""
         result = {}
         # description
@@ -191,7 +197,7 @@ class OpenAPIGenerator:
         if isinstance(prop.type, SchemaObject):
             result.update(
                 {
-                    "$ref": f"#/components/schemas/{prop.type.name}",
+                    "$ref": f"#/components/schemas/{schema}{prop.type.name}",
                 }
             )
         elif isinstance(prop.type, SchemaExpandable):
@@ -200,14 +206,22 @@ class OpenAPIGenerator:
             result.update({"type": "integer"})
         elif isinstance(prop.type, SchemaBackReference):
             if prop.type.prop is None:
-                result.update({"$ref": f"#/components/schemas/{prop.type.obj.name}"})
+                result.update(
+                    {"$ref": f"#/components/schemas/{schema}{prop.type.obj.name}"}
+                )
             else:
-                result.update(self._property_schema(prop.type.obj.prop(prop.type.prop)))
+                result.update(
+                    self._property_schema(schema, prop.type.obj.prop(prop.type.prop))
+                )
         elif isinstance(prop.type, SchemaReference):
-            result.update(self._property_schema(prop.type.obj.prop(prop.type.prop)))
+            result.update(
+                self._property_schema(schema, prop.type.obj.prop(prop.type.prop))
+            )
         elif isinstance(prop.type, SchemaContainerList):
             if isinstance(prop.type.content, SchemaObject):
-                content = {"$ref": f"#/components/schemas/{prop.type.content.name}"}
+                content = {
+                    "$ref": f"#/components/schemas/{schema}{prop.type.content.name}"
+                }
             else:
                 content = self._native_schema(prop.type.content.native)
             result.update(
