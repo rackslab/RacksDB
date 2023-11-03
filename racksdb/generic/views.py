@@ -22,6 +22,7 @@ class DBActionParameter:
         choices=None,
         default=None,
         _type=None,
+        body=None,
     ):
         self.name = name
         self.description = description
@@ -32,6 +33,7 @@ class DBActionParameter:
         self.choices = choices
         self.default = default
         self.type = _type
+        self.body = body
 
 
 class DBActionResponse:

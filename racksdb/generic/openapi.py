@@ -38,9 +38,25 @@ class OpenAPIGenerator:
             if len(action.parameters):
                 action_schema["parameters"] = []
             for parameter in action.parameters:
-                action_schema["parameters"].append(
-                    self._action_argument_description(action, parameter)
-                )
+                if parameter.body:
+                    action_schema["requestBody"] = {
+                        "description": parameter.description,
+                        "content": {
+                            mimetype: {
+                                "schema": {
+                                    "$ref": f"#/components/schemas/{parameter.body}",
+                                }
+                            }
+                            for mimetype in [
+                                "application/json",
+                                "application/x-yaml",
+                            ]
+                        },
+                    }
+                else:
+                    action_schema["parameters"].append(
+                        self._action_argument_description(action, parameter)
+                    )
             action_schema["responses"] = {
                 "200": {"description": "successful operation", "content": {}}
             }
