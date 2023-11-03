@@ -9,7 +9,7 @@ from pathlib import Path
 import io
 import logging
 
-from flask import Flask, Blueprint, Response, request, send_file
+from flask import Flask, Blueprint, Response, request, send_file, jsonify
 
 from .. import RacksDB
 from ..version import get_version
@@ -53,6 +53,14 @@ class RacksDBWebBlueprint(Blueprint):
                 view_func=getattr(self, f"_{action.name}"),
                 methods=[action.method.upper()],
             )
+        for error in [400, 404, 415]:
+            self.register_error_handler(error, self._handle_bad_request)
+
+    def _handle_bad_request(self, error):
+        return (
+            jsonify(code=error.code, name=error.name, description=error.description),
+            error.code,
+        )
 
     def _schema(self):
         return Response(

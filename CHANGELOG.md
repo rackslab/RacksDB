@@ -37,6 +37,7 @@ and this project adheres to
   properties (#21).
 - draw: Start rack slot numbering from rack type initial index (1 by default)
   instead of hard-coded 0 in infrastructure graphical representations (#24).
+- web: Return REST API errors in JSON object.
 - docs:
   - Update supported Linux distributions in quickstart guide.
   - Update structure reference documentation and OpenAPI specification after
