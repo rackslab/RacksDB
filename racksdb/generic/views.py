@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Literal
 from itertools import chain
 
 from .errors import DBViewError
@@ -23,6 +23,7 @@ class DBActionParameter:
         default=None,
         _type=None,
         body=None,
+        specific: Union[None, Literal["cli", "web"]] = None,
     ):
         self.name = name
         self.description = description
@@ -34,6 +35,7 @@ class DBActionParameter:
         self.default = default
         self.type = _type
         self.body = body
+        self.specific = specific
 
 
 class DBActionResponse:

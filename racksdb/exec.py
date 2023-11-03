@@ -98,6 +98,8 @@ class RacksDBExec:
         for action in chain(self.views.views_actions(), self.views.actions()):
             subparser = subparsers.add_parser(action.name, help=action.description)
             for parameter in action.parameters:
+                if parameter.specific is not None and parameter.specific != "cli":
+                    continue
                 if parameter.positional:
                     args = (parameter.name,)
                 else:

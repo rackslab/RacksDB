@@ -41,6 +41,8 @@ class OpenAPIGenerator:
             if len(action.parameters):
                 action_schema["parameters"] = []
             for parameter in action.parameters:
+                if parameter.specific is not None and parameter.specific != "web":
+                    continue
                 if parameter.body:
                     action_schema["requestBody"] = {
                         "description": parameter.description,
