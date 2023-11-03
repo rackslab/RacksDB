@@ -47,6 +47,9 @@ and this project adheres to
   - Mention new _tags_ property on _Rack_ object in reference documentation.
   - Mention schema properties default `:recursive` special value in schema
     documentation.
+  - Prefix objects from RacksDB shema with `RacksDB` and add objects from
+    drawing parameters schema in OpenAPI specification and structure reference
+    documentation.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,

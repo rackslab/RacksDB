@@ -1,6 +1,193 @@
 components:
   schemas:
-    Datacenter:
+    DrawingsColoringRules:
+      properties:
+        equipments:
+          description: List of equipments coloring rules.
+          example: []
+          items:
+            $ref: '#/components/schemas/DrawingsEquipmentColoringRule'
+          type: array
+        racks:
+          description: List of racks coloring rules.
+          example: []
+          items:
+            $ref: '#/components/schemas/DrawingsRackColoringRule'
+          type: array
+      type: object
+    DrawingsEquipmentColoringRule:
+      properties:
+        background:
+          description: The background color of the equipments.
+          example:
+          - 0.6
+          - 0.6
+          - 0.6
+          items: number
+          type: array
+        border:
+          description: The border color of the equipments.
+          example:
+          - 0.2
+          - 0.2
+          - 0.2
+          items: number
+          type: array
+        tags:
+          description: List of tags equipments must have to be associated to the coloring
+            rule.
+          items:
+            type: string
+          type: array
+        type:
+          description: Name of type of quipments associated to the coloring rule.
+          type: string
+      type: object
+    DrawingsInfrastructure:
+      properties:
+        scale:
+          description: Scale of 1mm in pixels in Infrastructures graphical representations
+          example: 0.4
+          type: number
+      type: object
+    DrawingsMargin:
+      properties:
+        left:
+          description: Margin on the left of graphical representations.
+          example: 30
+          type: integer
+        top:
+          description: Margin at the top of graphical representations.
+          example: 30
+          type: integer
+      type: object
+    DrawingsRack:
+      properties:
+        door_depth:
+          description: The depth of a door in millimeters in rooms graphical representations
+          example: 50
+          type: integer
+        label_offset:
+          description: Space between row labels and racks labels in infrastructures
+            graphical representations
+          example: 20
+          type: integer
+        offset:
+          description: Space between racks labels and racks in infrastructures graphical
+            representations
+          example: 20
+          type: integer
+        pane_width:
+          description: Width of racks pane in infrastructures graphical representations
+          example: 10
+          type: integer
+        spacing:
+          description: Space between racks in infrastructures graphical representations
+          example: 3
+          type: integer
+        u_height:
+          description: The height of a rack unit in millimeters
+          example: 44.45
+          type: number
+      type: object
+    DrawingsRackColoringRule:
+      properties:
+        frame:
+          description: The color of the racks frame.
+          example:
+          - 0.2
+          - 0.2
+          - 0.2
+          items: number
+          type: array
+        pane:
+          description: The color of the racks pane.
+          example:
+          - 0.0
+          - 0.0
+          - 0.0
+          items: number
+          type: array
+        tags:
+          description: List of tags racks must have to be associated to the coloring
+            rule.
+          items:
+            type: string
+          type: array
+        type:
+          description: Name of type of rack associated to the coloring rule.
+          type: string
+      type: object
+    DrawingsRoom:
+      properties:
+        scale:
+          description: Scale of 1mm in pixels in rooms graphical representations
+          example: 0.07
+          type: number
+      type: object
+    DrawingsRow:
+      properties:
+        label_offset:
+          description: Space above row labels in infrastructure graphical representations
+          example: 20
+          type: integer
+      type: object
+    Drawings_content:
+      properties:
+        colors:
+          $ref: '#/components/schemas/DrawingsColoringRules'
+          description: Drawing coloring rules
+          example:
+            equipments: []
+            racks: []
+        infrastructure:
+          $ref: '#/components/schemas/DrawingsInfrastructure'
+          description: Infrastructures graphical representation settings
+          example:
+            scale: 0.4
+        margin:
+          $ref: '#/components/schemas/DrawingsMargin'
+          description: Graphical representation margins
+          example:
+            left: 30
+            top: 30
+        rack:
+          $ref: '#/components/schemas/DrawingsRack'
+          description: Rack graphical representation settings
+          example:
+            door_depth: 50
+            label_offset: 20
+            offset: 20
+            pane_width: 10
+            spacing: 3
+            u_height: 44.45
+        room:
+          $ref: '#/components/schemas/DrawingsRoom'
+          description: Rooms graphical representation settings
+          example:
+            scale: 0.07
+        row:
+          $ref: '#/components/schemas/DrawingsRow'
+          description: Rack row graphical representation settings
+          example:
+            label_offset: 20
+      type: object
+    Error:
+      properties:
+        code:
+          description: HTTP error code
+          example: 500
+          type: integer
+        description:
+          description: Detailed error description
+          example: Error while parsing object
+          type: string
+        error:
+          description: HTTP error name
+          example: Internal error
+          type: string
+      type: object
+    RacksDBDatacenter:
       properties:
         name:
           description: Unique name of the datacenter.
@@ -9,7 +196,7 @@ components:
         rooms:
           description: List of rooms in this datacenter.
           items:
-            $ref: '#/components/schemas/DatacenterRoom'
+            $ref: '#/components/schemas/RacksDBDatacenterRoom'
           type: array
         tags:
           description: The list of tags associated to this datacenter.
@@ -17,13 +204,13 @@ components:
             type: string
           type: array
       type: object
-    DatacenterRoom:
+    RacksDBDatacenterRoom:
       properties:
         datacenter:
-          $ref: '#/components/schemas/Datacenter'
+          $ref: '#/components/schemas/RacksDBDatacenter'
           description: Back reference to the datacenter where this room is located.
         dimensions:
-          $ref: '#/components/schemas/DatacenterRoomDimensions'
+          $ref: '#/components/schemas/RacksDBDatacenterRoomDimensions'
           description: Dimensions of this room.
         name:
           description: Unique name of the room in this datacenter.
@@ -32,10 +219,10 @@ components:
         rows:
           description: List of racks rows on this room.
           items:
-            $ref: '#/components/schemas/RacksRow'
+            $ref: '#/components/schemas/RacksDBRacksRow'
           type: array
       type: object
-    DatacenterRoomDimensions:
+    RacksDBDatacenterRoomDimensions:
       properties:
         depth:
           description: Depth of datacenter room.
@@ -46,7 +233,7 @@ components:
           example: 10000
           type: integer
       type: object
-    Infrastructure:
+    RacksDBInfrastructure:
       properties:
         description:
           description: Text description of the infrastructure.
@@ -55,7 +242,7 @@ components:
         layout:
           description: The list of parts composing the infrastructure.
           items:
-            $ref: '#/components/schemas/InfrastructurePart'
+            $ref: '#/components/schemas/RacksDBInfrastructurePart'
           type: array
         name:
           description: The name of the infrastructure.
@@ -69,26 +256,29 @@ components:
             type: string
           type: array
       type: object
-    InfrastructurePart:
+    RacksDBInfrastructurePart:
       description: This represents all the equipments of an infrastructure in one
         particular datacenter rack.
       properties:
         misc:
           description: The list of miscellaneous equipments of the infrastructure
             in this rack.
+          example: []
           items:
-            $ref: '#/components/schemas/MiscEquipment'
+            $ref: '#/components/schemas/RacksDBMiscEquipment'
           type: array
         network:
           description: The list of network equipments of the infrastructure in this
             rack.
+          example: []
           items:
-            $ref: '#/components/schemas/NetworkEquipment'
+            $ref: '#/components/schemas/RacksDBNetworkEquipment'
           type: array
         nodes:
           description: The list of nodes of the infrastructure in this rack.
+          example: []
           items:
-            $ref: '#/components/schemas/Node'
+            $ref: '#/components/schemas/RacksDBNode'
           type: array
         rack:
           description: The names of the racks in this set.
@@ -97,8 +287,9 @@ components:
         storage:
           description: The list of storage equipments of the infrastructure in this
             rack.
+          example: []
           items:
-            $ref: '#/components/schemas/StorageEquipment'
+            $ref: '#/components/schemas/RacksDBStorageEquipment'
           type: array
         tags:
           description: The list of tags associated to the equipments of the infrastructure
@@ -109,12 +300,12 @@ components:
             type: string
           type: array
       type: object
-    MiscEquipment:
+    RacksDBMiscEquipment:
       description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
         positioning how-to] for more details.'
       properties:
         infrastructure:
-          $ref: '#/components/schemas/Infrastructure'
+          $ref: '#/components/schemas/RacksDBInfrastructure'
           description: The infrastructure of these miscellaneous equipments.
         name:
           description: The names of the miscellaneous equipments in this set.
@@ -142,7 +333,7 @@ components:
           example: kvmconsole
           type: string
       type: object
-    MiscEquipmentType:
+    RacksDBMiscEquipmentType:
       properties:
         height:
           description: Height of miscellaneous equipment.
@@ -165,12 +356,12 @@ components:
           example: 1.0
           type: number
       type: object
-    NetworkEquipment:
+    RacksDBNetworkEquipment:
       description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
         positioning how-to] for more details.'
       properties:
         infrastructure:
-          $ref: '#/components/schemas/Infrastructure'
+          $ref: '#/components/schemas/RacksDBInfrastructure'
           description: The infrastructure of these network equipments.
         name:
           description: The names of the network equipments in this set.
@@ -198,7 +389,7 @@ components:
           example: switch48
           type: string
       type: object
-    NetworkEquipmentType:
+    RacksDBNetworkEquipmentType:
       properties:
         height:
           description: Height of network equipment.
@@ -215,7 +406,7 @@ components:
         netifs:
           description: List of network interfaces on this network equipment.
           items:
-            $ref: '#/components/schemas/NetworkEquipmentTypeNetif'
+            $ref: '#/components/schemas/RacksDBNetworkEquipmentTypeNetif'
           type: array
         specs:
           description: URL to network equipment specsheet.
@@ -226,7 +417,7 @@ components:
           example: 1.0
           type: number
       type: object
-    NetworkEquipmentTypeNetif:
+    RacksDBNetworkEquipmentTypeNetif:
       properties:
         bandwidth:
           description: The bandwidth (per second) of the network interface.
@@ -242,12 +433,12 @@ components:
           example: ethernet
           type: string
       type: object
-    Node:
+    RacksDBNode:
       description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
         positioning how-to] for more details.'
       properties:
         infrastructure:
-          $ref: '#/components/schemas/Infrastructure'
+          $ref: '#/components/schemas/RacksDBInfrastructure'
           description: The infrastructure of these nodes.
         name:
           description: The names of the nodes in this set.
@@ -274,15 +465,15 @@ components:
           example: server
           type: string
       type: object
-    NodeType:
+    RacksDBNodeType:
       properties:
         cpu:
-          $ref: '#/components/schemas/NodeTypeCpu'
+          $ref: '#/components/schemas/RacksDBNodeTypeCpu'
           description: CPU configuration of the node.
         gpu:
           description: List of GPUs of the node.
           items:
-            $ref: '#/components/schemas/NodeTypeGpu'
+            $ref: '#/components/schemas/RacksDBNodeTypeGpu'
           type: array
         height:
           description: Height of the node.
@@ -299,10 +490,10 @@ components:
         netifs:
           description: List of network interfaces of the node.
           items:
-            $ref: '#/components/schemas/NodeTypeNetif'
+            $ref: '#/components/schemas/RacksDBNodeTypeNetif'
           type: array
         ram:
-          $ref: '#/components/schemas/NodeTypeRam'
+          $ref: '#/components/schemas/RacksDBNodeTypeRam'
           description: RAM configuration of the node.
         specs:
           description: URL to node specsheet.
@@ -311,14 +502,14 @@ components:
         storage:
           description: List of storage devices of the node.
           items:
-            $ref: '#/components/schemas/NodeTypeStorage'
+            $ref: '#/components/schemas/RacksDBNodeTypeStorage'
           type: array
         width:
           description: Width of the node.
           example: 0.0
           type: number
       type: object
-    NodeTypeCpu:
+    RacksDBNodeTypeCpu:
       properties:
         cores:
           description: The number of cores per socket.
@@ -337,7 +528,7 @@ components:
           example: https://sipearl.com/en
           type: string
       type: object
-    NodeTypeGpu:
+    RacksDBNodeTypeGpu:
       properties:
         memory:
           description: The amount of memory per GPU.
@@ -352,7 +543,7 @@ components:
           example: https://www.amd.com/fr/products/server-accelerators/instinct-mi250
           type: string
       type: object
-    NodeTypeNetif:
+    RacksDBNodeTypeNetif:
       properties:
         bandwidth:
           description: The bandwidth (per second) of the network interface.
@@ -363,7 +554,7 @@ components:
           example: infiniband
           type: string
       type: object
-    NodeTypeRam:
+    RacksDBNodeTypeRam:
       properties:
         dimm:
           description: The number of DIMMs.
@@ -374,7 +565,7 @@ components:
           example: 34359738368
           type: integer
       type: object
-    NodeTypeStorage:
+    RacksDBNodeTypeStorage:
       properties:
         model:
           description: The model name of the storage device.
@@ -389,31 +580,38 @@ components:
           example: nvme
           type: string
       type: object
-    Rack:
+    RacksDBRack:
       properties:
         datacenter:
-          $ref: '#/components/schemas/Datacenter'
+          $ref: '#/components/schemas/RacksDBDatacenter'
           description: The datacenter where this rack is located.
         name:
           description: The names of the racks in this set.
           example: A[01-10]
           type: string
         room:
-          $ref: '#/components/schemas/DatacenterRoom'
+          $ref: '#/components/schemas/RacksDBDatacenterRoom'
           description: The datacenter room where this rack is located.
         row:
-          $ref: '#/components/schemas/RacksRow'
+          $ref: '#/components/schemas/RacksDBRacksRow'
           description: The racks row of this rack.
         slot:
           description: The first slot used by this set of racks.
           example: 2
           type: integer
+        tags:
+          description: The list of tags associated to the rack.
+          example:
+          - control
+          items:
+            type: string
+          type: array
         type:
           description: Unique identifier of the rack type.
           example: standard
           type: string
       type: object
-    RackType:
+    RacksDBRackType:
       properties:
         depth:
           description: Depth of the rack.
@@ -440,19 +638,19 @@ components:
           example: 600
           type: integer
       type: object
-    RacksRow:
+    RacksDBRacksRow:
       properties:
         name:
           description: Unique name of the racks row.
           example: computeA
           type: string
         position:
-          $ref: '#/components/schemas/RacksRowPosition'
+          $ref: '#/components/schemas/RacksDBRacksRowPosition'
           description: The position of the racks row in the room.
         racks:
           description: The list of (empty) racks in the room.
           items:
-            $ref: '#/components/schemas/Rack'
+            $ref: '#/components/schemas/RacksDBRack'
           type: array
         reversed:
           description: Boolean to control the side of the racks doors in the racks
@@ -460,7 +658,7 @@ components:
           example: true
           type: boolean
       type: object
-    RacksRowPosition:
+    RacksDBRacksRowPosition:
       description: 'NOTE: Please refer to xref:positioning-racks.adoc[racks positioning
         how-to] for more details.'
       properties:
@@ -480,12 +678,12 @@ components:
           example: 2000
           type: integer
       type: object
-    StorageEquipment:
+    RacksDBStorageEquipment:
       description: 'NOTE: Please refer to xref:positioning-equipments.adoc[equipment
         positioning how-to] for more details.'
       properties:
         infrastructure:
-          $ref: '#/components/schemas/Infrastructure'
+          $ref: '#/components/schemas/RacksDBInfrastructure'
           description: The infrastructure of these storage equipments.
         name:
           description: The names of the storage equipments in this set.
@@ -513,12 +711,12 @@ components:
           example: nas
           type: string
       type: object
-    StorageEquipmentType:
+    RacksDBStorageEquipmentType:
       properties:
         disks:
           description: List of storage devices in the storage equipment.
           items:
-            $ref: '#/components/schemas/StorageEquipmentTypeDisk'
+            $ref: '#/components/schemas/RacksDBStorageEquipmentTypeDisk'
           type: array
         height:
           description: Height of storage equipment.
@@ -535,7 +733,7 @@ components:
         netifs:
           description: List of network devices in the storage equipment.
           items:
-            $ref: '#/components/schemas/StorageEquipmentTypeNetif'
+            $ref: '#/components/schemas/RacksDBStorageEquipmentTypeNetif'
           type: array
         specs:
           description: URL to storage equipment specsheet.
@@ -546,7 +744,7 @@ components:
           example: 1.0
           type: number
       type: object
-    StorageEquipmentTypeDisk:
+    RacksDBStorageEquipmentTypeDisk:
       properties:
         model:
           description: The model name of the storage device.
@@ -566,7 +764,7 @@ components:
           example: disk
           type: string
       type: object
-    StorageEquipmentTypeNetif:
+    RacksDBStorageEquipmentTypeNetif:
       properties:
         bandwidth:
           description: The bandwidth (per second) of the network interface.
@@ -577,33 +775,53 @@ components:
           example: ethernet
           type: string
       type: object
-    Types:
+    RacksDBTypes:
       properties:
         misc:
           description: List of miscellaneous equipments types definitions.
+          example: []
           items:
-            $ref: '#/components/schemas/MiscEquipmentType'
+            $ref: '#/components/schemas/RacksDBMiscEquipmentType'
           type: array
         network:
           description: List of network equipments types definitions.
+          example: []
           items:
-            $ref: '#/components/schemas/NetworkEquipmentType'
+            $ref: '#/components/schemas/RacksDBNetworkEquipmentType'
           type: array
         nodes:
           description: List of nodes types definitions.
+          example: []
           items:
-            $ref: '#/components/schemas/NodeType'
+            $ref: '#/components/schemas/RacksDBNodeType'
           type: array
         racks:
           description: List of (empty) racks types definitions.
           items:
-            $ref: '#/components/schemas/RackType'
+            $ref: '#/components/schemas/RacksDBRackType'
           type: array
         storage:
           description: List of storage equipments types definitions.
+          example: []
           items:
-            $ref: '#/components/schemas/StorageEquipmentType'
+            $ref: '#/components/schemas/RacksDBStorageEquipmentType'
           type: array
+      type: object
+    RacksDB_content:
+      properties:
+        datacenters:
+          description: List of datacenters definitions.
+          items:
+            $ref: '#/components/schemas/RacksDBDatacenter'
+          type: array
+        infrastructures:
+          description: List of infrastructures definitions.
+          items:
+            $ref: '#/components/schemas/RacksDBInfrastructure'
+          type: array
+        types:
+          $ref: '#/components/schemas/RacksDBTypes'
+          description: Datacenter equipments types definitions.
       type: object
 info:
   title: RacksDB REST API
@@ -653,7 +871,7 @@ paths:
         name: format
         required: false
         schema:
-          enum: &id001
+          enum:
           - yaml
           - json
           type: string
@@ -663,16 +881,16 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Datacenter'
+                  $ref: '#/components/schemas/RacksDBDatacenter'
                 type: array
             application/x-yaml:
               schema:
                 items:
-                  $ref: '#/components/schemas/Datacenter'
+                  $ref: '#/components/schemas/RacksDBDatacenter'
                 type: array
           description: successful operation
   /draw/<entity>/<name>.<format>:
-    get:
+    post:
       description: Draw an entity
       parameters:
       - description: Type of entity to draw
@@ -701,6 +919,15 @@ paths:
           - svg
           - pdf
           type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drawings_content'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Drawings_content'
+        description: Drawing parameters
       responses:
         '200':
           content:
@@ -716,6 +943,19 @@ paths:
               schema:
                 type: string
           description: successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unable to parse drawing parameters in JSON format
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unsupported drawing parameters format or unable to load drawing
+            parameters schema
   /infrastructures:
     get:
       description: Get information about infrastructures
@@ -759,7 +999,9 @@ paths:
         name: format
         required: false
         schema:
-          enum: *id001
+          enum:
+          - yaml
+          - json
           type: string
       responses:
         '200':
@@ -767,12 +1009,12 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Infrastructure'
+                  $ref: '#/components/schemas/RacksDBInfrastructure'
                 type: array
             application/x-yaml:
               schema:
                 items:
-                  $ref: '#/components/schemas/Infrastructure'
+                  $ref: '#/components/schemas/RacksDBInfrastructure'
                 type: array
           description: successful operation
   /nodes:
@@ -824,7 +1066,9 @@ paths:
         name: format
         required: false
         schema:
-          enum: *id001
+          enum:
+          - yaml
+          - json
           type: string
       responses:
         '200':
@@ -832,12 +1076,12 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Node'
+                  $ref: '#/components/schemas/RacksDBNode'
                 type: array
             application/x-yaml:
               schema:
                 items:
-                  $ref: '#/components/schemas/Node'
+                  $ref: '#/components/schemas/RacksDBNode'
                 type: array
           description: successful operation
   /racks:
@@ -873,7 +1117,9 @@ paths:
         name: format
         required: false
         schema:
-          enum: *id001
+          enum:
+          - yaml
+          - json
           type: string
       responses:
         '200':
@@ -881,12 +1127,11 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Rack'
+                  $ref: '#/components/schemas/RacksDBRack'
                 type: array
             application/x-yaml:
               schema:
                 items:
-                  $ref: '#/components/schemas/Rack'
+                  $ref: '#/components/schemas/RacksDBRack'
                 type: array
           description: successful operation
-
