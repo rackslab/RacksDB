@@ -16,6 +16,7 @@ and this project adheres to
     _MiscEquipment_ objects (#29).
   - Add support of `:recursive` object default to make the property default the
     corresponding object with all its defaults properties recursively.
+  - Add optional _tags_ property on _Rack_ objects.
 - core:
   - Add `bits` defined type.
   - Add `watts` defined type (#23).

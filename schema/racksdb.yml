@@ -417,6 +417,12 @@ _objects:
       row:
         type: ^RacksRow
         description: The racks row of this rack.
+      tags:
+        type: list[str]
+        description: >-
+          The list of tags associated to the rack.
+        optional: true
+        example: ["control"]
   Infrastructure:
     properties:
       name:
