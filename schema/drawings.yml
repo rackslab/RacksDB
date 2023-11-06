@@ -24,6 +24,10 @@ _content:
       type: :Row
       description: Rack row graphical representation settings
       default: :recursive
+    colors:
+      type: :ColoringRules
+      description: Drawing coloring rules
+      default: :recursive
 
 _objects:
   Room:
@@ -81,3 +85,55 @@ _objects:
         type: int
         description: Space above row labels in infrastructure graphical representations
         default: 20
+  ColoringRules:
+    properties:
+      equipments:
+        type: list[:EquipmentColoringRule]
+        description: List of equipments coloring rules.
+        default: []
+      racks:
+        type: list[:RackColoringRule]
+        description: List of racks coloring rules.
+        default: []
+  EquipmentColoringRule:
+    properties:
+      type:
+        type: str
+        description: >-
+          Name of type of quipments associated to the coloring rule.
+        optional: true
+      tags:
+        type: list[str]
+        description: >-
+          List of tags equipments must have to be associated to the coloring
+          rule.
+        optional: true
+      background:
+        type: ~hexcolor
+        description: The background color of the equipments.
+        default: "#999999"
+      border:
+        type: ~hexcolor
+        description: The border color of the equipments.
+        default: "#333333"
+  RackColoringRule:
+    properties:
+      type:
+        type: str
+        description: >-
+          Name of type of rack associated to the coloring rule.
+        optional: true
+      tags:
+        type: list[str]
+        description: >-
+          List of tags racks must have to be associated to the coloring
+          rule.
+        optional: true
+      frame:
+        type: ~hexcolor
+        description: The color of the racks frame.
+        default: "#333333"
+      pane:
+        type: ~hexcolor
+        description: The color of the racks pane.
+        default: "#000000"
