@@ -27,6 +27,7 @@ and this project adheres to
   - Add schema for drawing parameters.
   - Add possibility to tune drawings settings (eg. margin, spacing, etc) with
     drawings parameters.
+  - Add `~hexcolor` defined type.
 - docs:
   - Mention web extra package installation from PyPI in quickstart guide.
   - Mention new optional list of _NodeTypeGpu_ on _NodeType_ in OpenAPI
