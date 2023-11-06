@@ -124,8 +124,10 @@ class InfrastructureDrawer(Drawer):
             * self.parameters.infrastructure.scale
         )
 
+        colorset = self._find_equipment_colorset(equipment)
+
         # draw equipment background
-        self.ctx.set_source_rgb(0.6, 0.6, 0.6)  # grey
+        self.ctx.set_source_rgb(*colorset.background)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,
@@ -136,7 +138,7 @@ class InfrastructureDrawer(Drawer):
         self.ctx.fill()
 
         # draw equipment frame
-        self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
+        self.ctx.set_source_rgb(*colorset.border)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,
@@ -171,8 +173,10 @@ class InfrastructureDrawer(Drawer):
         self.ctx.set_source_rgb(0, 0, 0)  # black
         self.ctx.show_text(f"rack {rack.name}")
 
+        colorset = self._find_rack_colorset(rack)
+
         # draw rack frame
-        self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
+        self.ctx.set_source_rgb(*colorset.frame)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             dl.x,
@@ -183,7 +187,7 @@ class InfrastructureDrawer(Drawer):
         self.ctx.stroke()
 
         # draw rack panes
-        self.ctx.set_source_rgb(0, 0, 0)  # black
+        self.ctx.set_source_rgb(*colorset.pane)
         self.ctx.rectangle(
             dl.x,
             dl.y - rack_height,
