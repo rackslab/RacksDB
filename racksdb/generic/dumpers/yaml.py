@@ -35,6 +35,12 @@ class DBDumperYAML(MapperDumper):
             value = [dumper.represent_data(_object) for _object in data]
         return yaml.SequenceNode(tag, value)
 
+    def _represent_tuple(self, dumper, data):
+        # Represent Python tuples as a YAML sequence
+        tag = "tag:yaml.org,2002:seq"
+        value = [dumper.represent_data(_object) for _object in data]
+        return yaml.SequenceNode(tag, value)
+
     def _represent_dict(self, dumper, data):
         # DBDict are rendered like a list, as well as they are represented in
         # database.
@@ -96,6 +102,7 @@ class DBDumperYAML(MapperDumper):
     def _setup(self):
         yaml.add_representer(DBDict, self._represent_dict)
         yaml.add_representer(DBList, self._represent_list)
+        yaml.add_representer(tuple, self._represent_tuple)
         yaml.add_multi_representer(DBObject, self._represent_dbobject)
         yaml.add_multi_representer(DBObjectRange, self._represent_dbobjectrange)
         yaml.add_multi_representer(DBObjectRangeId, self._represent_dbobjectrangeid)
