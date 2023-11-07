@@ -3,12 +3,11 @@
 import os
 from pathlib import Path
 
-import yaml
-
 from racksdb import RacksDB
 from racksdb.views import RacksDBViews
 from racksdb.generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from racksdb.generic.openapi import OpenAPIGenerator
+from racksdb.generic.dumpers import DBDumperFactory
 from racksdb.drawers.parameters import DrawingParameters
 
 
@@ -29,7 +28,8 @@ def main():
     openapi = OpenAPIGenerator(
         "RacksDB", {"RacksDB": racksdb_schema, "Drawings": drawing_schema}, views
     )
-    print(yaml.dump(openapi.generate()))
+    dumper = DBDumperFactory.get("yaml")()
+    print(dumper.dump(openapi.generate()))
 
 
 if __name__ == "__main__":
