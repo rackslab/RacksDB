@@ -45,9 +45,22 @@ class DBActionResponse:
         self.object = object_name
 
 
+class DBActionError:
+    def __init__(self, code: int, description):
+        self.code = code
+        self.description = description
+
+
 class DBAction:
     def __init__(
-        self, name, path, description, method="get", parameters=[], responses=[]
+        self,
+        name,
+        path,
+        description,
+        method="get",
+        parameters=[],
+        responses=[],
+        errors=[],
     ):
         self.name = name
         self.path = path
@@ -55,6 +68,7 @@ class DBAction:
         self.method = method
         self.parameters = parameters
         self.responses = responses
+        self.errors = errors
 
     def inpath(self, parameter: DBActionParameter) -> bool:
         """Return True if a DBActionParameter is in DBAction path"""
