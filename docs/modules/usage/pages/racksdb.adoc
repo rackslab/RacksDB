@@ -230,6 +230,14 @@ This command accepts the following options:
   File format of the generated image file. Possible values are _png_, _svg_ and
   _pdf_. Default value is _png_.
 
+[.cli-opt]#*--parameters*=#[.cli-optval]##_PARAMETERS_##::
+  Path to YAML xref:drawparams.adoc[drawing parameters] file. With special value
+  `-`, drawings parameters are read on standard input.
+
+[.cli-opt]#*--drawings-schema*=#[.cli-optval]##_DRAWINGS_SCHEMA_##::
+  Path to drawing parameters schema YAML file. Default value is
+  [.path]#`/usr/share/racksdb/drawings.yml`#.
+
 The following sub-commands are available:
 
 [.cli-opt]#*infrastructure*#::
@@ -257,6 +265,21 @@ $ racksdb draw infrastructure --name=tiger --format=svg
 [.cli-example-desc]
 Generate SVG image file `tiger.svg` with racks and equipments used in _tiger_
 infrastructure.
+
+[source,console]
+$ racksdb draw infrastructure --name=tiger --format=pdf --parameters=custom.yaml
+
+[.cli-example-desc]
+Generate PDF image file `tiger.pdf` with racks and equipments used in _tiger_
+infrastructure with custom xref:drawparams.adoc[drawing parameters] defined in
+`custom.yaml`.
+
+[source,console]
+$ racksdb draw room --name=noisy --parameters=- < custom.yaml
+
+[.cli-example-desc]
+Generate the map of datacenter room _noisy_ with custom drawing parameters read
+on standard input fed with content of `custom.yaml`.
 ====
 
 == Exit status

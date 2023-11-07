@@ -46,6 +46,10 @@ endif::[]
 [.cli-opt]#*-p, --port*=#[.cli-optval]##_PORT_##::
   TCP port to listen for incoming requests. Default value is 5000.
 
+[.cli-opt]#*--drawings-schema*=#[.cli-optval]##_DRAWINGS_SCHEMA_##::
+  Path to drawing parameters schema YAML file. Default value is
+  [.path]#`/usr/share/racksdb/drawings.yml`#.
+
 [.cli-opt]#*--cors*#::
   Enable CORS headers.
 

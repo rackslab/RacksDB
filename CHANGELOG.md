@@ -41,6 +41,8 @@ and this project adheres to
   - Mention new _MiscEquipmentType_ and _MiscEquipment_ objects in OpenAPI
     specification and structure reference documentation.
   - Add miscellaneous equipment in example database.
+  - Mention drawing parameters options `--parameters` and `--drawings-schema`
+    options in `racksdb` and `racksdb-web` manpages.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
