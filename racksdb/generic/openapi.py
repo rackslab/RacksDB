@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from itertools import chain
+from typing import Tuple, Any
 
 from .schema import (
     SchemaObject,
@@ -15,6 +16,7 @@ from .schema import (
     SchemaReference,
 )
 from .definedtype import SchemaDefinedType
+from .errors import DBOpenAPIGeneratorError
 from ..version import get_version
 
 
@@ -174,16 +176,34 @@ class OpenAPIGenerator:
                 return self._property_example(prop.type.obj.prop(prop.type.prop))
         return None
 
+    def _native_type(self, native_type):
+        """Convert native property type into OpenAPI type."""
+        if native_type is str:
+            return "string"
+        elif native_type is int:
+            return "integer"
+        elif native_type is float:
+            return "number"
+        elif native_type is bool:
+            return "boolean"
+        raise DBOpenAPIGeneratorError(
+            f"Unsupported type conversion for native type '{native_type}'"
+        )
+
     def _native_schema(self, property_type):
-        """Convert native type into OpenAPI schema."""
-        if property_type is str:
-            return {"type": "string"}
-        elif property_type is int:
-            return {"type": "integer"}
-        elif property_type is float:
-            return {"type": "number"}
-        elif property_type is bool:
-            return {"type": "boolean"}
+        """Convert native property type into OpenAPI schema."""
+        try:
+            return {"type": self._native_type(property_type)}
+        except DBOpenAPIGeneratorError:
+            pass
+        if isinstance(property_type, type(Tuple[Any, ...])):
+            return {
+                "type": "array",
+                "items": self._native_type(property_type.__args__[0]),
+            }
+        raise DBOpenAPIGeneratorError(
+            f"Unsupported schema conversion for property native type '{property_type}'"
+        )
 
     def _property_schema(self, schema, prop):
         """Return the OpenAPI schema of an object property, depending on its type."""

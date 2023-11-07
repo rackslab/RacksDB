@@ -19,3 +19,7 @@ class DBDumperError(Exception):
 
 class DBViewError(Exception):
     pass
+
+
+class DBOpenAPIGeneratorError(Exception):
+    pass
