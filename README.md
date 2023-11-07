@@ -80,13 +80,22 @@ of RacksDB is available online with complete database definition reference
 documentation, how-tos (extensions, positioning), CLI manpage and library API
 documentation.
 
-## Tests
+## Community
 
-To run the unit tests, launch this command:
+Do you want to get in touch with developers and the community? Several channels
+are available:
 
-```
-$ python3 -m unittest discover -v .
-```
+* **Matrix Chat** [#racksdb:talk.rackslab.io](https://matrix.to/#/#racksdb:talk.rackslab.io):
+  instant messaging for quick feedback and help.
+
+  > [!NOTE]
+  > A [Matrix account](https://matrix.org/docs/chat_basics/matrix-for-im/#creating-a-matrix-account)
+  > is required to access the chat room. It can be created in few steps on any
+  > Matrix network public provider such as [matrix.org](https://matrix.org) or
+  > [gitter.im](https://gitter.im/#apps).
+
+* [**GitHub Discussions**](https://github.com/rackslab/RacksDB/discussions):
+  send questions, ideas and suggestions.
 
 ## Authors
 
@@ -98,6 +107,14 @@ The project has also received external contributions from great people:
 
 * [@btravouillon](https://github.com/btravouillon)
   ([Mila](https://mila.quebec/en/))
+
+## Tests
+
+To run the unit tests, launch this command:
+
+```
+$ python3 -m unittest discover -v .
+```
 
 ## License
 
