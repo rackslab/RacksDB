@@ -4,16 +4,26 @@
 Objects definitions are mappings with the following expected keys:
 
 `description` _(optional)_:: String to describe the purpose of the object.
+
 `properties`:: Mapping of objects properties. The keys are the names of the
 properties. The values are mapping with the following expected keys:
+
 `type`::: The xref:#type[property type], as described below.
+
 `description`::: String to describe the purpose and content of the property.
+
 `key` _(optional)_::: Boolean to determine if the property is a
 xref:concepts.adoc#key[key]. Default value is _false_.
-`default` _(optional)_::: Default value of the property.
+
+`default` _(optional)_::: Default value of the property. When the `type` is an
+xref:concepts.adoc#object[object], the special value `:recursive` can be used to
+make the default value of the property the corresponding object with all its
+defaults properties, recursively.
+
 `example` _(optional)_::: Example value of the property.
+
 `optional` _(optional)_::: Boolean to determine if property is optional.
-   Default value is _false_.
+Default value is _false_.
 
 [#type]
 == Properties Type

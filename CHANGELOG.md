@@ -45,6 +45,8 @@ and this project adheres to
     options in `racksdb` and `racksdb-web` manpages.
   - Add documentation page for drawing parameters with howto and reference.
   - Mention new _tags_ property on _Rack_ object in reference documentation.
+  - Mention schema properties default `:recursive` special value in schema
+    documentation.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
