@@ -15,6 +15,7 @@ from .generic.views import (
     DBAction,
     DBActionParameter,
     DBActionResponse,
+    DBActionError,
 )
 
 
@@ -147,6 +148,14 @@ class RacksDBViews(DBViewSet):
                 DBActionResponse("image/png", binary=True),
                 DBActionResponse("image/svg+xml"),
                 DBActionResponse("application/pdf", binary=True),
+            ],
+            errors=[
+                DBActionError(400, "Unable to parse drawing parameters in JSON format"),
+                DBActionError(
+                    415,
+                    "Unsupported drawing parameters format or unable to load drawing "
+                    "parameters schema",
+                ),
             ],
         )
     ]
