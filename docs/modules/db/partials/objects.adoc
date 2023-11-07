@@ -728,6 +728,12 @@ Library class type: `RacksDBRack`
 
 |{symbol-ref}{nbsp}xref:#obj-racktype[{symbol-obj}{nbsp}RackType].id
 |[.green]#icon:check[]#
+
+|tags
+|The list of tags associated to the rack.
+
+|{symbol-seq}{nbsp}str
+|[.grey]#-#
 |===
 
 .Automatic back references
