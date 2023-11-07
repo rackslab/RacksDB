@@ -43,6 +43,7 @@ and this project adheres to
   - Add miscellaneous equipment in example database.
   - Mention drawing parameters options `--parameters` and `--drawings-schema`
     options in `racksdb` and `racksdb-web` manpages.
+  - Add documentation page for drawing parameters with howto and reference.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,

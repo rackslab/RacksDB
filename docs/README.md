@@ -14,7 +14,16 @@ To generate the schema objects partial of database structure reference
 documentation, run this command:
 
 ```sh
-make gen
+make ref
+```
+
+## Generate objects reference documentation
+
+To generate the schema objects partial of drawing parameters reference
+documentation, run this command:
+
+```sh
+make drawing-ref
 ```
 
 ## Update OpenAPI description

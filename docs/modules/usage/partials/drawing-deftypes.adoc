@@ -1,0 +1,19 @@
+== Defined Types
+
+:url-deftypes: https://github.com/rackslab/racksdb/blob/main/racksdb/drawers/dtypes
+
+[cols="2a,2a,1l,3a"]
+|===
+|Name|Examples|Resulting type|Comment
+
+|[#deftype-hexcolor]`~hexcolor`
+{url-deftypes}/hexcolor.py[icon:code[]]
+|* `#ffffff`
+* `#a66321`
+|tuple(float, float, float)
+|Hexadecimal color code (see
+https://en.wikipedia.org/wiki/Web_colors#Hex_triplet[Wikipedia article for more
+details]). The resulting value is tuple of 3 floats between 0 and 1 representing
+the rate of red, green and blue primary colors in the resulting color.
+
+|===

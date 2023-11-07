@@ -1,0 +1,108 @@
+= Drawing Parameters
+
+RacksDB offers the possibity to generate graphical representations of datacenter
+room and infrastructures with their racks and equipments in various images
+formats. The images are generated with various default drawing parameters that
+user are able to customize for their requirements.
+
+The xref:#usage[first section] of this page describes how to specify drawing
+parameters with both RacksDB xref:racksdb.adoc[CLI] and
+xref:rest.adoc[REST API]. The xref:#reference[second section] is the reference
+documentation of all available drawing parameters with their format and default
+values.
+
+[#usage]
+== Usage
+
+=== CLI
+
+The `draw` subcommand of xref:racksdb.adoc[`racksdb` CLI] accepts drawing
+parameters with `--parameters` option. The value of this option must specify a
+path to a YAML file that contains the drawing parameters.
+
+.Show example `custom.yml` drawing parameters YAML file
+[%collapsible]
+====
+[source,yaml]
+----
+include::example$custom.yml[]
+----
+====
+
+For example, to generate graphical representation of _tiger_ infrastructure with
+custom drawing parameters in `custom.yml` file, run this command:
+
+[source,console]
+----
+$ racksdb draw infrastructure --name=tiger --parameters=custom.yml
+----
+
+Alternatively, the option accepts the special value `-`. In this case, the
+drawing parameters are read on command standard input (_stdin_). For example:
+
+[source,console]
+----
+$ racksdb draw room --name=noisy --parameters=- < custom.yaml
+----
+
+=== REST API
+
+It is also possible to provide custom drawing parameters to RacksDB
+xref:rest.adoc[REST API]. The REST API accepts drawing parameters in both JSON
+and YAML formats. The parameters must be sent in requests body content with
+content type header set according to the format.
+
+For example, to generate graphical representation of _mercury_ infrastructure
+with inline drawing parameters in JSON format, the following `curl` command can
+be used:
+
+[source,console]
+----
+$ curl -X POST -H 'Content-Type: application/json' \
+       --data '{"margin":{ "top": 200 }}' \
+       http://localhost:5000/draw/infrastructure/mercury.png \
+       --output mercury.png
+----
+
+Alternatively, the drawing parameters can be extracted a JSON file. For example
+with file `custom.json`:
+
+[source,console]
+----
+$ curl -X POST -H 'Content-Type: application/json' \
+       --data @custom.json
+       http://localhost:5000/draw/infrastructure/mercury.png \
+       --output mercury.png
+----
+
+.Show example `custom.json` drawing parameters YAML file
+[%collapsible]
+====
+[source,json]
+----
+include::example$custom.json[]
+----
+====
+
+To send drawing parameters in YAML format, the content type HTTP header must be
+changed:
+
+[source,console]
+----
+$ curl -X POST -H 'Content-Type: application/x-yaml' \
+       --data-binary @custom.yml \
+       http://localhost:5000/draw/infrastructure/mercury.png \
+       --output mercury.png
+----
+
+CAUTION: To send YAML content with `curl` client, the `--data-binary` option
+must be used in favor of `-d, --data` to preserve line breaks.
+
+[#reference]
+== Reference
+
+include::db:partial$symbols.adoc[leveloffset=+1]
+
+include::partial$drawing-objects.adoc[leveloffset=+1]
+
+include::partial$drawing-deftypes.adoc[leveloffset=+1]

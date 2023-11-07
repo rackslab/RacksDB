@@ -1,39 +1,12 @@
 = Database Structure Reference
 
-:symbol-seq: icon:list[title=Sequence]
-:symbol-ref: icon:arrow-up-right-from-square[title=Reference]
-:symbol-obj: icon:cube[title=Object]
-:symbol-deftype: icon:shapes[title=Defined type]
-:symbol-backref: icon:share-from-square[title=Reference,flip=horizontal]
-:symbol-key: icon:key[title=Key]
-
 This page contains *the reference documentation of RacksDB database structure*,
 with all objects models and properties. The document starts with a legend of
 some symbols used for schematic representation of properties. Then, the root
 content of the database is described, followed by all subsequents objects. At
 the end, the defined types are described.
 
-== Symbols legend
-
-Some icons are used in the tables of this page for symbolic representations of
-xref:concepts.adoc#advanced[advanced data types]:
-
-[no-bullet]
-- {symbol-ref} xref:concepts.adoc#reference[*reference*]
-- {symbol-obj} xref:concepts.adoc#object[*object*]
-- {symbol-deftype} xref:concepts.adoc#deftype[*defined types*]
-- {symbol-backref} xref:concepts.adoc#backref[*back reference*]
-
-Other symbols are used for xref:concepts.adoc#attributes[attributes] of
-properties:
-
-[no-bullet]
-- {symbol-seq} xref:concepts.adoc#sequence[*sequence*]
-- {symbol-key} xref:concepts.adoc#key[*key*]
-
-The optional/required attribute is indicated in the _Required_ column of
-properties definition table. When defined, the default value attribute is
-mentioned in the _Description_ column.
+include::partial$symbols.adoc[]
 
 include::partial$objects.adoc[]
 

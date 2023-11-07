@@ -1,0 +1,24 @@
+{
+    "margin": {
+        "top": 200
+    },
+    "colors": {
+        "equipments": [
+            {
+                "type": "sm610u",
+                "background": "#348feb"
+            },
+            {
+                "tags": ["hpc", "servers"],
+                "border": "#a66321"
+            }
+        ],
+        "racks": [
+            {
+                "type": "half",
+                "pane": "#8d42f5",
+                "frame": "#81a85e"
+            }
+        ]
+    }
+}

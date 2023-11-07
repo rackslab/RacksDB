@@ -1,0 +1,12 @@
+margin:
+  top: 200
+colors:
+  equipments:
+  - type: sm610u
+    background: "#348feb" # blue
+  - tags: ["hpc", "servers"]
+    border: "#a66321" # orange
+  racks:
+  - type: half
+    pane: "#8d42f5" # purple
+    frame: "#81a85e" # green

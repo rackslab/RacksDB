@@ -1,5 +1,6 @@
 * CLI manpages
 ** xref:racksdb.adoc[`racksdb`]
 ** xref:racksdb-web.adoc[`racksdb-web`]
+* xref:drawparams.adoc[]
 * xref:lib.adoc[]
 * xref:rest.adoc[]

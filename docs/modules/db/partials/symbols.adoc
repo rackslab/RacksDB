@@ -1,0 +1,28 @@
+:symbol-seq: icon:list[title=Sequence]
+:symbol-ref: icon:arrow-up-right-from-square[title=Reference]
+:symbol-obj: icon:cube[title=Object]
+:symbol-deftype: icon:shapes[title=Defined type]
+:symbol-backref: icon:share-from-square[title=Reference,flip=horizontal]
+:symbol-key: icon:key[title=Key]
+
+== Symbols legend
+
+Some icons are used in the tables of this page for symbolic representations of
+xref:db:concepts.adoc#advanced[advanced data types]:
+
+[no-bullet]
+- {symbol-ref} xref:db:concepts.adoc#reference[*reference*]
+- {symbol-obj} xref:db:concepts.adoc#object[*object*]
+- {symbol-deftype} xref:db:concepts.adoc#deftype[*defined types*]
+- {symbol-backref} xref:db:concepts.adoc#backref[*back reference*]
+
+Other symbols are used for xref:db:concepts.adoc#attributes[attributes] of
+properties:
+
+[no-bullet]
+- {symbol-seq} xref:db:concepts.adoc#sequence[*sequence*]
+- {symbol-key} xref:db:concepts.adoc#key[*key*]
+
+The optional/required attribute is indicated in the _Required_ column of
+properties definition table. When defined, the default value attribute is
+mentioned in the _Description_ column.

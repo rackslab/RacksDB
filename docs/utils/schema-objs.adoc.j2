@@ -38,7 +38,16 @@ xref:#deftype-{{ data_type.name[deftype_prefix|length:]|lower() }}[{symbol-defty
 |{{ prop.name }}{% if prop.key is true %}{nbsp}{symbol-key}{% endif %}
 |{{ prop.description }}
 {% if prop.default is not none %}
+{%- if prop.default is mapping %}
+*Default value:*
+
+[source,yaml]
+----
+{{prop.default|toyaml}}
+----
+{%- else %}
 *Default value:* `{{prop.default}}`
+{%- endif %}
 {%- endif %}
 |{{ represent_type(prop.type) }}
 |{% if prop.required is false %}[.grey]#-#{% else %}[.green]#icon:check[]#{% endif %}
