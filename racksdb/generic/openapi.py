@@ -71,6 +71,9 @@ class OpenAPIGenerator:
                 action_schema["responses"]["200"]["content"].update(
                     self._action_reponse_description(response)
                 )
+            # add actions errors reponses
+            for error in action.errors:
+                action_schema["responses"].update(self._error_response(error))
 
         # components
         result["components"] = {"schemas": {}}
@@ -82,7 +85,50 @@ class OpenAPIGenerator:
                     f"{schema}{_type.name}"
                 ] = self._object_schema(schema, _type)
 
+        # add error component
+        result["components"]["schemas"].update(self._error_component())
+
         return result
+
+    def _error_component(self):
+        """Return the OpenAPI component schema of a generic Error object."""
+        return {
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "description": "HTTP error code",
+                        "type": "integer",
+                        "example": 500
+                    },
+                    "error": {
+                        "description": "HTTP error name",
+                        "type": "string",
+                        "example": "Internal error"
+                    },
+                    "description": {
+                        "description": "Detailed error description",
+                        "type": "string",
+                        "example": "Error while parsing object"
+                    }
+                },
+            }
+        }
+
+    def _error_response(self, error):
+        """Return the OpenAPI reponse description of a DBActionError."""
+        return {
+            str(error.code): {
+                "description": error.description,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error",
+                        }
+                    }
+                }
+            }
+        }
 
     def _action_argument_description(self, action, parameter):
         """Return the OpenAPI description of a DBActionArgument."""
