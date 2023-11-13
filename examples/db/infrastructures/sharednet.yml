@@ -1,0 +1,35 @@
+description: Central network infrastructure
+tags:
+- network
+- shared
+layout:
+- rack: R2-A02
+  network:
+  - name: netmercurysw[01-02]
+    type: cisco3650
+    slot: 18
+    tags: [network]
+- rack: rackE01
+  network:
+  - name: netsw01
+    type: cisco3650
+    slot: 40
+    tags: [network, shared]
+- rack: rackE02
+  network:
+  - name: netsw02
+    type: cisco3650
+    slot: 40
+    tags: [network, shared]
+- rack: R5-A01
+  network:
+  - name: netsw03
+    type: cisco3650
+    slot: 40
+    tags: [network, shared]
+- rack: R5-A02
+  network:
+  - name: netsw04
+    type: cisco3650
+    slot: 40
+    tags: [network, shared]

@@ -1,0 +1,82 @@
+tags:
+- freecooling
+- tier3
+rooms:
+  - name: level1
+    dimensions:
+      width: 15m
+      depth: 8m
+    rows:
+    - name: A
+      reversed: true
+      position:
+        width: 3m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackA[01-06]
+        type: standard
+    - name: B
+      position:
+        width: 6m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackB[01-06]
+        type: standard
+    - name: C
+      reversed: true
+      position:
+        width: 10m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackC[01-06]
+        type: standard
+    - name: D
+      position:
+        width: 13m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackD[01-06]
+        type: standard
+  - name: level2
+    dimensions:
+      width: 15m
+      depth: 8m
+    rows:
+    - name: E
+      reversed: true
+      position:
+        width: 3m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackE[01-06]
+        type: standard
+    - name: F
+      position:
+        width: 6m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackF[01-06]
+        type: standard
+    - name: G
+      reversed: true
+      position:
+        width: 10m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackG[01-06]
+        type: standard
+    - name: H
+      position:
+        width: 13m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackH[01-06]
+        type: standard

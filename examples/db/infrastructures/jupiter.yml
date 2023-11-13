@@ -1,0 +1,54 @@
+description: Jupiter data cluster
+tags:
+- data
+- cluster
+layout:
+- rack: rackE01
+  storage:
+  - name: junas[01-04]
+    type: qnaph1277
+    slot: 4
+    tags: [storage]
+  network:
+  - name: jusw01
+    type: cisco3650
+    slot: 38
+    tags: [network]
+- rack: rackE02
+  tags: [storage]
+  storage:
+  - name: junas[05-08]
+    type: qnaph1277
+    slot: 4
+    tags: [storage]
+  network:
+  - name: jusw02
+    type: cisco3650
+    slot: 38
+    tags: [network]
+- rack: R5-A01
+  storage:
+  - name: junas[09-12]
+    type: qnaph1277
+    slot: 4
+    tags: [storage]
+  misc:
+  - name: jukvm01
+    type: kvm
+    slot: 18
+  network:
+  - name: jusw03
+    type: cisco3650
+    slot: 38
+    tags: [network]
+- rack: R5-A02
+  storage:
+  - name: junas[13-16]
+    type: qnaph1277
+    slot: 4
+    tags: [storage]
+  network:
+  - name: jusw04
+    type: cisco3650
+    slot: 38
+    tags: [network]

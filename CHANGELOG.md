@@ -50,6 +50,7 @@ and this project adheres to
   - Prefix objects from RacksDB shema with `RacksDB` and add objects from
     drawing parameters schema in OpenAPI specification and structure reference
     documentation.
+  - Add new datacenter and infrastructures in example database.
 
 ### Changed
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
