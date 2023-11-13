@@ -46,7 +46,7 @@ class TestDBLoad(unittest.TestCase):
     def test_content(self):
         db = RacksDB.load(schema=self.schema_path, db=self.db_path)
         self.assertEqual(type(db), RacksDB)
-        self.assertEqual(len(db.infrastructures), 1)
+        self.assertEqual(len(db.infrastructures), 3)
         # Thanks to lazy loading, just a few expandable object are loaded, much
         # fewer than the number of nodes. The number of potentially expanded
         # objects is reported correctly by len(). However, it must be much lower
@@ -56,7 +56,6 @@ class TestDBLoad(unittest.TestCase):
         self.assertEqual(
             type(db.infrastructures.first()).__name__, "RacksDBInfrastructure"
         )
-        self.assertEqual(db.infrastructures.first().name, "mercury")
         self.assertEqual(db.infrastructures["mercury"].name, "mercury")
         self.assertEqual(len(db.infrastructures["mercury"].nodes.keys()), 6)
         self.assertEqual(len(db.infrastructures["mercury"].nodes), 129)
