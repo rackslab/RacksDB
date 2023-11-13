@@ -4,3 +4,4 @@ build/
 dist/
 /docs/man/*.1
 /generated-doc
+node_modules/
