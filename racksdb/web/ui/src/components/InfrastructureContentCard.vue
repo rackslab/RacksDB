@@ -10,11 +10,12 @@ import type {
 
 var showPopUp = ref(false)
 var popUpContent: Ref<NodeEquipment | NetworkEquipment | StorageEquipment | undefined> = ref()
+type equipmentType = 'nodes' | 'storage' | 'network'
 
 const props = defineProps({
   rack: String,
   equipment: {
-    type: String,
+    type: String as PropType<equipmentType>,
     required: true
   },
   name: {
@@ -28,7 +29,7 @@ const props = defineProps({
   }
 })
 
-function popUp(name: string, equipment: 'nodes' | 'storage' | 'network') {
+function popUp(name: string, equipment: equipmentType) {
   if (showPopUp.value) {
     showPopUp.value = !showPopUp.value
   } else {
