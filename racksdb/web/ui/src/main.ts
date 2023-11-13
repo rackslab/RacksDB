@@ -6,7 +6,6 @@ import router from './router'
 import { initRuntimeConfiguration, runtimeConfiguration } from './plugins/runtimeConfiguration'
 import { httpPlugin } from './plugins/http'
 
-
 const app = createApp(App)
 app.use(router)
 app.use(runtimeConfiguration, await initRuntimeConfiguration())

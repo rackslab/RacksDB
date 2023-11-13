@@ -7,49 +7,52 @@ import type { Ref } from 'vue'
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const http = useHttp()
 
-async function getDatacenters(){
-    try {
-        const resp = await http.get('datacenters')
-        datacenters.value = resp.data as Datacenter[]
-    } catch (error) {
-        console.error('Erreur lors de la récupératuon des données des datacenters', error)
-    }
+async function getDatacenters() {
+  try {
+    const resp = await http.get('datacenters')
+    datacenters.value = resp.data as Datacenter[]
+  } catch (error) {
+    console.error('Erreur lors de la récupératuon des données des datacenters', error)
+  }
 }
 
 onMounted(() => {
-    getDatacenters()
+  getDatacenters()
 })
 
 export interface Datacenter {
-    name: string,
-    rooms: Array<DatacenterRoom>
-    tags: any
+  name: string
+  rooms: Array<DatacenterRoom>
+  tags: any
 }
 
 export interface DatacenterRoom {
-    name: string
-    dimensions: {
-        width: number
-        depth: number
+  name: string
+  dimensions: {
+    width: number
+    depth: number
+  }
+  rows: [
+    {
+      racks: [
+        {
+          name: string
+          fillrate: number
+        }
+      ]
+      nbracks: number
     }
-    rows: [{
-        racks: [{
-            name: string,
-            fillrate: number,
-        }]
-        nbracks: number
-    }]       
+  ]
 }
 </script>
 
 <template>
-    <SearchBar 
-        v-if="datacenters.length"
-        viewTitle="Datacenter View"    
-        searchedItem="datacenter" 
-        :items="datacenters"
-    />
+  <SearchBar
+    v-if="datacenters.length"
+    viewTitle="Datacenter View"
+    searchedItem="datacenter"
+    :items="datacenters"
+  />
 
-    <!-- map code will be here -->
-
+  <!-- map code will be here -->
 </template>

@@ -14,41 +14,39 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-    
+
     {
       path: '/datacenters',
       name: 'datacenters',
       component: DatacentersView
     },
-    
+
     {
       path: '/datacenters/:name',
       name: 'datacenterdetails',
       component: DatacenterDetailsView,
-      props: true,
+      props: true
     },
 
     {
       path: '/datacenters/:name/:datacenterRoom',
       name: 'datacenterroom',
       component: DatacenterRoomView,
-      props: true,
+      props: true
     },
 
     {
       path: '/infrastructures',
       name: 'infrastructures',
-      component: InfrastructuresView,
+      component: InfrastructuresView
     },
 
     {
       path: '/infrastructures/:name',
       name: 'infrastructuredetails',
       component: InfrastructureDetailsView,
-      props: true,
-    },
-
-    
+      props: true
+    }
   ]
 })
 
