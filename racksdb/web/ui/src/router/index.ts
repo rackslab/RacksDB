@@ -1,3 +1,9 @@
+/*Copyright (c) 2022-2023 Rackslab
+
+This file is part of RacksDB.
+
+SPDX-License-Identifier: GPL-3.0-or-later */
+
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DatacentersView from '../views/DatacentersView.vue'
