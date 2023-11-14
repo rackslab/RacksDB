@@ -1,6 +1,6 @@
 = Getting Started
 
-image::overview:racksdb_logo.svg[RacksDB Overview,150,float=right]
+image::overview:logo_racksdb.svg[RacksDB Overview,150,float=right]
 
 *RacksDB* is an _open source_ solution to modelize your datacenters
 infrastructures in a simple database schema to store information about
