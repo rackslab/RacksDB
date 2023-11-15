@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
-import HomeViewCards from '@/components/HomeViewCards.vue'
+import HomeViewCard from '@/components/HomeViewCard.vue'
 import type { Ref } from 'vue'
 import type { Datacenter } from './DatacentersView.vue'
 import type { Infrastructure } from './InfrastructuresView.vue'
@@ -48,24 +48,24 @@ onMounted(() => {
   </section>
 
   <div class="flex justify-around pt-32 px-32">
-    <HomeViewCards
+    <HomeViewCard
       v-for="datacenter in datacenters"
       :key="datacenter.name"
       title="datacenter"
       route="datacenters"
       :body="datacenter.name"
       :complement="datacenter.tags"
-      :array="datacenters"
+      :nbItem="datacenters.length"
     />
 
-    <HomeViewCards
+    <HomeViewCard
       v-for="infrastructure in infrastructures"
       :key="infrastructure.name"
       title="infrastructure"
       route="infrastructures"
       :body="infrastructure.name"
       :complement="infrastructure.name"
-      :array="infrastructures"
+      :nbItem="infrastructures.length"
     />
   </div>
 </template>
