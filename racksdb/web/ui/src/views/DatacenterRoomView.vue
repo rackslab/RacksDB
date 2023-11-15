@@ -37,7 +37,7 @@ async function getRacks() {
     rackDetails.value = racks.value.filter((rack) => rack.room === props.datacenterRoom)
     console.log(rackDetails.value)
   } catch (error) {
-    console.error('Erreur lors de la récupératuon des données des datacenters', error)
+    console.error('Error during racks data recovery', error)
   }
 }
 
@@ -49,7 +49,7 @@ async function getDatacenters() {
       (datacenter) => datacenter.name === props.name
     )[0]
   } catch (error) {
-    console.error('Erreur lors de la récupératuon des données des datacenters', error)
+    console.error('Error during datacenters data recovery', error)
   }
 }
 

@@ -55,7 +55,7 @@ async function getInfrastructure() {
       (infrastructure) => infrastructure.name === props.name
     )[0]
   } catch (error) {
-    console.error('Error during infrastructure data recovery', error)
+    console.error('Error during infrastructures data recovery', error)
   }
 }
 

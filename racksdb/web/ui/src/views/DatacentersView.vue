@@ -18,7 +18,7 @@ async function getDatacenters() {
     const resp = await http.get('datacenters')
     datacenters.value = resp.data as Datacenter[]
   } catch (error) {
-    console.error('Erreur lors de la récupératuon des données des datacenters', error)
+    console.error('Error during datacenters data recovery', error)
   }
 }
 

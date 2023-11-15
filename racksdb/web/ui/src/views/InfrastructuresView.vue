@@ -18,7 +18,7 @@ async function getInfrastructure() {
     const resp = await http.get('infrastructures')
     infrastructures.value = resp.data as Infrastructure[]
   } catch (error) {
-    console.error('Error during infrastructure data recovery', error)
+    console.error('Error during infrastructures data recovery', error)
   }
 }
 

@@ -27,7 +27,7 @@ async function getDatacenters() {
       (datacenter) => datacenter.name === props.name
     )[0]
   } catch (error) {
-    console.error('Error when fetching the data of datacenters', error)
+    console.error('Error during racks data recovery', error)
   }
 }
 
