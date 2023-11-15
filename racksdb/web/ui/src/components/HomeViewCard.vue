@@ -22,11 +22,9 @@ defineProps({
     type: String,
     required: true
   },
-  array: {
-    type: Array,
-    default() {
-      return []
-    }
+  nbItem: {
+    type: Number,
+    required: true
   }
 })
 </script>
@@ -39,7 +37,7 @@ defineProps({
       <router-link :to="route">
         <h2 class="text-2xl font-semibold flex justify-center text-purple-700 capitalize">
           {{ title }}
-          <span v-if="array.length > 1" class="lowercase">s</span>
+          <span v-if="nbItem > 1" class="lowercase">s</span>
         </h2>
       </router-link>
 
