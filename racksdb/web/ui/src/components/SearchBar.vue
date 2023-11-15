@@ -9,14 +9,14 @@ import { ref, onMounted } from 'vue'
 import type { Ref } from 'vue'
 
 const input = ref('')
-const li = ref('')
 const matchingItems: Ref<Array<Item>> = ref([])
-var showList = ref(true)
 
+// This function filters items by name based on the user input value
 function search() {
   matchingItems.value = props.items.filter((item) => item.name.includes(input.value))
 }
 
+// Use the hook onMounted to insert data from the prop in a variabe when the component is initialized
 onMounted(() => {
   matchingItems.value = props.items
 })
@@ -82,13 +82,12 @@ const props = defineProps({
 
     <ul
       id="myUL"
-      v-show="showList"
       v-for="item in matchingItems"
       :key="item.name"
       class="flex justify-center"
     >
       <router-link :to="{ name: searchedItem + 'details', params: { name: item.name } }">
-        <li ref="li" class="capitalize">{{ item.name }}</li>
+        <li class="capitalize">{{ item.name }}</li>
       </router-link>
     </ul>
   </div>
