@@ -8,19 +8,19 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 defineProps({
   title: {
     type: String,
-    default: 'default title'
+    required: true
   },
   route: {
     type: String,
-    default: 'default title'
+    required: true
   },
   body: {
     type: String,
-    default: 'default body'
+    required: true
   },
   complement: {
     type: String,
-    default: 'default complement'
+    required: true
   },
   array: {
     type: Array,
