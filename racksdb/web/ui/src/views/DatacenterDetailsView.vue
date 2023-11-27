@@ -85,7 +85,7 @@ const props = defineProps({
             <router-link
               :to="{
                 name: 'datacenterroom',
-                params: { name: datacenterDetails?.name, datacenterRoom: room.name }
+                params: { datacenterName: props.name, datacenterRoom: room.name }
               }"
             >
               <button
