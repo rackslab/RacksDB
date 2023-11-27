@@ -46,7 +46,7 @@ async function getDatacenters() {
     const resp = await http.get('datacenters')
     datacenters.value = resp.data as Datacenter[]
     datacenterDetails.value = datacenters.value.filter(
-      (datacenter) => datacenter.name === props.name
+      (datacenter) => datacenter.name === props.datacenterName
     )[0]
   } catch (error) {
     console.error('Error during datacenters data recovery', error)
@@ -59,7 +59,7 @@ onMounted(() => {
 })
 
 const props = defineProps({
-  name: String,
+  datacenterName: String,
   datacenterRoom: String
 })
 
