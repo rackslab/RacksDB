@@ -15,6 +15,7 @@ const http = useHttp()
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
 
+// Get the room and sum all the racks in the array with .reduce()
 function roomNbRacks(room: DatacenterRoom) {
   return room.rows.reduce((result, row) => result + row.nbracks, 0)
 }
