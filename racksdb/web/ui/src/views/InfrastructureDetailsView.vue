@@ -12,6 +12,10 @@ import InfrastructureCards from '@/components/InfrastructureCards.vue'
 import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/views/InfrastructuresView.vue'
+import {
+  Squares2X2Icon,
+  TableCellsIcon
+} from '@heroicons/vue/24/outline'
 
 const http = useHttp()
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
@@ -19,18 +23,11 @@ const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
 const showFullImg = ref(false)
 const rack = ref()
 const cardsView = ref(true)
-const tableView = ref(false)
 const showRack = ref(false)
 const showInfrastructureRacks = ref(true)
 
-function choseView() {
-  if (cardsView.value) {
-    cardsView.value = !cardsView.value
-    tableView.value = !tableView.value
-  } else {
-    tableView.value = !tableView.value
-    cardsView.value = !cardsView.value
-  }
+function changeView(){
+    cardsView.value = false
 }
 
 function openImg() {
@@ -99,9 +96,16 @@ const props = defineProps({
     />
   </div>
 
-  <div class="flex justify-end mr-36">
-    <img @click="choseView()" src="/assets/cards.svg" alt="" />
-    <img @click="choseView()" src="/assets/table.svg" alt="" />
+  <div class="flex justify-center pb-5">
+    <div v-if="cardsView" class="flex">
+      <Squares2X2Icon @click="changeView()" class="h-20 w-20"/>
+      <TableCellsIcon @click="changeView()" class="h-10 w-10"/>
+    </div>
+
+    <div v-if="!cardsView" class="flex">
+      <Squares2X2Icon @click="changeView()" class="h-10 w-10"/>
+      <TableCellsIcon @click="changeView()" class="h-20 w-20"/>
+    </div>
   </div>
 
   <div v-show="cardsView">
@@ -122,7 +126,7 @@ const props = defineProps({
     />
   </div>
 
-  <div v-show="tableView" class="pb-10">
+  <div v-show="!cardsView" class="pb-10">
     <div
       class="flex justify-center pb-28"
       v-for="infrastructure in infrastructures"
