@@ -49,23 +49,17 @@ onMounted(() => {
 
   <div class="flex justify-around pt-32 px-32">
     <HomeViewCard
-      v-for="datacenter in datacenters"
-      :key="datacenter.name"
       title="datacenter"
       route="datacenters"
-      :body="datacenter.name"
-      :complement="datacenter.tags"
       :nbItem="datacenters.length"
+      :datacentersArray="datacenters"
     />
 
     <HomeViewCard
-      v-for="infrastructure in infrastructures"
-      :key="infrastructure.name"
       title="infrastructure"
       route="infrastructures"
-      :body="infrastructure.name"
-      :complement="infrastructure.name"
       :nbItem="infrastructures.length"
+      :infrastructuresArray="infrastructures"
     />
   </div>
 </template>
