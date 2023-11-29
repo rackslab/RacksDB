@@ -94,7 +94,7 @@ const props = defineProps({
     </div>
   </div>
 
-  <div v-show="cardsView">
+  <div v-show="cardsView" class="flex justify-center pb-10">
     <InfrastructureCards
       v-if="infrastructureDetails"
       :infrastructure="infrastructureDetails"

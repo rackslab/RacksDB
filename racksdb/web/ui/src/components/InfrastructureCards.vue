@@ -45,7 +45,7 @@ const props = defineProps({
       </div>
     </div>
 
-    <div v-else class="flex flex-wrap justify-center pb-10">
+    <div v-else class="flex flex-wrap justify-center">
       <div v-for="item in rack.network" :key="item.name">
         <InfrastructureContentCard
           :rack="item.rack"
