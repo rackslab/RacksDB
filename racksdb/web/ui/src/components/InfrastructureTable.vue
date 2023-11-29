@@ -40,18 +40,20 @@ const props = defineProps({
 
 <template>
   <div
-    class="flex justify-center pb-28"
+    class="flex justify-center pb-10"
     v-for="infrastructure in props.infrastructure"
     :key="infrastructure.name"
   >
-    <div v-for="rack in infrastructure.layout" :key="rack.rack">
-      <button
-        type="button"
-        @click="rackDetails(rack.rack)"
-        class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-      >
-        {{ rack.rack }}
-      </button>
+    <div v-if="infrastructure.name == props.infrastructureDetails.name" class="flex">
+      <div v-for="rack in props.infrastructureDetails.layout" :key="rack.rack" class="pt-10 px-5">
+        <button
+          type="button"
+          @click="rackDetails(rack.rack)"
+          class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        >
+          {{ rack.rack }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -73,7 +75,7 @@ const props = defineProps({
           >
             {{ node.name }}
           </td>
-          <td class="px-6 py-4">Node {{ node.rack }}</td>
+          <td class="px-6 py-4">{{ node.rack }}</td>
           <td class="px-6 py-4 capitalize">{{ node.type.id }}</td>
         </tr>
 
@@ -84,7 +86,7 @@ const props = defineProps({
           >
             {{ storage.name }}
           </td>
-          <td class="px-6 py-4">Storage {{ storage.rack }}</td>
+          <td class="px-6 py-4">{{ storage.rack }}</td>
           <td class="px-6 py-4 capitalize">{{ storage.type.id }}</td>
         </tr>
 
@@ -95,7 +97,7 @@ const props = defineProps({
           >
             {{ network.name }}
           </td>
-          <td class="px-6 py-4">Network {{ network.rack }}</td>
+          <td class="px-6 py-4">{{ network.rack }}</td>
           <td class="px-6 py-4 capitalize">{{ network.type.id }}</td>
         </tr>
       </template>
@@ -120,7 +122,7 @@ const props = defineProps({
           >
             {{ node.name }}
           </td>
-          <td class="px-6 py-4">Node {{ node.rack }}</td>
+          <td class="px-6 py-4">{{ node.rack }}</td>
           <td class="px-6 py-4 capitalize">{{ node.type.id }}</td>
         </tr>
 
@@ -131,7 +133,7 @@ const props = defineProps({
           >
             {{ storage.name }}
           </td>
-          <td class="px-6 py-4">Storage {{ storage.rack }}</td>
+          <td class="px-6 py-4">{{ storage.rack }}</td>
           <td class="px-6 py-4 capitalize">{{ storage.type.id }}</td>
         </tr>
 
@@ -142,7 +144,7 @@ const props = defineProps({
           >
             {{ network.name }}
           </td>
-          <td class="px-6 py-4">Network {{ network.rack }}</td>
+          <td class="px-6 py-4">{{ network.rack }}</td>
           <td class="px-6 py-4 capitalize">{{ network.type.id }}</td>
         </tr>
       </template>
