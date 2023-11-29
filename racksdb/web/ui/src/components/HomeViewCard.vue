@@ -84,9 +84,7 @@ const props = defineProps({
           :key="datacenter.name"
         >
           <li class="flex space-x-3 items-center">
-            <router-link
-              :to="{ name: props.title + 'details', params: { name: datacenter.name } }"
-            >
+            <router-link :to="{ name: props.title + 'details', params: { name: datacenter.name } }">
               <span
                 class="text-base font-normal leading-tight dark:text-gray-400 capitalize text-purple-700"
                 >{{ datacenter.name }},</span
@@ -96,8 +94,6 @@ const props = defineProps({
           </li>
         </ul>
       </div>
-
-      
     </div>
   </div>
 </template>

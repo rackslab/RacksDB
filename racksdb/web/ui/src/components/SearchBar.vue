@@ -80,12 +80,7 @@ const props = defineProps({
       </div>
     </div>
 
-    <ul
-      id="myUL"
-      v-for="item in matchingItems"
-      :key="item.name"
-      class="flex justify-center"
-    >
+    <ul id="myUL" v-for="item in matchingItems" :key="item.name" class="flex justify-center">
       <router-link :to="{ name: searchedItem + 'details', params: { name: item.name } }">
         <li class="capitalize">{{ item.name }}</li>
       </router-link>
