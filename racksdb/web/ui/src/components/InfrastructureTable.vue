@@ -13,6 +13,7 @@ const rack = ref()
 const showRack = ref(false)
 const showInfrastructureRacks = ref(true)
 
+// This function changes the display and filter the infrastructure to only get the data from a rack
 function rackDetails(rackName: string) {
   showRack.value = true
   showInfrastructureRacks.value = false
