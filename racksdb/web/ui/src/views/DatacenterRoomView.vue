@@ -19,7 +19,7 @@ const rackDetails: Ref<Array<Rack>> = ref([])
 const showFullImg = ref(false)
 const http = useHttp()
 
-function openImg() {
+function toggleImageModal() {
   showFullImg.value = !showFullImg.value
 }
 
@@ -85,7 +85,7 @@ interface Rack {
   <img
     :src="`${inject(injectionKey)!.api_server}/draw/room/${props.datacenterRoom}.svg`"
     alt=""
-    @click="openImg()"
+    @click="toggleImageModal()"
     class="h-96 max-w-500 mx-auto p-10"
   />
 
@@ -96,7 +96,7 @@ interface Rack {
     <img
       :src="`${inject(injectionKey)!.api_server}/draw/room/${props.datacenterRoom}.svg`"
       alt=""
-      @click="openImg()"
+      @click="toggleImageModal()"
       class="h-screen max-w-full bg-white"
     />
   </div>
