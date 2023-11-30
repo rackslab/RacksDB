@@ -12,7 +12,7 @@ import type {
   NodeEquipment,
   NetworkEquipment,
   StorageEquipment
-} from '@/views/InfrastructuresView.vue'
+} from '@/composables/RacksDBAPI'
 
 var showPopUp = ref(false)
 var popUpContent: Ref<NodeEquipment | NetworkEquipment | StorageEquipment | undefined> = ref()

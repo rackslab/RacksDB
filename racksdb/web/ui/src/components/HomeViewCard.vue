@@ -5,8 +5,8 @@ This file is part of RacksDB.
 SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
-import type { Datacenter } from '@/views/DatacentersView.vue'
-import type { Infrastructure } from '@/views/InfrastructuresView.vue'
+import type { Datacenter } from '@/composables/RacksDBAPI'
+import type { Infrastructure } from '@/composables/RacksDBAPI'
 
 const props = defineProps({
   title: {

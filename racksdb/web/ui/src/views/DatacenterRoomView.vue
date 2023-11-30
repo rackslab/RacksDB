@@ -10,7 +10,7 @@ import { ref, onMounted, inject } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
-import type { Datacenter } from './DatacentersView.vue'
+import type { Datacenter, Rack } from '@/composables/RacksDBAPI'
 
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
@@ -63,15 +63,7 @@ const props = defineProps({
   datacenterRoom: String
 })
 
-interface Rack {
-  room: String
-  name: String
-  nodes: [
-    {
-      infrastructure: String
-    }
-  ]
-}
+
 </script>
 
 <template>

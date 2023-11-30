@@ -9,7 +9,7 @@ import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
-import type { Datacenter, DatacenterRoom } from './DatacentersView.vue'
+import type { Datacenter, DatacenterRoom } from '@/composables/RacksDBAPI'
 
 const http = useHttp()
 const datacenters: Ref<Array<Datacenter>> = ref([])

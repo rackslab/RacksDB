@@ -12,7 +12,7 @@ import InfrastructureCards from '@/components/InfrastructureCards.vue'
 import InfrastructureTable from '@/components/InfrastructureTable.vue'
 import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
-import type { Infrastructure } from '@/views/InfrastructuresView.vue'
+import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/outline'
 
 const http = useHttp()

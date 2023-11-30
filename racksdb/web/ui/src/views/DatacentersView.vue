@@ -9,6 +9,7 @@ import { useHttp } from '@/plugins/http'
 import { ref, onMounted } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
+import type { Datacenter } from '@/composables/RacksDBAPI'
 
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const http = useHttp()
@@ -26,30 +27,6 @@ onMounted(() => {
   getDatacenters()
 })
 
-export interface Datacenter {
-  name: string
-  rooms: Array<DatacenterRoom>
-  tags: any
-}
-
-export interface DatacenterRoom {
-  name: string
-  dimensions: {
-    width: number
-    depth: number
-  }
-  rows: [
-    {
-      racks: [
-        {
-          name: string
-          fillrate: number
-        }
-      ]
-      nbracks: number
-    }
-  ]
-}
 </script>
 
 <template>

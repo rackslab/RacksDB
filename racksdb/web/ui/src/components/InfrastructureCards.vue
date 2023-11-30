@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import InfrastructureContentCard from './InfrastructureContentCard.vue'
 import type { PropType } from 'vue'
-import type { Infrastructure } from '@/views/InfrastructuresView.vue'
+import type { Infrastructure } from '@/composables/RacksDBAPI'
 
 const props = defineProps({
   cardTitle: String,
