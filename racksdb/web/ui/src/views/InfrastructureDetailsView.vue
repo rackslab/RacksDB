@@ -6,11 +6,11 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import InfrastructureCards from '@/components/InfrastructureCards.vue'
 import InfrastructureTable from '@/components/InfrastructureTable.vue'
-import { injectionKey } from '@/plugins/runtimeConfiguration'
+//import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/outline'
@@ -18,7 +18,7 @@ import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/outline'
 const http = useHttp()
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
-const showFullImg = ref(false)
+//const showFullImg = ref(false)
 const cardsView = ref(true)
 
 // this function changes the display by assigning the opposite value to cardsView
@@ -26,11 +26,13 @@ function changeView() {
   cardsView.value = !cardsView.value
 }
 
+/*
 function toggleImageModal() {
   showFullImg.value = !showFullImg.value
 }
+*/
 
-async function getInfrastructure() {
+async function getInfrastructures() {
   try {
     const resp = await http.get('infrastructures')
     infrastructures.value = resp.data as Infrastructure[]
@@ -43,8 +45,16 @@ async function getInfrastructure() {
 }
 
 onMounted(() => {
-  getInfrastructure()
+  getInfrastructures()
 })
+
+// Using watch to trigger getDatacenter() when the value of props.name change
+watch(
+  () => props.name,
+  () => {
+    getInfrastructures()
+  }
+)
 
 const props = defineProps({
   name: String
@@ -63,6 +73,7 @@ const props = defineProps({
     {{ name }} Infrastructure
   </h2>
 
+  <!--
   <img
     :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${props.name}.svg`"
     alt=""
@@ -81,6 +92,7 @@ const props = defineProps({
       class="h-screen max-w-full bg-white"
     />
   </div>
+  -->
 
   <div class="flex justify-center pb-5">
     <div v-if="cardsView" class="flex">
