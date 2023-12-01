@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Datacenter, DatacenterRoom } from '@/composables/RacksDBAPI'
@@ -35,6 +35,14 @@ async function getDatacenters() {
 onMounted(() => {
   getDatacenters()
 })
+
+// Using watch to trigger getDatacenter() when the value of props.name change
+watch(
+  () => props.name,
+  () => {
+    getDatacenters()
+  }
+)
 
 const props = defineProps({
   name: String
