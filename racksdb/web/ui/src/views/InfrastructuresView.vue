@@ -26,7 +26,6 @@ async function getInfrastructure() {
 onMounted(() => {
   getInfrastructure()
 })
-
 </script>
 
 <template>
