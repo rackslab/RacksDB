@@ -8,25 +8,52 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 import { useHttp } from '@/plugins/http'
 import { ref, onMounted, inject } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
-import { injectionKey } from '@/plugins/runtimeConfiguration'
+// import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
-import type { Datacenter, Rack } from '@/composables/RacksDBAPI'
+import type { Datacenter, Infrastructure, Rack } from '@/composables/RacksDBAPI'
 
 const datacenters: Ref<Array<Datacenter>> = ref([])
+const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
 const racks: Ref<Array<Rack>> = ref([])
 const rackDetails: Ref<Array<Rack>> = ref([])
-const showFullImg = ref(false)
+//const showFullImg = ref(false)
 const http = useHttp()
 
+/*
 function toggleImageModal() {
   showFullImg.value = !showFullImg.value
 }
+*/
 
+// this function checks in which infrastructures the rack is present and returns the infrastructure name(s)
 function listInfrastructures() {
-  var rack = rackDetails.value[0].nodes
+  const rack = rackDetails.value
+  const infrastructure = infrastructures.value
+  const infrastructureNames = []
+
   for (let index = 0; index < rack.length; index++) {
-    return rack[index].infrastructure
+    const rackName = rack[index].name
+
+    for (let x = 0; x < infrastructure.length; x++) {
+      for (let y = 0; y < infrastructure[x].layout.length; y++) {
+        const infrastructuresRacks = infrastructure[x].layout[y].rack
+
+        if (infrastructuresRacks == rackName) {
+          infrastructureNames.push(infrastructure[x].name)
+          return infrastructureNames
+        }
+      }
+    }
+  }
+}
+
+async function getInfrastructures() {
+  try {
+    const resp = await http.get('infrastructures')
+    infrastructures.value = resp.data as Infrastructure[]
+  } catch (error) {
+    console.error('Error during infrastructures data recovery', error)
   }
 }
 
@@ -35,7 +62,6 @@ async function getRacks() {
     const resp = await http.get('racks')
     racks.value = resp.data as Rack[]
     rackDetails.value = racks.value.filter((rack) => rack.room === props.datacenterRoom)
-    console.log(rackDetails.value)
   } catch (error) {
     console.error('Error during racks data recovery', error)
   }
@@ -55,6 +81,7 @@ async function getDatacenters() {
 
 onMounted(() => {
   getDatacenters()
+  getInfrastructures()
   getRacks()
 })
 
@@ -62,8 +89,6 @@ const props = defineProps({
   datacenterName: String,
   datacenterRoom: String
 })
-
-
 </script>
 
 <template>
@@ -74,6 +99,9 @@ const props = defineProps({
     :items="datacenters"
   />
 
+  <h2 class="flex justify-center py-10 capitalize text-3xl">{{ datacenterRoom }} room</h2>
+
+  <!--
   <img
     :src="`${inject(injectionKey)!.api_server}/draw/room/${props.datacenterRoom}.svg`"
     alt=""
@@ -92,28 +120,34 @@ const props = defineProps({
       class="h-screen max-w-full bg-white"
     />
   </div>
+  -->
 
-  <table v-if="datacenterDetails" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-      <tr>
-        <th scope="col" class="px-6 py-3">Name</th>
-        <th scope="col" class="px-6 py-3">Fill rate</th>
-        <th scope="col" class="px-6 py-3">List of infrastructures</th>
-      </tr>
-    </thead>
+  <div class="flex justify-center">
+    <table
+      v-if="datacenterDetails"
+      class="w-screen text-base text-center text-gray-500 dark:text-gray-400"
+    >
+      <thead class="text-lg text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3">Name</th>
+          <th scope="col" class="px-6 py-3">Fill rate</th>
+          <th scope="col" class="px-6 py-3">List of infrastructures</th>
+        </tr>
+      </thead>
 
-    <template v-for="room in datacenterDetails.rooms" :key="room">
-      <template v-for="row in room.rows" :key="row">
-        <template v-for="rack in row.racks" :key="rack">
-          <tbody>
-            <tr>
-              <td>{{ rack.name }}</td>
-              <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
-              <td>{{ listInfrastructures() }}</td>
-            </tr>
-          </tbody>
+      <template v-for="room in datacenterDetails.rooms" :key="room">
+        <template v-for="row in room.rows" :key="row">
+          <template v-for="rack in row.racks" :key="rack">
+            <tbody>
+              <tr>
+                <td>{{ rack.name }}</td>
+                <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
+                <td class="capitalize">{{ listInfrastructures()?.join(' , ') }}</td>
+              </tr>
+            </tbody>
+          </template>
         </template>
       </template>
-    </template>
-  </table>
+    </table>
+  </div>
 </template>
