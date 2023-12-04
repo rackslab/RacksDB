@@ -26,7 +26,6 @@ async function getDatacenters() {
 onMounted(() => {
   getDatacenters()
 })
-
 </script>
 
 <template>
