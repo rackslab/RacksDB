@@ -106,22 +106,44 @@ const props = defineProps({
     </div>
   </div>
 
-  <div v-show="cardsView" class="flex justify-center pb-10">
-    <InfrastructureCards
-      v-if="infrastructureDetails"
-      :infrastructure="infrastructureDetails"
-      searchItem="nodes"
-    />
-    <InfrastructureCards
-      v-if="infrastructureDetails"
-      :infrastructure="infrastructureDetails"
-      searchItem="storage"
-    />
-    <InfrastructureCards
-      v-if="infrastructureDetails"
-      :infrastructure="infrastructureDetails"
-      searchItem="network"
-    />
+  <div v-if="infrastructureDetails">
+    <div v-show="cardsView" class="flex justify-center pb-10">
+      <div v-for="rack in infrastructureDetails.layout" :key="rack.rack">
+        <div v-for="item in rack.nodes" :key="item.name">
+          <InfrastructureCards
+            v-if="infrastructureDetails"
+            :infrastructure="infrastructureDetails"
+            :rack="item.rack"
+            equipment="nodes"
+            :name="item.name"
+            :id="item.type.id"
+            searchItem="nodes"
+          />
+        </div>
+        <div v-for="item in rack.storage" :key="item.name">
+          <InfrastructureCards
+            v-if="infrastructureDetails"
+            :infrastructure="infrastructureDetails"
+            :rack="item.rack"
+            equipment="storage"
+            :name="item.name"
+            :id="item.type.id"
+            searchItem="storage"
+          />
+        </div>
+        <div v-for="item in rack.network" :key="item.name">
+          <InfrastructureCards
+            v-if="infrastructureDetails"
+            :infrastructure="infrastructureDetails"
+            :rack="item.rack"
+            equipment="network"
+            :name="item.name"
+            :id="item.type.id"
+            searchItem="network"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 
   <div v-show="!cardsView" class="pb-10">
