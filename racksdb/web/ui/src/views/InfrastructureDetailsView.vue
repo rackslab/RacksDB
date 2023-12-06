@@ -9,7 +9,7 @@ import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted, inject, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
-import InfrastructureCards from '@/components/InfrastructureCards.vue'
+import InfrastructureCard from '@/components/InfrastructureCard.vue'
 import InfrastructureTable from '@/components/InfrastructureTable.vue'
 //import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
@@ -108,7 +108,7 @@ const props = defineProps({
     <div v-show="cardsView" class="flex justify-center pb-10">
       <div v-for="rack in infrastructureDetails.layout" :key="rack.rack">
         <div v-for="item in rack.nodes" :key="item.name">
-          <InfrastructureCards
+          <InfrastructureCard
             v-if="infrastructureDetails"
             :infrastructure="infrastructureDetails"
             :rack="item.rack"
@@ -118,7 +118,7 @@ const props = defineProps({
           />
         </div>
         <div v-for="item in rack.storage" :key="item.name">
-          <InfrastructureCards
+          <InfrastructureCard
             v-if="infrastructureDetails"
             :infrastructure="infrastructureDetails"
             :rack="item.rack"
@@ -128,7 +128,7 @@ const props = defineProps({
           />
         </div>
         <div v-for="item in rack.network" :key="item.name">
-          <InfrastructureCards
+          <InfrastructureCard
             v-if="infrastructureDetails"
             :infrastructure="infrastructureDetails"
             :rack="item.rack"
