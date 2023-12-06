@@ -6,32 +6,23 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
+import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted } from 'vue'
 import HomeViewCard from '@/components/HomeViewCard.vue'
 import type { Ref } from 'vue'
-import type { Datacenter } from '@/composables/RacksDBAPI'
-import type { Infrastructure } from '@/composables/RacksDBAPI'
+import type { Infrastructure, Datacenter } from '@/composables/RacksDBAPI'
 
 const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
 
 async function getDatacenters() {
-  try {
-    const resp = await http.get('datacenters')
-    datacenters.value = resp.data as Datacenter[]
-  } catch (error) {
-    console.error('Erreur lors de la récupératuon des données des datacenters', error)
-  }
+  datacenters.value = await racksDBAPI.datacenters()
 }
 
 async function getInfrastructures() {
-  try {
-    const resp = await http.get('infrastructures')
-    infrastructures.value = resp.data as Infrastructure[]
-  } catch (error) {
-    console.error('Erreur lors de la récupératuon des données des datacenters', error)
-  }
+  infrastructures.value = await racksDBAPI.infrastructures()
 }
 
 onMounted(() => {

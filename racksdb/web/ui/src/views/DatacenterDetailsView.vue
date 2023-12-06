@@ -6,12 +6,14 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
+import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Datacenter, DatacenterRoom } from '@/composables/RacksDBAPI'
 
 const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
 
@@ -21,15 +23,10 @@ function roomNbRacks(room: DatacenterRoom) {
 }
 
 async function getDatacenters() {
-  try {
-    const resp = await http.get('datacenters')
-    datacenters.value = resp.data as Datacenter[]
-    datacenterDetails.value = datacenters.value.filter(
+  datacenters.value = await racksDBAPI.datacenters()
+  datacenterDetails.value = datacenters.value.filter(
       (datacenter) => datacenter.name === props.name
     )[0]
-  } catch (error) {
-    console.error('Error during racks data recovery', error)
-  }
 }
 
 onMounted(() => {

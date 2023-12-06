@@ -6,25 +6,22 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
+import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 
-const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
+const infrastructures: Ref<Array<Infrastructure>> = ref([])
 
-async function getInfrastructure() {
-  try {
-    const resp = await http.get('infrastructures')
-    infrastructures.value = resp.data as Infrastructure[]
-  } catch (error) {
-    console.error('Error during infrastructures data recovery', error)
-  }
+async function getInfrastructures() {
+  infrastructures.value = await racksDBAPI.infrastructures()
 }
 
 onMounted(() => {
-  getInfrastructure()
+  getInfrastructures()
 })
 </script>
 

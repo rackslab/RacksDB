@@ -5,12 +5,12 @@ export interface Datacenter {
   rooms: Array<DatacenterRoom>
   tags: any
 }
-  
+
 export interface DatacenterRoom {
   name: string
   dimensions: {
-  width: number
-  depth: number
+    width: number
+    depth: number
   }
   rows: [
     {
@@ -123,4 +123,42 @@ export interface StorageEquipment {
   rack: string
   name: string
   slot: number
+}
+
+export function useRacksDBAPI(http: AxiosInstance) {
+  async function racksDBGet(ressource: string): Promise<any> {
+    try {
+      const response = await http.get(ressource)
+      return response.data
+    } catch (error: any) {
+      console.error(`Error getting ${ressource}`, error)
+      throw error
+    }
+  }
+
+  /*
+  async function imgRacksDB(ressource: string): Promise<ArrayBuffer> {
+    try {
+      let response = await http.post(ressource, {
+        responseType: 'arraybuffer'
+      })
+    } catch (error: any){
+  }*/
+
+  async function datacenters(): Promise<Array<Datacenter>> {
+    const response = (await racksDBGet('datacenters')) as Datacenter[]
+    return response
+  }
+
+  async function infrastructures(): Promise<Array<Infrastructure>> {
+    const response = (await racksDBGet('infrastructures')) as Infrastructure[]
+    return response
+  }
+
+  async function racks(): Promise<Array<Rack>> {
+    const response = (await racksDBGet('racks')) as Rack[]
+    return response
+  }
+
+  return { racksDBGet, datacenters, infrastructures, racks }
 }

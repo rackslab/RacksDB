@@ -6,6 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
+import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted, inject, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import InfrastructureCards from '@/components/InfrastructureCards.vue'
@@ -16,6 +17,7 @@ import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/outline'
 
 const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
 //const showFullImg = ref(false)
@@ -32,16 +34,12 @@ function toggleImageModal() {
 }
 */
 
+
 async function getInfrastructures() {
-  try {
-    const resp = await http.get('infrastructures')
-    infrastructures.value = resp.data as Infrastructure[]
-    infrastructureDetails.value = infrastructures.value.filter(
+  infrastructures.value = await racksDBAPI.infrastructures()
+  infrastructureDetails.value = infrastructures.value.filter(
       (infrastructure) => infrastructure.name === props.name
     )[0]
-  } catch (error) {
-    console.error('Error during infrastructures data recovery', error)
-  }
 }
 
 onMounted(() => {
