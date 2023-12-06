@@ -18,46 +18,46 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
-      //meta: { entry: 'home' }
+      component: HomeView,
+      meta: { entry: 'home' }
     },
 
     {
       path: '/datacenters',
       name: 'datacenters',
-      component: DatacentersView
-      //meta: { entry: 'datacenters' }
+      component: DatacentersView,
+      meta: { entry: 'datacenters' }
     },
 
     {
       path: '/datacenters/:name',
       name: 'datacenterdetails',
       component: DatacenterDetailsView,
-      props: true
-      //meta: { entry: 'datacenters' }
+      props: true,
+      meta: { entry: 'datacenters' }
     },
 
     {
       path: '/datacenters/:datacenterName/:datacenterRoom',
       name: 'datacenterroom',
       component: DatacenterRoomView,
-      props: true
-      //meta: { entry: 'datacenters' }
+      props: true,
+      meta: { entry: 'datacenters' }
     },
 
     {
       path: '/infrastructures',
       name: 'infrastructures',
-      component: InfrastructuresView
-      //meta: { entry: 'infrastructures' }
+      component: InfrastructuresView,
+      meta: { entry: 'infrastructures' }
     },
 
     {
       path: '/infrastructures/:name',
       name: 'infrastructuredetails',
       component: InfrastructureDetailsView,
-      props: true
-      //meta: { entry: 'infrastructures' }
+      props: true,
+      meta: { entry: 'infrastructures' }
     }
   ]
 })

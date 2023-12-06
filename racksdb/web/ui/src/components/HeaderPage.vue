@@ -5,37 +5,38 @@ This file is part of RacksDB.
 SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 
-const router = useRouter()
+const route = useRoute()
 
-function isRouteActive(route: string) {
-  return router.currentRoute.value.path === route
-}
+function isRouteActive(name: String) {
+    if(route.meta.entry == name)
+    return true
+  }
 </script>
 
 <template>
   <header class="flex justify-between items-center p-4 px-20">
     <div>
-      <router-link :to="{name: 'home'}"
+      <router-link :to="{ name: 'home' }"
         ><img alt="Rackslab logo" src="/assets/logo_racksdb.svg" class="h-32 w-32"
       /></router-link>
     </div>
 
     <nav class="space-x-4">
-      <router-link :to="{name: 'home'}">
-        <span v-if="isRouteActive('/')" class="text-purple-700 font-medium">Home</span>
+      <router-link :to="{ name: 'home' }">
+        <span v-if="isRouteActive('home')" class="text-purple-700 font-medium">Home</span>
         <span v-else>Home</span>
       </router-link>
 
-      <router-link :to="{name:'datacenters'}">
+      <router-link :to="{ name: 'datacenters' }">
         <span v-if="isRouteActive('datacenters')" class="text-purple-700 font-medium"
           >Datacenters</span
         >
         <span v-else>Datacenters</span>
       </router-link>
 
-      <router-link :to="{name: 'infrastructures'}">
+      <router-link :to="{ name: 'infrastructures' }">
         <span v-if="isRouteActive('infrastructures')" class="text-purple-700 font-medium"
           >Infrastructures</span
         >
