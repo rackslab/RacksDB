@@ -117,7 +117,6 @@ const props = defineProps({
             equipment="nodes"
             :name="item.name"
             :id="item.type.id"
-            searchItem="nodes"
           />
         </div>
         <div v-for="item in rack.storage" :key="item.name">
@@ -128,7 +127,6 @@ const props = defineProps({
             equipment="storage"
             :name="item.name"
             :id="item.type.id"
-            searchItem="storage"
           />
         </div>
         <div v-for="item in rack.network" :key="item.name">
@@ -139,7 +137,6 @@ const props = defineProps({
             equipment="network"
             :name="item.name"
             :id="item.type.id"
-            searchItem="network"
           />
         </div>
       </div>
