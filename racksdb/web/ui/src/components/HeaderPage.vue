@@ -10,9 +10,8 @@ import { RouterLink, useRoute } from 'vue-router'
 const route = useRoute()
 
 function isRouteActive(name: String) {
-    if(route.meta.entry == name)
-    return true
-  }
+  if (route.meta.entry == name) return true
+}
 </script>
 
 <template>
