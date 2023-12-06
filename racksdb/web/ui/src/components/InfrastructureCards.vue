@@ -42,7 +42,7 @@ function closePopUp() {
 const props = defineProps({
   rack: String,
   equipment: {
-    type: Object as PropType<equipmentType>,
+    type: String as PropType<equipmentType>,
     required: true
   },
   name: {
