@@ -6,6 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
+import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted, inject } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 // import { injectionKey } from '@/plugins/runtimeConfiguration'
@@ -19,6 +20,7 @@ const racks: Ref<Array<Rack>> = ref([])
 const rackDetails: Ref<Array<Rack>> = ref([])
 //const showFullImg = ref(false)
 const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
 
 /*
 function toggleImageModal() {
@@ -27,56 +29,33 @@ function toggleImageModal() {
 */
 
 // this function checks in which infrastructures the rack is present and returns the infrastructure name(s)
-function listInfrastructures() {
-  const rack = rackDetails.value
-  const infrastructure = infrastructures.value
-  const infrastructureNames = []
+function listInfrastructures(rackName: string) {
+  const infrastructureNames: Array<String> = []
 
-  for (let index = 0; index < rack.length; index++) {
-    const rackName = rack[index].name
-
-    for (let x = 0; x < infrastructure.length; x++) {
-      for (let y = 0; y < infrastructure[x].layout.length; y++) {
-        const infrastructuresRacks = infrastructure[x].layout[y].rack
-
-        if (infrastructuresRacks == rackName) {
-          infrastructureNames.push(infrastructure[x].name)
-          return infrastructureNames
-        }
+  infrastructures.value.forEach((infrastructure) => {
+    infrastructure.layout.forEach((layout) => {
+      if (rackName == layout.rack) {
+        infrastructureNames.push(infrastructure.name)
       }
-    }
-  }
-}
-
-async function getInfrastructures() {
-  try {
-    const resp = await http.get('infrastructures')
-    infrastructures.value = resp.data as Infrastructure[]
-  } catch (error) {
-    console.error('Error during infrastructures data recovery', error)
-  }
-}
-
-async function getRacks() {
-  try {
-    const resp = await http.get('racks')
-    racks.value = resp.data as Rack[]
-    rackDetails.value = racks.value.filter((rack) => rack.room === props.datacenterRoom)
-  } catch (error) {
-    console.error('Error during racks data recovery', error)
-  }
+    })
+  })
+  return infrastructureNames
 }
 
 async function getDatacenters() {
-  try {
-    const resp = await http.get('datacenters')
-    datacenters.value = resp.data as Datacenter[]
-    datacenterDetails.value = datacenters.value.filter(
+  datacenters.value = await racksDBAPI.datacenters()
+  datacenterDetails.value = datacenters.value.filter(
       (datacenter) => datacenter.name === props.datacenterName
     )[0]
-  } catch (error) {
-    console.error('Error during datacenters data recovery', error)
-  }
+}
+
+async function getInfrastructures() {
+  infrastructures.value = await racksDBAPI.infrastructures()
+}
+
+async function getRacks() {
+  racks.value = await racksDBAPI.racks()
+  rackDetails.value = racks.value.filter((rack) => rack.room === props.datacenterRoom)
 }
 
 onMounted(() => {
@@ -142,7 +121,7 @@ const props = defineProps({
               <tr>
                 <td>{{ rack.name }}</td>
                 <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
-                <td class="capitalize">{{ listInfrastructures()?.join(' , ') }}</td>
+                <td class="capitalize">{{ listInfrastructures(rack.name).join(' , ') }}</td>
               </tr>
             </tbody>
           </template>
