@@ -17,7 +17,7 @@ const racksDBAPI = useRacksDBAPI(http)
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
 
-// Get the room and sum all the racks in the array with .reduce()
+// Get the room and return the sum of all the racks in the array with .reduce()
 function roomNbRacks(room: DatacenterRoom) {
   return room.rows.reduce((result, row) => result + row.nbracks, 0)
 }
@@ -25,8 +25,8 @@ function roomNbRacks(room: DatacenterRoom) {
 async function getDatacenters() {
   datacenters.value = await racksDBAPI.datacenters()
   datacenterDetails.value = datacenters.value.filter(
-      (datacenter) => datacenter.name === props.name
-    )[0]
+    (datacenter) => datacenter.name === props.name
+  )[0]
 }
 
 onMounted(() => {
