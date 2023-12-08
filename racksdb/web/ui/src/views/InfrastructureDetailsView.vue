@@ -7,43 +7,47 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { ref, onMounted, inject, watch } from 'vue'
+import { useRacksDBIMGAPI } from '@/composables/RacksDBIMG'
+import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import InfrastructureCard from '@/components/InfrastructureCard.vue'
 import InfrastructureTable from '@/components/InfrastructureTable.vue'
-//import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/outline'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
+const racksDBIMG = useRacksDBIMGAPI(http)
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
-//const showFullImg = ref(false)
 const cardsView = ref(true)
+const blobURL = ref()
+
+async function getInfrastructureImg() {
+  try {
+    const myBlob = await racksDBIMG.infrastructureImageSvg(props.name)
+    blobURL.value = URL.createObjectURL(myBlob)
+  } catch (error) {
+    console.error(`Error getting ${props.name}: ` + error)
+  }
+}
 
 // this function changes the display by assigning the opposite value to cardsView
 function changeView() {
   cardsView.value = !cardsView.value
 }
 
-/*
-function toggleImageModal() {
-  showFullImg.value = !showFullImg.value
-}
-*/
-
-
 async function getInfrastructures() {
   infrastructures.value = await racksDBAPI.infrastructures()
   infrastructureDetails.value = infrastructures.value.filter(
-      (infrastructure) => infrastructure.name === props.name
-    )[0]
+    (infrastructure) => infrastructure.name === props.name
+  )[0]
 }
 
 onMounted(() => {
   getInfrastructures()
+  getInfrastructureImg()
 })
 
 // Using watch to trigger getDatacenter() when the value of props.name change
@@ -51,11 +55,15 @@ watch(
   () => props.name,
   () => {
     getInfrastructures()
+    getInfrastructureImg()
   }
 )
 
 const props = defineProps({
-  name: String
+  name: {
+    type: String,
+    required: true
+  }
 })
 </script>
 
@@ -71,26 +79,7 @@ const props = defineProps({
     {{ name }} Infrastructure
   </h2>
 
-  <!--
-  <img
-    :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${props.name}.svg`"
-    alt=""
-    @click="toggleImageModal()"
-    class="h-96 max-w-500 mx-auto p-10"
-  />
-
-  <div
-    v-show="showFullImg"
-    class="fixed top-0 left-0 flex flex-col items-center justify-center w-screen h-screen bg-gray-300 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 backdrop-blur-md z-50"
-  >
-    <img
-      :src="`${inject(injectionKey)!.api_server}/draw/infrastructure/${props.name}.svg`"
-      alt=""
-      @click="toggleImageModal()"
-      class="h-screen max-w-full bg-white"
-    />
-  </div>
-  -->
+  <img v-if="blobURL" :src="blobURL" class="" alt="" />
 
   <div class="flex justify-center pb-5">
     <div v-if="cardsView" class="flex">

@@ -7,28 +7,32 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { ref, onMounted, inject } from 'vue'
+import { useRacksDBIMGAPI } from '@/composables/RacksDBIMG'
+import { ref, onMounted } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
-// import { injectionKey } from '@/plugins/runtimeConfiguration'
 import type { Ref } from 'vue'
 import type { Datacenter, Infrastructure, Rack } from '@/composables/RacksDBAPI'
 
+const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
+const racksDBIMG = useRacksDBIMGAPI(http)
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
 const racks: Ref<Array<Rack>> = ref([])
 const rackDetails: Ref<Array<Rack>> = ref([])
-//const showFullImg = ref(false)
-const http = useHttp()
-const racksDBAPI = useRacksDBAPI(http)
+const blobURL = ref()
 
-/*
-function toggleImageModal() {
-  showFullImg.value = !showFullImg.value
+async function getInfrastructureImg() {
+  try {
+    const myBlob = await racksDBIMG.roomImageSvg(props.datacenterRoom)
+    blobURL.value = URL.createObjectURL(myBlob)
+  } catch (error) {
+    console.error(`Error getting ${props.datacenterRoom}: ` + error)
+  }
 }
-*/
 
-// this function checks in which infrastructures the rack is present and returns the infrastructure name(s)
+// this function checks if a rack is part of an infrastructure and if it's the case it returns the infrastructure name(s)
 function listInfrastructures(rackName: string) {
   const infrastructureNames: Array<String> = []
 
@@ -45,8 +49,8 @@ function listInfrastructures(rackName: string) {
 async function getDatacenters() {
   datacenters.value = await racksDBAPI.datacenters()
   datacenterDetails.value = datacenters.value.filter(
-      (datacenter) => datacenter.name === props.datacenterName
-    )[0]
+    (datacenter) => datacenter.name === props.datacenterName
+  )[0]
 }
 
 async function getInfrastructures() {
@@ -62,11 +66,15 @@ onMounted(() => {
   getDatacenters()
   getInfrastructures()
   getRacks()
+  getInfrastructureImg()
 })
 
 const props = defineProps({
   datacenterName: String,
-  datacenterRoom: String
+  datacenterRoom: {
+    type: String,
+    required: true
+  }
 })
 </script>
 
@@ -80,26 +88,7 @@ const props = defineProps({
 
   <h2 class="flex justify-center py-10 capitalize text-3xl">{{ datacenterRoom }} room</h2>
 
-  <!--
-  <img
-    :src="`${inject(injectionKey)!.api_server}/draw/room/${props.datacenterRoom}.svg`"
-    alt=""
-    @click="toggleImageModal()"
-    class="h-96 max-w-500 mx-auto p-10"
-  />
-
-  <div
-    v-show="showFullImg"
-    class="fixed top-0 left-0 flex flex-col items-center justify-center w-screen h-screen bg-gray-300 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 backdrop-blur-md z-50"
-  >
-    <img
-      :src="`${inject(injectionKey)!.api_server}/draw/room/${props.datacenterRoom}.svg`"
-      alt=""
-      @click="toggleImageModal()"
-      class="h-screen max-w-full bg-white"
-    />
-  </div>
-  -->
+  <img v-if="blobURL" :src="blobURL" class="" alt="" />
 
   <div class="flex justify-center">
     <table
