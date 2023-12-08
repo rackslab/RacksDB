@@ -22,6 +22,16 @@ const datacenterDetails: Ref<Datacenter | undefined> = ref()
 const racks: Ref<Array<Rack>> = ref([])
 const rackDetails: Ref<Array<Rack>> = ref([])
 const blobURL = ref()
+const showImg = ref(false)
+
+
+function toggleImageModal() {
+  if (showImg.value) {
+    showImg.value = false
+  } else {
+    showImg.value = true
+  }
+}
 
 async function getInfrastructureImg() {
   try {
@@ -88,7 +98,36 @@ const props = defineProps({
 
   <h2 class="flex justify-center py-10 capitalize text-3xl">{{ datacenterRoom }} room</h2>
 
-  <img v-if="blobURL" :src="blobURL" class="" alt="" />
+  <div class="pb-10">
+    <img
+      v-if="blobURL"
+      @click="toggleImageModal()"
+      :src="blobURL"
+      class="h-96 max-w-500 mx-auto p-10 border-2 border-black"
+      alt=""
+    />
+  </div>
+
+  <div
+    v-if="showImg"
+    class="fixed top-0 left-0 flex flex-col items-center justify-center w-screen h-screen bg-gray-300 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 backdrop-blur-md z-50"
+  >
+    <div
+      class="max-w-4xl bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+    >
+      <img v-if="blobURL" :src="blobURL" class="w-full" alt="" />
+
+      <div class="pt-5 flex justify-center">
+        <button
+          type="button"
+          @click="toggleImageModal()"
+          class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        >
+          close
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div class="flex justify-center">
     <table
