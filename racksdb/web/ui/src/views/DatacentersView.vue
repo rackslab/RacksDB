@@ -16,9 +16,7 @@ const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
 const datacenters: Ref<Array<Datacenter>> = ref([])
 
-
 async function getDatacenters() {
-  console.log('Fetching datacenters...')
   datacenters.value = await racksDBAPI.datacenters()
 }
 
