@@ -136,15 +136,6 @@ export function useRacksDBAPI(http: AxiosInstance) {
     }
   }
 
-  /*
-  async function imgRacksDB(ressource: string): Promise<ArrayBuffer> {
-    try {
-      let response = await http.post(ressource, {
-        responseType: 'arraybuffer'
-      })
-    } catch (error: any){
-  }*/
-
   async function datacenters(): Promise<Array<Datacenter>> {
     const response = (await racksDBGet('datacenters')) as Datacenter[]
     return response
