@@ -18,7 +18,7 @@ function isRouteActive(name: String) {
   <header class="flex justify-between items-center p-4 px-20">
     <div>
       <router-link :to="{ name: 'home' }"
-        ><img alt="Rackslab logo" src="/assets/logo_racksdb.svg" class="h-32 w-32"
+        ><img alt="Rackslab logo" src="/assets/racksdb_logo.svg" class="h-32 w-32"
       /></router-link>
     </div>
 
