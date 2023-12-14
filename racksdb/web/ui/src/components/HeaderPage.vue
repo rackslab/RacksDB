@@ -24,22 +24,16 @@ function isRouteActive(name: String) {
 
     <nav class="space-x-4">
       <router-link :to="{ name: 'home' }">
-        <span v-if="isRouteActive('home')" class="text-purple-700 font-medium">Home</span>
-        <span v-else>Home</span>
+        <span :class="[ isRouteActive('home') && 'text-purple-700 font-medium']">Home</span>
       </router-link>
 
       <router-link :to="{ name: 'datacenters' }">
-        <span v-if="isRouteActive('datacenters')" class="text-purple-700 font-medium"
-          >Datacenters</span
-        >
-        <span v-else>Datacenters</span>
+        <span :class="[ isRouteActive('datacenters') && 'text-purple-700 font-medium']">Datacenters</span>
       </router-link>
 
       <router-link :to="{ name: 'infrastructures' }">
-        <span v-if="isRouteActive('infrastructures')" class="text-purple-700 font-medium"
-          >Infrastructures</span
-        >
-        <span v-else>Infrastructures</span>
+        <span :class="[ isRouteActive('infrastructures') && 'text-purple-700 font-medium']">Infrastructures</span>
+
       </router-link>
     </nav>
   </header>
