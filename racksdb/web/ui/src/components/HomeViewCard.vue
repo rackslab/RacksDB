@@ -52,19 +52,19 @@ const props = defineProps({
         <ul
           role="list"
           class="space-y-5 my-7"
-          v-for="infrastrucutre in infrastructuresArray"
-          :key="infrastrucutre.name"
+          v-for="infrastructure in infrastructuresArray"
+          :key="infrastructure.name"
         >
           <li class="flex space-x-3 items-center">
             <router-link
-              :to="{ name: props.title + 'details', params: { name: infrastrucutre.name } }"
+              :to="{ name: props.title + 'details', params: { name: infrastructure.name } }"
             >
               <span
                 class="text-base font-normal leading-tight dark:text-gray-400 capitalize text-purple-700"
-                >{{ infrastrucutre.name }},</span
+                >{{ infrastructure.name }},</span
               >
             </router-link>
-            <span class="lowercase italic text-gray-500"> {{ infrastrucutre.description }} </span>
+            <span class="lowercase italic text-gray-500"> {{ infrastructure.description }} </span>
           </li>
         </ul>
       </div>
