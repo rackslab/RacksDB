@@ -93,7 +93,7 @@ const props = defineProps({
       v-if="blobURL"
       @click="toggleImageModal()"
       :src="blobURL"
-      class="h-96 max-w-500 mx-auto p-10 border-2 border-black"
+      class="h-96 max-w-500 mx-auto p-10 border-2 border-black transition-transform transform duration-150 hover:scale-105 hover:border-violet-700 cursor-pointer"
       alt=""
     />
   </div>
