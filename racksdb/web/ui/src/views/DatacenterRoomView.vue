@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { useRacksDBIMGAPI } from '@/composables/RacksDBIMG'
 import { ref, onMounted } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
@@ -15,7 +14,6 @@ import type { Datacenter, Infrastructure, Rack } from '@/composables/RacksDBAPI'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
-const racksDBIMG = useRacksDBIMGAPI(http)
 const datacenters: Ref<Array<Datacenter>> = ref([])
 const infrastructures: Ref<Array<Infrastructure>> = ref([])
 const datacenterDetails: Ref<Datacenter | undefined> = ref()
@@ -34,7 +32,7 @@ function toggleImageModal() {
 
 async function getInfrastructureImg() {
   try {
-    const myBlob = await racksDBIMG.roomImageSvg(props.datacenterRoom)
+    const myBlob = await racksDBAPI.roomImageSvg(props.datacenterRoom)
     blobURL.value = URL.createObjectURL(myBlob)
   } catch (error) {
     console.error(`Error getting ${props.datacenterRoom}: ` + error)

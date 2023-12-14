@@ -142,6 +142,16 @@ export function useRacksDBAPI(http: AxiosInstance) {
     }
   }
 
+  async function racksDBIMGPOST(resource: string): Promise<any> {
+    try {
+      const response = await http.post(resource)
+      return response.data
+    } catch (error: any) {
+      console.error('Error', error)
+      throw error
+    }
+  }
+
   async function datacenters(): Promise<Array<Datacenter>> {
     const response = (await racksDBGet('datacenters')) as Datacenter[]
     return response
@@ -157,5 +167,17 @@ export function useRacksDBAPI(http: AxiosInstance) {
     return response
   }
 
-  return { racksDBGet, datacenters, infrastructures, racks }
+  async function infrastructureImageSvg(infrastructure: string): Promise<Blob> {
+    return new Blob([await racksDBIMGPOST(`/draw/infrastructure/${infrastructure}.svg`)], {
+      type: 'image/svg+xml'
+    })
+  }
+
+  async function roomImageSvg(room: string): Promise<Blob> {
+    return new Blob([await racksDBIMGPOST(`/draw/room/${room}.svg`)], {
+      type: 'image/svg+xml'
+    })
+  }
+
+  return { racksDBGet, datacenters, infrastructures, racks, infrastructureImageSvg, roomImageSvg }
 }
