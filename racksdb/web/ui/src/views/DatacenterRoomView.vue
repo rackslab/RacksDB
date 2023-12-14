@@ -24,7 +24,6 @@ const rackDetails: Ref<Array<Rack>> = ref([])
 const blobURL = ref()
 const showImg = ref(false)
 
-
 function toggleImageModal() {
   if (showImg.value) {
     showImg.value = false
@@ -44,7 +43,7 @@ async function getInfrastructureImg() {
 
 // this function checks if a rack is part of an infrastructure and if it's the case it returns the infrastructure name(s)
 function listInfrastructures(rackName: string) {
-  const infrastructureNames: Array<String> = []
+  const infrastructureNames: Array<string> = []
 
   infrastructures.value.forEach((infrastructure) => {
     infrastructure.layout.forEach((layout) => {
@@ -103,7 +102,7 @@ const props = defineProps({
       v-if="blobURL"
       @click="toggleImageModal()"
       :src="blobURL"
-      class="h-96 max-w-500 mx-auto p-10 border-2 border-black"
+      class="h-96 max-w-500 mx-auto p-10 border-2 border-black transition-transform transform duration-150 hover:scale-105 hover:border-violet-700 cursor-pointer"
       alt=""
     />
   </div>
@@ -149,7 +148,12 @@ const props = defineProps({
               <tr>
                 <td>{{ rack.name }}</td>
                 <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
-                <td class="capitalize">{{ listInfrastructures(rack.name).join(' , ') }}</td>
+                <td class="capitalize">
+                  <router-link
+                    :to="{ name: 'infrastructuredetails', params: { name: 'mercury' } }"
+                    >{{ listInfrastructures(rack.name).join(' , ') }}</router-link
+                  >
+                </td>
               </tr>
             </tbody>
           </template>
