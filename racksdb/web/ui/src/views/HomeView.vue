@@ -11,7 +11,7 @@ import HomeViewCards from '@/components/HomeViewCards.vue'
 <template>
   <section>
     <div class="flex justify-center items-center w-full h-full text-purple-700">
-      <h1 class="text-5xl font-medium flex justify-center py-20 z-10">Overview of your database</h1>
+      <h1 class="text-5xl flex justify-center py-20 z-10 font-bold">Overview</h1>
     </div>
   </section>
 
