@@ -44,6 +44,7 @@ export interface Rack {
 export interface Infrastructure {
   name: string
   description: string
+  tags: []
   layout: [
     {
       rack: string
