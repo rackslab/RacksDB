@@ -31,9 +31,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="cards flex justify-around pt-32 px-32">
+  <div class="w-full flex justify-center">
     <div
-      class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+      class="flex flex-col w-[800px] min-h-[500px] bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 mr-10"
     >
       <router-link to="datacenters">
         <h2 class="text-2xl font-semibold flex justify-center text-purple-700 capitalize">
@@ -42,28 +42,36 @@ onMounted(() => {
         </h2>
       </router-link>
 
-      <ul
-        role="list"
-        class="space-y-5 my-7"
-        v-for="datacenter in datacenters"
-        :key="datacenter.name"
-      >
-        <li class="flex space-x-3 items-center">
-          <router-link :to="{ name: 'datacenterdetails', params: { name: datacenter.name } }">
-            <span
-              class="text-base font-normal leading-tight dark:text-gray-400 capitalize text-purple-700"
-              >{{ datacenter.name }},</span
-            >
-          </router-link>
-          <span class="lowercase italic text-gray-500"> {{ datacenter.tags.join(', ') }} </span>
-        </li>
-      </ul>
-    </div>
-  </div>
+      <div class="pt-10">
+        <div class="space-y-5 my-7" v-for="datacenter in datacenters" :key="datacenter.name">
+          <div class="flex flex-col">
+            <router-link :to="{ name: 'datacenterdetails', params: { name: datacenter.name } }">
+              <span
+                class="text-base font-normal leading-tight dark:text-gray-400 capitalize text-purple-700"
+                >{{ datacenter.name }}</span
+              >
+            </router-link>
 
-  <div class="cards flex justify-around pt-32 px-32">
+            <div class="flex justify-between">
+              <span v-if="datacenter.rooms.length > 1">{{ datacenter.rooms.length }} rooms</span>
+              <span v-else>{{ datacenter.rooms.length }} room</span>
+
+              <div class="flex justify-end">
+                <div v-for="tag in datacenter.tags" :key="tag" class="px-1">
+                  <span class="p-2 bg-purple-700 rounded-md text-white">#{{ tag }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-5">
+              <hr />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div
-      class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+      class="flex flex-col w-[800px] min-h-[500px] bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 ml-10"
     >
       <router-link to="infrastructures">
         <h2 class="text-2xl font-semibold flex justify-center text-purple-700 capitalize">
@@ -72,24 +80,37 @@ onMounted(() => {
         </h2>
       </router-link>
 
-      <ul
-        role="list"
-        class="space-y-5 my-7"
-        v-for="infrastructure in infrastructures"
-        :key="infrastructure.name"
-      >
-        <li class="flex space-x-3 items-center">
-          <router-link
-            :to="{ name: 'infrastructuredetails', params: { name: infrastructure.name } }"
-          >
-            <span
-              class="text-base font-normal leading-tight dark:text-gray-400 capitalize text-purple-700"
-              >{{ infrastructure.name }},</span
+      <div class="pt-10">
+        <div
+          class="space-y-5 my-7"
+          v-for="infrastructure in infrastructures"
+          :key="infrastructure.name"
+        >
+          <div class="flex flex-col">
+            <router-link
+              :to="{ name: 'infrastructuredetails', params: { name: infrastructure.name } }"
             >
-          </router-link>
-          <span class="lowercase italic text-gray-500"> {{ infrastructure.description }} </span>
-        </li>
-      </ul>
+              <span
+                class="text-base font-normal leading-tight dark:text-gray-400 capitalize text-purple-700"
+                >{{ infrastructure.name }}</span
+              >
+            </router-link>
+
+            <div class="flex justify-between">
+              <span class="lowercase"> {{ infrastructure.description }} </span>
+
+              <div class="flex justify-end">
+                <div v-for="tag in infrastructure.tags" :key="tag" class="px-1">
+                  <span class="p-2 bg-purple-700 rounded-md text-white">#{{ tag }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2">
+            <hr />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
