@@ -14,6 +14,7 @@ import InfrastructureTable from '@/components/InfrastructureTable.vue'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/outline'
+import BreadCrumbs from '@/components/BreadCrumbs.vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -75,6 +76,7 @@ const props = defineProps({
 </script>
 
 <template>
+  <BreadCrumbs :infrastructureName="props.name" />
   <SearchBar
     v-if="infrastructures.length"
     viewTitle="Infrastructure Details"

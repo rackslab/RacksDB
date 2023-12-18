@@ -11,6 +11,7 @@ import { ref, onMounted } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
+import BreadCrumbs from '@/components/BreadCrumbs.vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -26,6 +27,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <BreadCrumbs />
+
   <SearchBar
     v-if="infrastructures.length"
     viewTitle="Infrastructure View"

@@ -15,14 +15,8 @@ function isRouteActive(name: String) {
 </script>
 
 <template>
-  <header class="flex justify-between items-center p-4 px-20">
-    <div>
-      <router-link :to="{ name: 'home' }"
-        ><img alt="Rackslab logo" src="/assets/racksdb_logo.png" class="h-32 w-32"
-      /></router-link>
-    </div>
-
-    <nav class="space-x-4">
+  <header class="flex justify-end items-center px-20 py-16 w-1/2 top-0 right-0 absolute">
+    <nav class="space-x-4 pt-10">
       <router-link :to="{ name: 'home' }">
         <span :class="[isRouteActive('home') && 'text-purple-700 font-medium']">Home</span>
       </router-link>

@@ -11,6 +11,7 @@ import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Datacenter, DatacenterRoom } from '@/composables/RacksDBAPI'
+import BreadCrumbs from '@/components/BreadCrumbs.vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -47,6 +48,8 @@ const props = defineProps({
 </script>
 
 <template>
+  <BreadCrumbs :datacenterName="props.name" />
+
   <SearchBar
     v-if="datacenters.length"
     viewTitle="Datacenter Details"
@@ -109,9 +112,5 @@ const props = defineProps({
         </tbody>
       </table>
     </div>
-  </div>
-
-  <div v-else>
-    <p>No data availaible for this datacenter</p>
   </div>
 </template>
