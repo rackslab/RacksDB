@@ -80,6 +80,17 @@ and this project adheres to
   - In infrastructure diagrams, computed rows widths and heights, thus drawing
     scale eventually, are now based on represented racks by taking into account
     empty racks, `discard_empty_racks` and `other_racks` drawing parameters.
+- ui:
+  - Many improvements in datacenter details page (#39), such as:
+    - The table of rooms is moved upper in the page
+    - The datacenter search input is replaced by a filter input in the top right
+      corner to filter rooms by name.
+    - The table of rooms does not use all page width anymore.
+    - The _"Access to the room"_ button is be renamed _"View room"_.
+    - The table header for view room button has been removed.
+    - Add button to sort rooms by name in alphabetical order, either in
+      ascending or descending order
+    - Adopt the same font as in datacenter room details view.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).
