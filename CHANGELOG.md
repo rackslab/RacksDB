@@ -9,6 +9,7 @@ and this project adheres to
 ## Unreleased
 
 ### Added
+- ui: new web UI (in _beta_ version)
 - schema:
   - Add support of optional list of GPU on _NodeType_ (from @btravouillon).
   - Add optional _initial_ property on _RackType_ to define initial slot index.

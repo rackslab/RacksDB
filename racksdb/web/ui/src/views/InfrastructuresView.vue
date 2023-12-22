@@ -1,0 +1,35 @@
+<!--Copyright (c) 2022-2023 Rackslab
+
+This file is part of RacksDB.
+
+SPDX-License-Identifier: GPL-3.0-or-later -->
+
+<script setup lang="ts">
+import { useHttp } from '@/plugins/http'
+import { useRacksDBAPI } from '@/composables/RacksDBAPI'
+import { ref, onMounted } from 'vue'
+import SearchBar from '@/components/SearchBar.vue'
+import type { Ref } from 'vue'
+import type { Infrastructure } from '@/composables/RacksDBAPI'
+
+const http = useHttp()
+const racksDBAPI = useRacksDBAPI(http)
+const infrastructures: Ref<Array<Infrastructure>> = ref([])
+
+async function getInfrastructures() {
+  infrastructures.value = await racksDBAPI.infrastructures()
+}
+
+onMounted(() => {
+  getInfrastructures()
+})
+</script>
+
+<template>
+  <SearchBar
+    v-if="infrastructures.length"
+    viewTitle="Infrastructure View"
+    searchedItem="infrastructure"
+    :items="infrastructures"
+  />
+</template>
