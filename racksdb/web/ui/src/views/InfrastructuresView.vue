@@ -8,10 +8,10 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
 import { ref, onMounted } from 'vue'
-import SearchBar from '@/components/SearchBar.vue'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 import BreadCrumbs from '@/components/BreadCrumbs.vue'
+import ComboBox from '@/components/ComboBox.vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -29,10 +29,5 @@ onMounted(() => {
 <template>
   <BreadCrumbs />
 
-  <SearchBar
-    v-if="infrastructures.length"
-    viewTitle="Infrastructure View"
-    searchedItem="infrastructure"
-    :items="infrastructures"
-  />
+  <ComboBox itemType="infrastructure" :items="infrastructures" />
 </template>
