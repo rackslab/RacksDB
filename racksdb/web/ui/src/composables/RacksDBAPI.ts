@@ -32,13 +32,9 @@ export interface DatacenterRoom {
 }
 
 export interface Rack {
-  room: String
-  name: String
-  nodes: [
-    {
-      infrastructure: String
-    }
-  ]
+  room: string
+  name: string
+  fillrate: number
 }
 
 export interface Infrastructure {

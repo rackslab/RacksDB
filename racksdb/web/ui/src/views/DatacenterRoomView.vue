@@ -7,21 +7,35 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { ref, onMounted } from 'vue'
-import SearchBar from '@/components/SearchBar.vue'
+import { ref, onMounted, computed } from 'vue'
 import type { Ref } from 'vue'
-import type { Datacenter, Infrastructure, Rack } from '@/composables/RacksDBAPI'
 import BreadCrumbs from '@/components/BreadCrumbs.vue'
+import type { Infrastructure, Rack } from '@/composables/RacksDBAPI'
+import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
-const datacenters: Ref<Array<Datacenter>> = ref([])
-const infrastructures: Ref<Array<Infrastructure>> = ref([])
-const datacenterDetails: Ref<Datacenter | undefined> = ref()
-const racks: Ref<Array<Rack>> = ref([])
+let infrastructures: Array<Infrastructure> = []
 const rackDetails: Ref<Array<Rack>> = ref([])
 const blobURL = ref()
 const showImg = ref(false)
+const input = ref('')
+const hideEmpty = ref(false)
+var filteredRacks = computed(() => {
+  let result: Array<Rack> = rackDetails.value
+
+  result = result.filter((room) => room.room === props.datacenterRoom)
+
+  if (hideEmpty.value) {
+    result = result.filter((rack) => rack.fillrate > 0)
+  }
+
+  if (input.value !== '') {
+    result = result.filter((rack) => rack.name.toLowerCase().includes(input.value.toLowerCase()))
+  }
+
+  return result
+})
 
 function toggleImageModal() {
   if (showImg.value) {
@@ -33,47 +47,39 @@ function toggleImageModal() {
 
 async function getInfrastructureImg() {
   try {
-    const myBlob = await racksDBAPI.roomImageSvg(props.datacenterRoom)
-    blobURL.value = URL.createObjectURL(myBlob)
+    blobURL.value = URL.createObjectURL(await racksDBAPI.roomImageSvg(props.datacenterRoom))
   } catch (error) {
     console.error(`Error getting ${props.datacenterRoom}: ` + error)
   }
 }
 
-// this function checks if a rack is part of an infrastructure and if it's the case it returns the infrastructure name(s)
-function listInfrastructures(rackName: string) {
-  const infrastructureNames: Array<string> = []
-
-  infrastructures.value.forEach((infrastructure) => {
-    infrastructure.layout.forEach((layout) => {
-      if (rackName == layout.rack) {
-        infrastructureNames.push(infrastructure.name)
-      }
-    })
-  })
-  return infrastructureNames
-}
-
 async function getDatacenters() {
-  datacenters.value = await racksDBAPI.datacenters()
-  datacenterDetails.value = datacenters.value.filter(
+  // Get datacenters and filter using the prop datacenterName
+  let datacenterDetails = (await racksDBAPI.datacenters()).filter(
     (datacenter) => datacenter.name === props.datacenterName
   )[0]
+
+  // Loop on datacenterDetails to get all the rack it contains
+  datacenterDetails.rooms.forEach((room) => {
+    room.rows.forEach((row) => {
+      row.racks.forEach((rack) => {
+        rackDetails.value.push({
+          name: rack.name,
+          fillrate: rack.fillrate,
+          room: room.name
+        })
+      })
+    })
+  })
 }
 
 async function getInfrastructures() {
-  infrastructures.value = await racksDBAPI.infrastructures()
-}
-
-async function getRacks() {
-  racks.value = await racksDBAPI.racks()
-  rackDetails.value = racks.value.filter((rack) => rack.room === props.datacenterRoom)
+  infrastructures = await racksDBAPI.infrastructures()
 }
 
 onMounted(() => {
   getDatacenters()
   getInfrastructures()
-  getRacks()
   getInfrastructureImg()
 })
 
@@ -89,14 +95,15 @@ const props = defineProps({
 <template>
   <BreadCrumbs :datacenterName="props.datacenterName" :datacenterRoom="props.datacenterRoom" />
 
-  <SearchBar
-    v-if="datacenters.length"
-    viewTitle="Datacenter Room"
-    searchedItem="datacenter"
-    :items="datacenters"
-  />
-
-  <h2 class="flex justify-center py-10 capitalize text-3xl">{{ datacenterRoom }} room</h2>
+  <div class="flex justify-end items-center p-4 px-20">
+    <input
+      type="text"
+      v-model="input"
+      class="w-96 rounded-md focus:border-purple-700 focus:outline-none border-2 border-solid bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+      placeholder="Filter rack by name"
+      required
+    />
+  </div>
 
   <div class="pb-10">
     <img
@@ -129,36 +136,56 @@ const props = defineProps({
     </div>
   </div>
 
-  <div class="flex justify-center">
-    <table
-      v-if="datacenterDetails"
-      class="w-screen text-base text-center text-gray-500 dark:text-gray-400"
-    >
-      <thead class="text-lg text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  <div class="flex justify-center pt-5">
+    <SwitchGroup>
+      <div class="pt-5">
+        <SwitchLabel class="mx-4">Hide empty racks</SwitchLabel>
+        <Switch
+          v-model="hideEmpty"
+          :class="hideEmpty ? 'bg-purple-900' : 'bg-purple-700'"
+          class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+        >
+          <span
+            aria-hidden="true"
+            :class="hideEmpty ? 'translate-x-9' : 'translate-x-0'"
+            class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+          />
+        </Switch>
+      </div>
+    </SwitchGroup>
+  </div>
+
+  <div class="flex justify-center pb-10">
+    <table class="min-w-[75vw] text-base text-center text-gray-500 dark:text-gray-400 table-fixed">
+      <thead
+        class="text-lg text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 h-24"
+      >
         <tr>
-          <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">Fill rate</th>
-          <th scope="col" class="px-6 py-3">List of infrastructures</th>
+          <th scope="col" class="w-24">Name</th>
+          <th scope="col" class="w-24">Fill rate</th>
+          <th scope="col" class="w-24">List of infrastructures</th>
         </tr>
       </thead>
 
-      <template v-for="room in datacenterDetails.rooms" :key="room">
-        <template v-for="row in room.rows" :key="row">
-          <template v-for="rack in row.racks" :key="rack">
-            <tbody>
-              <tr>
-                <td>{{ rack.name }}</td>
-                <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
-                <td class="capitalize">
-                  <router-link
-                    :to="{ name: 'infrastructuredetails', params: { name: 'mercury' } }"
-                    >{{ listInfrastructures(rack.name).join(' , ') }}</router-link
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </template>
+      <template v-if="filteredRacks.length > 0">
+        <tbody>
+          <tr
+            v-for="rack in filteredRacks"
+            :key="rack.name"
+            class="h-24 my-4 border-gray-200 border-b-2"
+          >
+            <td>{{ rack.name }}</td>
+            <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-else>
+        <tbody class="h-24 my-4 border-gray-200 border-b-2">
+          <tr>
+            <td colspan="3">No data available</td>
+          </tr>
+        </tbody>
       </template>
     </table>
   </div>

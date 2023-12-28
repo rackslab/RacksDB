@@ -92,6 +92,12 @@ and this project adheres to
       ascending or descending order.
     - Adopt the same font as in datacenter room details view.
   - More ergonomic combobox to select datacenter and infrastructure (#38).
+  - Many improvements in datacenter room page, such as:
+    - The datacenter search input is replaced by a filter input in the top right
+      corner to filter racks by name.
+    - Improve readability of racks table by reducing its width, add lines
+      between rows and increase row height.
+    - Add _"Hide empty"_ button to hide empty racks.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).
