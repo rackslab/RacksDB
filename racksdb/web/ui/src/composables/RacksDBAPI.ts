@@ -85,6 +85,7 @@ export interface NodeEquipment {
   rack: string
   name: string
   slot: number
+  tags: []
 }
 
 export interface NetworkEquipment {
