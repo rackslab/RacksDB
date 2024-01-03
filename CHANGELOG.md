@@ -108,6 +108,18 @@ and this project adheres to
       with escape key or by clicking outside.
     - Add link to infrastructure details view in infrastructures list.
     - Add alternative text for the images.
+  - Many improvements in infrastructure details page (#41), such as:
+    - The cards are removed in favor of the table view only.
+    - Equipment tags are displayed in table.
+    - The table is splitted by racks sections with grouped rows, sorted by
+      names. Racks sections can be closed and opened at will.
+    - A button gives the possibility to invert the order of racks.
+    - Equipments in racks sections are ordered by position in the racks from
+      top to bottom.
+    - Readability of equipment table is improved by reducing its width on
+      large screens.
+    - When the infrastructure image is maximized, it can be closed with
+      escape button or by clicking on the sides.
 - schema: Declare all computed properties in schema.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
