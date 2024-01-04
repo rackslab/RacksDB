@@ -98,6 +98,8 @@ and this project adheres to
     - Improve readability of racks table by reducing its width, add lines
       between rows and increase row height.
     - Add _"Hide empty"_ button to hide empty racks.
+    - Add button to invert racks sorting by name in alphabetical order, either
+      in ascending or descending order.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).

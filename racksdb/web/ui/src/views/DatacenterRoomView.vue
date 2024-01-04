@@ -12,6 +12,7 @@ import type { Ref } from 'vue'
 import BreadCrumbs from '@/components/BreadCrumbs.vue'
 import type { Infrastructure, Rack } from '@/composables/RacksDBAPI'
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
+import { BarsArrowDownIcon, BarsArrowUpIcon } from '@heroicons/vue/24/outline'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -21,6 +22,7 @@ const blobURL = ref()
 const showImg = ref(false)
 const input = ref('')
 const hideEmpty = ref(false)
+const alphabeticalOrder = ref(true)
 var filteredRacks = computed(() => {
   let result: Array<Rack> = rackDetails.value
 
@@ -36,6 +38,13 @@ var filteredRacks = computed(() => {
 
   return result
 })
+
+function invertRackSort() {
+  if (rackDetails.value) {
+    rackDetails.value.reverse()
+  }
+  alphabeticalOrder.value = !alphabeticalOrder.value
+}
 
 function toggleImageModal() {
   if (showImg.value) {
@@ -136,23 +145,35 @@ const props = defineProps({
     </div>
   </div>
 
-  <div class="flex justify-center pt-5">
-    <SwitchGroup>
-      <div class="pt-5">
-        <SwitchLabel class="mx-4">Hide empty racks</SwitchLabel>
-        <Switch
-          v-model="hideEmpty"
-          :class="hideEmpty ? 'bg-purple-900' : 'bg-purple-700'"
-          class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
-        >
-          <span
-            aria-hidden="true"
-            :class="hideEmpty ? 'translate-x-9' : 'translate-x-0'"
-            class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
-          />
-        </Switch>
+  <div class="flex justify-center py-3">
+    <div class="flex justify-between min-w-[75vw]">
+      <div @click="invertRackSort()" class="flex items-center pt-5">
+        <div v-if="alphabeticalOrder">
+          <BarsArrowDownIcon class="h-7 w-7" />
+        </div>
+        <div v-else>
+          <BarsArrowUpIcon class="h-7 w-7" />
+        </div>
+        <p>Sort racks</p>
       </div>
-    </SwitchGroup>
+
+      <SwitchGroup>
+        <div class="pt-5 flex items-center">
+          <SwitchLabel class="mx-4">Hide empty racks</SwitchLabel>
+          <Switch
+            v-model="hideEmpty"
+            :class="hideEmpty ? 'bg-purple-900' : 'bg-purple-700'"
+            class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          >
+            <span
+              aria-hidden="true"
+              :class="hideEmpty ? 'translate-x-9' : 'translate-x-0'"
+              class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+            />
+          </Switch>
+        </div>
+      </SwitchGroup>
+    </div>
   </div>
 
   <div class="flex justify-center pb-10">
