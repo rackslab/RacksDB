@@ -13,6 +13,7 @@ import BreadCrumbs from '@/components/BreadCrumbs.vue'
 import type { Infrastructure, Rack } from '@/composables/RacksDBAPI'
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import { BarsArrowDownIcon, BarsArrowUpIcon } from '@heroicons/vue/24/outline'
+import { Dialog, DialogPanel } from '@headlessui/vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -124,26 +125,25 @@ const props = defineProps({
     />
   </div>
 
-  <div
-    v-if="showImg"
+  <Dialog
+    :open="showImg"
+    @close="toggleImageModal"
     class="fixed top-0 left-0 flex flex-col items-center justify-center w-screen h-screen bg-gray-300 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 backdrop-blur-md z-50"
   >
-    <div
-      class="max-w-4xl bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+    <DialogPanel
+      class="h-full flex flex-col items-center justify-center max-w-4xl bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
     >
-      <img v-if="blobURL" :src="blobURL" class="w-full" alt="" />
+      <img v-if="blobURL" :src="blobURL" class="h-auto max-w-full max-h-full" alt="" />
 
-      <div class="pt-5 flex justify-center">
-        <button
-          type="button"
-          @click="toggleImageModal()"
-          class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-        >
-          close
-        </button>
-      </div>
-    </div>
-  </div>
+      <button
+        type="button"
+        @click="toggleImageModal"
+        class="py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-purple-700 rounded-lg border"
+      >
+        close
+      </button>
+    </DialogPanel>
+  </Dialog>
 
   <div class="flex justify-center py-3">
     <div class="flex justify-between min-w-[75vw]">

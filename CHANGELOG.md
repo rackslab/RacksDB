@@ -100,6 +100,8 @@ and this project adheres to
     - Add _"Hide empty"_ button to hide empty racks.
     - Add button to invert racks sorting by name in alphabetical order, either
       in ascending or descending order.
+    - More accessible dialog to view room map in bigger size which can be closed
+      with escape key or by clicking outside.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).
