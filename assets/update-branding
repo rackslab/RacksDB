@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2023 Rackslab
+#
+# This file is part of RacksDB.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import glob
+import itertools
+from pathlib import Path
+
+from rfl.build.ninja import NinjaBuilder
+
+# Combination of logo and background colors available in branding reference file
+LOGOS = ["", "_full", "_full_horizontal"]
+BACKGROUNDS = ["white", "dark"]
+# Sizes names and associated DPI
+DPI_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 192}
+
+INKSCAPE_COMMON_OPTS = "--export-overwrite"
+FAVICON_DIR = "favicon"
+BITMAPS_DIR = "bitmaps"
+SCALABLES_DIR = "scalables"
+FAVICON_SIZES = [256, 64, 48, 32, 16]
+
+
+def main():
+    # First generate all intermediate SVG (optimized with scour) from reference branding
+    builder = NinjaBuilder()
+    branding = Path("branding.svg")
+    for output in [
+        f"logo{logo_background[0]}_{logo_background[1]}"
+        for logo_background in itertools.product(LOGOS, BACKGROUNDS)
+    ]:
+        builder.rule(
+            name=f"svg-plain-{output}",
+            command=(
+                f"inkscape $in {INKSCAPE_COMMON_OPTS} --export-id={output} "
+                "--export-id-only --export-plain-svg --export-filename=- | "
+                "python3 -m scour.scour /dev/stdin $out"
+            ),
+        )
+        svg = branding.parent / SCALABLES_DIR / f"{output}.svg"
+        builder.build(outputs=[svg], rule=f"svg-plain-{output}", inputs=[branding])
+    builder.run()
+
+    # Then generate bitmaps and favicon
+    builder = NinjaBuilder()
+    for size, dpi in DPI_SIZES.items():
+        builder.rule(
+            name=f"png-{size}",
+            command=(
+                f"inkscape $in {INKSCAPE_COMMON_OPTS} --export-type=png "
+                f"--export-dpi={dpi} --export-filename=$out"
+            ),
+        )
+
+    # The SVG file is first converted to PNG by inkscape and converted into ico by
+    # convert in order to keep alpha channel. If the SVG file is directly consumed by
+    # convert, alpha channel is lost.
+    builder.rule(
+        name="favicon",
+        command=(
+            f"inkscape $in {INKSCAPE_COMMON_OPTS} --export-id=favicon --export-id-only "
+            "--export-type=png --export-dpi=96 --export-filename=- | "
+            "convert - -resize 256x256 -define "
+            f"icon:auto-resize={','.join([str(size) for size in FAVICON_SIZES])} $out"
+        ),
+    )
+
+    svgs = glob.glob(f"{SCALABLES_DIR}/*.svg")
+    for svg_s in svgs:
+        svg = Path(svg_s)
+        for size in DPI_SIZES.keys():
+            png = branding.parent / BITMAPS_DIR / f"{svg.stem}_{size}.png"
+            builder.build(outputs=[png], rule=f"png-{size}", inputs=[svg])
+
+    ico = branding.parent / BITMAPS_DIR / "favicon.ico"
+    builder.build(outputs=[ico], rule="favicon", inputs=[branding])
+    builder.run()
+
+
+if __name__ == "__main__":
+    main()
