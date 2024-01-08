@@ -1,5 +1,5 @@
 <img
-  src="assets/racksdb_logo.svg"
+  src="assets/bitmaps/logo_full_white_medium.png"
   alt="RacksDB Overview"
   align="right"
   width="200px"
