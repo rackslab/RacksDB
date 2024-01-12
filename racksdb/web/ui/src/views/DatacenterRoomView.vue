@@ -1,4 +1,4 @@
-<!--Copyright (c) 2022-2023 Rackslab
+<!--Copyright (c) 2022-2024 Rackslab
 
 This file is part of RacksDB.
 
@@ -14,6 +14,7 @@ import type { Infrastructure, Rack } from '@/composables/RacksDBAPI'
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import { BarsArrowDownIcon, BarsArrowUpIcon } from '@heroicons/vue/24/outline'
 import { Dialog, DialogPanel } from '@headlessui/vue'
+import DatacenterListInfrastructures from '@/components/DatacenterListInfrastructures.vue'
 
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
@@ -61,6 +62,22 @@ async function getInfrastructureImg() {
   } catch (error) {
     console.error(`Error getting ${props.datacenterRoom}: ` + error)
   }
+}
+
+/*
+ * Return the list of infrastructure names which have equipment in a given rack.
+ */
+function listInfrastructures(rackName: string) {
+  const infrastructureNames: Array<string> = []
+
+  infrastructures.forEach((infrastructure) => {
+    infrastructure.layout.forEach((layout) => {
+      if (rackName == layout.rack) {
+        infrastructureNames.push(infrastructure.name)
+      }
+    })
+  })
+  return infrastructureNames
 }
 
 async function getDatacenters() {
@@ -197,7 +214,9 @@ const props = defineProps({
           >
             <td>{{ rack.name }}</td>
             <td>{{ (rack.fillrate * 100).toFixed(0) }}%</td>
-            <td>-</td>
+            <td>
+              <DatacenterListInfrastructures :infrastructures="listInfrastructures(rack.name)" />
+            </td>
           </tr>
         </tbody>
       </template>
