@@ -5,7 +5,7 @@ This file is part of RacksDB.
 SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -23,6 +23,7 @@ import { ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 const selectedItem: Ref<string | undefined> = ref()
 const router = useRouter()
 const input = ref('')
+const inputComponent: Ref<typeof ComboboxInput | null> = ref(null)
 const filteredItems = computed(() =>
   input.value === ''
     ? props.items
@@ -58,6 +59,17 @@ watchEffect(() => {
     goToItem(selectedItem.value)
   }
 })
+
+onMounted(() => {
+  /*
+   * Give focus to ComboboxInputElement when component is loaded.
+   *
+   * This is not stated in Headless UI documentation but ComboboxInput
+   * component exposes an el attribute which is a ref on the child input
+   * HTML element. This can be use to set focus on this element.
+   */
+  inputComponent.value?.el.focus()
+})
 </script>
 
 <template>
@@ -73,6 +85,7 @@ watchEffect(() => {
             >
           </ComboboxLabel>
           <ComboboxInput
+            ref="inputComponent"
             class="w-96 focus:border-purple-700 focus:outline-none border-2 border-solid rounded-md bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
             :placeholder="`Type to filter the list of ${itemType}s`"
             @change="input = $event.target.value"
