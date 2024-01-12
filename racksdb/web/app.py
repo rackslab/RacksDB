@@ -39,13 +39,13 @@ class RacksDBWebBlueprint(Blueprint):
         schema=RacksDB.DEFAULT_SCHEMA,
         ext=RacksDB.DEFAULT_EXT,
         db=RacksDB.DEFAULT_DB,
-        drawings_schema_path=DrawingParameters.DEFAULT_SCHEMA,
+        drawings_schema=DrawingParameters.DEFAULT_SCHEMA,
         openapi=False,
     ):
         super().__init__("RacksDB web blueprint", __name__)
         self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
-        self.drawings_schema_path = drawings_schema_path
+        self.drawings_schema = drawings_schema
         self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
         self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
         if openapi:
@@ -114,7 +114,7 @@ class RacksDBWebBlueprint(Blueprint):
         else:
             abort(415, "Unsupported request body format")
         try:
-            parameters = DrawingParameters.load(db_loader, self.drawings_schema_path)
+            parameters = DrawingParameters.load(db_loader, self.drawings_schema)
         except DBSchemaError as err:
             abort(415, f"Unable to load drawing parameters schema: {str(err)}")
         except DBFormatError as err:
