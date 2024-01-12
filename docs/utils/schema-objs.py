@@ -39,7 +39,7 @@ def bases(obj):
 def main():
     # Load the schema, the DB does not matter here.
     db = RacksDB.load(
-        schema=Path("../schema/racksdb.yml"),
+        schema=Path("../schemas/racksdb.yml"),
         db=Path("../examples/simple/racksdb.yml"),
     )
 

@@ -14,7 +14,7 @@ When RacksDB is installed, the schema is available in path
 [.path]#`/usr/share/racksdb/schema.yml`#.
 
 The file is also available in
-https://github.com/rackslab/racksdb/blob/main/schema/racksdb.yml[source code Git
+https://github.com/rackslab/racksdb/blob/main/schemas/racksdb.yml[source code Git
 repository].
 
 == Content

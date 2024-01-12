@@ -50,7 +50,7 @@ def toyaml(stuff):
 def main():
     # Load the schema, the DB does not matter here.
     drawing_schema = Schema(
-        SchemaFileLoader(Path("../schema/drawings.yml")),
+        SchemaFileLoader(Path("../schemas/drawings.yml")),
         SchemaDefinedTypeLoader(DrawingParameters.DEFINED_TYPES_MODULE),
     )
 

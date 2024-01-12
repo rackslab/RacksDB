@@ -11,17 +11,17 @@ man/%.1: man/%.adoc modules/usage/pages/%.adoc
 
 ref: modules/db/partials/objects.adoc
 
-modules/db/partials/objects.adoc: ../schema/racksdb.yml
+modules/db/partials/objects.adoc: ../schemas/racksdb.yml
 	python3 utils/schema-objs.py > $@
 
 drawing-ref: modules/usage/partials/drawing-objects.adoc
 
-modules/usage/partials/drawing-objects.adoc: ../schema/drawings.yml
+modules/usage/partials/drawing-objects.adoc: ../schemas/drawings.yml
 	python3 utils/drawings-schema-objs.py > $@
 
 openapi: modules/usage/attachments/openapi.yml
 
-modules/usage/attachments/openapi.yml: ../schema/racksdb.yml
+modules/usage/attachments/openapi.yml: ../schemas/racksdb.yml
 	python3 utils/gen-openapi.py > $@
 
 SVGS := $(shell find . -name '*.svg')

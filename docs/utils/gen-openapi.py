@@ -14,12 +14,12 @@ from racksdb.drawers.parameters import DrawingParameters
 def main():
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    racksdb_schema_path = Path(current_dir).joinpath("../../schema/racksdb.yml")
+    racksdb_schema_path = Path(current_dir).joinpath("../../schemas/racksdb.yml")
     racksdb_schema = Schema(
         SchemaFileLoader(racksdb_schema_path),
         SchemaDefinedTypeLoader(RacksDB.DEFINED_TYPES_MODULE),
     )
-    drawings_schema_path = Path(current_dir).joinpath("../../schema/drawings.yml")
+    drawings_schema_path = Path(current_dir).joinpath("../../schemas/drawings.yml")
     drawing_schema = Schema(
         SchemaFileLoader(drawings_schema_path),
         SchemaDefinedTypeLoader(DrawingParameters.DEFINED_TYPES_MODULE),
