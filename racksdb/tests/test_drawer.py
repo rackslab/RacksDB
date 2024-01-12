@@ -45,7 +45,7 @@ class TestDrawer(unittest.TestCase):
         current_dir = os.path.dirname(os.path.realpath(__file__))
         drawings_schema_paths = [
             Path(current_dir).joinpath("../../schemas/drawings.yml"),
-            Path("/usr/share/racksdb/drawings.yml"),
+            Path("/usr/share/racksdb/schemas/drawings.yml"),
         ]
         self.drawings_schema_path = None
         for drawings_schema_path in drawings_schema_paths:

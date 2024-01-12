@@ -54,6 +54,8 @@ and this project adheres to
   - Add new datacenter and infrastructures in example database.
 
 ### Changed
+- Database schema is moved from `/usr/share/racksdb/schema.yml` to
+  `/usr/share/racksdb/schemas/racksdb.yml`.
 - schema: Use `~bits` defined type instead of `~bytes` for _NodeTypeNetif_,
   _StorageEquipmentTypeNetif_ and _NetworkEquipmentTypeNetif_ bandwidth
   properties (#21).

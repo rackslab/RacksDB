@@ -31,7 +31,7 @@ endif::[]
 
 [.cli-opt]#*-s, --schema*=#[.cli-optval]##_SCHEMA_##::
   Path to RacksDB schema YAML file. If the file does not exist, an error is
-  reported. Default value is [.path]#`/usr/share/racksdb/schema.yml`#.
+  reported. Default value is [.path]#`/usr/share/racksdb/schemas/racksdb.yml`#.
 
 [.cli-opt]#*-e, --ext*=#[.cli-optval]##_EXT_##::
   Path to optional RacksDB schema extensions. If the file does not exist,

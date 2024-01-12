@@ -15,7 +15,7 @@ from . import bases
 class RacksDB(GenericDB):
 
     DEFAULT_DB = "/var/lib/racksdb"
-    DEFAULT_SCHEMA = "/usr/share/racksdb/schema.yml"
+    DEFAULT_SCHEMA = "/usr/share/racksdb/schemas/racksdb.yml"
     DEFAULT_EXT = "/etc/racksdb/extensions.yml"
     PREFIX = "RacksDB"
     DEFINED_TYPES_MODULE = "racksdb.dtypes"

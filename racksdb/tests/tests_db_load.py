@@ -19,7 +19,7 @@ class TestDBLoad(unittest.TestCase):
         current_dir = os.path.dirname(os.path.realpath(__file__))
         schema_paths = [
             Path(current_dir).joinpath("../../schemas/racksdb.yml"),
-            Path("/usr/share/racksdb/schema.yml"),
+            Path("/usr/share/racksdb/schemas/racksdb.yml"),
         ]
         self.schema_path = None
         for schema_path in schema_paths:

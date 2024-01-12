@@ -11,7 +11,7 @@ additional data using xref:ext.adoc[schema extensions].
 == Path
 
 When RacksDB is installed, the schema is available in path
-[.path]#`/usr/share/racksdb/schema.yml`#.
+[.path]#`/usr/share/racksdb/schemas/racksdb.yml`#.
 
 The file is also available in
 https://github.com/rackslab/racksdb/blob/main/schemas/racksdb.yml[source code Git

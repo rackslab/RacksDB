@@ -48,7 +48,7 @@ specified in arguments:
 ----
 >>> from racksdb import RacksDB
 >>> db = RacksDB.load(
-...    schema='/usr/share/racksdb/schema.yml',
+...    schema='/usr/share/racksdb/schemas/racksdb.yml',
 ...    ext='/etc/racksdb/extensions.yml',
 ...    db='/var/lib/racksdb',
 ... )
@@ -67,7 +67,7 @@ The default paths are defined as class attributes:
 >>> RacksDB.DEFAULT_EXT
 '/etc/racksdb/extensions.yml'
 >>> RacksDB.DEFAULT_SCHEMA
-'/usr/share/racksdb/schema.yml'
+'/usr/share/racksdb/schemas/racksdb.yml'
 ----
 
 Two exceptions can be raised by the `load()` method:
