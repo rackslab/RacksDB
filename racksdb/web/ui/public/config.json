@@ -1,3 +1,4 @@
 {
-    "API_SERVER": "http://localhost:5000/"
+    "API_SERVER": "http://localhost:5000/",
+    "API_VERSION": "v0.2.0"
 }

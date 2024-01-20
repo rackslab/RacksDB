@@ -9,6 +9,7 @@ import { inject } from 'vue'
 
 export interface RuntimeConfiguration {
   api_server: string
+  api_version: string
 }
 
 export const injectionKey = Symbol('rc') as InjectionKey<RuntimeConfiguration>
@@ -25,7 +26,8 @@ export const initRuntimeConfiguration = async (): Promise<RuntimeConfiguration> 
   const value = await resp.json()
 
   return {
-    api_server: value.API_SERVER
+    api_server: value.API_SERVER,
+    api_version: value.API_VERSION
   } as RuntimeConfiguration
 }
 
