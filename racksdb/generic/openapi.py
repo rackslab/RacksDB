@@ -21,8 +21,9 @@ from ..version import get_version
 
 
 class OpenAPIGenerator:
-    def __init__(self, prefix, schemas, views):
+    def __init__(self, prefix, version, schemas, views):
         self.prefix = prefix
+        self.version = version
         self.schemas = schemas
         self.views = views
 
@@ -36,10 +37,9 @@ class OpenAPIGenerator:
 
         # actions including views
         for action in chain(self.views.views_actions(), self.views.actions()):
-            result["paths"][action.path] = {
-                action.method: {"description": action.description}
-            }
-            action_schema = result["paths"][action.path][action.method]
+            path = f"/v{self.version}{action.path}"
+            result["paths"][path] = {action.method: {"description": action.description}}
+            action_schema = result["paths"][path][action.method]
             if len(action.parameters):
                 action_schema["parameters"] = []
             for parameter in action.parameters:

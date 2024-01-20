@@ -46,16 +46,22 @@ class RacksDBWebBlueprint(Blueprint):
         self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
         self.drawings_schema = drawings_schema
-        self.add_url_rule("/schema", view_func=self._schema, methods=["GET"])
-        self.add_url_rule("/dump", view_func=self._dump, methods=["GET"])
         if openapi:
             self.add_url_rule("/openapi.yaml", view_func=self._openapi, methods=["GET"])
-        self.add_url_rule("/<content>", view_func=self._dump_view, methods=["GET"])
+        self.add_url_rule(
+            f"/v{get_version()}/<content>", view_func=self._dump_view, methods=["GET"]
+        )
+        self.add_url_rule(
+            f"/v{get_version()}/schema", view_func=self._schema, methods=["GET"]
+        )
+        self.add_url_rule(
+            f"/v{get_version()}/dump", view_func=self._dump, methods=["GET"]
+        )
 
         for action in self.views.actions():
             # add path with generic action
             self.add_url_rule(
-                action.path,
+                f"/v{get_version()}{action.path}",
                 view_func=getattr(self, f"_{action.name}"),
                 methods=[action.method.upper()],
             )
@@ -138,6 +144,7 @@ class RacksDBWebBlueprint(Blueprint):
         )
         data = OpenAPIGenerator(
             self.db._prefix,
+            get_version(),
             {"RacksDB": self.db._schema, "Drawings": _drawings_schema},
             self.views,
         ).generate()

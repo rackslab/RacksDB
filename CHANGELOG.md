@@ -65,6 +65,7 @@ and this project adheres to
   - Return REST API errors in JSON object.
   - Changed /draw route method from GET to POST with optional JSON or YAML
     drawing parameters in request body.
+  - Add version to REST API paths.
 - docs:
   - Update supported Linux distributions in quickstart guide.
   - Update structure reference documentation and OpenAPI specification after
