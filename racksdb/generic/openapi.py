@@ -99,18 +99,18 @@ class OpenAPIGenerator:
                     "code": {
                         "description": "HTTP error code",
                         "type": "integer",
-                        "example": 500
+                        "example": 500,
                     },
                     "error": {
                         "description": "HTTP error name",
                         "type": "string",
-                        "example": "Internal error"
+                        "example": "Internal error",
                     },
                     "description": {
                         "description": "Detailed error description",
                         "type": "string",
-                        "example": "Error while parsing object"
-                    }
+                        "example": "Error while parsing object",
+                    },
                 },
             }
         }
@@ -126,7 +126,7 @@ class OpenAPIGenerator:
                             "$ref": "#/components/schemas/Error",
                         }
                     }
-                }
+                },
             }
         }
 
