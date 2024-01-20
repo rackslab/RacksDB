@@ -76,6 +76,7 @@ and this project adheres to
     and possibility to change it in database.
   - Report default value as example in REST API reference documentation when
     example is not defined in schema.
+  - Update REST API reference documentation paths with version.
 
 ### Fixed
 - core:
