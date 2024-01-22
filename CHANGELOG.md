@@ -8,6 +8,8 @@ and this project adheres to
 
 ## Unreleased
 
+## [0.3.0] - 2024-01-22
+
 ### Added
 - ui: new web UI (in _beta_ version)
 - schema:
@@ -189,3 +191,4 @@ and this project adheres to
 [unreleased]: https://github.com/rackslab/racksdb/compare/v0.2.0...HEAD
 [0.1.0~beta]: https://github.com/rackslab/racksdb/releases/tag/v0.1.0-beta
 [0.2.0]: https://github.com/rackslab/racksdb/releases/tag/v0.2.0
+[0.3.0]: https://github.com/rackslab/racksdb/releases/tag/v0.3.0

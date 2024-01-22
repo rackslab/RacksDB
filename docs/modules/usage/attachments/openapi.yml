@@ -825,10 +825,10 @@ components:
       type: object
 info:
   title: RacksDB REST API
-  version: 0.2.0
+  version: 0.3.0
 openapi: 3.0.0
 paths:
-  /v0.2.0/datacenters:
+  /v0.3.0/datacenters:
     get:
       description: Get information about datacenters
       parameters:
@@ -889,7 +889,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBDatacenter'
                 type: array
           description: successful operation
-  /v0.2.0/draw/<entity>/<name>.<format>:
+  /v0.3.0/draw/<entity>/<name>.<format>:
     post:
       description: Draw an entity
       parameters:
@@ -956,7 +956,7 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Unsupported drawing parameters format or unable to load drawing
             parameters schema
-  /v0.2.0/infrastructures:
+  /v0.3.0/infrastructures:
     get:
       description: Get information about infrastructures
       parameters:
@@ -1017,7 +1017,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBInfrastructure'
                 type: array
           description: successful operation
-  /v0.2.0/nodes:
+  /v0.3.0/nodes:
     get:
       description: Get information about nodes
       parameters:
@@ -1084,7 +1084,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBNode'
                 type: array
           description: successful operation
-  /v0.2.0/racks:
+  /v0.3.0/racks:
     get:
       description: Get information about racks
       parameters:
