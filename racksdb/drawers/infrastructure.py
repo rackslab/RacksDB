@@ -164,12 +164,16 @@ class InfrastructureDrawer(Drawer):
 
         # Write equipment name, rotate the text if height > width
         if equipment_height > equipment_width:
-            self.ctx.move_to(tl.x + 2, tl.y + 2)
+            self.ctx.move_to(tl.x, tl.y + 1)
             self.ctx.save()
             self.ctx.rotate(math.pi / 2)
+            self._print_text(
+                equipment.name, equipment_height, equipment_width, shift_y=True
+            )
         else:
-            self.ctx.move_to(tl.x + 2, tl.y + 15)
-        self.ctx.show_text(equipment.name)
+            self.ctx.move_to(tl.x, tl.y)
+            self._print_text(equipment.name, equipment_width, equipment_height)
+
         if equipment_height > equipment_width:
             self.ctx.restore()
 
@@ -185,7 +189,7 @@ class InfrastructureDrawer(Drawer):
         # write rack name
         self.ctx.move_to(dl.x, dl.y - rack_height - self.parameters.rack.offset)
         self.ctx.set_source_rgb(0, 0, 0)  # black
-        self.ctx.show_text(f"rack {rack.name}")
+        self._print_text(f"rack {rack.name}")
 
         colorset = self._find_rack_colorset(rack)
 
@@ -240,7 +244,7 @@ class InfrastructureDrawer(Drawer):
         )
         self.ctx.set_font_size(14)
         self.ctx.move_to(dl.x, dl.y - int(row.height * self.ratio))
-        self.ctx.show_text(f"row {row.name}")
+        self._print_text(f"row {row.name}")
 
         # iterate over the racks to draw racks in row
         for rack in self.racks:

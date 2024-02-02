@@ -101,14 +101,17 @@ class RoomDrawer(Drawer):
             # If the rack row rotation angle is between 0 and 180, flip the text
             # to be right side up.
             if rack.row.position.rotation > 0 and rack.row.position.rotation < 180:
-                self.ctx.move_to(tl.x + 15, tl.y - 2 + rack_height)
+                self.ctx.move_to(tl.x, tl.y - 2 + rack_height)
                 self.ctx.rotate(-math.pi / 2)
+                self._print_text(rack.name, rack_width, rack_height)
             else:
-                self.ctx.move_to(tl.x + 2, tl.y + 2)
+                self.ctx.move_to(tl.x, tl.y + 2)
                 self.ctx.rotate(math.pi / 2)
+                self._print_text(rack.name, rack_width, rack_height, shift_y=True)
         else:
-            self.ctx.move_to(tl.x + 2, tl.y + 15)
-        self.ctx.show_text(rack.name)
+            self.ctx.move_to(tl.x, tl.y)
+            self._print_text(rack.name, rack_width, rack_height)
+
         if rack_height > rack_width:
             self.ctx.restore()
 
@@ -175,10 +178,8 @@ class RoomDrawer(Drawer):
             "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
         )
         self.ctx.set_font_size(14)
-        self.ctx.move_to(
-            self.parameters.margin.left + 2, self.parameters.margin.top + 15
-        )
-        self.ctx.show_text(
+        self.ctx.move_to(self.parameters.margin.left + 2, self.parameters.margin.top)
+        self._print_text(
             f"Datacenter {self.room.datacenter.name} room {self.room.name}"
         )
 

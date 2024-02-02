@@ -4,9 +4,20 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from typing import Union
 import logging
 
 import cairo
+import gi
+
+gi.require_version("Pango", "1.0")
+gi.require_version("PangoCairo", "1.0")
+
+# This import is not at the top of the file because gi requires the version to be
+# specified with the calls above before importing the modules from repository, thus the
+# ruff QA exception on E402.
+from gi.repository import Pango, PangoCairo  # noqa: E402
+
 
 logger = logging.getLogger(__name__)
 
@@ -100,3 +111,36 @@ class Drawer:
                 continue
             return rule
         return DefaultEquipmentColorSet
+
+    def _print_text(
+        self,
+        text: str,
+        max_width: Union[int, None] = None,
+        max_height: Union[int, None] = None,
+        shift_x: bool = False,
+        shift_y: bool = False,
+    ) -> None:
+        """Print text label in context. The text size can possibly be responsive to
+        maximum width and height. The boolean shift_x and shift_y can be set to True in
+        order to shift the position of the text label by its height vertically or
+        horizontally respectively."""
+        layout = PangoCairo.create_layout(self.ctx)
+        layout.set_alignment(Pango.Alignment.CENTER)
+        # Try multiple decreasing size until it fits into optional max width/height
+        for size in range(12, 4, -1):
+            layout.set_font_description(
+                Pango.font_description_from_string(f"Sans Serif Normal {size}")
+            )
+            layout.set_markup(text, -1)
+            _, extents = layout.get_pixel_extents()
+            tw, th = extents.width, extents.height
+            # If max_{width/height} is set, text label width/height must be smaller.
+            if (max_width is None or tw < max_width) and (
+                max_height is None or th < max_height
+            ):
+                break
+        if shift_x:
+            self.ctx.rel_move_to(-th, 0)
+        if shift_y:
+            self.ctx.rel_move_to(0, -th)
+        PangoCairo.show_layout(self.ctx, layout)

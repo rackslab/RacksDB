@@ -16,6 +16,7 @@ dependencies = [
     "PyYAML",
     "ClusterShell",
     "pycairo",
+    "PyGObject",
 ]
 readme = "README.md"
 classifiers = [

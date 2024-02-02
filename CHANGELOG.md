@@ -8,11 +8,18 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+- pkg: Add dependency on PyGObject python library (used to call Pango library).
+
 ### Changed
-- draw: Replace Room/Infrastructure `scale` drawing parameters by maximum
-  width/height dimensions. RacksDB compute a dynamic ratio based on these
-  maximum dimensions to define the sizes of represented racks and equipment in
-  pixels.
+- draw:
+  - Replace Room/Infrastructure `scale` drawing parameters by maximum
+    width/height dimensions. RacksDB compute a dynamic ratio based on these
+    maximum dimensions to define the sizes of represented racks and equipment in
+    pixels.
+  - Make font size of text labels on racks and equipment responsive to the size
+    of the corresponding items. The font size is reduced, down to its minimum
+    size, until the text label fits into the item.
 - docs: Update supported Linux distributions in quickstart guide (add fedora 39
   and drop fedora 37).
 
