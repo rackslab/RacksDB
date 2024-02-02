@@ -25,13 +25,13 @@ class RoomDrawer(Drawer):
                     self.room = room
         if self.room is None:
             raise RacksDBError(f"Unable to find room {name} in database")
+        # Calculated at draw time based on dimensions
+        self.ratio = 0
 
     def _racks_row_tl(self, row):
         return ImagePoint(
-            self.parameters.margin.left
-            + int(row.position.width * self.parameters.room.scale),
-            self.parameters.margin.top
-            + int(row.position.depth * self.parameters.room.scale),
+            self.parameters.margin.left + int(row.position.width * self.ratio),
+            self.parameters.margin.top + int(row.position.depth * self.ratio),
         )
 
     def _rack_tl(self, rack):
@@ -42,7 +42,7 @@ class RoomDrawer(Drawer):
         filled_slots = {}
         for row_rack in rack.row.racks:
             if row_rack.slot < rack.slot:
-                tl.x += int(row_rack.type.width * self.parameters.room.scale)
+                tl.x += int(row_rack.type.width * self.ratio)
                 filled_slots[row_rack.slot] = row_rack
         # filling empty slots with previous rack width
         for slot in range(rack.slot):
@@ -56,13 +56,13 @@ class RoomDrawer(Drawer):
                         break
                 if not (last_rack_width):
                     last_rack_width = self.db.types.racks.first().width
-                tl.x += int(last_rack_width * self.parameters.room.scale)
+                tl.x += int(last_rack_width * self.ratio)
         return tl
 
     def _draw_rack(self, rack):
         tl = self._rack_tl(rack)
-        rack_width = int(rack.type.width * self.parameters.room.scale)
-        rack_height = int(rack.type.depth * self.parameters.room.scale)
+        rack_width = int(rack.type.width * self.ratio)
+        rack_height = int(rack.type.depth * self.ratio)
 
         colorset = self._find_rack_colorset(rack)
 
@@ -83,16 +83,14 @@ class RoomDrawer(Drawer):
                 tl.x,
                 tl.y,
                 rack_width,
-                (self.parameters.rack.door_depth * self.parameters.room.scale),
+                (self.parameters.rack.door_depth * self.ratio),
             )
         else:
             self.ctx.rectangle(
                 tl.x,
-                tl.y
-                + rack_height
-                - (self.parameters.rack.door_depth * self.parameters.room.scale),
+                tl.y + rack_height - (self.parameters.rack.door_depth * self.ratio),
                 rack_width,
-                (self.parameters.rack.door_depth * self.parameters.room.scale),
+                (self.parameters.rack.door_depth * self.ratio),
             )
         self.ctx.fill()
 
@@ -119,12 +117,46 @@ class RoomDrawer(Drawer):
             self._draw_rack(rack)
 
     def draw(self):
-        room_width = int(self.room.dimensions.width * self.parameters.room.scale)
-        room_depth = int(self.room.dimensions.depth * self.parameters.room.scale)
 
-        width = room_width + 2 * self.parameters.margin.left
-        height = room_depth + 2 * self.parameters.margin.top
-        self.init_ctx(width, height)
+        logger.debug(
+            "Maximum dimensions: %d %d",
+            self.parameters.dimensions.width,
+            self.parameters.dimensions.height,
+        )
+
+        # Compute total white spaces in width and height
+        width_whitespace = self.parameters.margin.left * 2
+        height_whitespace = self.parameters.margin.top * 2
+
+        # Deduce available space to draw in width and height
+        available_width = self.parameters.dimensions.width - width_whitespace
+        available_height = self.parameters.dimensions.height - height_whitespace
+        logger.debug(
+            "available draw area in pixels heights: %d width: %d",
+            available_height,
+            available_width,
+        )
+
+        self.ratio = min(
+            available_width / self.room.dimensions.width,
+            available_height / self.room.dimensions.depth,
+        )
+
+        logger.debug("Final ratio is: %f", self.ratio)
+
+        # Compute final surface width and height
+        surface_width = int(self.ratio * self.room.dimensions.width + width_whitespace)
+        surface_height = int(
+            self.ratio * self.room.dimensions.depth + height_whitespace
+        )
+
+        logger.debug("Final width: %d", surface_width)
+        logger.debug("Final height: %d", surface_height)
+
+        self.init_ctx(surface_width, surface_height)
+
+        room_width = int(self.room.dimensions.width * self.ratio)
+        room_depth = int(self.room.dimensions.depth * self.ratio)
 
         # draw room frame
         self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey

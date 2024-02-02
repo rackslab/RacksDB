@@ -9,6 +9,10 @@ and this project adheres to
 ## Unreleased
 
 ### Changed
+- draw: Replace Room/Infrastructure `scale` drawing parameters by maximum
+  width/height dimensions. RacksDB compute a dynamic ratio based on these
+  maximum dimensions to define the sizes of represented racks and equipment in
+  pixels.
 - docs: Update supported Linux distributions in quickstart guide (add fedora 39
   and drop fedora 37).
 

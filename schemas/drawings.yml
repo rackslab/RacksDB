@@ -4,13 +4,9 @@ _version: 0.3.0
 
 _content:
   properties:
-    room:
-      type: :Room
-      description: Rooms graphical representation settings
-      default: :recursive
-    infrastructure:
-      type: :Infrastructure
-      description: Infrastructures graphical representation settings
+    dimensions:
+      type: :Dimensions
+      description: Dimensions of image
       default: :recursive
     margin:
       type: :Margin
@@ -30,19 +26,16 @@ _content:
       default: :recursive
 
 _objects:
-  Room:
+  Dimensions:
     properties:
-      scale:
-        type: float
-        description: Scale of 1mm in pixels in rooms graphical representations
-        default: 0.07
-  Infrastructure:
-    properties:
-      scale:
-        type: float
-        description: >-
-          Scale of 1mm in pixels in Infrastructures graphical representations
-        default: 0.40
+      height:
+        type: int
+        default: 1200
+        description: Maximum height of image in pixels
+      width:
+        type: int
+        default: 1200
+        description: Maximum width of image in pixels
   Margin:
     properties:
       top:
@@ -57,11 +50,11 @@ _objects:
     properties:
       label_offset:
         type: int
-        description: Space between row labels and racks labels in infrastructures graphical representations
+        description: Vertical space between row labels and racks labels in infrastructures graphical representations
         default: 20
       offset:
         type: int
-        description: Space between racks labels and racks in infrastructures graphical representations
+        description: Vertical space between racks labels and racks in infrastructures graphical representations
         default: 20
       u_height:
         type: float
