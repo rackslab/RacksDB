@@ -20,6 +20,8 @@ and this project adheres to
   - Make font size of text labels on racks and equipment responsive to the size
     of the corresponding items. The font size is reduced, down to its minimum
     size, until the text label fits into the item.
+  - Change unit (pixels→mm) and default value (10→40) of Rack `pane_width`
+    drawing parameter.
 - docs: Update supported Linux distributions in quickstart guide (add fedora 39
   and drop fedora 37).
 

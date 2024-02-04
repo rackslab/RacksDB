@@ -104,12 +104,12 @@ class InfrastructureDrawer(Drawer):
         )
 
         tl.x += (
-            self.parameters.rack.pane_width
+            self.parameters.rack.pane_width * self.ratio
             + equipment_width_slot
             * equipment.type.width
             * (
                 int(equipment.rack.type.width * self.ratio)
-                - 2 * self.parameters.rack.pane_width
+                - 2 * self.parameters.rack.pane_width * self.ratio
             )
         )
         tl.y -= (
@@ -132,7 +132,7 @@ class InfrastructureDrawer(Drawer):
 
         equipment_width = equipment.type.width * (
             int(equipment.rack.type.width * self.ratio)
-            - 2 * self.parameters.rack.pane_width
+            - 2 * self.parameters.rack.pane_width * self.ratio
         )
         equipment_height = int(
             equipment.type.height * self.parameters.rack.u_height * self.ratio
@@ -209,13 +209,13 @@ class InfrastructureDrawer(Drawer):
         self.ctx.rectangle(
             dl.x,
             dl.y - rack_height,
-            self.parameters.rack.pane_width,
+            self.parameters.rack.pane_width * self.ratio,
             rack_height,
         )
         self.ctx.rectangle(
-            dl.x + rack_width - self.parameters.rack.pane_width,
+            dl.x + rack_width - self.parameters.rack.pane_width * self.ratio,
             dl.y - rack_height,
-            self.parameters.rack.pane_width,
+            self.parameters.rack.pane_width * self.ratio,
             rack_height,
         )
         self.ctx.fill()

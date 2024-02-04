@@ -62,8 +62,8 @@ _objects:
         default: 44.45
       pane_width:
         type: int
-        description: Width of racks pane in infrastructures graphical representations
-        default: 10
+        description: Width of racks pane in millimeters in infrastructures graphical representations
+        default: 40
       spacing:
         type: int
         description: Space between racks in infrastructures graphical representations
