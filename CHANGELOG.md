@@ -25,8 +25,10 @@ and this project adheres to
     size, until the text label fits into the item.
   - Change unit (pixels→mm) and default value (10→40) of Rack `pane_width`
     drawing parameter.
-- docs: Update supported Linux distributions in quickstart guide (add fedora 39
-  and drop fedora 37).
+- docs:
+  - Update supported Linux distributions in quickstart guide (add fedora 39
+    and drop fedora 37).
+  - Update OpenAPI specifications for REST API documentation
 
 ### Fixed
 - ui: bump missed version number in UI application metadata.

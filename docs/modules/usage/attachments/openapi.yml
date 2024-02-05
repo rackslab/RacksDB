@@ -15,6 +15,17 @@ components:
             $ref: '#/components/schemas/DrawingsRackColoringRule'
           type: array
       type: object
+    DrawingsDimensions:
+      properties:
+        height:
+          description: Maximum height of image in pixels
+          example: 1200
+          type: integer
+        width:
+          description: Maximum width of image in pixels
+          example: 1200
+          type: integer
+      type: object
     DrawingsEquipmentColoringRule:
       properties:
         background:
@@ -33,6 +44,14 @@ components:
           - 0.2
           items: number
           type: array
+        chassis:
+          description: The color of the equipment chassis.
+          example:
+          - 0.24705882352941178
+          - 0.24705882352941178
+          - 0.24705882352941178
+          items: number
+          type: array
         tags:
           description: List of tags equipments must have to be associated to the coloring
             rule.
@@ -43,12 +62,13 @@ components:
           description: Name of type of quipments associated to the coloring rule.
           type: string
       type: object
-    DrawingsInfrastructure:
+    DrawingsGeneral:
       properties:
-        scale:
-          description: Scale of 1mm in pixels in Infrastructures graphical representations
-          example: 0.4
-          type: number
+        pixel_perfect:
+          description: Control if entities are represented perfectly aligned on pixels
+            with concession on relative dimensions correctess.
+          example: false
+          type: boolean
       type: object
     DrawingsMargin:
       properties:
@@ -68,18 +88,19 @@ components:
           example: 50
           type: integer
         label_offset:
-          description: Space between row labels and racks labels in infrastructures
+          description: Vertical space between row labels and racks labels in infrastructures
             graphical representations
           example: 20
           type: integer
         offset:
-          description: Space between racks labels and racks in infrastructures graphical
-            representations
+          description: Vertical space between racks labels and racks in infrastructures
+            graphical representations
           example: 20
           type: integer
         pane_width:
-          description: Width of racks pane in infrastructures graphical representations
-          example: 10
+          description: Width of racks pane in millimeters in infrastructures graphical
+            representations
+          example: 40
           type: integer
         spacing:
           description: Space between racks in infrastructures graphical representations
@@ -118,13 +139,6 @@ components:
           description: Name of type of rack associated to the coloring rule.
           type: string
       type: object
-    DrawingsRoom:
-      properties:
-        scale:
-          description: Scale of 1mm in pixels in rooms graphical representations
-          example: 0.07
-          type: number
-      type: object
     DrawingsRow:
       properties:
         label_offset:
@@ -140,11 +154,17 @@ components:
           example:
             equipments: []
             racks: []
-        infrastructure:
-          $ref: '#/components/schemas/DrawingsInfrastructure'
-          description: Infrastructures graphical representation settings
+        dimensions:
+          $ref: '#/components/schemas/DrawingsDimensions'
+          description: Dimensions of image
           example:
-            scale: 0.4
+            height: 1200
+            width: 1200
+        general:
+          $ref: '#/components/schemas/DrawingsGeneral'
+          description: General settings
+          example:
+            pixel_perfect: false
         margin:
           $ref: '#/components/schemas/DrawingsMargin'
           description: Graphical representation margins
@@ -158,14 +178,9 @@ components:
             door_depth: 50
             label_offset: 20
             offset: 20
-            pane_width: 10
+            pane_width: 40
             spacing: 3
             u_height: 44.45
-        room:
-          $ref: '#/components/schemas/DrawingsRoom'
-          description: Rooms graphical representation settings
-          example:
-            scale: 0.07
         row:
           $ref: '#/components/schemas/DrawingsRow'
           description: Rack row graphical representation settings
