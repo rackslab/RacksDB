@@ -17,28 +17,29 @@ Library class type: `Drawings`
 |===
 |Property|Description|Type|Required
 
-|room
-|Rooms graphical representation settings
+|general
+|General settings
 
 *Default value:*
 
 [source,yaml]
 ----
-scale: 0.07
+pixel_perfect: false
 ----
-|xref:#obj-room[{symbol-obj}{nbsp}Room]
+|xref:#obj-general[{symbol-obj}{nbsp}General]
 |[.grey]#-#
 
-|infrastructure
-|Infrastructures graphical representation settings
+|dimensions
+|Dimensions of image
 
 *Default value:*
 
 [source,yaml]
 ----
-scale: 0.4
+height: 1200
+width: 1200
 ----
-|xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+|xref:#obj-dimensions[{symbol-obj}{nbsp}Dimensions]
 |[.grey]#-#
 
 |margin
@@ -64,7 +65,7 @@ top: 30
 door_depth: 50
 label_offset: 20
 offset: 20
-pane_width: 10
+pane_width: 40
 spacing: 3
 u_height: 44.45
 ----
@@ -125,6 +126,31 @@ Library class type: `DrawingsColoringRules`
 |[.grey]#-#
 |===
 
+[#obj-dimensions]
+=== Dimensions
+
+Library class type: `DrawingsDimensions`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|height
+|Maximum height of image in pixels
+
+*Default value:* `1200`
+|int
+|[.grey]#-#
+
+|width
+|Maximum width of image in pixels
+
+*Default value:* `1200`
+|int
+|[.grey]#-#
+|===
+
 [#obj-equipmentcoloringrule]
 === EquipmentColoringRule
 
@@ -154,6 +180,13 @@ Library class type: `DrawingsEquipmentColoringRule`
 |xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
 |[.grey]#-#
 
+|chassis
+|The color of the equipment chassis.
+
+*Default value:* `#3F3F3F`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+
 |border
 |The border color of the equipments.
 
@@ -162,21 +195,21 @@ Library class type: `DrawingsEquipmentColoringRule`
 |[.grey]#-#
 |===
 
-[#obj-infrastructure]
-=== Infrastructure
+[#obj-general]
+=== General
 
-Library class type: `DrawingsInfrastructure`
+Library class type: `DrawingsGeneral`
 
 .Properties
 [cols="{tbl-obj-props-cols-specs}"]
 |===
 |Property|Description|Type|Required
 
-|scale
-|Scale of 1mm in pixels in Infrastructures graphical representations
+|pixel_perfect
+|Control if entities are represented perfectly aligned on pixels with concession on relative dimensions correctess.
 
-*Default value:* `0.4`
-|float
+*Default value:* `False`
+|bool
 |[.grey]#-#
 |===
 
@@ -216,14 +249,14 @@ Library class type: `DrawingsRack`
 |Property|Description|Type|Required
 
 |label_offset
-|Space between row labels and racks labels in infrastructures graphical representations
+|Vertical space between row labels and racks labels in infrastructures graphical representations
 
 *Default value:* `20`
 |int
 |[.grey]#-#
 
 |offset
-|Space between racks labels and racks in infrastructures graphical representations
+|Vertical space between racks labels and racks in infrastructures graphical representations
 
 *Default value:* `20`
 |int
@@ -237,9 +270,9 @@ Library class type: `DrawingsRack`
 |[.grey]#-#
 
 |pane_width
-|Width of racks pane in infrastructures graphical representations
+|Width of racks pane in millimeters in infrastructures graphical representations
 
-*Default value:* `10`
+*Default value:* `40`
 |int
 |[.grey]#-#
 
@@ -292,24 +325,6 @@ Library class type: `DrawingsRackColoringRule`
 
 *Default value:* `#000000`
 |xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
-|[.grey]#-#
-|===
-
-[#obj-room]
-=== Room
-
-Library class type: `DrawingsRoom`
-
-.Properties
-[cols="{tbl-obj-props-cols-specs}"]
-|===
-|Property|Description|Type|Required
-
-|scale
-|Scale of 1mm in pixels in rooms graphical representations
-
-*Default value:* `0.07`
-|float
 |[.grey]#-#
 |===
 

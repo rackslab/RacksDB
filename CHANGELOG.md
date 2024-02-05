@@ -29,6 +29,7 @@ and this project adheres to
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).
   - Update OpenAPI specifications for REST API documentation
+  - Update drawing parameters reference doc
 
 ### Fixed
 - ui: bump missed version number in UI application metadata.
