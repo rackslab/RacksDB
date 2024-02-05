@@ -12,6 +12,9 @@ and this project adheres to
 - docs: Update supported Linux distributions in quickstart guide (add fedora 39
   and drop fedora 37).
 
+### Fixed
+- ui: bump missed version number in UI application metadata.
+
 ## [0.3.0] - 2024-01-22
 
 ### Added
