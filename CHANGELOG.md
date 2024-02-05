@@ -9,6 +9,9 @@ and this project adheres to
 ## Unreleased
 
 ### Added
+- draw: Add general `pixel_perfect` boolean drawing parameters, disabled by
+  default. When enabled, RacksDB properly align graphical representation with
+  pixels matrix with concession on relative dimensions correctness (#4).
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 
 ### Changed

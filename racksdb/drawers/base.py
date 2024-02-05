@@ -29,6 +29,7 @@ class DefaultRackColorSet:
 
 class DefaultEquipmentColorSet:
     background = (0.6, 0.6, 0.6)  # aka. #999999 (light gray)
+    chassis = (0.25, 0.25, 0.25)  # aka. #3F3F3F (medium gray)
     border = (0.2, 0.2, 0.2)  # aka. #333333 (dark gray)
 
 

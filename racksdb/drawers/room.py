@@ -70,10 +70,10 @@ class RoomDrawer(Drawer):
         self.ctx.set_source_rgb(*colorset.frame)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            tl.x,
-            tl.y,
-            rack_width,
-            rack_height,
+            tl.x - 0.5,
+            tl.y - 0.5,
+            rack_width + 1,
+            rack_height + 1,
         )
         self.ctx.stroke()
 
@@ -165,8 +165,8 @@ class RoomDrawer(Drawer):
         self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            self.parameters.margin.left,
-            self.parameters.margin.top,
+            self.parameters.margin.left - 0.5,
+            self.parameters.margin.top - 0.5,
             room_width,
             room_depth,
         )

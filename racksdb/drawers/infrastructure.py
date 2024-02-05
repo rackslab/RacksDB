@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from typing import Union
 import logging
 import math
 
@@ -45,6 +46,62 @@ class InfrastructureDrawer(Drawer):
             row_max_height = max(row_max_height, rack.type.height)
         return row_max_height
 
+    def _rack_width(self, rack) -> Union[float, int]:
+        """Return the width of a given rack as a number of pixels. If
+        general.pixel_perfect is False, it returns a float value, else it returns the
+        integer value rounded below."""
+        width = rack.type.width * self.ratio
+        if self.parameters.general.pixel_perfect:
+            return math.floor(width)
+        return width
+
+    def _rack_inside_width(self, rack) -> Union[float, int]:
+        """Return the available width inside a given rack as a number of pixels."""
+        return self._rack_width(rack) - 2 * self._rack_pane_width
+
+    def _rack_height(self, rack) -> Union[float, int]:
+        """Return the height of a given rack as a number of pixels. If
+        general.pixel_perfect is False, it returns a float value based on the rack
+        height and the computed drawing ratio, else it returns the integer value rounded
+        below based on the number of slots in the rack and the unit height."""
+        if self.parameters.general.pixel_perfect:
+            return rack.type.slots * self._rack_u_height
+        else:
+            return rack.type.height * self.ratio
+
+    def _equipment_width(self, equipment) -> Union[float, int]:
+        """Return the width of a given equipment as a number of pixels. If
+        general.pixel_perfect is False, it returns a float value, else it returns the
+        integer value rounded below."""
+        width = equipment.type.width * self._rack_inside_width(equipment.rack)
+        if self.parameters.general.pixel_perfect:
+            return math.floor(width)
+        return width
+
+    def _equipment_height(self, equipment) -> Union[float, int]:
+        """Return the height of a given equipment as a number of pixels."""
+        return equipment.type.height * self._rack_u_height
+
+    @property
+    def _rack_u_height(self) -> Union[float, int]:
+        """Return the height of a rack unit as a number of pixels. If
+        general.pixel_perfect is False, it returns a float value, else it returns the
+        integer value rounded below."""
+        height = self.parameters.rack.u_height * self.ratio
+        if self.parameters.general.pixel_perfect:
+            return math.floor(height)
+        return height
+
+    @property
+    def _rack_pane_width(self) -> Union[float, int]:
+        """Return the width of rack panes as a number of pixels. If
+        general.pixel_perfect is False, it returns a float value, else it returns the
+        integer value rounded below."""
+        width = self.parameters.rack.pane_width * self.ratio
+        if self.parameters.general.pixel_perfect:
+            return math.floor(width)
+        return width
+
     def _rack_row_dl(self, row) -> ImagePoint:
         # sum height of all previous rows
         pos_y = self.parameters.margin.top
@@ -81,20 +138,26 @@ class InfrastructureDrawer(Drawer):
         dl.y += self.parameters.rack.label_offset + self.parameters.rack.offset
         return dl
 
-    def _equipment_tl(self, row, rack, equipment) -> ImagePoint:
-        tl = self._rack_dl(row, rack)
+    def _equipment_width_slot(self, equipment) -> int:
+        """Return the slot of the equipment in the rack width."""
+        return (equipment.slot - equipment._first.slot) % (1 / equipment.type.width)
 
-        equipment_height_slot = (
+    def _equipment_height_slot(self, equipment) -> int:
+        """Return the slot of the equipment (ie. rack unit slot) in the rack height."""
+        return (
             equipment._first.slot
-            - rack.type.initial
+            - equipment.rack.type.initial
             + math.floor(
                 (equipment.slot - equipment._first.slot) * equipment.type.width
             )
             * equipment.type.height
         )
-        equipment_width_slot = (equipment.slot - equipment._first.slot) % (
-            1 / equipment.type.width
-        )
+
+    def _equipment_tl(self, row, rack, equipment) -> ImagePoint:
+        tl = self._rack_dl(row, rack)
+
+        equipment_height_slot = self._equipment_height_slot(equipment)
+        equipment_width_slot = self._equipment_width_slot(equipment)
 
         logger.debug(
             "Equipment %s calculated slots → height: %d width: %d",
@@ -103,20 +166,27 @@ class InfrastructureDrawer(Drawer):
             equipment_width_slot,
         )
 
-        tl.x += (
-            self.parameters.rack.pane_width * self.ratio
-            + equipment_width_slot
-            * equipment.type.width
-            * (
-                int(equipment.rack.type.width * self.ratio)
-                - 2 * self.parameters.rack.pane_width * self.ratio
+        tl.x += self._rack_pane_width + equipment_width_slot * self._equipment_width(
+            equipment
+        )
+        if self.parameters.general.pixel_perfect:
+            # Center the equipment in the rack by shifting right by half of the
+            # difference between width inside the rack and equipment width multiplied by
+            # the number of equipment in rack width.
+            tl.x += math.floor(
+                (
+                    self._rack_inside_width(equipment.rack)
+                    - self._equipment_width(equipment) / equipment.type.width
+                )
+                / 2
             )
-        )
-        tl.y -= (
-            (equipment.type.height + equipment_height_slot)
-            * self.parameters.rack.u_height
-            * self.ratio
-        )
+
+            # Except for the 1st equipment in rack width, shift other equipment by one
+            # pixel on the right so they are all represented the same size despite the
+            # equipment frame is drawn inside the equipment surface on its left side.
+            if equipment_width_slot > 0:
+                tl.x += 1
+        tl.y -= (equipment.type.height + equipment_height_slot) * self._rack_u_height
 
         return tl
 
@@ -130,19 +200,33 @@ class InfrastructureDrawer(Drawer):
         # top left of equipment
         tl = self._equipment_tl(row, rack, equipment)
 
-        equipment_width = equipment.type.width * (
-            int(equipment.rack.type.width * self.ratio)
-            - 2 * self.parameters.rack.pane_width * self.ratio
-        )
-        equipment_height = int(
-            equipment.type.height * self.parameters.rack.u_height * self.ratio
-        )
+        equipment_width = self._equipment_width(equipment)
+        equipment_height = self._equipment_height(equipment)
+        width_slot = self._equipment_width_slot(equipment)
 
         colorset = self._find_equipment_colorset(equipment)
 
+        # Draw chassis in full rack width, only for the equipment on the left side of
+        # the rack slot.
+        if width_slot == 0:
+            self.ctx.set_source_rgb(*colorset.chassis)
+            rack_dl = self._rack_dl(row, rack)
+            # At the top of the rack, do not cover the rack frame
+            if tl.y == rack_dl.y - self._rack_height(rack):
+                chassis_top = rack_dl.y - self._rack_height(rack)
+            else:
+                chassis_top = tl.y
+
+            self.ctx.rectangle(
+                rack_dl.x + self._rack_pane_width,
+                chassis_top,
+                self._rack_inside_width(equipment.rack),
+                equipment_height,
+            )
+            self.ctx.fill()
+
         # draw equipment background
         self.ctx.set_source_rgb(*colorset.background)
-        self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x,
             tl.y,
@@ -154,10 +238,24 @@ class InfrastructureDrawer(Drawer):
         # draw equipment frame
         self.ctx.set_source_rgb(*colorset.border)
         self.ctx.set_line_width(1)
+        # For the equipment on the left side of the rack slot, draw the equipment frame
+        # inside the equipment surface on its left side. Else, draw the frame outside
+        # the equipment surface.
+        if width_slot == 0:
+            frame_x = tl.x + 0.5
+        else:
+            frame_x = tl.x - 0.5
+        frame_y = tl.y - 0.5
+        # For full-width equipment, draw the frame inside the equipment surface on its
+        # right side as well.
+        if equipment_width == self._rack_inside_width(rack):
+            frame_width = equipment_width - 1
+        else:
+            frame_width = equipment_width
         self.ctx.rectangle(
-            tl.x,
-            tl.y,
-            equipment_width,
+            frame_x,
+            frame_y,
+            frame_width,
             equipment_height,
         )
         self.ctx.stroke()
@@ -180,11 +278,10 @@ class InfrastructureDrawer(Drawer):
     def _draw_rack(self, row, rack):
         logger.debug("Drawing rack %s (%s)", rack.name, rack.slot)
 
-        # top left of rack
+        # bottom left of rack
         dl = self._rack_dl(row, rack)
-
-        rack_width = rack.type.width * self.ratio
-        rack_height = rack.type.height * self.ratio
+        rack_width = self._rack_width(rack)
+        rack_height = self._rack_height(rack)
 
         # write rack name
         self.ctx.move_to(dl.x, dl.y - rack_height - self.parameters.rack.offset)
@@ -197,9 +294,9 @@ class InfrastructureDrawer(Drawer):
         self.ctx.set_source_rgb(*colorset.frame)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
-            dl.x,
-            dl.y - rack_height,
-            rack_width,
+            dl.x - 0.5,
+            dl.y - rack_height - 0.5,
+            rack_width + 1,
             rack_height,
         )
         self.ctx.stroke()
@@ -209,14 +306,14 @@ class InfrastructureDrawer(Drawer):
         self.ctx.rectangle(
             dl.x,
             dl.y - rack_height,
-            self.parameters.rack.pane_width * self.ratio,
-            rack_height,
+            self._rack_pane_width,
+            rack_height - 1,
         )
         self.ctx.rectangle(
-            dl.x + rack_width - self.parameters.rack.pane_width * self.ratio,
+            dl.x + rack_width - self._rack_pane_width,
             dl.y - rack_height,
-            self.parameters.rack.pane_width * self.ratio,
-            rack_height,
+            self._rack_pane_width,
+            rack_height - 1,
         )
         self.ctx.fill()
 
