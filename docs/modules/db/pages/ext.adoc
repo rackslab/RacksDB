@@ -138,9 +138,9 @@ $ racksdb-web --db /usr/share/doc/racksdb/examples/extensions/db \
 
 Request with HTTP client:
 
-[source,console]
+[source,console,subs=attributes]
 ----
-$ curl http://localhost:5000/racks | \
+$ curl http://localhost:5000/{api-version}/racks | \
   jq  '.[] | { name: .name, weight: .type.weight}'
 ----
 

@@ -41,7 +41,8 @@ and this project adheres to
   - Update drawing parameters reference doc
 
 ### Fixed
-- ui: bump missed version number in UI application metadata.
+- ui: Bump missed version number in UI application metadata.
+- docs: Add missing version in example REST API queries.
 
 ## [0.3.0] - 2024-01-22
 

@@ -398,9 +398,9 @@ details.
 
 The REST API can then be requested with any HTTP clients such as `curl`:
 
-[source,console]
+[source,console,subs=attributes]
 ----
-$ curl http://localhost:5000/infrastructures?list
+$ curl http://localhost:5000/{api-version}/infrastructures?list
 ["mercury"]
 ----
 

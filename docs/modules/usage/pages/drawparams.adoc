@@ -56,22 +56,22 @@ For example, to generate graphical representation of _mercury_ infrastructure
 with inline drawing parameters in JSON format, the following `curl` command can
 be used:
 
-[source,console]
+[source,console,subs=attributes]
 ----
 $ curl -X POST -H 'Content-Type: application/json' \
        --data '{"margin":{ "top": 200 }}' \
-       http://localhost:5000/draw/infrastructure/mercury.png \
+       http://localhost:5000/{api-version}/draw/infrastructure/mercury.png \
        --output mercury.png
 ----
 
 Alternatively, the drawing parameters can be extracted a JSON file. For example
 with file `custom.json`:
 
-[source,console]
+[source,console,subs=attributes]
 ----
 $ curl -X POST -H 'Content-Type: application/json' \
        --data @custom.json
-       http://localhost:5000/draw/infrastructure/mercury.png \
+       http://localhost:5000/{api-version}/draw/infrastructure/mercury.png \
        --output mercury.png
 ----
 
@@ -87,11 +87,11 @@ include::example$custom.json[]
 To send drawing parameters in YAML format, the content type HTTP header must be
 changed:
 
-[source,console]
+[source,console,subs=attributes]
 ----
 $ curl -X POST -H 'Content-Type: application/x-yaml' \
        --data-binary @custom.yml \
-       http://localhost:5000/draw/infrastructure/mercury.png \
+       http://localhost:5000/{api-version}/draw/infrastructure/mercury.png \
        --output mercury.png
 ----
 
