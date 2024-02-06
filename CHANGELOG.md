@@ -9,6 +9,9 @@ and this project adheres to
 ## Unreleased
 
 ### Added
+- lib: Add advanced `tags` property and `_filter()` method specializations on
+  `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
+  `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
 - draw: Add general `pixel_perfect` boolean drawing parameters, disabled by
   default. When enabled, RacksDB properly align graphical representation with
   pixels matrix with concession on relative dimensions correctness (#4).

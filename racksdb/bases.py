@@ -43,14 +43,14 @@ class RacksDBInfrastructureBase:
         return True
 
 
-class RacksDBNodeBase:
+class RacksDBGenericEquipment:
     @property
     def tags(self):
         result = DBList()
         for tag in getattr(self._parent, "tags", []):
             result.append(tag)
-        # RacksDBNodeBase loaded tags are renamed with loaded prefix to avoid
-        # conflict with this property.
+        # RacksDB{Node,StorageEquipment,NetworkEquipment,MiscEquipment} loaded tags are
+        # renamed with loaded prefix to avoid conflict with this property.
         for tag in getattr(self, f"{self.LOADED_PREFIX}tags", []):
             result.append(tag)
         return result
@@ -68,6 +68,22 @@ class RacksDBNodeBase:
                 if tag not in self.tags:
                     return False
         return True
+
+
+class RacksDBNodeBase(RacksDBGenericEquipment):
+    pass
+
+
+class RacksDBStorageEquipmentBase(RacksDBGenericEquipment):
+    pass
+
+
+class RacksDBNetworkEquipmentBase(RacksDBGenericEquipment):
+    pass
+
+
+class RacksDBMiscEquipmentBase(RacksDBGenericEquipment):
+    pass
 
 
 class RacksDBRackBase:
