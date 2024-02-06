@@ -33,6 +33,10 @@ and this project adheres to
   - Add infrastructure `discard_empty_racks` boolean drawing parameter, enabled
     by default, to control if racks used by infrastructure that contain only
     unselected equipment are represented in infrastructure diagrams.
+  - Add infrastructure `other_racks` boolean drawing parameter to control if
+    other racks located in the same rows as the infrastructure are represented,
+    even if they do not contain infrastructure equipment. Other racks are
+    represented when set to true. It is false by default (#61).
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 - docs:
   - Mention development libraries required for external dependencies in

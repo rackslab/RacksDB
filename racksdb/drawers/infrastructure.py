@@ -33,6 +33,14 @@ class InfrastructureDrawer(Drawer):
         # Calculated at draw time based on dimensions
         self.ratio = 0
 
+    def _rack_in_infrastructure(self, rack) -> bool:
+        """Return True if rack is used in infrastructure, False otherwise."""
+        for part in self.infrastructure.layout:
+            if part.rack.name == rack.name:
+                return True
+
+        return False
+
     def _part_contains_selected_equipment(self, part) -> bool:
         """Return True if the infrastructure part contains equipment that is selected
         for representation in the diagram, False otherwise."""
@@ -386,9 +394,24 @@ class InfrastructureDrawer(Drawer):
         )
         self.ctx.fill()
 
+        # Rack is not in the infrastructure, it is represented because other_racks is
+        # enabled. In this case, fill the rack with the frame color to imitate a closed
+        # door.
+        if not self._rack_in_infrastructure(rack):
+            self.ctx.set_source_rgb(*colorset.frame)
+            self.ctx.rectangle(
+                dl.x + self._rack_pane_width,
+                dl.y - rack_height,
+                self._rack_inside_width(rack),
+                rack_height - 1,
+            )
+            self.ctx.fill()
+            # Lease now to avoid equipment drawing loop.
+            return
+
         # draw equipments in rack
         for part in self.infrastructure.layout:
-            if part.rack is rack:
+            if part.rack.name == rack.name:
                 for equipment in chain(
                     part.nodes, part.storage, part.network, part.misc
                 ):
@@ -435,7 +458,13 @@ class InfrastructureDrawer(Drawer):
                 and not self._part_contains_selected_equipment(part)
             ):
                 continue
-            if part.rack not in self.racks:
+            # If other_racks is True, select all racks in part rack row.
+            if self.parameters.infrastructure.other_racks:
+                for rack in part.rack.row.racks:
+                    if rack not in self.racks:
+                        self.racks.append(rack)
+            # Else select all racks in part.
+            elif part.rack not in self.racks:
                 self.racks.append(part.rack)
             if part.rack.row not in self.rack_rows:
                 self.rack_rows.append(part.rack.row)

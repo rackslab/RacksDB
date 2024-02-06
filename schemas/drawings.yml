@@ -89,6 +89,12 @@ _objects:
           Control if racks used by infrastructure that contain only unselected equipment
           are represented.
         default: true
+      other_racks:
+        type: bool
+        description: >-
+          Control if racks present in the rows but not used by the infrastructure are
+          represented in infrastructure diagrams.
+        default: false
   Margin:
     properties:
       top:
