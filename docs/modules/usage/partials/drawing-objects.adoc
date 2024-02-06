@@ -29,6 +29,30 @@ pixel_perfect: false
 |xref:#obj-general[{symbol-obj}{nbsp}General]
 |[.grey]#-#
 
+|room
+|Rooms graphical representation settings
+
+*Default value:*
+
+[source,yaml]
+----
+racks_labels: true
+----
+|xref:#obj-room[{symbol-obj}{nbsp}Room]
+|[.grey]#-#
+
+|infrastructure
+|Infrastructures graphical representation settings
+
+*Default value:*
+
+[source,yaml]
+----
+equipment_labels: true
+----
+|xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+|[.grey]#-#
+
 |dimensions
 |Dimensions of image
 
@@ -213,6 +237,24 @@ Library class type: `DrawingsGeneral`
 |[.grey]#-#
 |===
 
+[#obj-infrastructure]
+=== Infrastructure
+
+Library class type: `DrawingsInfrastructure`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|equipment_labels
+|Control if equipment are labelled with their names
+
+*Default value:* `True`
+|bool
+|[.grey]#-#
+|===
+
 [#obj-margin]
 === Margin
 
@@ -325,6 +367,24 @@ Library class type: `DrawingsRackColoringRule`
 
 *Default value:* `#000000`
 |xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+|===
+
+[#obj-room]
+=== Room
+
+Library class type: `DrawingsRoom`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|racks_labels
+|Control if racks are labelled with their names
+
+*Default value:* `True`
+|bool
 |[.grey]#-#
 |===
 
