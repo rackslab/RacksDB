@@ -192,6 +192,15 @@ class InfrastructureDrawer(Drawer):
         return tl
 
     def _draw_rack_equipment(self, row, rack, equipment):
+
+        # If equipment_tags drawing parameters is set, skip equipments that do not have
+        # any of these tags.
+        if self.parameters.infrastructure.equipment_tags is not None and not any(
+            equipment_tag in self.parameters.infrastructure.equipment_tags
+            for equipment_tag in equipment.tags
+        ):
+            return
+
         logger.debug(
             "Drawing equipment %s in rack %s",
             equipment.name,

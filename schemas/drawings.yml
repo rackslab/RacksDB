@@ -68,6 +68,13 @@ _objects:
         type: bool
         description: Control if equipment are labelled with their names
         default: true
+      equipment_tags:
+        type: list[str]
+        description: Draw only the equipment matching at least one of the tags.
+        optional: true
+        example:
+        - compute
+        - switch
   Margin:
     properties:
       top:

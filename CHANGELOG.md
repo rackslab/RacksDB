@@ -13,14 +13,17 @@ and this project adheres to
   `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
   `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
 - draw:
-  - Add general `pixel_perfect` boolean drawing parameters, disabled by default.
+  - Add general `pixel_perfect` boolean drawing parameter, disabled by default.
     When enabled, RacksDB properly align graphical representation with pixels
     matrix with concession on relative dimensions correctness (#4).
-  - Add room `racks_labels` boolean drawing parameters, enabled by default. When
+  - Add room `racks_labels` boolean drawing parameter, enabled by default. When
     enabled, RacksDB label all racks with their names in room diagrams (#58).
-  - Add infrastructure `equipment_labels` boolean drawing parameters, enabled by
+  - Add infrastructure `equipment_labels` boolean drawing parameter, enabled by
     default. When enabled, RacksDB label equipment with their names in
     infrastructure diagrams (#55).
+  - Add infrastructure `equipment_tags` optional drawing parameter to give the
+    possibility to select equipment represented in infrastructure diagrams with
+    their tags (#57).
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 - docs:
   - Mention development libraries required for external dependencies in
