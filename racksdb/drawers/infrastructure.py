@@ -260,6 +260,20 @@ class InfrastructureDrawer(Drawer):
         )
         self.ctx.stroke()
 
+        self._label_equipment(row, rack, equipment)
+
+    def _label_equipment(self, row, rack, equipment):
+        """Label equipment with its name."""
+
+        # Skip if equipment_label drawing parameter is disabled
+        if not self.parameters.infrastructure.equipment_labels:
+            return
+
+        # Retrieve top-left corner and dimensions of equipment
+        tl = self._equipment_tl(row, rack, equipment)
+        equipment_width = self._equipment_width(equipment)
+        equipment_height = self._equipment_height(equipment)
+
         # Write equipment name, rotate the text if height > width
         if equipment_height > equipment_width:
             self.ctx.move_to(tl.x, tl.y + 1)

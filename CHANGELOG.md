@@ -18,6 +18,9 @@ and this project adheres to
     matrix with concession on relative dimensions correctness (#4).
   - Add room `racks_labels` boolean drawing parameters, enabled by default. When
     enabled, RacksDB label all racks with their names in room diagrams (#58).
+  - Add infrastructure `equipment_labels` boolean drawing parameters, enabled by
+    default. When enabled, RacksDB label equipment with their names in
+    infrastructure diagrams (#55).
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 - docs:
   - Mention development libraries required for external dependencies in

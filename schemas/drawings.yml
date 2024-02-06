@@ -12,6 +12,10 @@ _content:
       type: :Room
       description: Rooms graphical representation settings
       default: :recursive
+    infrastructure:
+      type: :Infrastructure
+      description: Infrastructures graphical representation settings
+      default: :recursive
     dimensions:
       type: :Dimensions
       description: Dimensions of image
@@ -57,6 +61,12 @@ _objects:
       racks_labels:
         type: bool
         description: Control if racks are labelled with their names
+        default: true
+  Infrastructure:
+    properties:
+      equipment_labels:
+        type: bool
+        description: Control if equipment are labelled with their names
         default: true
   Margin:
     properties:
