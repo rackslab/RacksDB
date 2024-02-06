@@ -94,7 +94,20 @@ class RoomDrawer(Drawer):
             )
         self.ctx.fill()
 
-        # write rack name
+        self._label_rack(rack)
+
+    def _label_rack(self, rack):
+        """Label rack with its name."""
+
+        # Skip if racks_label drawing parameter is disabled
+        if not self.parameters.room.racks_labels:
+            return
+
+        # Retrieve rack top-left corner and dimensions
+        tl = self._rack_tl(rack)
+        rack_width = int(rack.type.width * self.ratio)
+        rack_height = int(rack.type.depth * self.ratio)
+
         self.ctx.set_source_rgb(0, 0, 0)  # black
         if rack_height > rack_width:
             self.ctx.save()

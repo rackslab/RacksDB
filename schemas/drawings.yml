@@ -8,6 +8,10 @@ _content:
       type: :General
       description: General settings
       default: :recursive
+    room:
+      type: :Room
+      description: Rooms graphical representation settings
+      default: :recursive
     dimensions:
       type: :Dimensions
       description: Dimensions of image
@@ -48,6 +52,12 @@ _objects:
         type: int
         default: 1200
         description: Maximum width of image in pixels
+  Room:
+    properties:
+      racks_labels:
+        type: bool
+        description: Control if racks are labelled with their names
+        default: true
   Margin:
     properties:
       top:

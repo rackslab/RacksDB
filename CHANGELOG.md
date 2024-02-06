@@ -12,9 +12,12 @@ and this project adheres to
 - lib: Add advanced `tags` property and `_filter()` method specializations on
   `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
   `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
-- draw: Add general `pixel_perfect` boolean drawing parameters, disabled by
-  default. When enabled, RacksDB properly align graphical representation with
-  pixels matrix with concession on relative dimensions correctness (#4).
+- draw:
+  - Add general `pixel_perfect` boolean drawing parameters, disabled by default.
+    When enabled, RacksDB properly align graphical representation with pixels
+    matrix with concession on relative dimensions correctness (#4).
+  - Add room `racks_labels` boolean drawing parameters, enabled by default. When
+    enabled, RacksDB label all racks with their names in room diagrams (#58).
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 - docs:
   - Mention development libraries required for external dependencies in
