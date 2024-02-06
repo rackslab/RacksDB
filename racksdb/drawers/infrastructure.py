@@ -191,14 +191,42 @@ class InfrastructureDrawer(Drawer):
 
         return tl
 
+    def _draw_equipment_ghost(self, equipment):
+        """Draw an equipment as ghosted."""
+        logger.debug(
+            "Drawing equipment %s in rack %s as ghosted",
+            equipment.name,
+            equipment.rack.name,
+        )
+
+        # Retrieve top-left corner and dimensions of equipment
+        tl = self._equipment_tl(equipment.rack.row, equipment.rack, equipment)
+        equipment_width = self._equipment_width(equipment)
+        equipment_height = self._equipment_height(equipment)
+
+        # draw equipment ghosted background
+        colorset = self._find_equipment_colorset(equipment)
+        self.ctx.set_source_rgb(*colorset.ghost)
+        self.ctx.rectangle(
+            tl.x,
+            tl.y,
+            equipment_width,
+            equipment_height,
+        )
+        self.ctx.fill()
+
     def _draw_rack_equipment(self, row, rack, equipment):
 
-        # If equipment_tags drawing parameters is set, skip equipments that do not have
-        # any of these tags.
+        # If equipment_tags drawing parameters is set, check the equipment has at least
+        # one matching associated tag.
         if self.parameters.infrastructure.equipment_tags is not None and not any(
             equipment_tag in self.parameters.infrastructure.equipment_tags
             for equipment_tag in equipment.tags
         ):
+            # If ghost_unselected is true, represent this equipment ghosted.
+            if self.parameters.infrastructure.ghost_unselected:
+                self._draw_equipment_ghost(equipment)
+            # Then skip
             return
 
         logger.debug(

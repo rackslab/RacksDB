@@ -24,6 +24,12 @@ and this project adheres to
   - Add infrastructure `equipment_tags` optional drawing parameter to give the
     possibility to select equipment represented in infrastructure diagrams with
     their tags (#57).
+  - Add infrastructure `ghost_unselected` boolean drawing parameter, disabled by
+    default, to control if unselected equipment is represented as ghosted in
+    racks to mark their presence in the infrastructure. When disabled, the
+    unselected equipment is simply discarded.
+  - Add colors equipment `ghost` drawing parameter to specify the color of
+    ghosted equipment.
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 - docs:
   - Mention development libraries required for external dependencies in

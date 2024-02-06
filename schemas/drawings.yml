@@ -75,6 +75,14 @@ _objects:
         example:
         - compute
         - switch
+      ghost_unselected:
+        type: bool
+        description: >-
+          Control if unselected equipment are represented as ghosts in racks. When the
+          value is true, infrastructure equipment that is not selected for the diagram
+          is represented without details nor label just to mark its presence. When the
+          value is false, this equipment is simply discarded.
+        default: false
   Margin:
     properties:
       top:
@@ -152,6 +160,10 @@ _objects:
         type: ~hexcolor
         description: The border color of the equipments.
         default: "#333333"
+      ghost:
+        type: ~hexcolor
+        description: The color of ghosted equipment.
+        default: "#737373"
   RackColoringRule:
     properties:
       type:
