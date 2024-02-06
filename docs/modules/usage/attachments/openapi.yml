@@ -52,6 +52,14 @@ components:
           - 0.24705882352941178
           items: number
           type: array
+        ghost:
+          description: The color of ghosted equipment.
+          example:
+          - 0.45098039215686275
+          - 0.45098039215686275
+          - 0.45098039215686275
+          items: number
+          type: array
         tags:
           description: List of tags equipments must have to be associated to the coloring
             rule.
@@ -67,6 +75,33 @@ components:
         pixel_perfect:
           description: Control if entities are represented perfectly aligned on pixels
             with concession on relative dimensions correctess.
+          example: false
+          type: boolean
+      type: object
+    DrawingsInfrastructure:
+      properties:
+        discard_empty_racks:
+          description: Control if racks used by infrastructure that contain only unselected
+            equipment are represented.
+          example: true
+          type: boolean
+        equipment_labels:
+          description: Control if equipment are labelled with their names
+          example: true
+          type: boolean
+        equipment_tags:
+          description: Draw only the equipment matching at least one of the tags.
+          example:
+          - compute
+          - switch
+          items:
+            type: string
+          type: array
+        ghost_unselected:
+          description: Control if unselected equipment are represented as ghosts in
+            racks. When the value is true, infrastructure equipment that is not selected
+            for the diagram is represented without details nor label just to mark
+            its presence. When the value is false, this equipment is simply discarded.
           example: false
           type: boolean
       type: object
@@ -139,6 +174,13 @@ components:
           description: Name of type of rack associated to the coloring rule.
           type: string
       type: object
+    DrawingsRoom:
+      properties:
+        racks_labels:
+          description: Control if racks are labelled with their names
+          example: true
+          type: boolean
+      type: object
     DrawingsRow:
       properties:
         label_offset:
@@ -165,6 +207,13 @@ components:
           description: General settings
           example:
             pixel_perfect: false
+        infrastructure:
+          $ref: '#/components/schemas/DrawingsInfrastructure'
+          description: Infrastructures graphical representation settings
+          example:
+            discard_empty_racks: true
+            equipment_labels: true
+            ghost_unselected: false
         margin:
           $ref: '#/components/schemas/DrawingsMargin'
           description: Graphical representation margins
@@ -181,6 +230,11 @@ components:
             pane_width: 40
             spacing: 3
             u_height: 44.45
+        room:
+          $ref: '#/components/schemas/DrawingsRoom'
+          description: Rooms graphical representation settings
+          example:
+            racks_labels: true
         row:
           $ref: '#/components/schemas/DrawingsRow'
           description: Rack row graphical representation settings
