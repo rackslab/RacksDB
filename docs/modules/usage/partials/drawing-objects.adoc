@@ -48,7 +48,9 @@ racks_labels: true
 
 [source,yaml]
 ----
+discard_empty_racks: true
 equipment_labels: true
+ghost_unselected: false
 ----
 |xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
 |[.grey]#-#
@@ -217,6 +219,13 @@ Library class type: `DrawingsEquipmentColoringRule`
 *Default value:* `#333333`
 |xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
 |[.grey]#-#
+
+|ghost
+|The color of ghosted equipment.
+
+*Default value:* `#737373`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
 |===
 
 [#obj-general]
@@ -249,6 +258,26 @@ Library class type: `DrawingsInfrastructure`
 
 |equipment_labels
 |Control if equipment are labelled with their names
+
+*Default value:* `True`
+|bool
+|[.grey]#-#
+
+|equipment_tags
+|Draw only the equipment matching at least one of the tags.
+
+|{symbol-seq}{nbsp}str
+|[.grey]#-#
+
+|ghost_unselected
+|Control if unselected equipment are represented as ghosts in racks. When the value is true, infrastructure equipment that is not selected for the diagram is represented without details nor label just to mark its presence. When the value is false, this equipment is simply discarded.
+
+*Default value:* `False`
+|bool
+|[.grey]#-#
+
+|discard_empty_racks
+|Control if racks used by infrastructure that contain only unselected equipment are represented.
 
 *Default value:* `True`
 |bool
