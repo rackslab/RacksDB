@@ -616,18 +616,28 @@ Get all infrastructures with tag _cluster_:
 [#spec-racksdbnode]
 === `RacksDBNode`
 
+[#spec-racksdbstorageequipment]
+=== `RacksDBStorageEquipment`
+
+[#spec-racksdbnetworkequipment]
+=== `RacksDBNetworkEquipment`
+
+[#spec-racksdbmiscequipment]
+=== `RacksDBMiscEquipment`
+
 ==== Filtering
 
-The `RacksDBNode` class provides an implementation of the `_filter()` method,
-for easy filtering of xref:#list[`DBList`] and xref:#dict[`DBDict`] containing
-`RacksDBNode` objects. It accepts the following arguments:
+The `RacksDBNode`, `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
+`RacksDBMiscEquipment` classes provide an implementation of the `_filter()`
+method, for easy filtering of xref:#list[`DBList`] and xref:#dict[`DBDict`]
+containing these objects. It accepts the following arguments:
 
 * `infrastructure`: the name of an infrastructure
 * `name`: the name of a node
 * `tags`: a list of tags
 
-A node is selected only if it matches all criteria. If multiple tags are
-provided, only the nodes for which all the tags are applied are selected.
+The equipment is selected only if it matches all criteria. If multiple tags are
+provided, only the equipment for which all the tags are applied are selected.
 
 .Examples
 ====

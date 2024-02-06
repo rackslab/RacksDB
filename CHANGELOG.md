@@ -16,8 +16,12 @@ and this project adheres to
   default. When enabled, RacksDB properly align graphical representation with
   pixels matrix with concession on relative dimensions correctness (#4).
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
-- docs: Mention development libraries required for external dependencies in
-  Quickstart guide.
+- docs:
+  - Mention development libraries required for external dependencies in
+    Quickstart guide.
+  - Mention new class specializations on `RacksDBStorageEquipment`,
+    `RacksDBNetworkEquipment` and `RacksDBSMiscEquipment` in library reference
+    documentation.
 
 ### Changed
 - draw:
