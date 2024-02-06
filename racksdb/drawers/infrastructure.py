@@ -5,8 +5,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from typing import Union
-import logging
 import math
+from itertools import chain
+import logging
 
 import cairo
 
@@ -334,11 +335,8 @@ class InfrastructureDrawer(Drawer):
         # draw equipments in rack
         for part in self.infrastructure.layout:
             if part.rack is rack:
-                for equipment in (
-                    list(part.nodes)
-                    + list(part.storage)
-                    + list(part.network)
-                    + list(part.misc)
+                for equipment in chain(
+                    part.nodes, part.storage, part.network, part.misc
                 ):
                     self._draw_rack_equipment(row, rack, equipment)
 
