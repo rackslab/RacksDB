@@ -83,6 +83,12 @@ _objects:
           is represented without details nor label just to mark its presence. When the
           value is false, this equipment is simply discarded.
         default: false
+      discard_empty_racks:
+        type: bool
+        description: >-
+          Control if racks used by infrastructure that contain only unselected equipment
+          are represented.
+        default: true
   Margin:
     properties:
       top:

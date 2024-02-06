@@ -33,6 +33,23 @@ class InfrastructureDrawer(Drawer):
         # Calculated at draw time based on dimensions
         self.ratio = 0
 
+    def _part_contains_selected_equipment(self, part) -> bool:
+        """Return True if the infrastructure part contains equipment that is selected
+        for representation in the diagram, False otherwise."""
+
+        # If equipment_tags is unset, all equipment is represented, then it is True.
+        if self.parameters.infrastructure.equipment_tags is None:
+            return True
+        # Iterate over all equipment to check if at least one has matching tag.
+        for equipment in chain(part.nodes, part.storage, part.network, part.misc):
+            if any(
+                equipment_tag in self.parameters.infrastructure.equipment_tags
+                for equipment_tag in equipment.tags
+            ):
+                return True
+        # No matching equipment found, return False.
+        return False
+
     def _rack_row_width(self, rack_row):
         """Return rack row width in mm"""
         total = 0
@@ -411,6 +428,13 @@ class InfrastructureDrawer(Drawer):
 
         # Get list of racks and rows used by the infrastructure
         for part in self.infrastructure.layout:
+            # If discard_empty_racks is True, skip parts without equipment selected for
+            # representation in the diagram.
+            if (
+                self.parameters.infrastructure.discard_empty_racks
+                and not self._part_contains_selected_equipment(part)
+            ):
+                continue
             if part.rack not in self.racks:
                 self.racks.append(part.rack)
             if part.rack.row not in self.rack_rows:

@@ -30,6 +30,9 @@ and this project adheres to
     unselected equipment is simply discarded.
   - Add colors equipment `ghost` drawing parameter to specify the color of
     ghosted equipment.
+  - Add infrastructure `discard_empty_racks` boolean drawing parameter, enabled
+    by default, to control if racks used by infrastructure that contain only
+    unselected equipment are represented in infrastructure diagrams.
 - pkg: Add dependency on PyGObject python library (used to call Pango library).
 - docs:
   - Mention development libraries required for external dependencies in
