@@ -21,7 +21,7 @@ modules/usage/partials/drawing-objects.adoc: ../schemas/drawings.yml
 
 openapi: modules/usage/attachments/openapi.yml
 
-modules/usage/attachments/openapi.yml: ../schemas/racksdb.yml
+modules/usage/attachments/openapi.yml: ../schemas/racksdb.yml ../schemas/drawings.yml
 	python3 utils/gen-openapi.py > $@
 
 SVGS := $(shell find . -name '*.svg')
