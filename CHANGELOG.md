@@ -56,6 +56,9 @@ and this project adheres to
     size, until the text label fits into the item.
   - Change unit (pixels→mm) and default value (10→40) of Rack `pane_width`
     drawing parameter.
+  - In infrastructure diagrams, computed rows widths and heights, thus drawing
+    scale eventually, are now based on represented racks by taking into account
+    empty racks, `discard_empty_racks` and `other_racks` drawing parameters.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).

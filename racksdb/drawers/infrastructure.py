@@ -58,18 +58,66 @@ class InfrastructureDrawer(Drawer):
         # No matching equipment found, return False.
         return False
 
-    def _rack_row_width(self, rack_row):
+    def _rack_contains_selected_equipment(self, rack) -> bool:
+        """Return True if the given rack contains equipment that is selected
+        for representation in the diagram, False otherwise."""
+        for part in self.infrastructure.layout:
+            if part.rack.name == rack.name:
+                if self._part_contains_selected_equipment(part):
+                    return True
+        return False
+
+    def _rack_must_be_represented(self, rack) -> bool:
+        """Return true if the given rack must be represented in infrastructure diagram.
+        This method must be called only with racks in rows where the infrastructure is
+        present."""
+        # When other_racks is true, the rack must be represented as soon as it is in the
+        # row.
+        if self.parameters.infrastructure.other_racks:
+            return True
+        # Else the rack must be represented if it used in infrastructure and if it
+        # contains selected equipment or discard_empty_rack is disabled.
+        return self._rack_in_infrastructure(rack) and (
+            not self.parameters.infrastructure.discard_empty_racks
+            or self._rack_contains_selected_equipment(rack)
+        )
+
+    def _rack_row_width(self, row) -> int:
         """Return rack row width in mm"""
         total = 0
-        for rack in rack_row.racks:
-            total += rack.type.width
+
+        if row.reversed:
+            # If row is reversed, search for the minimum slot among racks to represent
+            # in the row.
+            min_slot = math.inf
+            for rack in row.racks:
+                if self._rack_must_be_represented(rack) and rack.slot < min_slot:
+                    min_slot = rack.slot
+            # Sum widths of all racks over this minimum slot
+            for rack in row.racks:
+                if rack.slot >= min_slot:
+                    total += rack.type.width
+
+        else:
+            max_slot = 0
+            # Else, search for the maximum slot among racks to represent in the row.
+            for rack in row.racks:
+                if self._rack_must_be_represented(rack) and rack.slot > max_slot:
+                    max_slot = rack.slot
+            # Sum widths of all racks below this maximum slot
+            for rack in row.racks:
+                if rack.slot <= max_slot:
+                    total += rack.type.width
+
         return total
 
-    def _rack_row_height(self, rack_row):
-        """Return rack row height, ie. the maximum rack height in the row, in mm."""
+    def _rack_row_height(self, row) -> int:
+        """Return rack row height, ie. the maximum rack height among the represented
+        racks in the row, in mm."""
         row_max_height = 0
-        for rack in rack_row.racks:
-            row_max_height = max(row_max_height, rack.type.height)
+        for rack in row.racks:
+            if self._rack_must_be_represented(rack):
+                row_max_height = max(row_max_height, rack.type.height)
         return row_max_height
 
     def _rack_width(self, rack) -> Union[float, int]:
