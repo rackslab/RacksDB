@@ -51,6 +51,7 @@ racks_labels: true
 discard_empty_racks: true
 equipment_labels: true
 ghost_unselected: false
+other_racks: false
 ----
 |xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
 |[.grey]#-#
@@ -280,6 +281,13 @@ Library class type: `DrawingsInfrastructure`
 |Control if racks used by infrastructure that contain only unselected equipment are represented.
 
 *Default value:* `True`
+|bool
+|[.grey]#-#
+
+|other_racks
+|Control if racks present in the rows but not used by the infrastructure are represented in infrastructure diagrams.
+
+*Default value:* `False`
 |bool
 |[.grey]#-#
 |===
