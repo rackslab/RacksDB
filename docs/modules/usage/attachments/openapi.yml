@@ -104,6 +104,11 @@ components:
             its presence. When the value is false, this equipment is simply discarded.
           example: false
           type: boolean
+        other_racks:
+          description: Control if racks present in the rows but not used by the infrastructure
+            are represented in infrastructure diagrams.
+          example: false
+          type: boolean
       type: object
     DrawingsMargin:
       properties:
@@ -214,6 +219,7 @@ components:
             discard_empty_racks: true
             equipment_labels: true
             ghost_unselected: false
+            other_racks: false
         margin:
           $ref: '#/components/schemas/DrawingsMargin'
           description: Graphical representation margins
