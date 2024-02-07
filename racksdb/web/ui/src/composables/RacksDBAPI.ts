@@ -47,6 +47,7 @@ export interface Infrastructure {
       nodes: [NodeEquipment]
       network: [NetworkEquipment]
       storage: [StorageEquipment]
+      misc: [MiscEquipment]
     }
   ]
 }
@@ -122,6 +123,19 @@ export interface StorageEquipment {
         number: number
       }
     ]
+  }
+  tags: []
+  rack: string
+  name: string
+  slot: number
+}
+
+export interface MiscEquipment {
+  type: {
+    id: string
+    model: string
+    height: number
+    width: number
   }
   tags: []
   rack: string
