@@ -994,6 +994,23 @@ paths:
           - svg
           - pdf
           type: string
+      - allowEmptyValue: true
+        description: Dump equipments and racks coordinates in diagrams. When this
+          parameter is set, the mimetype of the response is `multipart/form-data`.
+        in: query
+        name: coordinates
+        required: false
+        schema: {}
+      - description: Format of coordinates
+        in: query
+        name: coordinates_format
+        required: false
+        schema:
+          default: json
+          enum:
+          - json
+          - yaml
+          type: string
       requestBody:
         content:
           application/json:
@@ -1016,6 +1033,10 @@ paths:
                 type: string
             image/svg+xml:
               schema:
+                type: string
+            multipart/form-data:
+              schema:
+                format: binary
                 type: string
           description: successful operation
         '400':
