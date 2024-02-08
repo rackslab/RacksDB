@@ -122,7 +122,10 @@ class RacksDBExec:
                     kwargs["choices"] = parameter.choices
                 if parameter.default is not None:
                     kwargs["default"] = parameter.default
-                    kwargs["help"] += " (default: %(default)s)"
+                    if parameter.default_in_help:
+                        kwargs["help"] += " (default: %(default)s)"
+                if parameter.const is not None:
+                    kwargs["const"] = parameter.const
                 if parameter.required:
                     kwargs["required"] = True
                 if parameter.type:

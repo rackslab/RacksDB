@@ -31,8 +31,11 @@ class DBActionParameter:
           in CLI and reported as required in OpenAPI description.
         choices: Possible accepted values for the parameter.
         default: Default value of the parameter.
-        _type: Type of the value after parsing on CLI. This attribute has no effect on
-          REST API.
+        default_in_help: When True, the default value is reported in CLI help message.
+          This attribute does not have any effect on REST API.
+        const: Constant value used in CLI. This attribute has no effect on REST API.
+        _type: Type of the value after parsing on CLI. This attribute does not have any
+          effect on REST API.
         body: When defined, this parameter is declared as the body content of the action
           request in OpenAPI description. The value of the attribute is the name of the
           component accepted as value for the parameter. This attribute has no effect on
@@ -41,6 +44,7 @@ class DBActionParameter:
           Possible values are "web" (ie. REST API specific) and "cli" (ie. CLI
           specific).
     """
+
     def __init__(
         self,
         name: str,
@@ -51,6 +55,8 @@ class DBActionParameter:
         required: bool = False,
         choices: Optional[List[str]] = None,
         default: Any = None,
+        default_in_help: bool = True,
+        const: Any = None,
         _type: Any = None,
         body: Optional[str] = None,
         specific: Optional[str] = None,
@@ -63,6 +69,8 @@ class DBActionParameter:
         self.required = required
         self.choices = choices
         self.default = default
+        self.default_in_help = default_in_help
+        self.const = const
         self.type = _type
         self.body = body
         self.specific = specific
