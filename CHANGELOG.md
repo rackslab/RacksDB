@@ -16,6 +16,9 @@ and this project adheres to
   `racksdb draw` sub-command to generate coordinate file in either JSON or YAML
   format with coordinates of racks and equipment in the image along with the
   image file.
+- web: Add `coordinates` and `coordinates_format` query parameter on `draw`
+  action enpoint to get coordinates of racks and equipment along with image file
+  in multipart response (#56).
 - draw:
   - Add general `pixel_perfect` boolean drawing parameter, disabled by default.
     When enabled, RacksDB properly align graphical representation with pixels
@@ -41,7 +44,11 @@ and this project adheres to
     other racks located in the same rows as the infrastructure are represented,
     even if they do not contain infrastructure equipment. Other racks are
     represented when set to true. It is false by default (#61).
-- pkg: Add dependency on PyGObject python library (used to call Pango library).
+- pkg:
+  - Add dependency on PyGObject python library (used to call Pango library).
+  - Add optional dependency on requests-toolbelt python library on web variant
+    to generate multipart response with graphical representations images and
+    coordinates.
 - docs:
   - Mention development libraries required for external dependencies in
     Quickstart guide.

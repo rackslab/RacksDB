@@ -146,6 +146,16 @@ class RacksDBViews(DBViewSet):
                 DBActionParameter(
                     "coordinates",
                     description=(
+                        "Dump equipments and racks coordinates in diagrams. When this "
+                        "parameter is set, the mimetype of the response is "
+                        "`multipart/form-data`."
+                    ),
+                    nargs=0,
+                    specific="web",
+                ),
+                DBActionParameter(
+                    "coordinates",
+                    description=(
                         "Dump equipments and racks coordinates in diagrams (default: "
                         "disabled, default filename: coordinates.<FORMAT>)"
                     ),
@@ -168,6 +178,7 @@ class RacksDBViews(DBViewSet):
                 DBActionResponse("image/png", binary=True),
                 DBActionResponse("image/svg+xml"),
                 DBActionResponse("application/pdf", binary=True),
+                DBActionResponse("multipart/form-data", binary=True),
             ],
             errors=[
                 DBActionError(400, "Unable to parse drawing parameters in JSON format"),

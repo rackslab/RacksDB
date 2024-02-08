@@ -33,6 +33,7 @@ classifiers = [
 web = [
     "Flask",
     "Flask-Cors",
+    "requests-toolbelt",
 ]
 
 [project.scripts]

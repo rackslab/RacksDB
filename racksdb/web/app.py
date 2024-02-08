@@ -10,6 +10,7 @@ import io
 import logging
 
 from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
+from requests_toolbelt import MultipartEncoder
 
 from .. import RacksDB
 from ..version import get_version
@@ -125,13 +126,55 @@ class RacksDBWebBlueprint(Blueprint):
             abort(415, f"Unable to load drawing parameters schema: {str(err)}")
         except DBFormatError as err:
             abort(415, f"Unable to load drawing parameters: {str(err)}")
+
+        # Handle coordinates query parameters
+        with_coordinates = "coordinates" in request.args
+        coordinates_format = request.args.get("coordinates_format", "json")
+        if coordinates_format not in {"json", "yaml"}:
+            abort(145, "Unsupported coordinates format")
+
+        # Create volatile in-memory file handlers
         file = io.BytesIO()
+        coordinates_fh = io.StringIO() if with_coordinates else None
+
         if entity == "infrastructure":
-            drawer = InfrastructureDrawer(self.db, name, file, format, parameters)
+            drawer = InfrastructureDrawer(
+                self.db,
+                name,
+                file,
+                format,
+                parameters,
+                coordinates_fh,
+                coordinates_format,
+            )
         elif entity == "room":
-            drawer = RoomDrawer(self.db, name, file, format, parameters)
+            drawer = RoomDrawer(
+                self.db,
+                name,
+                file,
+                format,
+                parameters,
+                coordinates_fh,
+                coordinates_format,
+            )
         drawer.draw()
         file.seek(0)
+
+        if with_coordinates:
+            coordinates_fh.seek(0)
+            # Send coordinates in multipart response along with generated image.
+            multipart = MultipartEncoder(
+                fields={
+                    "image": (f"{name}.{format}", file, self.MIMETYPES[format]),
+                    "coordinates": (
+                        f"coordinates.{coordinates_format}",
+                        coordinates_fh,
+                        self.MIMETYPES[coordinates_format],
+                    ),
+                }
+            )
+            return Response(multipart.to_string(), mimetype=multipart.content_type)
+
         return send_file(
             file,
             mimetype=self.MIMETYPES[format],
