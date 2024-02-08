@@ -12,6 +12,10 @@ and this project adheres to
 - lib: Add advanced `tags` property and `_filter()` method specializations on
   `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
   `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
+- cli: Add `-c, --coordinates` and `--coordinates-format` arguments on
+  `racksdb draw` sub-command to generate coordinate file in either JSON or YAML
+  format with coordinates of racks and equipment in the image along with the
+  image file.
 - draw:
   - Add general `pixel_perfect` boolean drawing parameter, disabled by default.
     When enabled, RacksDB properly align graphical representation with pixels

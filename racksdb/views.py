@@ -143,6 +143,26 @@ class RacksDBViews(DBViewSet):
                     default=DrawingParameters.DEFAULT_SCHEMA,
                     specific="cli",
                 ),
+                DBActionParameter(
+                    "coordinates",
+                    description=(
+                        "Dump equipments and racks coordinates in diagrams (default: "
+                        "disabled, default filename: coordinates.<FORMAT>)"
+                    ),
+                    short="c",
+                    nargs="?",
+                    _type=Path,
+                    default=False,
+                    default_in_help=False,
+                    const=True,
+                    specific="cli",
+                ),
+                DBActionParameter(
+                    "coordinates_format",
+                    description="Format of coordinates",
+                    choices=["json", "yaml"],
+                    default="json",
+                ),
             ],
             responses=[
                 DBActionResponse("image/png", binary=True),

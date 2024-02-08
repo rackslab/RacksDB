@@ -221,6 +221,17 @@ class RacksDBExec:
 
     def _run_draw(self):
         file = f"{self.args.name}.{self.args.format}"
+
+        # Handle coordinates opts
+        if self.args.coordinates is False:
+            coordinates_file = None
+        elif self.args.coordinates is True:
+            coordinates_file = f"coordinates.{self.args.coordinates_format}"
+        else:
+            coordinates_file = self.args.coordinates
+        coordinates_fh = (
+            open(coordinates_file, "w+") if coordinates_file is not None else None
+        )
         try:
             if self.args.parameters is None:
                 db_loader = DBEmptyLoader()
@@ -238,11 +249,26 @@ class RacksDBExec:
             sys.exit(1)
         if self.args.entity == "infrastructure":
             drawer = InfrastructureDrawer(
-                self.db, self.args.name, file, self.args.format, parameters
+                self.db,
+                self.args.name,
+                file,
+                self.args.format,
+                parameters,
+                coordinates_fh,
+                self.args.coordinates_format,
             )
         elif self.args.entity == "room":
             drawer = RoomDrawer(
-                self.db, self.args.name, file, self.args.format, parameters
+                self.db,
+                self.args.name,
+                file,
+                self.args.format,
+                parameters,
+                coordinates_fh,
+                self.args.coordinates_format,
             )
         drawer.draw()
         logger.info("Generated image file %s", file)
+        if self.args.coordinates:
+            logger.info("Generated coordinates file %s", coordinates_file)
+            coordinates_fh.close()
