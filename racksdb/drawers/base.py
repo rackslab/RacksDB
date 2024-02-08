@@ -10,6 +10,8 @@ import logging
 import cairo
 import gi
 
+from .coordinates import CoordinateDumperFactory
+
 gi.require_version("Pango", "1.0")
 gi.require_version("PangoCairo", "1.0")
 
@@ -41,11 +43,16 @@ class ImagePoint:
 
 
 class Drawer:
-    def __init__(self, db, file, output_format, parameters):
+    def __init__(
+        self, db, file, output_format, parameters, coordinates_fh, coordinates_format
+    ):
         self.db = db
         self.file = file
         self.output_format = output_format
         self.parameters = parameters
+        self.coordinates_fh = coordinates_fh
+        self.coordinates_format = coordinates_format
+        self.coordinates = {}
         self.surface = None
         self.ctx = None
 
@@ -64,6 +71,12 @@ class Drawer:
         elif self.output_format in ["svg", "pdf"]:
             self.surface.finish()
             self.surface.flush()
+        if self.coordinates_fh is not None:
+            self.coordinates_fh.write(
+                CoordinateDumperFactory.create(self.coordinates_format).dump(
+                    self.coordinates
+                )
+            )
 
     def _find_rack_colorset(self, rack):
         """Return the rack matching coloring rule defined in drawing parameters or the

@@ -17,9 +17,32 @@ from ..errors import RacksDBError
 logger = logging.getLogger(__name__)
 
 
+class EquipmentCoordinate:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    @property
+    def _serialized(self):
+        return [self.x, self.y, self.width, self.height]
+
+
 class InfrastructureDrawer(Drawer):
-    def __init__(self, db, name, file, output_format, parameters):
-        super().__init__(db, file, output_format, parameters)
+    def __init__(
+        self,
+        db,
+        name,
+        file,
+        output_format,
+        parameters,
+        coordinates_fh,
+        coordinates_format,
+    ):
+        super().__init__(
+            db, file, output_format, parameters, coordinates_fh, coordinates_format
+        )
         self.infrastructure = None
         for infrastructure in self.db.infrastructures:
             if infrastructure.name == name:
@@ -345,6 +368,13 @@ class InfrastructureDrawer(Drawer):
             equipment_height,
         )
         self.ctx.fill()
+
+        self.coordinates[equipment.name] = EquipmentCoordinate(
+            tl.x,
+            tl.y,
+            equipment_width,
+            equipment_height,
+        )
 
         # draw equipment frame
         self.ctx.set_source_rgb(*colorset.border)

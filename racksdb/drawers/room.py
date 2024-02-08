@@ -15,9 +15,38 @@ from ..errors import RacksDBError
 logger = logging.getLogger(__name__)
 
 
+class RackCoordinate:
+    def __init__(self, x, y, width, height, angle):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.angle = angle
+
+    @property
+    def _serialized(self):
+        return [self.x, self.y, self.width, self.height, self.angle]
+
+
 class RoomDrawer(Drawer):
-    def __init__(self, db, name, file, output_format, parameters):
-        super().__init__(db, file, output_format, parameters)
+    def __init__(
+        self,
+        db,
+        name,
+        file,
+        output_format,
+        parameters,
+        coordinates_fh,
+        coordinates_format,
+    ):
+        super().__init__(
+            db,
+            file,
+            output_format,
+            parameters,
+            coordinates_fh,
+            coordinates_format,
+        )
         self.room = None
         for datacenter in self.db.datacenters:
             for room in datacenter.rooms:
