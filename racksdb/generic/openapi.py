@@ -131,7 +131,7 @@ class OpenAPIGenerator:
         }
 
     def _action_argument_description(self, action, parameter):
-        """Return the OpenAPI description of a DBActionArgument."""
+        """Return the OpenAPI description of a DBActionParameter."""
         result = {
             "name": parameter.name,
             "in": "path" if action.inpath(parameter) else "query",
