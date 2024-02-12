@@ -55,6 +55,8 @@ and this project adheres to
   - Mention new class specializations on `RacksDBStorageEquipment`,
     `RacksDBNetworkEquipment` and `RacksDBSMiscEquipment` in library reference
     documentation.
+  - Update `racksdb` manpage to mention `-c, --coordinates` and
+    `--coordinates-format` arguments on `racksdb draw` sub-command.
 
 ### Changed
 - draw:

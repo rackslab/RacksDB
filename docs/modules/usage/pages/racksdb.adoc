@@ -238,6 +238,17 @@ This command accepts the following options:
   Path to drawing parameters schema YAML file. Default value is
   [.path]#`/usr/share/racksdb/drawings.yml`#.
 
+[.cli-opt]#*-c, --coordinates*=#[.cli-optval]##_COORDINATES_##::
+  Dump pixels coordinates of equipment and racks in the graphical
+  representations in an additional file. The value of the option is the path of
+  the generated coordiantes file. This value is optional. When this option is
+  used without value, coordinates are dumped into a file named
+  `coordinates.FORMAT` where `FORMAT` is the coordinates format (_ex:_ `json`).
+
+[.cli-opt]#*--coordinates-format*=#[.cli-optval]##_COORDINATES_FORMAT_##::
+  Format of coordinates files. Possible values are `json` and `yaml`. Default
+  value is `json`.
+
 The following sub-commands are available:
 
 [.cli-opt]#*infrastructure*#::
@@ -280,6 +291,27 @@ $ racksdb draw room --name=noisy --parameters=- < custom.yaml
 [.cli-example-desc]
 Generate the map of datacenter room _noisy_ with custom drawing parameters read
 on standard input fed with content of `custom.yaml`.
+
+[source,console]
+$ racksdb draw infrastructure --name=mercury --coordinates
+
+[.cli-example-desc]
+Generate graphical representation of _mercury_ infrastructure and dump
+coordinates of equipment in JSON format in a file named `coordinates.json`.
+
+[source,console]
+$ racksdb draw infrastructure --name=tiger --coordinates --coordinates-format yaml
+
+[.cli-example-desc]
+Generate graphical representation of _tiger_ infrastructure and dump
+coordinates of equipment in YAML format in a file named `coordinates.yaml`.
+
+[source,console]
+$ racksdb draw room --name=noisy --coordinates=noisy-coordinates.json
+
+[.cli-example-desc]
+Generate graphical representation of _noisy_ datacenter room and dump
+coordinates of racks in JSON format in a file named `noisy-coordinates.json`.
 ====
 
 == Exit status
