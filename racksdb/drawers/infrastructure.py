@@ -38,7 +38,7 @@ class InfrastructureDrawer(Drawer):
         for representation in the diagram, False otherwise."""
 
         # If equipment_tags is unset, all equipment is represented, then it is True.
-        if self.parameters.infrastructure.equipment_tags is None:
+        if not hasattr(self.parameters.infrastructure, "equipment_tags"):
             return True
         # Iterate over all equipment to check if at least one has matching tag.
         for equipment in chain(part.nodes, part.storage, part.network, part.misc):
@@ -236,7 +236,7 @@ class InfrastructureDrawer(Drawer):
 
         # If equipment_tags drawing parameters is set, check the equipment has at least
         # one matching associated tag.
-        if self.parameters.infrastructure.equipment_tags is not None and not any(
+        if hasattr(self.parameters.infrastructure, "equipment_tags") and not any(
             equipment_tag in self.parameters.infrastructure.equipment_tags
             for equipment_tag in equipment.tags
         ):
