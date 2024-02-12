@@ -214,7 +214,7 @@ class InfrastructureDrawer(Drawer):
 
     def _equipment_width_slot(self, equipment) -> int:
         """Return the slot of the equipment in the rack width."""
-        return (equipment.slot - equipment._first.slot) % (1 / equipment.type.width)
+        return (equipment.slot - equipment._first.slot) % int(1 / equipment.type.width)
 
     def _equipment_height_slot(self, equipment) -> int:
         """Return the slot of the equipment (ie. rack unit slot) in the rack height."""
