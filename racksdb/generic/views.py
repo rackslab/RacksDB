@@ -4,26 +4,56 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from typing import List, Dict, Union, Literal
+from typing import List, Dict, Optional, Union, Any
 from itertools import chain
 
 from .errors import DBViewError
 
 
 class DBActionParameter:
+    """Represents a parameter of a DBAction.
+
+    Attributes:
+        name: Name of the parameter.
+        description: Description of the parameter. It is used as help message in CLI and
+          parameter description in OpenAPI description, or as requestBody description if
+          body is defined.
+        short: Alternative short command line argument name to enable the parameter.
+          This attribute has no effect on REST API.
+        nargs: Number of values accepted by the parameter. By default, the parameter
+          accepts one value. Possible alternatives are 0, "*" or "?". With 0, the value
+          of the parameter is a boolean on CLI and is marked as allowEmptyValue in
+          OpenAPI description. With "*" multiple values are accepted. With "?", the
+          value is optional.
+        positional: When True, the parameter is set as positional on the CLI. This
+          attribute has no effect on REST API.
+        required: When True, the corresponding command line argument is set as required
+          in CLI and reported as required in OpenAPI description.
+        choices: Possible accepted values for the parameter.
+        default: Default value of the parameter.
+        _type: Type of the value after parsing on CLI. This attribute has no effect on
+          REST API.
+        body: When defined, this parameter is declared as the body content of the action
+          request in OpenAPI description. The value of the attribute is the name of the
+          component accepted as value for the parameter. This attribute has no effect on
+          CLI.
+        specific: Define if this parameter is either specific to REST API or CLI.
+          Possible values are "web" (ie. REST API specific) and "cli" (ie. CLI
+          specific).
+    """
     def __init__(
         self,
-        name,
-        description,
-        short=None,
-        nargs=None,
-        positional=False,
-        required=False,
-        choices=None,
-        default=None,
-        _type=None,
-        body=None,
-        specific: Union[None, Literal["cli", "web"]] = None,
+        name: str,
+        description: str,
+        short: Optional[str] = None,
+        nargs: Optional[Union[str, int]] = None,
+        positional: bool = False,
+        required: bool = False,
+        choices: Optional[List[str]] = None,
+        default: Any = None,
+        _type: Any = None,
+        body: Optional[str] = None,
+        specific: Optional[str] = None,
     ):
         self.name = name
         self.description = description
