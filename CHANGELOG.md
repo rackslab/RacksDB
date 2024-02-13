@@ -58,6 +58,8 @@ and this project adheres to
     documentation.
   - Update `racksdb` manpage to mention `-c, --coordinates` and
     `--coordinates-format` arguments on `racksdb draw` sub-command.
+  - Mention optional alpha channel in documentation of drawing parameters
+    `~hexcolor` defined type.
 
 ### Changed
 - draw:

@@ -10,10 +10,14 @@
 {url-deftypes}/hexcolor.py[icon:code[]]
 |* `#ffffff`
 * `#a66321`
-|tuple(float, float, float)
+* `#348febaa`
+|tuple(float, float, float, float)
 |Hexadecimal color code (see
 https://en.wikipedia.org/wiki/Web_colors#Hex_triplet[Wikipedia article for more
-details]). The resulting value is tuple of 3 floats between 0 and 1 representing
-the rate of red, green and blue primary colors in the resulting color.
+details]) with optional alpha channel. Default alpha channel value is `ff` (ie.
+fully opaque). The resulting value is tuple of 4 floats between 0 and 1
+representing the rate of red, green and blue primary colors in the resulting
+color and the color opacity (from 0 for fully transparent to 1 for fully
+opaque).
 
 |===
