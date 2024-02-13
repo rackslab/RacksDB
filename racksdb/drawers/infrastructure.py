@@ -214,8 +214,8 @@ class InfrastructureDrawer(Drawer):
         pos_y += int(row.height * self.ratio)
         return ImagePoint(self.parameters.margin.left, pos_y)
 
-    def _rack_dl(self, row, rack) -> ImagePoint:
-        dl = self._rack_row_dl(row)
+    def _rack_dl(self, rack) -> ImagePoint:
+        dl = self._rack_row_dl(rack.row)
 
         # Sum the width of all racks in row before the current rack
         if rack.row.reversed:
@@ -250,8 +250,8 @@ class InfrastructureDrawer(Drawer):
             * equipment.type.height
         )
 
-    def _equipment_tl(self, row, rack, equipment) -> ImagePoint:
-        tl = self._rack_dl(row, rack)
+    def _equipment_tl(self, equipment) -> ImagePoint:
+        tl = self._rack_dl(equipment.rack)
 
         equipment_height_slot = self._equipment_height_slot(equipment)
         equipment_width_slot = self._equipment_width_slot(equipment)
@@ -296,7 +296,7 @@ class InfrastructureDrawer(Drawer):
         )
 
         # Retrieve top-left corner and dimensions of equipment
-        tl = self._equipment_tl(equipment.rack.row, equipment.rack, equipment)
+        tl = self._equipment_tl(equipment)
         equipment_width = self._equipment_width(equipment)
         equipment_height = self._equipment_height(equipment)
 
@@ -311,7 +311,7 @@ class InfrastructureDrawer(Drawer):
         )
         self.ctx.fill()
 
-    def _draw_rack_equipment(self, row, rack, equipment):
+    def _draw_rack_equipment(self, equipment):
 
         # If equipment_tags drawing parameters is set, check the equipment has at least
         # one matching associated tag.
@@ -328,11 +328,11 @@ class InfrastructureDrawer(Drawer):
         logger.debug(
             "Drawing equipment %s in rack %s",
             equipment.name,
-            rack.name,
+            equipment.rack.name,
         )
 
         # top left of equipment
-        tl = self._equipment_tl(row, rack, equipment)
+        tl = self._equipment_tl(equipment)
 
         equipment_width = self._equipment_width(equipment)
         equipment_height = self._equipment_height(equipment)
@@ -344,10 +344,10 @@ class InfrastructureDrawer(Drawer):
         # the rack slot.
         if width_slot == 0:
             self.ctx.set_source_rgba(*colorset.chassis)
-            rack_dl = self._rack_dl(row, rack)
+            rack_dl = self._rack_dl(equipment.rack)
             # At the top of the rack, do not cover the rack frame
-            if tl.y == rack_dl.y - self._rack_height(rack):
-                chassis_top = rack_dl.y - self._rack_height(rack)
+            if tl.y == rack_dl.y - self._rack_height(equipment.rack):
+                chassis_top = rack_dl.y - self._rack_height(equipment.rack)
             else:
                 chassis_top = tl.y
 
@@ -389,7 +389,7 @@ class InfrastructureDrawer(Drawer):
         frame_y = tl.y - 0.5
         # For full-width equipment, draw the frame inside the equipment surface on its
         # right side as well.
-        if equipment_width == self._rack_inside_width(rack):
+        if equipment_width == self._rack_inside_width(equipment.rack):
             frame_width = equipment_width - 1
         else:
             frame_width = equipment_width
@@ -401,9 +401,9 @@ class InfrastructureDrawer(Drawer):
         )
         self.ctx.stroke()
 
-        self._label_equipment(row, rack, equipment)
+        self._label_equipment(equipment)
 
-    def _label_equipment(self, row, rack, equipment):
+    def _label_equipment(self, equipment):
         """Label equipment with its name."""
 
         # Skip if equipment_label drawing parameter is disabled
@@ -411,7 +411,7 @@ class InfrastructureDrawer(Drawer):
             return
 
         # Retrieve top-left corner and dimensions of equipment
-        tl = self._equipment_tl(row, rack, equipment)
+        tl = self._equipment_tl(equipment)
         equipment_width = self._equipment_width(equipment)
         equipment_height = self._equipment_height(equipment)
 
@@ -430,11 +430,11 @@ class InfrastructureDrawer(Drawer):
         if equipment_height > equipment_width:
             self.ctx.restore()
 
-    def _draw_rack(self, row, rack):
+    def _draw_rack(self, rack):
         logger.debug("Drawing rack %s (%s)", rack.name, rack.slot)
 
         # bottom left of rack
-        dl = self._rack_dl(row, rack)
+        dl = self._rack_dl(rack)
         rack_width = self._rack_width(rack)
         rack_height = self._rack_height(rack)
 
@@ -493,7 +493,7 @@ class InfrastructureDrawer(Drawer):
                 for equipment in chain(
                     part.nodes, part.storage, part.network, part.misc
                 ):
-                    self._draw_rack_equipment(row, rack, equipment)
+                    self._draw_rack_equipment(equipment)
 
     def _draw_rack_row(self, row):
 
@@ -513,7 +513,7 @@ class InfrastructureDrawer(Drawer):
         # iterate over the racks to draw racks in row
         for rack in self.racks:
             if rack.row is row:
-                self._draw_rack(row, rack)
+                self._draw_rack(rack)
 
     def _draw_infrastructure(self):
         for row in self.rack_rows:
