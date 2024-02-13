@@ -302,7 +302,7 @@ class InfrastructureDrawer(Drawer):
 
         # draw equipment ghosted background
         colorset = self._find_equipment_colorset(equipment)
-        self.ctx.set_source_rgb(*colorset.ghost)
+        self.ctx.set_source_rgba(*colorset.ghost)
         self.ctx.rectangle(
             tl.x,
             tl.y,
@@ -343,7 +343,7 @@ class InfrastructureDrawer(Drawer):
         # Draw chassis in full rack width, only for the equipment on the left side of
         # the rack slot.
         if width_slot == 0:
-            self.ctx.set_source_rgb(*colorset.chassis)
+            self.ctx.set_source_rgba(*colorset.chassis)
             rack_dl = self._rack_dl(row, rack)
             # At the top of the rack, do not cover the rack frame
             if tl.y == rack_dl.y - self._rack_height(rack):
@@ -360,7 +360,7 @@ class InfrastructureDrawer(Drawer):
             self.ctx.fill()
 
         # draw equipment background
-        self.ctx.set_source_rgb(*colorset.background)
+        self.ctx.set_source_rgba(*colorset.background)
         self.ctx.rectangle(
             tl.x,
             tl.y,
@@ -377,7 +377,7 @@ class InfrastructureDrawer(Drawer):
         )
 
         # draw equipment frame
-        self.ctx.set_source_rgb(*colorset.border)
+        self.ctx.set_source_rgba(*colorset.border)
         self.ctx.set_line_width(1)
         # For the equipment on the left side of the rack slot, draw the equipment frame
         # inside the equipment surface on its left side. Else, draw the frame outside
@@ -440,13 +440,13 @@ class InfrastructureDrawer(Drawer):
 
         # write rack name
         self.ctx.move_to(dl.x, dl.y - rack_height - self.parameters.rack.offset)
-        self.ctx.set_source_rgb(0, 0, 0)  # black
+        self.ctx.set_source_rgba(0, 0, 0, 1)  # black
         self._print_text(f"rack {rack.name}")
 
         colorset = self._find_rack_colorset(rack)
 
         # draw rack frame
-        self.ctx.set_source_rgb(*colorset.frame)
+        self.ctx.set_source_rgba(*colorset.frame)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             dl.x - 0.5,
@@ -457,7 +457,7 @@ class InfrastructureDrawer(Drawer):
         self.ctx.stroke()
 
         # draw rack panes
-        self.ctx.set_source_rgb(*colorset.pane)
+        self.ctx.set_source_rgba(*colorset.pane)
         self.ctx.rectangle(
             dl.x,
             dl.y - rack_height,
@@ -476,7 +476,7 @@ class InfrastructureDrawer(Drawer):
         # enabled. In this case, fill the rack with the frame color to imitate a closed
         # door.
         if not self._rack_in_infrastructure(rack):
-            self.ctx.set_source_rgb(*colorset.frame)
+            self.ctx.set_source_rgba(*colorset.frame)
             self.ctx.rectangle(
                 dl.x + self._rack_pane_width,
                 dl.y - rack_height,
@@ -502,7 +502,7 @@ class InfrastructureDrawer(Drawer):
         dl = self._rack_row_dl(row)
 
         # write row name
-        self.ctx.set_source_rgb(0, 0, 0)  # black
+        self.ctx.set_source_rgba(0, 0, 0, 1)  # black
         self.ctx.select_font_face(
             "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
         )

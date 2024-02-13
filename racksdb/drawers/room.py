@@ -96,7 +96,7 @@ class RoomDrawer(Drawer):
         colorset = self._find_rack_colorset(rack)
 
         # draw rack frame
-        self.ctx.set_source_rgb(*colorset.frame)
+        self.ctx.set_source_rgba(*colorset.frame)
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x - 0.5,
@@ -137,7 +137,7 @@ class RoomDrawer(Drawer):
         rack_width = int(rack.type.width * self.ratio)
         rack_height = int(rack.type.depth * self.ratio)
 
-        self.ctx.set_source_rgb(0, 0, 0)  # black
+        self.ctx.set_source_rgba(0, 0, 0, 1)  # black
         if rack_height > rack_width:
             self.ctx.save()
             # If the rack row rotation angle is between 0 and 180, flip the text
@@ -204,7 +204,7 @@ class RoomDrawer(Drawer):
         room_depth = int(self.room.dimensions.depth * self.ratio)
 
         # draw room frame
-        self.ctx.set_source_rgb(0.2, 0.2, 0.2)  # grey
+        self.ctx.set_source_rgba(0.2, 0.2, 0.2, 1)  # grey
         self.ctx.set_line_width(1)
         self.ctx.rectangle(
             self.parameters.margin.left - 0.5,
@@ -215,7 +215,7 @@ class RoomDrawer(Drawer):
         self.ctx.stroke()
 
         # write room name
-        self.ctx.set_source_rgb(0, 0, 0)  # black
+        self.ctx.set_source_rgba(0, 0, 0, 1)  # black
         self.ctx.select_font_face(
             "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
         )

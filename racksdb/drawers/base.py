@@ -25,15 +25,15 @@ logger = logging.getLogger(__name__)
 
 
 class DefaultRackColorSet:
-    frame = (0.2, 0.2, 0.2)  # aka. #333333 (dark gray)
-    pane = (0, 0, 0)  # aka. #000000 (black)
+    frame = (0.2, 0.2, 0.2, 1)  # aka. #333333 (dark gray)
+    pane = (0, 0, 0, 1)  # aka. #000000 (black)
 
 
 class DefaultEquipmentColorSet:
-    background = (0.6, 0.6, 0.6)  # aka. #999999 (light gray)
-    ghost = (0.45, 0.45, 0.45)  # aka. #737373 (lighter gray)
-    chassis = (0.25, 0.25, 0.25)  # aka. #3F3F3F (medium gray)
-    border = (0.2, 0.2, 0.2)  # aka. #333333 (dark gray)
+    background = (0.6, 0.6, 0.6, 1)  # aka. #999999 (light gray)
+    ghost = (0.45, 0.45, 0.45, 1)  # aka. #737373 (lighter gray)
+    chassis = (0.25, 0.25, 0.25, 1)  # aka. #3F3F3F (medium gray)
+    border = (0.2, 0.2, 0.2, 1)  # aka. #333333 (dark gray)
 
 
 class ImagePoint:
