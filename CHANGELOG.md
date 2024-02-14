@@ -61,6 +61,8 @@ and this project adheres to
     in the racks (#72).
   - Introduce `DatacenterLocation` object attached to `Datacenter` optional
     location property to define GPS coordinates of the datacenters.
+- ui: Add map of datacenters if datacenters view with their geographical
+  positions if defined in database (#43).
 - pkg:
   - Add dependency on PyGObject python library (used to call Pango library).
   - Add optional dependency on requests-toolbelt python library on web variant
