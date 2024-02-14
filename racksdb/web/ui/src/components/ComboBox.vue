@@ -12,13 +12,12 @@ import { useRouter } from 'vue-router'
 import type { Datacenter, Infrastructure } from '@/composables/RacksDBAPI'
 import {
   Combobox,
-  ComboboxButton,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
   ComboboxLabel
 } from '@headlessui/vue'
-import { ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
+import { CheckIcon } from '@heroicons/vue/24/outline'
 
 const selectedItem: Ref<string | undefined> = ref()
 const router = useRouter()
@@ -91,12 +90,6 @@ onMounted(() => {
             @change="input = $event.target.value"
           />
         </div>
-
-        <ComboboxButton
-          class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
-        >
-          <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="false" />
-        </ComboboxButton>
 
         <ComboboxOptions
           static
