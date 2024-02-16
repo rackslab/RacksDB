@@ -69,3 +69,6 @@ rooms:
       racks:
       - name: R7-A[01-06]
         type: standard
+location:
+  longitude: 2.294694
+  latitude: 48.858093
