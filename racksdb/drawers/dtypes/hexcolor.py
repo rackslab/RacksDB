@@ -20,6 +20,6 @@ class SchemaDefinedTypeHexcolor(SchemaDefinedType):
         hexrgb = re.findall("[0-9a-fA-F]{2}", value)
         # If optional alpha channel is not defined, set it to 255/ff (ie. fully opaque)
         if len(hexrgb) == 3:
-            hexrgb.append('ff')
+            hexrgb.append("ff")
         rgb = tuple(int(f"0x{_hex}", 16) / 255 for _hex in hexrgb)
         return rgb
