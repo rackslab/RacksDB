@@ -322,6 +322,10 @@ _objects:
         type: list[str]
         description: The list of tags associated to this datacenter.
         optional: true
+      location:
+        type: :DatacenterLocation
+        description: The GPS coordinates of the datacenter.
+        optional: true
   DatacenterRoom:
     properties:
       name:
@@ -350,6 +354,14 @@ _objects:
         type: ~dimension
         description: Depth of datacenter room.
         example: 15m
+  DatacenterLocation:
+    properties:
+      longitude:
+        type: float
+        description: GPS longitude of the datacenter.
+      latitude:
+        type: float
+        description: GPS latitude of the datacenter.
   RacksRow:
     properties:
       name:
