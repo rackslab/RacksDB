@@ -10,6 +10,12 @@ export interface Datacenter {
   name: string
   rooms: Array<DatacenterRoom>
   tags: any
+  location?: DatacenterLocation
+}
+
+export interface DatacenterLocation {
+  longitude: number
+  latitude: number
 }
 
 export interface DatacenterRoom {
