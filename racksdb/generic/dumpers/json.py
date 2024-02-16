@@ -57,23 +57,11 @@ class GenericJSONEncoder(json.JSONEncoder, MapperDumper):
                 return obj
         elif isinstance(obj, DBObject):
             result = {}
-            for attribute, value in vars(obj).items():
-                # Skip special attributes
-                if attribute in [
-                    "_db",
-                    "_indexes",
-                    "_schema",
-                    "_parent",
-                    "_first",
-                    "_key",
-                ]:
+            for prop in obj._schema.properties:
+                try:
+                    self._fill_obj_dict(result, obj, prop.name, getattr(obj, prop.name))
+                except AttributeError:
                     continue
-                # Replace renamed attribute by overriding property
-                if attribute.startswith(obj.LOADED_PREFIX):
-                    attribute = attribute[len(obj.LOADED_PREFIX) :]
-                    value = getattr(obj, attribute)
-                self._fill_obj_dict(result, obj, attribute, value)
-
             for prop in obj._computed_props():
                 self._fill_obj_dict(result, obj, prop, getattr(obj, prop))
             return result

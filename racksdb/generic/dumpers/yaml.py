@@ -69,23 +69,13 @@ class DBDumperYAML(MapperDumper):
 
         node = yaml.MappingNode(tag, node_value)
 
-        for item_key, item_value in vars(data).items():
-            # skip special fields
-            if item_key in [
-                "_db",
-                "_indexes",
-                "_schema",
-                "_parent",
-                "_first",
-                "_key",
-            ]:
+        for prop in data._schema.properties:
+            try:
+                self._fill_obj_node_value(
+                    dumper, node_value, data, prop.name, getattr(data, prop.name)
+                )
+            except AttributeError:
                 continue
-            # If the attribute has been renamed with loaded prefix, call bases
-            # module class attribute instead.
-            if item_key.startswith(data.LOADED_PREFIX):
-                item_key = item_key[len(data.LOADED_PREFIX) :]
-                item_value = getattr(data, item_key)
-            self._fill_obj_node_value(dumper, node_value, data, item_key, item_value)
 
         for prop in data._computed_props():
             self._fill_obj_node_value(
