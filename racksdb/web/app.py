@@ -41,12 +41,14 @@ class RacksDBWebBlueprint(Blueprint):
         ext=RacksDB.DEFAULT_EXT,
         db=RacksDB.DEFAULT_DB,
         drawings_schema=DrawingParameters.DEFAULT_SCHEMA,
+        default_drawing_parameters={},
         openapi=False,
     ):
         super().__init__("RacksDB web blueprint", __name__)
         self.db = RacksDB.load(schema=schema, ext=ext, db=db)
         self.views = RacksDBViews()
         self.drawings_schema = drawings_schema
+        self.default_drawing_parameters = default_drawing_parameters
         if openapi:
             self.add_url_rule("/openapi.yaml", view_func=self._openapi, methods=["GET"])
         self.add_url_rule(
@@ -113,11 +115,15 @@ class RacksDBWebBlueprint(Blueprint):
 
     def _draw(self, entity, name, format):
         if not len(request.data):
-            db_loader = DBDictsLoader()
+            db_loader = DBDictsLoader(self.default_drawing_parameters)
         elif request.is_json:
-            db_loader = DBDictsLoader(request.get_json())
+            db_loader = DBDictsLoader(
+                self.default_drawing_parameters, request.get_json()
+            )
         elif request.content_type == "application/x-yaml":
-            db_loader = DBStringLoader(request.data.decode())
+            db_loader = DBStringLoader(
+                request.data.decode(), initial=self.default_drawing_parameters
+            )
         else:
             abort(415, "Unsupported request body format")
         try:

@@ -16,9 +16,12 @@ and this project adheres to
   `racksdb draw` sub-command to generate coordinate file in either JSON or YAML
   format with coordinates of racks and equipment in the image along with the
   image file.
-- web: Add `coordinates` and `coordinates_format` query parameter on `draw`
-  action enpoint to get coordinates of racks and equipment along with image file
-  in multipart response (#56).
+- web:
+  - Add `coordinates` and `coordinates_format` query parameter on `draw` action
+    enpoint to get coordinates of racks and equipment along with image file in
+    multipart response (#56).
+  - Optional default drawing parameters in arguments of `RacksDBWebBlueprint`
+    used for all requests to `draw` endpoint unless overriden in request body.
 - draw:
   - Add general `pixel_perfect` boolean drawing parameter, disabled by default.
     When enabled, RacksDB properly align graphical representation with pixels
