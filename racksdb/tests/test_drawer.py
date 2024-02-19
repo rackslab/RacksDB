@@ -10,7 +10,7 @@ from pathlib import Path
 
 from racksdb.drawers.base import Drawer, DefaultEquipmentColorSet, DefaultRackColorSet
 from racksdb.drawers.parameters import DrawingParameters
-from racksdb.generic.db import DBEmptyLoader
+from racksdb.generic.db import DBDictsLoader
 
 
 class FakeEquipmentType:
@@ -72,7 +72,7 @@ class TestDrawer(unittest.TestCase):
                 ],
             }
         }
-        loader = DBEmptyLoader(parameters_raw)
+        loader = DBDictsLoader(parameters_raw)
         parameters = DrawingParameters.load(loader, self.drawings_schema_path)
         self.drawer = Drawer({}, "output", "format", parameters)
 

@@ -15,7 +15,7 @@ from requests_toolbelt import MultipartEncoder
 from .. import RacksDB
 from ..version import get_version
 from ..views import RacksDBViews
-from ..generic.db import DBEmptyLoader, DBStringLoader
+from ..generic.db import DBDictsLoader, DBStringLoader
 from ..generic.openapi import OpenAPIGenerator
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from ..generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
@@ -113,9 +113,9 @@ class RacksDBWebBlueprint(Blueprint):
 
     def _draw(self, entity, name, format):
         if not len(request.data):
-            db_loader = DBEmptyLoader()
+            db_loader = DBDictsLoader()
         elif request.is_json:
-            db_loader = DBEmptyLoader(request.get_json())
+            db_loader = DBDictsLoader(request.get_json())
         elif request.content_type == "application/x-yaml":
             db_loader = DBStringLoader(request.data.decode())
         else:

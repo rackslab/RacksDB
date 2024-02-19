@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
+import copy
 import logging
 
 import yaml
@@ -25,6 +26,19 @@ from .schema import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def deepmerge(a: dict, b: dict, path=[]) -> dict:
+    """Deep-merge dict b into dict a."""
+    for key in b:
+        if key in a:
+            if isinstance(a[key], dict) and isinstance(b[key], dict):
+                deepmerge(a[key], b[key], path + [str(key)])
+            elif a[key] != b[key]:
+                raise Exception("Conflict at " + ".".join(path + [str(key)]))
+        else:
+            a[key] = b[key]
+    return a
 
 
 class DBObject:
@@ -264,14 +278,17 @@ class DBSplittedFilesLoader:
                 self.content[item.stem] = DBSplittedFilesLoader(item).content
 
 
-class DBEmptyLoader:
-    """Loader that loads nothing, just define an empty database with an optional
-    initial content. It is designed to be used to load optional database files
-    when schema defines enough default values to operate or when initial data
-    is loaded by other mean."""
+class DBDictsLoader:
+    """Loader that loads data from an optional set of dictionaries nothing. It accepts
+    any number of dictionaries in argument, they are all deep merged consecutively. It
+    can be used to load optional database files (ie. potentially empty database) when
+    schema defines enough default values to operate or when initial data is loaded by
+    other mean."""
 
-    def __init__(self, initial={}):
-        self.content = initial
+    def __init__(self, *args):
+        self.content = {}
+        for _content in args:
+            self.content = deepmerge(copy.deepcopy(self.content), _content)
 
 
 class DBStdinLoader:

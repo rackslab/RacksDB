@@ -15,7 +15,7 @@ from .version import get_version
 from .generic.errors import DBFormatError, DBSchemaError
 from .generic.db import (
     DBSplittedFilesLoader,
-    DBEmptyLoader,
+    DBDictsLoader,
     DBStdinLoader,
 )
 from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
@@ -234,7 +234,7 @@ class RacksDBExec:
         )
         try:
             if self.args.parameters is None:
-                db_loader = DBEmptyLoader()
+                db_loader = DBDictsLoader()
             elif isinstance(self.args.parameters, str):
                 if self.args.parameters == "-":
                     db_loader = DBStdinLoader()
