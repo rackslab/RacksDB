@@ -441,7 +441,7 @@ class InfrastructureDrawer(Drawer):
         # write rack name
         self.ctx.move_to(dl.x, dl.y - rack_height - self.parameters.rack.offset)
         self.ctx.set_source_rgba(0, 0, 0, 1)  # black
-        self._print_text(f"rack {rack.name}")
+        self._print_text(f"rack {rack.name}", max_width=self._rack_width(rack))
 
         colorset = self._find_rack_colorset(rack)
 

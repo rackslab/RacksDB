@@ -45,6 +45,8 @@ and this project adheres to
     even if they do not contain infrastructure equipment. Other racks are
     represented when set to true. It is false by default (#61).
   - Add support for optional alpha channel in `~hexcolor` defined type (#65).
+  - Make racks labels scalable to avoid exceeding rack width in infrastructure
+    diagrams (#69).
 - pkg:
   - Add dependency on PyGObject python library (used to call Pango library).
   - Add optional dependency on requests-toolbelt python library on web variant
