@@ -304,9 +304,9 @@ class DBStdinLoader:
 class DBStringLoader:
     """Load YAML database provided in a string."""
 
-    def __init__(self, content):
+    def __init__(self, content, initial={}):
         try:
-            self.content = yaml.safe_load(content)
+            self.content = deepmerge(initial, yaml.safe_load(content))
         except yaml.composer.ComposerError as err:
             raise DBFormatError(err)
 
