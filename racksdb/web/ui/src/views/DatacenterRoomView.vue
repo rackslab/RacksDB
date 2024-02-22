@@ -138,7 +138,7 @@ const props = defineProps({
       @click="toggleImageModal()"
       :src="blobURL"
       class="h-96 max-w-500 mx-auto p-10 border-2 border-black transition-transform transform duration-150 hover:scale-105 hover:border-violet-700 cursor-pointer"
-      alt=""
+      :alt="`Small image of the room ${datacenterRoom} in ${datacenterName} datacenter`"
     />
   </div>
 
@@ -150,7 +150,12 @@ const props = defineProps({
     <DialogPanel
       class="h-full flex flex-col items-center justify-center max-w-4xl bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
     >
-      <img v-if="blobURL" :src="blobURL" class="h-auto max-w-full max-h-full" alt="" />
+      <img
+        v-if="blobURL"
+        :src="blobURL"
+        class="h-auto max-w-full max-h-full"
+        :alt="`Big image of the room ${datacenterRoom} in ${datacenterName} datacenter`"
+      />
 
       <button
         type="button"
