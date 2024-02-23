@@ -275,7 +275,7 @@ class RacksDBWebApp(Flask):
                 self.args.ext,
                 self.args.db,
                 self.args.drawings_schema,
-                self.args.openapi,
+                openapi=self.args.openapi,
             )
         )
 
