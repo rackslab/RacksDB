@@ -100,8 +100,10 @@ and this project adheres to
 
 ### Fixed
 - ui: Bump missed version number in UI application metadata.
-- core: Fix dump of properties in JSON and YAML when not defined in database but
-  overriden by specialized classes.
+- core:
+  - Fix dump of properties in JSON and YAML when not defined in database but
+    overriden by specialized classes.
+  - Fix folded equipment name filtering (#73).
 - docs: Add missing version in example REST API queries.
 
 ## [0.3.0] - 2024-01-22

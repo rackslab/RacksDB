@@ -205,9 +205,17 @@ class DBDict(dict):
         """Return a copy of the current DBDict without key and values that do not match
         provided filter criteria."""
         result = DBDict()
-        for key, value in self.items():
+
+        def add_match(key, value):
             if value._filter(**kwargs):
                 result[key] = value
+
+        for key, value in self.items():
+            if isinstance(value, DBExpandableObject):
+                for _expanded_value in value.objects():
+                    add_match(key, _expanded_value)
+            else:
+                add_match(key, value)
         return result
 
     def __iter__(self):
