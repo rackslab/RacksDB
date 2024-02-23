@@ -19,16 +19,14 @@ import DatacenterListInfrastructures from '@/components/DatacenterListInfrastruc
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
 let infrastructures: Array<Infrastructure> = []
-const rackDetails: Ref<Array<Rack>> = ref([])
+const roomRacks: Ref<Array<Rack>> = ref([])
 const blobURL = ref()
 const showImg = ref(false)
 const input = ref('')
 const hideEmpty = ref(false)
 const alphabeticalOrder = ref(true)
 var filteredRacks = computed(() => {
-  let result: Array<Rack> = rackDetails.value
-
-  result = result.filter((room) => room.room === props.datacenterRoom)
+  let result: Array<Rack> = roomRacks.value
 
   if (hideEmpty.value) {
     result = result.filter((rack) => rack.fillrate > 0)
@@ -42,8 +40,8 @@ var filteredRacks = computed(() => {
 })
 
 function invertRackSort() {
-  if (rackDetails.value) {
-    rackDetails.value.reverse()
+  if (roomRacks.value) {
+    roomRacks.value.reverse()
   }
   alphabeticalOrder.value = !alphabeticalOrder.value
 }
@@ -80,17 +78,23 @@ function listInfrastructures(rackName: string) {
   return infrastructureNames
 }
 
-async function getDatacenters() {
+/*
+ * Get racks of the current room.
+ */
+async function getRacks() {
   // Get datacenters and filter using the prop datacenterName
   let datacenterDetails = (await racksDBAPI.datacenters()).filter(
     (datacenter) => datacenter.name === props.datacenterName
   )[0]
 
-  // Loop on datacenterDetails to get all the rack it contains
+  // Iterate over rooms to get current room and get all the rack it contains
   datacenterDetails.rooms.forEach((room) => {
+    if (room.name !== props.datacenterRoom) {
+      return
+    }
     room.rows.forEach((row) => {
       row.racks.forEach((rack) => {
-        rackDetails.value.push({
+        roomRacks.value.push({
           name: rack.name,
           fillrate: rack.fillrate,
           room: room.name
@@ -105,7 +109,7 @@ async function getInfrastructures() {
 }
 
 onMounted(() => {
-  getDatacenters()
+  getRacks()
   getInfrastructures()
   getInfrastructureImg()
 })
