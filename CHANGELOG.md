@@ -123,6 +123,11 @@ and this project adheres to
   - Fix folded equipment name filtering (#73).
 - docs: Add missing version in example REST API queries.
 
+### Removed
+- docs: Remove mention of computed properties in Python library reference
+  documentation as computed properties are now properly declared along with back
+  references in database structure reference documentation.
+
 ## [0.3.0] - 2024-01-22
 
 ### Added

@@ -659,71 +659,6 @@ Get all nodes of infrastructure _tiger_ with tag _compute_:
 [#spec-racksdbrack]
 === `RacksDBRack`
 
-==== Attributes
-
-The `RacksDBRack` class provides the following specialized attribute:
-
-* `nodes`: xref:#list[`DBList`] object containing all nodes located in this
-  rack.
-+
---
-NOTE: This attribute is also a _computed property_ which means it is also
-visible in xref:usage:racksdb.adoc#_search_commands[RacksDB search dumps].
-
-.Example
-====
-Print the list of nodes in every racks located in row _R1_ of room _noisy_ in
-datacenter _paris_:
-
-[source,python]
-----
->>> for rack in db.datacenters["paris"].rooms["noisy"].rows["R1"].racks:
-...     print(f"{rack.name}: {[nodes.name for nodes in rack.nodes]}")
-...
-R1-A01: ['mecn0001', 'mecn0002', 'mecn0003', 'mecn0004', …]
-R1-A02: ['mecn0061', 'mecn0062', 'mecn0063', 'mecn0064', …]
-R1-A03: []
-R1-A04: []
-R1-A05: []
-R1-A06: []
-R1-A07: []
-R1-A08: []
-R1-A09: []
-R1-A10: []
-----
-====
---
-* `fillrate`: a float representing the filling rate of the rack between 0
-  (empty) and 1 (full).
-+
---
-NOTE: This attribute is also a _computed property_ which means it is also
-visible in xref:usage:racksdb.adoc#_search_commands[RacksDB search dumps].
-
-.Example
-====
-Print the filling rate of every racks located in row _R1_ of room _noisy_ in
-datacenter _paris_:
-
-[source,python]
-----
->>> for rack in db.datacenters["paris"].rooms["noisy"].rows["R1"].racks:
-...   print(f"{rack.name}: {rack.fillrate*100:.2f}%")
-...
-R1-A01: 97.62%
-R1-A02: 95.24%
-R1-A03: 0.00%
-R1-A04: 0.00%
-R1-A05: 0.00%
-R1-A06: 0.00%
-R1-A07: 0.00%
-R1-A08: 0.00%
-R1-A09: 0.00%
-R1-A10: 0.00%
-----
-====
---
-
 ==== Filtering
 
 The `RacksDBRack` class provides an implementation of the `_filter()` method,
@@ -743,39 +678,6 @@ Get rack named _R1-A02_:
 >>> db.racks.filter(name='R1-A02')
 ----
 ====
-
-[#spec-racksdbracksrow]
-=== `RacksDBRacksRow`
-
-==== Attributes
-
-The `RacksDBRacksRow` class provides the following specialized attribute:
-
-* `nbracks`: an integer representing the number of racks in the row.
-+
---
-NOTE: This attribute is also a _computed property_ which means it is also
-visible in xref:usage:racksdb.adoc#_search_commands[RacksDB search dumps].
-
-.Example
-====
-Print the number of racks in every rows of room _noisy_ in datacenter _paris_:
-
-[source,python]
-----
->>> for row in db.datacenters["paris"].rooms["noisy"].rows:
-...     print(f"{row.name}: {row.nbracks} rack(s)")
-...
-R1: 10 rack(s)
-R2: 10 rack(s)
-R3: 9 rack(s)
-R4: 6 rack(s)
-R5: 6 rack(s)
-R6: 6 rack(s)
-R7: 6 rack(s)
-----
-====
---
 
 == Database content
 
