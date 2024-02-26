@@ -77,10 +77,6 @@ class DBDumperYAML(MapperDumper):
             except AttributeError:
                 continue
 
-        for prop in data._computed_props():
-            self._fill_obj_node_value(
-                dumper, node_value, data, prop, getattr(data, prop)
-            )
         return node
 
     def _represent_dbobjectrange(self, dumper, data):

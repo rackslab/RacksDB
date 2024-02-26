@@ -62,8 +62,6 @@ class GenericJSONEncoder(json.JSONEncoder, MapperDumper):
                     self._fill_obj_dict(result, obj, prop.name, getattr(obj, prop.name))
                 except AttributeError:
                     continue
-            for prop in obj._computed_props():
-                self._fill_obj_dict(result, obj, prop, getattr(obj, prop))
             return result
         # Let the base class default method raise the TypeError
         return json.JSONEncoder.default(self, obj)

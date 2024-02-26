@@ -53,12 +53,6 @@ class DBObject:
         classes when filtering is needed."""
         return True
 
-    def _computed_props(self):
-        """Generator to iterate over the list of DBObject computed properties."""
-        if hasattr(self, "COMPUTED_PROPERTIES"):
-            for prop in self.COMPUTED_PROPERTIES:
-                yield prop
-
 
 class DBExpandableObject(DBObject):
     def _attributes(self):
@@ -432,6 +426,7 @@ class GenericDB(DBObject):
             if (
                 not isinstance(prop.type, SchemaBackReference)
                 and prop.required
+                and not prop.computed
                 and not hasattr(obj, prop.name)
             ):
                 raise DBFormatError(
@@ -498,6 +493,12 @@ class GenericDB(DBObject):
             for token, literal in _content.copy().items():
                 # Get the schema property corresponding to this token
                 token_property = self.token_object_property(token, schema_object)
+                # Check property is not computed or raise error
+                if token_property.computed:
+                    raise DBFormatError(
+                        f"{schema_object.name}>{token} is a computed property, thus it "
+                        "cannot be defined in database."
+                    )
                 # Check if this attribute can be loaded, considering its
                 # references and loaded objects.
                 if not self.loadable_attribute(token, token_property, passes, obj):
