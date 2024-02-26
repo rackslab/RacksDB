@@ -517,6 +517,10 @@ _objects:
         description: The list of tags associated to these nodes.
         optional: true
         example: ["compute", "standard"]
+      position:
+        type: :EquipmentPosition
+        description: Node position in the rack.
+        computed: true
   StorageEquipment:
     description: >-
       NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -546,6 +550,10 @@ _objects:
         description: The list of tags associated to these storage equipments.
         optional: true
         example: ["storage", "nas"]
+      position:
+        type: :EquipmentPosition
+        description: Storage equipment position in the rack.
+        computed: true
   NetworkEquipment:
     description: >-
       NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -575,6 +583,10 @@ _objects:
         description: The list of tags associated to these network equipments.
         optional: true
         example: ["ethernet", "switch"]
+      position:
+        type: :EquipmentPosition
+        description: Network equipment position in the rack.
+        computed: true
   MiscEquipment:
     description: >-
       NOTE: Please refer to xref:positioning-equipments.adoc[equipment
@@ -606,3 +618,16 @@ _objects:
           The list of tags associated to these miscellaneous equipments.
         optional: true
         example: ["kvm", "keyboard"]
+      position:
+        type: :EquipmentPosition
+        description: Miscellaneous equipment position in the rack.
+        computed: true
+  EquipmentPosition:
+    description: Equipment position in the rack.
+    properties:
+      height:
+        type: int
+        description: Rack slot where the equipment is located.
+      width:
+        type: int
+        description: Equipment position in rack width.

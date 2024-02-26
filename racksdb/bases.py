@@ -4,6 +4,20 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import math
+
+try:
+    from functools import cached_property
+except ImportError:
+    # For Python 3.[6-7] compatibility. The dependency to cached_property
+    # external library is not declared in pyproject.toml, it is added
+    # explicitely in packages codes only for distributions stuck with these old
+    # versions of Python.
+    #
+    # This try/except block can be removed when support of Python < 3.8 is
+    # dropped in RacksDB.
+    from cached_property import cached_property
+
 from .generic.db import DBList, DBDict
 
 
@@ -54,6 +68,18 @@ class RacksDBGenericEquipment:
         for tag in getattr(self, f"{self.LOADED_PREFIX}tags", []):
             result.append(tag)
         return result
+
+    @cached_property
+    def position(self):
+        obj = self._db.create_object_by_name("EquipmentPosition")
+        obj.height = (
+            self._first.slot
+            - self.rack.type.initial
+            + math.floor((self.slot - self._first.slot) * self.type.width)
+            * self.type.height
+        )
+        obj.width = (self.slot - self._first.slot) % int(1 / self.type.width)
+        return obj
 
     def _filter(self, infrastructure=None, name=None, tags=None):
         # filter by name

@@ -50,6 +50,9 @@ and this project adheres to
   - Add support for optional alpha channel in `~hexcolor` defined type (#65).
   - Make racks labels scalable to avoid exceeding rack width in infrastructure
     diagrams (#69).
+- schema: Add `position` computed property on `Node`, `StorageEquipment`,
+  `NetworkEquipment` and `MiscEquipment` objects to get their exact position in
+  the racks (#72).
 - pkg:
   - Add dependency on PyGObject python library (used to call Pango library).
   - Add optional dependency on requests-toolbelt python library on web variant
