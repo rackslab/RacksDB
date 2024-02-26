@@ -235,36 +235,19 @@ class InfrastructureDrawer(Drawer):
         dl.y += self.parameters.rack.label_offset + self.parameters.rack.offset
         return dl
 
-    def _equipment_width_slot(self, equipment) -> int:
-        """Return the slot of the equipment in the rack width."""
-        return (equipment.slot - equipment._first.slot) % int(1 / equipment.type.width)
-
-    def _equipment_height_slot(self, equipment) -> int:
-        """Return the slot of the equipment (ie. rack unit slot) in the rack height."""
-        return (
-            equipment._first.slot
-            - equipment.rack.type.initial
-            + math.floor(
-                (equipment.slot - equipment._first.slot) * equipment.type.width
-            )
-            * equipment.type.height
-        )
-
     def _equipment_tl(self, equipment) -> ImagePoint:
         tl = self._rack_dl(equipment.rack)
-
-        equipment_height_slot = self._equipment_height_slot(equipment)
-        equipment_width_slot = self._equipment_width_slot(equipment)
 
         logger.debug(
             "Equipment %s calculated slots → height: %d width: %d",
             equipment.name,
-            equipment_height_slot,
-            equipment_width_slot,
+            equipment.position.height,
+            equipment.position.width,
         )
 
-        tl.x += self._rack_pane_width + equipment_width_slot * self._equipment_width(
-            equipment
+        tl.x += (
+            self._rack_pane_width
+            + equipment.position.width * self._equipment_width(equipment)
         )
         if self.parameters.general.pixel_perfect:
             # Center the equipment in the rack by shifting right by half of the
@@ -281,9 +264,11 @@ class InfrastructureDrawer(Drawer):
             # Except for the 1st equipment in rack width, shift other equipment by one
             # pixel on the right so they are all represented the same size despite the
             # equipment frame is drawn inside the equipment surface on its left side.
-            if equipment_width_slot > 0:
+            if equipment.position.width > 0:
                 tl.x += 1
-        tl.y -= (equipment.type.height + equipment_height_slot) * self._rack_u_height
+        tl.y -= (
+            equipment.type.height + equipment.position.height
+        ) * self._rack_u_height
 
         return tl
 
@@ -336,13 +321,12 @@ class InfrastructureDrawer(Drawer):
 
         equipment_width = self._equipment_width(equipment)
         equipment_height = self._equipment_height(equipment)
-        width_slot = self._equipment_width_slot(equipment)
 
         colorset = self._find_equipment_colorset(equipment)
 
         # Draw chassis in full rack width, only for the equipment on the left side of
         # the rack slot.
-        if width_slot == 0:
+        if equipment.position.width == 0:
             self.ctx.set_source_rgba(*colorset.chassis)
             rack_dl = self._rack_dl(equipment.rack)
             # At the top of the rack, do not cover the rack frame
@@ -382,7 +366,7 @@ class InfrastructureDrawer(Drawer):
         # For the equipment on the left side of the rack slot, draw the equipment frame
         # inside the equipment surface on its left side. Else, draw the frame outside
         # the equipment surface.
-        if width_slot == 0:
+        if equipment.position.width == 0:
             frame_x = tl.x + 0.5
         else:
             frame_x = tl.x - 0.5
