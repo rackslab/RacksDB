@@ -5,7 +5,7 @@
     to discover how it is used.
 ////
 :tbl-obj-props-cols-specs: 2m,6a,4,^.^1
-:tbl-obj-backrefs-cols-specs: 2m,6a,4
+:tbl-obj-backrefs-cols-specs: 4m,6a,4
 
 [#obj-root]
 == Database Root
@@ -97,14 +97,14 @@ Library class type: `RacksDBDatacenterRoom`
 |[.grey]#-#
 |===
 
-.Automatic back references
+.Automatic properties
 [cols="{tbl-obj-backrefs-cols-specs}"]
 |===
 |Property|Description|Type
 
-|datacenter
+|{symbol-backref}{nbsp}datacenter
 |Back reference to the datacenter where this room is located.
-|{symbol-backref}{nbsp}xref:#obj-datacenter[{symbol-obj}{nbsp}Datacenter]
+|xref:#obj-datacenter[{symbol-obj}{nbsp}Datacenter]
 |===
 
 [#obj-datacenterroomdimensions]
@@ -127,6 +127,31 @@ Library class type: `RacksDBDatacenterRoomDimensions`
 |Depth of datacenter room.
 
 |xref:#deftype-dimension[{symbol-deftype}{nbsp}~dimension]
+|[.green]#icon:check[]#
+|===
+
+[#obj-equipmentposition]
+=== EquipmentPosition
+
+Library class type: `RacksDBEquipmentPosition`
+
+Equipment position in the rack.
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|height
+|Rack slot where the equipment is located.
+
+|int
+|[.green]#icon:check[]#
+
+|width
+|Equipment position in rack width.
+
+|int
 |[.green]#icon:check[]#
 |===
 
@@ -255,18 +280,22 @@ NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how
 |[.grey]#-#
 |===
 
-.Automatic back references
+.Automatic properties
 [cols="{tbl-obj-backrefs-cols-specs}"]
 |===
 |Property|Description|Type
 
-|infrastructure
+|{symbol-backref}{nbsp}infrastructure
 |The infrastructure of these miscellaneous equipments.
-|{symbol-backref}{nbsp}xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+|xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
 
-|rack
+|{symbol-backref}{nbsp}rack
 |The rack of these miscellaneous equipments.
-|{symbol-backref}{nbsp}xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+|xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+
+|{symbol-computed}{nbsp}position
+|Miscellaneous equipment position in the rack.
+|xref:#obj-equipmentposition[{symbol-obj}{nbsp}EquipmentPosition]
 |===
 
 [#obj-miscequipmenttype]
@@ -348,18 +377,22 @@ NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how
 |[.grey]#-#
 |===
 
-.Automatic back references
+.Automatic properties
 [cols="{tbl-obj-backrefs-cols-specs}"]
 |===
 |Property|Description|Type
 
-|infrastructure
+|{symbol-backref}{nbsp}infrastructure
 |The infrastructure of these network equipments.
-|{symbol-backref}{nbsp}xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+|xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
 
-|rack
+|{symbol-backref}{nbsp}rack
 |The rack of these network equipments.
-|{symbol-backref}{nbsp}xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+|xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+
+|{symbol-computed}{nbsp}position
+|Network equipment position in the rack.
+|xref:#obj-equipmentposition[{symbol-obj}{nbsp}EquipmentPosition]
 |===
 
 [#obj-networkequipmenttype]
@@ -476,18 +509,22 @@ NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how
 |[.grey]#-#
 |===
 
-.Automatic back references
+.Automatic properties
 [cols="{tbl-obj-backrefs-cols-specs}"]
 |===
 |Property|Description|Type
 
-|infrastructure
+|{symbol-backref}{nbsp}infrastructure
 |The infrastructure of these nodes.
-|{symbol-backref}{nbsp}xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+|xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
 
-|rack
+|{symbol-backref}{nbsp}rack
 |The rack of these nodes.
-|{symbol-backref}{nbsp}xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+|xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+
+|{symbol-computed}{nbsp}position
+|Node position in the rack.
+|xref:#obj-equipmentposition[{symbol-obj}{nbsp}EquipmentPosition]
 |===
 
 [#obj-nodetype]
@@ -736,22 +773,30 @@ Library class type: `RacksDBRack`
 |[.grey]#-#
 |===
 
-.Automatic back references
+.Automatic properties
 [cols="{tbl-obj-backrefs-cols-specs}"]
 |===
 |Property|Description|Type
 
-|datacenter
+|{symbol-backref}{nbsp}datacenter
 |The datacenter where this rack is located.
-|{symbol-backref}{nbsp}xref:#obj-datacenter[{symbol-obj}{nbsp}Datacenter]
+|xref:#obj-datacenter[{symbol-obj}{nbsp}Datacenter]
 
-|room
+|{symbol-backref}{nbsp}room
 |The datacenter room where this rack is located.
-|{symbol-backref}{nbsp}xref:#obj-datacenterroom[{symbol-obj}{nbsp}DatacenterRoom]
+|xref:#obj-datacenterroom[{symbol-obj}{nbsp}DatacenterRoom]
 
-|row
+|{symbol-backref}{nbsp}row
 |The racks row of this rack.
-|{symbol-backref}{nbsp}xref:#obj-racksrow[{symbol-obj}{nbsp}RacksRow]
+|xref:#obj-racksrow[{symbol-obj}{nbsp}RacksRow]
+
+|{symbol-computed}{nbsp}nodes
+|List of nodes in the rack.
+|{symbol-seq}{nbsp}xref:#obj-node[{symbol-obj}{nbsp}Node]
+
+|{symbol-computed}{nbsp}fillrate
+|Rack filling rate.
+|float
 |===
 
 [#obj-racksrow]
@@ -777,7 +822,7 @@ Library class type: `RacksDBRacksRow`
 |[.green]#icon:check[]#
 
 |racks
-|The list of (empty) racks in the room.
+|The list of (empty) racks in the row.
 
 |{symbol-seq}{nbsp}xref:#obj-rack[{symbol-obj}{nbsp}Rack]
 |[.green]#icon:check[]#
@@ -907,18 +952,22 @@ NOTE: Please refer to xref:positioning-equipments.adoc[equipment positioning how
 |[.grey]#-#
 |===
 
-.Automatic back references
+.Automatic properties
 [cols="{tbl-obj-backrefs-cols-specs}"]
 |===
 |Property|Description|Type
 
-|infrastructure
+|{symbol-backref}{nbsp}infrastructure
 |The infrastructure of these storage equipments.
-|{symbol-backref}{nbsp}xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
+|xref:#obj-infrastructure[{symbol-obj}{nbsp}Infrastructure]
 
-|rack
+|{symbol-backref}{nbsp}rack
 |The rack of these storage equipments.
-|{symbol-backref}{nbsp}xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+|xref:#obj-infrastructurepart[{symbol-obj}{nbsp}InfrastructurePart].rack
+
+|{symbol-computed}{nbsp}position
+|Storage equipment position in the rack.
+|xref:#obj-equipmentposition[{symbol-obj}{nbsp}EquipmentPosition]
 |===
 
 [#obj-storageequipmenttype]
