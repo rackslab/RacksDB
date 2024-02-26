@@ -411,6 +411,10 @@ class GenericDB(DBObject):
         # instanciate the object with its dynamically defined class
         return type(classname, tuple(bases), dict())(self, schema_object)
 
+    def create_object_by_name(self, name):
+        """Instanciate DBObject by its name."""
+        return self.create_object(self._schema.find_obj(name))
+
     def load_object(
         self, token, literal, schema_object: SchemaObject, parent: SchemaObject
     ):
