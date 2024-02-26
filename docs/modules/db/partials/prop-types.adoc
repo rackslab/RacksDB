@@ -25,6 +25,9 @@ defaults properties, recursively.
 `optional` _(optional)_::: Boolean to determine if property is optional.
 Default value is _false_.
 
+`computed` _(optional)_::: Boolean to determine if property is
+xref:concepts.adoc#computed[automatically computed]. Default value is _false_.
+
 [#type]
 == Properties Type
 

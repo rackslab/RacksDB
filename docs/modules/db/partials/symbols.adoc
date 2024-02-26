@@ -4,6 +4,7 @@
 :symbol-deftype: icon:shapes[title=Defined type]
 :symbol-backref: icon:share-from-square[title=Reference,flip=horizontal]
 :symbol-key: icon:key[title=Key]
+:symbol-computed: icon:cogs[title=Computed]
 
 == Symbols legend
 
@@ -22,6 +23,7 @@ properties:
 [no-bullet]
 - {symbol-seq} xref:db:concepts.adoc#sequence[*sequence*]
 - {symbol-key} xref:db:concepts.adoc#key[*key*]
+- {symbol-computed} xref:db:concepts.adoc#computed[*computed*]
 
 The optional/required attribute is indicated in the _Required_ column of
 properties definition table. When defined, the default value attribute is

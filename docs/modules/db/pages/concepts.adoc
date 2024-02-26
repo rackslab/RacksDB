@@ -61,6 +61,11 @@ is not required in the database.
 default value:: When the property is not declared for the respective objects in
 database, it is assigned this default value.
 
+[#computed]
+computed:: The property is automatically computed by RacksDB based on other
+values in the database. This property must not be declared for the respective
+objects in the database.
+
 [#key]
 key:: The property is a key for the respective objects. When the object is
 contained in a xref:#sequence[sequence], the value of this property can be used
