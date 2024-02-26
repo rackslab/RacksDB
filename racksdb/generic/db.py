@@ -388,10 +388,8 @@ class GenericDB(DBObject):
     def load_defined_type(self, literal, schema_type: SchemaDefinedType):
         return schema_type.parse(literal)
 
-    def load_object(
-        self, token, literal, schema_object: SchemaObject, parent: SchemaObject
-    ):
-        logger.debug("Loading object %s with %s (%s)", token, literal, schema_object)
+    def create_object(self, schema_object):
+        """Instanciate DBObject with dynamic instanciation with optional base class."""
         # is it expandable?
         if schema_object.expandable:
             bases = [DBExpandableObject]
@@ -411,7 +409,13 @@ class GenericDB(DBObject):
         except AttributeError:
             pass
         # instanciate the object with its dynamically defined class
-        obj = type(classname, tuple(bases), dict())(self, schema_object)
+        return type(classname, tuple(bases), dict())(self, schema_object)
+
+    def load_object(
+        self, token, literal, schema_object: SchemaObject, parent: SchemaObject
+    ):
+        logger.debug("Loading object %s with %s (%s)", token, literal, schema_object)
+        obj = self.create_object(schema_object)
 
         obj._parent = parent
 
