@@ -34,6 +34,7 @@ components:
           - 0.6
           - 0.6
           - 0.6
+          - 1.0
           items: number
           type: array
         border:
@@ -42,6 +43,7 @@ components:
           - 0.2
           - 0.2
           - 0.2
+          - 1.0
           items: number
           type: array
         chassis:
@@ -50,6 +52,7 @@ components:
           - 0.24705882352941178
           - 0.24705882352941178
           - 0.24705882352941178
+          - 1.0
           items: number
           type: array
         ghost:
@@ -58,6 +61,7 @@ components:
           - 0.45098039215686275
           - 0.45098039215686275
           - 0.45098039215686275
+          - 1.0
           items: number
           type: array
         tags:
@@ -159,6 +163,7 @@ components:
           - 0.2
           - 0.2
           - 0.2
+          - 1.0
           items: number
           type: array
         pane:
@@ -167,6 +172,7 @@ components:
           - 0.0
           - 0.0
           - 0.0
+          - 1.0
           items: number
           type: array
         tags:
