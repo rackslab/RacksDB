@@ -314,6 +314,16 @@ components:
           example: 10000
           type: integer
       type: object
+    RacksDBEquipmentPosition:
+      description: Equipment position in the rack.
+      properties:
+        height:
+          description: Rack slot where the equipment is located.
+          type: integer
+        width:
+          description: Equipment position in rack width.
+          type: integer
+      type: object
     RacksDBInfrastructure:
       properties:
         description:
@@ -392,6 +402,9 @@ components:
           description: The names of the miscellaneous equipments in this set.
           example: kvm[01-02]
           type: string
+        position:
+          $ref: '#/components/schemas/RacksDBEquipmentPosition'
+          description: Miscellaneous equipment position in the rack.
         rack:
           description: The names of the racks in this set.
           example: A[01-10]
@@ -448,6 +461,9 @@ components:
           description: The names of the network equipments in this set.
           example: ethsw[01-10]
           type: string
+        position:
+          $ref: '#/components/schemas/RacksDBEquipmentPosition'
+          description: Network equipment position in the rack.
         rack:
           description: The names of the racks in this set.
           example: A[01-10]
@@ -525,6 +541,9 @@ components:
           description: The names of the nodes in this set.
           example: cn[001-0040]
           type: string
+        position:
+          $ref: '#/components/schemas/RacksDBEquipmentPosition'
+          description: Node position in the rack.
         rack:
           description: The names of the racks in this set.
           example: A[01-10]
@@ -666,10 +685,18 @@ components:
         datacenter:
           $ref: '#/components/schemas/RacksDBDatacenter'
           description: The datacenter where this rack is located.
+        fillrate:
+          description: Rack filling rate.
+          type: number
         name:
           description: The names of the racks in this set.
           example: A[01-10]
           type: string
+        nodes:
+          description: List of nodes in the rack.
+          items:
+            $ref: '#/components/schemas/RacksDBNode'
+          type: array
         room:
           $ref: '#/components/schemas/RacksDBDatacenterRoom'
           description: The datacenter room where this rack is located.
@@ -725,11 +752,14 @@ components:
           description: Unique name of the racks row.
           example: computeA
           type: string
+        nbracks:
+          description: Number of racks in the row.
+          type: integer
         position:
           $ref: '#/components/schemas/RacksDBRacksRowPosition'
           description: The position of the racks row in the room.
         racks:
-          description: The list of (empty) racks in the room.
+          description: The list of (empty) racks in the row.
           items:
             $ref: '#/components/schemas/RacksDBRack'
           type: array
@@ -770,6 +800,9 @@ components:
           description: The names of the storage equipments in this set.
           example: nas[01-04]
           type: string
+        position:
+          $ref: '#/components/schemas/RacksDBEquipmentPosition'
+          description: Storage equipment position in the rack.
         rack:
           description: The names of the racks in this set.
           example: A[01-10]
