@@ -87,9 +87,6 @@ class RacksDBMiscEquipmentBase(RacksDBGenericEquipment):
 
 
 class RacksDBRackBase:
-
-    COMPUTED_PROPERTIES = ["nodes", "fillrate"]
-
     def _filter(self, name=None):
         # filter by name
         if name is not None and name != self.name:
@@ -126,9 +123,6 @@ class RacksDBRackBase:
 
 
 class RacksDBRacksRowBase:
-
-    COMPUTED_PROPERTIES = ["nbracks"]
-
     @property
     def nbracks(self):
         """Return the number of racks in the row."""

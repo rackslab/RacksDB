@@ -362,7 +362,11 @@ _objects:
         description: The position of the racks row in the room.
       racks:
         type: list[:Rack]
-        description: The list of (empty) racks in the room.
+        description: The list of (empty) racks in the row.
+      nbracks:
+        type: int
+        description: Number of racks in the row.
+        computed: true
       reversed:
         type: bool
         description: >-
@@ -423,6 +427,14 @@ _objects:
           The list of tags associated to the rack.
         optional: true
         example: ["control"]
+      nodes:
+        type: list[:Node]
+        description: List of nodes in the rack.
+        computed: true
+      fillrate:
+        type: float
+        description: Rack filling rate.
+        computed: true
   Infrastructure:
     properties:
       name:

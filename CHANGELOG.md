@@ -104,6 +104,7 @@ and this project adheres to
       with escape key or by clicking outside.
     - Add link to infrastructure details view in infrastructures list.
     - Add alternative text for the images.
+- schema: Declare all computed properties in schema.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).
