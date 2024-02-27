@@ -83,6 +83,10 @@ export interface NodeEquipment {
       }
     ]
   }
+  position: {
+    height: number
+    width: number
+  }
   rack: string
   name: string
   slot: number
@@ -102,6 +106,10 @@ export interface NetworkEquipment {
         number: number
       }
     ]
+  }
+  position: {
+    height: number
+    width: number
   }
   tags: []
   rack: string
@@ -124,6 +132,10 @@ export interface StorageEquipment {
       }
     ]
   }
+  position: {
+    height: number
+    width: number
+  }
   tags: []
   rack: string
   name: string
@@ -134,6 +146,10 @@ export interface MiscEquipment {
   type: {
     id: string
     model: string
+    height: number
+    width: number
+  }
+  position: {
     height: number
     width: number
   }
