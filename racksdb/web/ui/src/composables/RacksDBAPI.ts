@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023 Rackslab
+/* Copyright (c) 2022-2024 Rackslab
 
 This file is part of RacksDB.
 
@@ -52,37 +52,75 @@ export interface Infrastructure {
   ]
 }
 
-export interface NodeEquipment {
-  type: {
-    id: string
+export interface NodeEquipmentType {
+  id: string
+  model: string
+  height: number
+  width: number
+  specs: string
+  cpu: {
+    sockets: number
     model: string
-    height: number
-    width: number
     specs: string
-    cpu: {
-      sockets: number
+    cores: number
+  }
+  ram: {
+    dimm: number
+    size: number
+  }
+  storage: [
+    {
+      type: string
       model: string
-      specs: string
-      cores: number
-    }
-    ram: {
-      dimm: number
       size: number
     }
-    storage: [
-      {
-        type: string
-        model: string
-        size: number
-      }
-    ]
-    netifs: [
-      {
-        type: string
-        bandwidth: number
-      }
-    ]
-  }
+  ]
+  netifs: [
+    {
+      type: string
+      bandwidth: number
+    }
+  ]
+}
+
+export interface NetworkEquipmentType {
+  id: string
+  model: string
+  height: number
+  width: number
+  netifs: [
+    {
+      type: string
+      bandwidth: number
+      number: number
+    }
+  ]
+}
+
+export interface StorageEquipmentType {
+  id: string
+  model: string
+  height: number
+  width: number
+  disks: [
+    {
+      type: string
+      size: number
+      model: string
+      number: number
+    }
+  ]
+}
+
+export interface MiscEquipmentType {
+  id: string
+  model: string
+  height: number
+  width: number
+}
+
+export interface NodeEquipment {
+  type: NodeEquipmentType
   position: {
     height: number
     width: number
@@ -94,19 +132,7 @@ export interface NodeEquipment {
 }
 
 export interface NetworkEquipment {
-  type: {
-    id: string
-    model: string
-    height: number
-    width: number
-    netifs: [
-      {
-        type: string
-        bandwidth: number
-        number: number
-      }
-    ]
-  }
+  type: NetworkEquipmentType
   position: {
     height: number
     width: number
@@ -118,20 +144,7 @@ export interface NetworkEquipment {
 }
 
 export interface StorageEquipment {
-  type: {
-    id: string
-    model: string
-    height: number
-    width: number
-    disks: [
-      {
-        type: string
-        size: number
-        model: string
-        number: number
-      }
-    ]
-  }
+  type: StorageEquipmentType
   position: {
     height: number
     width: number
@@ -143,12 +156,7 @@ export interface StorageEquipment {
 }
 
 export interface MiscEquipment {
-  type: {
-    id: string
-    model: string
-    height: number
-    width: number
-  }
+  type: MiscEquipmentType
   position: {
     height: number
     width: number
