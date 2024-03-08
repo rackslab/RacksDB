@@ -79,7 +79,7 @@ onMounted(() => {
           <ComboboxLabel class="flex justify-center text-3xl pb-4">
             <span
               >Select
-              {{ itemType == 'infrastructure' ? 'an': 'a' }}
+              {{ itemType == 'infrastructure' ? 'an' : 'a' }}
               {{ itemType }}</span
             >
           </ComboboxLabel>
