@@ -5,6 +5,7 @@ This file is part of RacksDB.
 SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
 import type { Ref, PropType } from 'vue'
 import type {
   Infrastructure,
@@ -17,14 +18,23 @@ import type {
   StorageEquipmentType,
   MiscEquipmentType
 } from '@/composables/RacksDBAPI'
-import { ref, onMounted } from 'vue'
+import EquipmentTypeModal from '@/components/EquipmentTypeModal.vue'
+import InfrastructureFilters from '@/components/InfrastructureFilters.vue'
+import FiltersBar from '@/components/FiltersBar.vue'
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
   ChevronDownIcon,
   ChevronUpIcon
 } from '@heroicons/vue/24/outline'
-import EquipmentTypeModal from '@/components/EquipmentTypeModal.vue'
+import { FunnelIcon } from '@heroicons/vue/24/solid'
+
+const props = defineProps({
+  infrastructureDetails: {
+    type: Object as PropType<Infrastructure>,
+    required: true
+  }
+})
 
 var showModal = ref(false)
 var modalContent: Ref<
@@ -32,6 +42,63 @@ var modalContent: Ref<
 > = ref()
 const alphabeticalOrder = ref(true)
 const displayRacks: Ref<Record<string, boolean>> = ref({})
+const showSlider = ref(false)
+const inputEquipmentName: Ref<string> = ref('')
+const selectedRacks: Ref<Array<string>> = ref([])
+const selectedCategories: Ref<Array<string>> = ref([])
+const selectedEquipmentTypes: Ref<Array<string>> = ref([])
+const selectedTags: Ref<Array<string>> = ref([])
+let equipmentCategories: Array<string> = []
+let racks: Array<string> = []
+let equipmentTypes: Array<string> = []
+let tags: Array<string> = []
+const infrastructureRacks: Ref<Array<string>> = ref([])
+const racksEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
+const racksFilteredEquipment = computed(() => {
+  let filteredEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
+
+  Object.keys(racksEquipment).forEach((rackName) => {
+    filteredEquipment[rackName] = racksEquipment[rackName].filter((equipment) => {
+      if (selectedRacks.value.length > 0 && !selectedRacks.value.includes(equipment.rack)) {
+        return false
+      }
+
+      if (
+        selectedCategories.value.length > 0 &&
+        !selectedCategories.value.includes(equipment.equipmentType)
+      ) {
+        return false
+      }
+
+      if (
+        selectedEquipmentTypes.value.length > 0 &&
+        !selectedEquipmentTypes.value.includes(equipment.type.id)
+      ) {
+        return false
+      }
+
+      if (selectedTags.value.length > 0) {
+        if (equipment.tags.filter((tag) => selectedTags.value.includes(tag)).length === 0) {
+          return false
+        }
+      }
+
+      if (inputEquipmentName.value !== '') {
+        if (
+          equipment.name
+            .toLocaleLowerCase()
+            .includes(inputEquipmentName.value.toLocaleLowerCase()) === false
+        ) {
+          return false
+        }
+      }
+
+      return true
+    })
+  })
+
+  return filteredEquipment
+})
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -49,6 +116,10 @@ interface Storage extends StorageEquipment {
 
 interface Misc extends MiscEquipment {
   equipmentType: EquipmentType
+}
+
+function toggleSlider() {
+  showSlider.value = !showSlider.value
 }
 
 function displayRackEquipment(rackName: string) {
@@ -102,6 +173,7 @@ function getRackEquipments(rackName: string) {
       })
     )
   })
+
   /*
    * Sort equipment by slot in descending order, or in width descending orders
    * when in the same slot.
@@ -123,16 +195,28 @@ function toggleModal(
     showModal.value = !showModal.value
   }
 }
-const props = defineProps({
-  infrastructureDetails: {
-    type: Object as PropType<Infrastructure>,
-    required: true
-  }
-})
 
 onMounted(() => {
-  props.infrastructureDetails.layout.forEach((rack) => {
-    displayRacks.value[rack.rack] = true
+  props.infrastructureDetails.layout.forEach((part) => {
+    displayRacks.value[part.rack] = true
+    infrastructureRacks.value.push(part.rack)
+    racks.push(part.rack)
+    racksEquipment[part.rack] = getRackEquipments(part.rack)
+    racksEquipment[part.rack].forEach((equipment) => {
+      if (!equipmentCategories.includes(equipment.equipmentType)) {
+        equipmentCategories.push(equipment.equipmentType)
+      }
+
+      if (!equipmentTypes.includes(equipment.type.id)) {
+        equipmentTypes.push(equipment.type.id)
+      }
+
+      equipment.tags.forEach((tag) => {
+        if (!tags.includes(tag)) {
+          tags.push(tag)
+        }
+      })
+    })
   })
 })
 </script>
@@ -148,10 +232,48 @@ onMounted(() => {
         <BarsArrowUpIcon v-else class="h-7 w-7" />
         <p class="pl-2">Sort racks</p>
       </div>
+      <div
+        class="flex pt-5 cursor-pointer hover:text-purple-700 hover:duration-100 duration-150"
+        @click="toggleSlider()"
+      >
+        <p class="pr-2">Filters</p>
+        <FunnelIcon class="h-7 w-7" />
+      </div>
     </div>
   </div>
-  <div class="flex justify-center my-auto mx-auto pt-5">
-    <table class="min-w-[60vw] text-center text-gray-500 dark:text-gray-400 table-fixed">
+
+  <FiltersBar
+    v-show="
+      selectedRacks.length > 0 ||
+      selectedCategories.length > 0 ||
+      selectedEquipmentTypes.length > 0 ||
+      selectedTags.length > 0 ||
+      inputEquipmentName.length > 0
+    "
+    v-model:selected-racks="selectedRacks"
+    v-model:selected-equipment-types="selectedEquipmentTypes"
+    v-model:selected-categories="selectedCategories"
+    v-model:selected-tags="selectedTags"
+    v-model:input-equipment-name="inputEquipmentName"
+  />
+
+  <!-- Slider -->
+  <InfrastructureFilters
+    @toggle-slider="toggleSlider"
+    :showSlider="showSlider"
+    :racks="racks"
+    :equipmentCategories="equipmentCategories"
+    :equipmentTypes="equipmentTypes"
+    :tags="tags"
+    v-model:selected-racks="selectedRacks"
+    v-model:selected-equipment-types="selectedEquipmentTypes"
+    v-model:selected-categories="selectedCategories"
+    v-model:selected-tags="selectedTags"
+    v-model:input-equipment-name="inputEquipmentName"
+  />
+
+  <div class="flex justify-center my-auto mx-auto pt-3">
+    <table class="w-[60vw] text-center text-gray-500 dark:text-gray-400 table-fixed">
       <thead
         class="border-b text-lg text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400 h-24"
       >
@@ -172,39 +294,25 @@ onMounted(() => {
                   <ChevronDownIcon class="h-7 w-7 text-purple-700" />
                 </div>
                 <div v-else><ChevronUpIcon class="h-7 w-7 text-purple-700" /></div>
-                <span class="ml-2">{{ rack }}</span>
+                <p class="ml-2">
+                  {{ rack }}
+                  <span class="text-sm font-light"
+                    >({{ racksFilteredEquipment[rack].length }})</span
+                  >
+                </p>
               </div>
             </th>
           </tr>
           <template v-if="displayState">
             <tr
-              v-for="equipment in getRackEquipments(rack)"
+              v-for="equipment in racksFilteredEquipment[rack]"
               :key="equipment.name"
               class="border-b border-t dark:bg-gray-800 h-14 align-middle"
             >
               <td>{{ equipment.name }}</td>
               <td class="capitalize flex justify-center align-middle">
                 <div
-                  v-if="equipment.equipmentType == 'nodes'"
-                  class="bg-red-100 rounded-xl center items-center my-2 w-20 h-6"
-                >
-                  <span>{{ equipment.equipmentType }}</span>
-                </div>
-                <div
-                  v-if="equipment.equipmentType == 'storage'"
-                  class="bg-blue-100 rounded-xl center items-center my-2 w-20 h-6"
-                >
-                  <span>{{ equipment.equipmentType }}</span>
-                </div>
-                <div
-                  v-if="equipment.equipmentType == 'network'"
-                  class="bg-green-100 rounded-xl center items-center my-2 w-20 h-6"
-                >
-                  <span>{{ equipment.equipmentType }}</span>
-                </div>
-                <div
-                  v-if="equipment.equipmentType == 'misc'"
-                  class="bg-yellow-100 rounded-xl center items-center my-2 w-20 h-6"
+                  class="bg-yellow-500 p-2 mx-1 my-2 w-20 justify-center rounded-full text-white"
                 >
                   <span>{{ equipment.equipmentType }}</span>
                 </div>
@@ -221,7 +329,7 @@ onMounted(() => {
                   <div
                     v-for="tag in equipment.tags"
                     :key="tag"
-                    class="flex p-2 mx-1 my-2 w-20 justify-center bg-purple-700 rounded-md text-white"
+                    class="flex p-2 mx-1 my-2 w-20 justify-center bg-purple-700 rounded-full text-white"
                   >
                     {{ tag }}
                   </div>
