@@ -48,6 +48,7 @@ const displayRacks: Ref<Record<string, boolean>> = ref({})
 const showSlider = ref(false)
 const selectedRacks: Ref<Array<string>> = ref([])
 const infrastructureRacks: Ref<Array<string>> = ref([])
+const equipmentCategories: Array<string> = ['nodes', 'storage', 'network', 'misc']
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -319,6 +320,26 @@ watch(
                       </Combobox>
 
                       <!-- Equipment category -->
+                      <div class="pt-4 px-4 flex flex-col">
+                        <label for="equipment-category" class="text-lg pb-3"
+                          >Equipment category</label
+                        >
+                        <div
+                          v-for="equipmentCategory in equipmentCategories"
+                          :key="equipmentCategory"
+                        >
+                          <input
+                            id="equipment-category"
+                            name="equipment-category"
+                            type="checkbox"
+                            :value="equipmentCategory"
+                            class="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-700"
+                          />
+                          <label for="equipment-category" class="pl-2 capitalize">{{
+                            equipmentCategory
+                          }}</label>
+                        </div>
+                      </div>
 
                       <!-- Equipment types -->
 
