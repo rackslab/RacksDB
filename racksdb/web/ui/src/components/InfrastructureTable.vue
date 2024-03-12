@@ -51,6 +51,7 @@ const infrastructureRacks: Ref<Array<string>> = ref([])
 const equipmentCategories: Array<string> = ['nodes', 'storage', 'network', 'misc']
 const selectedEquipmentTypes: Ref<Array<string>> = ref([])
 let equipmentTypes: Array<string> = []
+let tags: Array<string> = []
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -128,9 +129,13 @@ function getRackEquipments(rackName: string) {
 
   equipments.forEach((equipment) => {
     equipmentTypes.push(equipment.type.id)
+    equipment.tags.forEach((tag) => {
+      tags.push(tag)
+    })
   })
 
   equipmentTypes = equipmentTypes.filter((x, i) => equipmentTypes.indexOf(x) === i)
+  tags = tags.filter((x, i) => tags.indexOf(x) === i)
 
   if (selectedEquipmentTypes.value.length > 0) {
     equipments = equipments.filter((equipment) =>
@@ -444,6 +449,19 @@ watch(
                       </Combobox>
 
                       <!-- Tags -->
+                      <div class="pt-4 px-4 flex flex-col">
+                        <label for="tags" class="text-lg pb-3">Tags</label>
+                        <div v-for="tag in tags" :key="tag">
+                          <input
+                            id="tags"
+                            name="tags"
+                            type="checkbox"
+                            :value="tag"
+                            class="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-700"
+                          />
+                          <label for="tags" class="pl-2 capitalize">{{ tag }}</label>
+                        </div>
+                      </div>
 
                       <!-- Equipment name -->
                     </div>
