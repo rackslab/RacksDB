@@ -52,6 +52,7 @@ const equipmentCategories: Array<string> = ['nodes', 'storage', 'network', 'misc
 const selectedEquipmentTypes: Ref<Array<string>> = ref([])
 let equipmentTypes: Array<string> = []
 let tags: Array<string> = []
+const input = ref('')
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -464,6 +465,16 @@ watch(
                       </div>
 
                       <!-- Equipment name -->
+                      <div class="pt-4 px-4 flex flex-col">
+                        <label for="equipment-name" class="text-lg pb-3">Equipment name</label>
+                        <input
+                          type="text"
+                          v-model="input"
+                          class="w-96 rounded-md focus:border-purple-700 focus:outline-none border-2 border-solid bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+                          placeholder="Filter by equipment name"
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
                 </DialogPanel>
