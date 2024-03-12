@@ -9,7 +9,12 @@ from typing import Union
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBDict, DBList, DBSplittedFilesLoader
+from .generic.errors import DBSchemaError, DBFormatError
 from . import bases
+
+# Export main errors to facilitate import from other software which use RacksDB
+# as external library.
+__all__ = [DBSchemaError, DBFormatError]
 
 
 class RacksDB(GenericDB):

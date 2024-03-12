@@ -9,9 +9,13 @@ and this project adheres to
 ## Unreleased
 
 ### Added
-- lib: Add advanced `tags` property and `_filter()` method specializations on
-  `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
-  `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
+- lib:
+  - Add advanced `tags` property and `_filter()` method specializations on
+    `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
+    `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
+  - Export `DBSchemaError` and `DBFormatError` in main module in order to
+    facilitate their import from other software that use RacksDB as an external
+    library.
 - cli: Add `-c, --coordinates` and `--coordinates-format` arguments on
   `racksdb draw` sub-command to generate coordinate file in either JSON or YAML
   format with coordinates of racks and equipment in the image along with the
