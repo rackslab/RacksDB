@@ -249,8 +249,16 @@ class DBDict(dict):
         return list(self)[0]  # list() calls __iter__()
 
 
-class DBFileLoader:
+class DBLoader:
+    """Abstract DB loader."""
+
+    def __init__(self):
+        self.path = None
+
+
+class DBFileLoader(DBLoader):
     def __init__(self, path):
+        self.path = path
         with open(path) as fh:
             try:
                 self.content = yaml.safe_load(fh)
@@ -258,8 +266,9 @@ class DBFileLoader:
                 raise DBFormatError(err)
 
 
-class DBSplittedFilesLoader:
+class DBSplittedFilesLoader(DBLoader):
     def __init__(self, path):
+        self.path = path
         # try the parent folder
         if not path.exists():
             raise DBFormatError(f"DB path {path} does not exist")
@@ -280,7 +289,7 @@ class DBSplittedFilesLoader:
                 self.content[item.stem] = DBSplittedFilesLoader(item).content
 
 
-class DBDictsLoader:
+class DBDictsLoader(DBLoader):
     """Loader that loads data from an optional set of dictionaries nothing. It accepts
     any number of dictionaries in argument, they are all deep merged consecutively. It
     can be used to load optional database files (ie. potentially empty database) when
@@ -293,7 +302,7 @@ class DBDictsLoader:
             self.content = deepmerge(copy.deepcopy(self.content), _content)
 
 
-class DBStdinLoader:
+class DBStdinLoader(DBLoader):
     """Load YAML database provided in program's standard input."""
 
     def __init__(self):
@@ -303,7 +312,7 @@ class DBStdinLoader:
             raise DBFormatError(err)
 
 
-class DBStringLoader:
+class DBStringLoader(DBLoader):
     """Load YAML database provided in a string."""
 
     def __init__(self, content, initial={}):
