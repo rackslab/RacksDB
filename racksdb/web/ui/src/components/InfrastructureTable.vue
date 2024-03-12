@@ -49,6 +49,8 @@ const showSlider = ref(false)
 const selectedRacks: Ref<Array<string>> = ref([])
 const infrastructureRacks: Ref<Array<string>> = ref([])
 const equipmentCategories: Array<string> = ['nodes', 'storage', 'network', 'misc']
+const selectedEquipmentTypes: Ref<Array<string>> = ref([])
+let equipmentTypes: Array<string> = []
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -123,6 +125,19 @@ function getRackEquipments(rackName: string) {
       })
     )
   })
+
+  equipments.forEach((equipment) => {
+    equipmentTypes.push(equipment.type.id)
+  })
+
+  equipmentTypes = equipmentTypes.filter((x, i) => equipmentTypes.indexOf(x) === i)
+
+  if (selectedEquipmentTypes.value.length > 0) {
+    equipments = equipments.filter((equipment) =>
+      selectedEquipmentTypes.value.includes(equipment.type.id)
+    )
+  }
+
   /*
    * Sort equipment by slot in descending order, or in width descending orders
    * when in the same slot.
@@ -174,6 +189,31 @@ watch(
       })
 
       displayRacks.value = filteredRacks
+    }
+  }
+)
+
+watch(
+  () => selectedEquipmentTypes.value,
+  () => {
+    const filteredEquipmentTypes: Record<string, boolean> = {}
+    if (selectedEquipmentTypes.value.length > 0) {
+      infrastructureRacks.value.forEach((rack) => {
+        getRackEquipments(rack).forEach((equipment) => {
+          selectedEquipmentTypes.value.forEach((selectedEquipment) => {
+            if (equipment.type.id == selectedEquipment) {
+              filteredEquipmentTypes[rack] = true
+            }
+            displayRacks.value = filteredEquipmentTypes
+          })
+        })
+      })
+    } else {
+      infrastructureRacks.value.forEach((rack) => {
+        filteredEquipmentTypes[rack] = true
+      })
+
+      displayRacks.value = filteredEquipmentTypes
     }
   }
 )
@@ -342,6 +382,66 @@ watch(
                       </div>
 
                       <!-- Equipment types -->
+                      <Combobox as="div" v-model="selectedEquipmentTypes" multiple class="p-4">
+                        <ComboboxLabel class="text-lg">Equipment Types</ComboboxLabel>
+
+                        <div
+                          class="pt-3 relative w-full cursor-default rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
+                        >
+                          <ComboboxInput
+                            class="w-96 capitalize focus:border-purple-700 focus:outline-none border-2 border-solid rounded-md bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
+                            :value="selectedEquipmentTypes"
+                          />
+                          <ComboboxButton class="pt-3 absolute inset-y-0 right-0 flex items-center">
+                            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          </ComboboxButton>
+                        </div>
+                        <transition
+                          enter-active-class="transition duration-100 ease-out"
+                          enter-from-class="transform scale-95 opacity-0"
+                          enter-to-class="transform scale-100 opacity-100"
+                          leave-active-class="transition duration-75 ease-out"
+                          leave-from-class="transform scale-100 opacity-100"
+                          leave-to-class="transform scale-95 opacity-0"
+                        >
+                          <ComboboxOptions
+                            class="w-96 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                          >
+                            <ComboboxOption
+                              v-for="equipment in equipmentTypes"
+                              :key="equipment"
+                              :value="equipment"
+                              v-slot="{ active, selected }"
+                            >
+                              <li
+                                :class="[
+                                  'relative cursor-default select-none py-2 pl-3 pr-9',
+                                  active ? 'bg-purple-600 text-white' : 'text-gray-900'
+                                ]"
+                              >
+                                <span
+                                  :class="[
+                                    'block truncate capitalize',
+                                    selected && 'font-semibold'
+                                  ]"
+                                >
+                                  {{ equipment }}
+                                </span>
+
+                                <span
+                                  v-if="selected"
+                                  :class="[
+                                    'absolute inset-y-0 right-0 flex items-center pr-4',
+                                    active ? 'text-white' : 'text-purple-600'
+                                  ]"
+                                >
+                                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                </span>
+                              </li>
+                            </ComboboxOption>
+                          </ComboboxOptions>
+                        </transition>
+                      </Combobox>
 
                       <!-- Tags -->
 
