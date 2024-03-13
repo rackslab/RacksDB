@@ -542,7 +542,7 @@ watch(
                   <ChevronDownIcon class="h-7 w-7 text-purple-700" />
                 </div>
                 <div v-else><ChevronUpIcon class="h-7 w-7 text-purple-700" /></div>
-                <span class="ml-2">{{ rack }}</span>
+                <p class="ml-2">{{ rack }} <span class="text-sm font-light">({{ getRackEquipments(rack).length }})</span></p>
               </div>
             </th>
           </tr>
