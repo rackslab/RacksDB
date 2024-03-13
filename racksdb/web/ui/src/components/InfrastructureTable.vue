@@ -53,6 +53,7 @@ const selectedEquipmentTypes: Ref<Array<string>> = ref([])
 let equipmentTypes: Array<string> = []
 let tags: Array<string> = []
 const input = ref('')
+const selectedCategories: Ref<Array<string>> = ref([])
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -144,6 +145,12 @@ function getRackEquipments(rackName: string) {
     )
   }
 
+  if (selectedCategories.value.length > 0) {
+    equipments = equipments.filter((equipment) =>
+      selectedCategories.value.includes(equipment.equipmentType)
+    )
+  }
+
   /*
    * Sort equipment by slot in descending order, or in width descending orders
    * when in the same slot.
@@ -220,6 +227,32 @@ watch(
       })
 
       displayRacks.value = filteredEquipmentTypes
+    }
+  }
+)
+
+watch(
+  () => selectedCategories.value,
+  () => {
+    const filteredCategories: Record<string, boolean> = {}
+    if (selectedCategories.value.length > 0) {
+      infrastructureRacks.value.forEach((rack) => {
+        getRackEquipments(rack).forEach((equipment) => {
+          selectedCategories.value.forEach((selectedCategory) => {
+            if (equipment.equipmentType == selectedCategory) {
+              console.log(equipment.equipmentType + ' et ' + selectedCategory)
+              filteredCategories[rack] = true
+            }
+            displayRacks.value = filteredCategories
+          })
+        })
+      })
+    } else {
+      infrastructureRacks.value.forEach((rack) => {
+        filteredCategories[rack] = true
+      })
+
+      displayRacks.value = filteredCategories
     }
   }
 )
@@ -379,6 +412,7 @@ watch(
                             name="equipment-category"
                             type="checkbox"
                             :value="equipmentCategory"
+                            v-model="selectedCategories"
                             class="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-700"
                           />
                           <label for="equipment-category" class="pl-2 capitalize">{{
