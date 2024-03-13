@@ -180,9 +180,9 @@ const props = defineProps({
 })
 
 onMounted(() => {
-  props.infrastructureDetails.layout.forEach((rack) => {
-    displayRacks.value[rack.rack] = true
-    infrastructureRacks.value.push(rack.rack)
+  props.infrastructureDetails.layout.forEach((part) => {
+    displayRacks.value[part.rack] = true
+    infrastructureRacks.value.push(part.rack)
   })
 })
 
