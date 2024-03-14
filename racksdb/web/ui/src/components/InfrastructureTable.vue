@@ -17,7 +17,7 @@ import type {
   StorageEquipmentType,
   MiscEquipmentType
 } from '@/composables/RacksDBAPI'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -48,12 +48,22 @@ const displayRacks: Ref<Record<string, boolean>> = ref({})
 const showSlider = ref(false)
 const selectedRacks: Ref<Array<string>> = ref([])
 const infrastructureRacks: Ref<Array<string>> = ref([])
-const equipmentCategories: Array<string> = ['nodes', 'storage', 'network', 'misc']
 const selectedEquipmentTypes: Ref<Array<string>> = ref([])
-let equipmentTypes: Array<string> = []
-let tags: Array<string> = []
 const input = ref('')
 const selectedCategories: Ref<Array<string>> = ref([])
+let equipments: Array<Node | Storage | Network | Misc> = []
+let equipmentCategories: Array<string> = []
+let racks: Array<string> = []
+let equipmentTypes: Array<string> = []
+let tags: Array<string> = []
+const rackFilteredEquipment = computed(() => {
+  const filteredEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
+  props.infrastructureDetails.layout.forEach((part) => {
+    const rackEquipments = getRackEquipments(part.rack)
+    filteredEquipment[part.rack] = rackEquipments
+  })
+  return filteredEquipment
+})
 
 type EquipmentType = 'nodes' | 'storage' | 'network' | 'misc'
 
@@ -129,28 +139,6 @@ function getRackEquipments(rackName: string) {
     )
   })
 
-  equipments.forEach((equipment) => {
-    equipmentTypes.push(equipment.type.id)
-    equipment.tags.forEach((tag) => {
-      tags.push(tag)
-    })
-  })
-
-  equipmentTypes = equipmentTypes.filter((x, i) => equipmentTypes.indexOf(x) === i)
-  tags = tags.filter((x, i) => tags.indexOf(x) === i)
-
-  if (selectedEquipmentTypes.value.length > 0) {
-    equipments = equipments.filter((equipment) =>
-      selectedEquipmentTypes.value.includes(equipment.type.id)
-    )
-  }
-
-  if (selectedCategories.value.length > 0) {
-    equipments = equipments.filter((equipment) =>
-      selectedCategories.value.includes(equipment.equipmentType)
-    )
-  }
-
   /*
    * Sort equipment by slot in descending order, or in width descending orders
    * when in the same slot.
@@ -183,7 +171,24 @@ onMounted(() => {
   props.infrastructureDetails.layout.forEach((part) => {
     displayRacks.value[part.rack] = true
     infrastructureRacks.value.push(part.rack)
+    getRackEquipments(part.rack).forEach((equipment) => {
+      equipments.push(equipment)
+    })
   })
+
+  equipments.forEach((equipment) => {
+    racks.push(equipment.rack)
+    equipmentCategories.push(equipment.equipmentType)
+    equipmentTypes.push(equipment.type.id)
+    equipment.tags.forEach((tag) => {
+      tags.push(tag)
+    })
+  })
+
+  equipmentTypes = equipmentTypes.filter((x, i) => equipmentTypes.indexOf(x) === i)
+  equipmentCategories = equipmentCategories.filter((x, i) => equipmentCategories.indexOf(x) === i)
+  tags = tags.filter((x, i) => tags.indexOf(x) === i)
+  racks = racks.filter((x, i) => racks.indexOf(x) === i)
 })
 
 watch(
@@ -240,7 +245,6 @@ watch(
         getRackEquipments(rack).forEach((equipment) => {
           selectedCategories.value.forEach((selectedCategory) => {
             if (equipment.equipmentType == selectedCategory) {
-              console.log(equipment.equipmentType + ' et ' + selectedCategory)
               filteredCategories[rack] = true
             }
             displayRacks.value = filteredCategories
@@ -363,7 +367,7 @@ watch(
                             class="w-96 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                           >
                             <ComboboxOption
-                              v-for="rack in infrastructureRacks"
+                              v-for="rack in racks"
                               :key="rack"
                               :value="rack"
                               v-slot="{ active, selected }"
@@ -542,13 +546,16 @@ watch(
                   <ChevronDownIcon class="h-7 w-7 text-purple-700" />
                 </div>
                 <div v-else><ChevronUpIcon class="h-7 w-7 text-purple-700" /></div>
-                <p class="ml-2">{{ rack }} <span class="text-sm font-light">({{ getRackEquipments(rack).length }})</span></p>
+                <p class="ml-2">
+                  {{ rack }}
+                  <span class="text-sm font-light">({{ rackFilteredEquipment[rack].length }})</span>
+                </p>
               </div>
             </th>
           </tr>
           <template v-if="displayState">
             <tr
-              v-for="equipment in getRackEquipments(rack)"
+              v-for="equipment in rackFilteredEquipment[rack]"
               :key="equipment.name"
               class="border-b border-t dark:bg-gray-800 h-14 align-middle"
             >
