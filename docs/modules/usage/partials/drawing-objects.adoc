@@ -5,7 +5,7 @@
     to discover how it is used.
 ////
 :tbl-obj-props-cols-specs: 2m,6a,4,^.^1
-:tbl-obj-backrefs-cols-specs: 2m,6a,4
+:tbl-obj-backrefs-cols-specs: 4m,6a,4
 
 [#obj-root]
 == Database Root
