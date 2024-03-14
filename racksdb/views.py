@@ -181,12 +181,13 @@ class RacksDBViews(DBViewSet):
                 DBActionResponse("multipart/form-data", binary=True),
             ],
             errors=[
-                DBActionError(400, "Unable to parse drawing parameters in JSON format"),
                 DBActionError(
-                    415,
-                    "Unsupported drawing parameters format or unable to load drawing "
-                    "parameters schema",
+                    400,
+                    "Unable to load drawing parameters or unsupported coordinates "
+                    "format.",
                 ),
+                DBActionError(415, "Unsupported drawing parameters format."),
+                DBActionError(500, "Unable to load drawing parameters schema."),
             ],
         )
     ]

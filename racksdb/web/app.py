@@ -68,7 +68,7 @@ class RacksDBWebBlueprint(Blueprint):
                 view_func=getattr(self, f"_{action.name}"),
                 methods=[action.method.upper()],
             )
-        for error in [400, 404, 415]:
+        for error in [400, 404, 415, 500]:
             self.register_error_handler(error, self._handle_bad_request)
 
     def _handle_bad_request(self, error):
@@ -129,15 +129,15 @@ class RacksDBWebBlueprint(Blueprint):
         try:
             parameters = DrawingParameters.load(db_loader, self.drawings_schema)
         except DBSchemaError as err:
-            abort(415, f"Unable to load drawing parameters schema: {str(err)}")
+            abort(500, f"Unable to load drawing parameters schema: {str(err)}")
         except DBFormatError as err:
-            abort(415, f"Unable to load drawing parameters: {str(err)}")
+            abort(400, f"Unable to load drawing parameters: {str(err)}")
 
         # Handle coordinates query parameters
         with_coordinates = "coordinates" in request.args
         coordinates_format = request.args.get("coordinates_format", "json")
         if coordinates_format not in {"json", "yaml"}:
-            abort(145, "Unsupported coordinates format")
+            abort(400, "Unsupported coordinates format")
 
         # Create volatile in-memory file handlers
         file = io.BytesIO()

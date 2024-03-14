@@ -89,6 +89,11 @@ and this project adheres to
   - In infrastructure diagrams, computed rows widths and heights, thus drawing
     scale eventually, are now based on represented racks by taking into account
     empty racks, `discard_empty_racks` and `other_racks` drawing parameters.
+- web:
+  - Change some HTTP status code to report errors on `draw` action endpoint:
+    - 415 → 500 when unable to load drawing parameters schema.
+    - 415 → 400 when unable to load drawing parameters.
+    - 415 → 400 for unsupported coordinates format.
 - ui:
   - Many improvements in datacenter details page (#39), such as:
     - The table of rooms is moved upper in the page.
