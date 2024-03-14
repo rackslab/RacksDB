@@ -183,8 +183,8 @@ class RacksDBViews(DBViewSet):
             errors=[
                 DBActionError(
                     400,
-                    "Unable to load drawing parameters or unsupported coordinates "
-                    "format.",
+                    "Unable to load drawing parameters, unsupported coordinates format"
+                    "or unable to load requested entity in database.",
                 ),
                 DBActionError(415, "Unsupported drawing parameters format."),
                 DBActionError(500, "Unable to load drawing parameters schema."),

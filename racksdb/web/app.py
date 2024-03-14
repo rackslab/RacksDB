@@ -13,6 +13,7 @@ from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
 from requests_toolbelt import MultipartEncoder
 
 from .. import RacksDB
+from ..errors import RacksDBError
 from ..version import get_version
 from ..views import RacksDBViews
 from ..generic.db import DBDictsLoader, DBStringLoader
@@ -143,26 +144,29 @@ class RacksDBWebBlueprint(Blueprint):
         file = io.BytesIO()
         coordinates_fh = io.StringIO() if with_coordinates else None
 
-        if entity == "infrastructure":
-            drawer = InfrastructureDrawer(
-                self.db,
-                name,
-                file,
-                format,
-                parameters,
-                coordinates_fh,
-                coordinates_format,
-            )
-        elif entity == "room":
-            drawer = RoomDrawer(
-                self.db,
-                name,
-                file,
-                format,
-                parameters,
-                coordinates_fh,
-                coordinates_format,
-            )
+        try:
+            if entity == "infrastructure":
+                drawer = InfrastructureDrawer(
+                    self.db,
+                    name,
+                    file,
+                    format,
+                    parameters,
+                    coordinates_fh,
+                    coordinates_format,
+                )
+            elif entity == "room":
+                drawer = RoomDrawer(
+                    self.db,
+                    name,
+                    file,
+                    format,
+                    parameters,
+                    coordinates_fh,
+                    coordinates_format,
+                )
+        except RacksDBError as err:
+            abort(400, str(err))
         drawer.draw()
         file.seek(0)
 
