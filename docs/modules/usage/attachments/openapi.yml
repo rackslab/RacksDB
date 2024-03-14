@@ -1083,14 +1083,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: Unable to parse drawing parameters in JSON format
+          description: Unable to load drawing parameters, unsupported coordinates
+            formator unable to load requested entity in database.
         '415':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: Unsupported drawing parameters format or unable to load drawing
-            parameters schema
+          description: Unsupported drawing parameters format.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unable to load drawing parameters schema.
   /v0.3.0/infrastructures:
     get:
       description: Get information about infrastructures
