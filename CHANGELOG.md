@@ -131,6 +131,7 @@ and this project adheres to
     - When the infrastructure image is maximized, it can be closed with
       escape button or by clicking on the sides.
 - schema: Declare all computed properties in schema.
+- pkg: Move Flask-Cors python dependency in _dev_ variant package.
 - docs:
   - Update supported Linux distributions in quickstart guide (add fedora 39
     and drop fedora 37).

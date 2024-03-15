@@ -30,9 +30,11 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+dev = [
+    "Flask-Cors",
+]
 web = [
     "Flask",
-    "Flask-Cors",
     "requests-toolbelt",
 ]
 
