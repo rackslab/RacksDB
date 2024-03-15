@@ -17,7 +17,7 @@ import type {
   StorageEquipmentType,
   MiscEquipmentType
 } from '@/composables/RacksDBAPI'
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
@@ -46,22 +46,53 @@ var modalContent: Ref<
 const alphabeticalOrder = ref(true)
 const displayRacks: Ref<Record<string, boolean>> = ref({})
 const showSlider = ref(false)
-const selectedRacks: Ref<Array<string>> = ref([])
 const infrastructureRacks: Ref<Array<string>> = ref([])
-const selectedEquipmentTypes: Ref<Array<string>> = ref([])
 const input = ref('')
+const selectedRacks: Ref<Array<string>> = ref([])
 const selectedCategories: Ref<Array<string>> = ref([])
-let equipments: Array<Node | Storage | Network | Misc> = []
+const selectedEquipmentTypes: Ref<Array<string>> = ref([])
+const selectedTags: Ref<Array<string>> = ref([])
 let equipmentCategories: Array<string> = []
 let racks: Array<string> = []
 let equipmentTypes: Array<string> = []
 let tags: Array<string> = []
+const equipments: Record<string, Array<Node | Storage | Misc | Network>> = {}
 const rackFilteredEquipment = computed(() => {
-  const filteredEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
+  let filteredEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
+
   props.infrastructureDetails.layout.forEach((part) => {
-    const rackEquipments = getRackEquipments(part.rack)
-    filteredEquipment[part.rack] = rackEquipments
+    const rackName = part.rack
+
+    filteredEquipment[rackName] = equipments[rackName].filter((equipment) => {
+      if (selectedRacks.value.length > 0 && !selectedRacks.value.includes(equipment.rack)) {
+        return false
+      }
+
+      if (
+        selectedCategories.value.length > 0 &&
+        !selectedCategories.value.includes(equipment.equipmentType)
+      ) {
+        return false
+      }
+
+      if (
+        selectedEquipmentTypes.value.length > 0 &&
+        !selectedEquipmentTypes.value.includes(equipment.type.id)
+      ) {
+        return false
+      }
+
+      if (selectedTags.value.length > 0) {
+        const filteredTags = equipment.tags.filter((tag) => selectedTags.value.includes(tag))
+        if (filteredTags.length === 0) {
+          return false
+        }
+      }
+
+      return true
+    })
   })
+
   return filteredEquipment
 })
 
@@ -171,17 +202,14 @@ onMounted(() => {
   props.infrastructureDetails.layout.forEach((part) => {
     displayRacks.value[part.rack] = true
     infrastructureRacks.value.push(part.rack)
-    getRackEquipments(part.rack).forEach((equipment) => {
-      equipments.push(equipment)
-    })
-  })
-
-  equipments.forEach((equipment) => {
-    racks.push(equipment.rack)
-    equipmentCategories.push(equipment.equipmentType)
-    equipmentTypes.push(equipment.type.id)
-    equipment.tags.forEach((tag) => {
-      tags.push(tag)
+    equipments[part.rack] = getRackEquipments(part.rack)
+    equipments[part.rack].forEach((equipment) => {
+      racks.push(equipment.rack)
+      equipmentCategories.push(equipment.equipmentType)
+      equipmentTypes.push(equipment.type.id)
+      equipment.tags.forEach((tag) => {
+        tags.push(tag)
+      })
     })
   })
 
@@ -190,76 +218,6 @@ onMounted(() => {
   tags = tags.filter((x, i) => tags.indexOf(x) === i)
   racks = racks.filter((x, i) => racks.indexOf(x) === i)
 })
-
-watch(
-  () => selectedRacks.value,
-  () => {
-    const filteredRacks: Record<string, boolean> = {}
-    if (selectedRacks.value.length > 0) {
-      selectedRacks.value.forEach((rack) => {
-        filteredRacks[rack] = true
-      })
-
-      displayRacks.value = filteredRacks
-    } else {
-      infrastructureRacks.value.forEach((rack) => {
-        filteredRacks[rack] = true
-      })
-
-      displayRacks.value = filteredRacks
-    }
-  }
-)
-
-watch(
-  () => selectedEquipmentTypes.value,
-  () => {
-    const filteredEquipmentTypes: Record<string, boolean> = {}
-    if (selectedEquipmentTypes.value.length > 0) {
-      infrastructureRacks.value.forEach((rack) => {
-        getRackEquipments(rack).forEach((equipment) => {
-          selectedEquipmentTypes.value.forEach((selectedEquipment) => {
-            if (equipment.type.id == selectedEquipment) {
-              filteredEquipmentTypes[rack] = true
-            }
-            displayRacks.value = filteredEquipmentTypes
-          })
-        })
-      })
-    } else {
-      infrastructureRacks.value.forEach((rack) => {
-        filteredEquipmentTypes[rack] = true
-      })
-
-      displayRacks.value = filteredEquipmentTypes
-    }
-  }
-)
-
-watch(
-  () => selectedCategories.value,
-  () => {
-    const filteredCategories: Record<string, boolean> = {}
-    if (selectedCategories.value.length > 0) {
-      infrastructureRacks.value.forEach((rack) => {
-        getRackEquipments(rack).forEach((equipment) => {
-          selectedCategories.value.forEach((selectedCategory) => {
-            if (equipment.equipmentType == selectedCategory) {
-              filteredCategories[rack] = true
-            }
-            displayRacks.value = filteredCategories
-          })
-        })
-      })
-    } else {
-      infrastructureRacks.value.forEach((rack) => {
-        filteredCategories[rack] = true
-      })
-
-      displayRacks.value = filteredCategories
-    }
-  }
-)
 </script>
 
 <template>
@@ -496,6 +454,7 @@ watch(
                             name="tags"
                             type="checkbox"
                             :value="tag"
+                            v-model="selectedTags"
                             class="h-4 w-4 rounded border-gray-300 text-purple-700 focus:ring-purple-700"
                           />
                           <label for="tags" class="pl-2 capitalize">{{ tag }}</label>
