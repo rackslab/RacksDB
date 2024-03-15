@@ -286,9 +286,11 @@ class RacksDBWebApp(Flask):
     def serve(self):
         logger.info("Running RacksDB web application")
         if self.args.cors:
-            from flask_cors import CORS
-
-            CORS(self)
+            try:
+                from flask_cors import CORS
+                CORS(self)
+            except ImportError:
+                logger.warning("Unable to load CORS module, CORS is disabled.")
         super().run(
             host=self.args.host,
             port=self.args.port,

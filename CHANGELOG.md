@@ -144,8 +144,11 @@ and this project adheres to
   - Fix dump of properties in JSON and YAML when not defined in database but
     overriden by specialized classes.
   - Fix folded equipment name filtering (#73).
-- web: Send HTTP/400 status code when JSON error instead of crashing with
-  exception in case of error when drawing an infrastructure or a room.
+- web:
+  - Send HTTP/400 status code when JSON error instead of crashing with
+    exception in case of error when drawing an infrastructure or a room.
+  - Warn instead of crash when CORS is enabled but the corresponding
+    Flask-Cors module cannot be imported.
 - docs: Add missing version in example REST API queries.
 
 ### Removed
