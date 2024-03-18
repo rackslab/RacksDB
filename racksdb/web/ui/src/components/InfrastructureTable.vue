@@ -299,15 +299,10 @@ onMounted(() => {
                     </div>
                   </TransitionChild>
                   <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                    <div class="px-4 sm:px-6">
-                      <DialogTitle class="text-lg font-semibold leading-6 text-gray-900"
-                        >Filters</DialogTitle
-                      >
-                    </div>
-                    <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                    <div class="relative flex-1 px-4 sm:px-6">
                       <!-- Racks -->
-                      <Combobox as="div" v-model="selectedRacks" multiple class="p-4">
-                        <ComboboxLabel class="text-lg">Racks</ComboboxLabel>
+                      <Combobox as="div" v-model="selectedRacks" multiple class="px-4 py-6">
+                        <ComboboxLabel class="text-xl">Racks</ComboboxLabel>
 
                         <div
                           class="pt-3 relative w-full cursor-default rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
@@ -368,8 +363,8 @@ onMounted(() => {
                       </Combobox>
 
                       <!-- Equipment category -->
-                      <div class="pt-4 px-4 flex flex-col">
-                        <label for="equipment-category" class="text-lg pb-3"
+                      <div class="px-4 flex flex-col">
+                        <label for="equipment-category" class="text-xl pb-3"
                           >Equipment category</label
                         >
                         <div
@@ -391,8 +386,8 @@ onMounted(() => {
                       </div>
 
                       <!-- Equipment types -->
-                      <Combobox as="div" v-model="selectedEquipmentTypes" multiple class="p-4">
-                        <ComboboxLabel class="text-lg">Equipment Types</ComboboxLabel>
+                      <Combobox as="div" v-model="selectedEquipmentTypes" multiple class="px-4 pt-6">
+                        <ComboboxLabel class="text-xl">Equipment Types</ComboboxLabel>
 
                         <div
                           class="pt-3 relative w-full cursor-default rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
@@ -453,8 +448,8 @@ onMounted(() => {
                       </Combobox>
 
                       <!-- Tags -->
-                      <div class="pt-4 px-4 flex flex-col">
-                        <label for="tags" class="text-lg pb-3">Tags</label>
+                      <div class="px-4 pt-6 flex flex-col">
+                        <label for="tags" class="text-xl pb-3">Tags</label>
                         <div v-for="tag in tags" :key="tag">
                           <input
                             :id="tag"
@@ -469,8 +464,8 @@ onMounted(() => {
                       </div>
 
                       <!-- Equipment name -->
-                      <div class="pt-4 px-4 flex flex-col">
-                        <label for="equipment-name" class="text-lg pb-3">Equipment name</label>
+                      <div class="px-4 pt-6 flex flex-col">
+                        <label for="equipment-name" class="text-xl pb-3">Equipment name</label>
                         <input
                           type="text"
                           v-model="input"
