@@ -74,13 +74,13 @@ class TestDrawer(unittest.TestCase):
         }
         loader = DBDictsLoader(parameters_raw)
         parameters = DrawingParameters.load(loader, self.drawings_schema_path)
-        self.drawer = Drawer({}, "output", "format", parameters)
+        self.drawer = Drawer({}, "output", "format", parameters, None, "yaml")
 
     def test_matching_equipment_coloring_rule(self):
         # Equipment with type type1 must match 1st coloring rule.
         self.assertEqual(
             self.drawer._find_equipment_colorset(FakeEquipment("type1", [])).background,
-            (17 / 255, 34 / 255, 51 / 255),
+            (17 / 255, 34 / 255, 51 / 255, 1.0),
         )
         # Equipment with another type must not match any defined coloring rule
         # and fallback to default.
@@ -94,7 +94,7 @@ class TestDrawer(unittest.TestCase):
             self.drawer._find_equipment_colorset(
                 FakeEquipment("type2", ["tag1", "tag2"])
             ).border,
-            (68 / 255, 85 / 255, 102 / 255),
+            (68 / 255, 85 / 255, 102 / 255, 1.0),
         )
         # Equipment with type != type1 and only part of 2nd coloring rule tags must not
         # match any defined coloring rule and fallback to default.
@@ -123,7 +123,7 @@ class TestDrawer(unittest.TestCase):
         # Rack with type type1 must match 1st coloring rule.
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type1", [])).frame,
-            (17 / 255, 34 / 255, 51 / 255),
+            (17 / 255, 34 / 255, 51 / 255, 1.0),
         )
         # Rack with another type must not match any defined coloring rule and fallback
         # to default.
@@ -134,7 +134,7 @@ class TestDrawer(unittest.TestCase):
         # Rack with type != type1 and all tag1 and tag2 must match 2nd coloring rule.
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type2", ["tag1", "tag2"])).pane,
-            (68 / 255, 85 / 255, 102 / 255),
+            (68 / 255, 85 / 255, 102 / 255, 1.0),
         )
         # Rack with type != type1 and only part of 2nd coloring rule tags must not match
         # any defined coloring rule and fallback to default.
