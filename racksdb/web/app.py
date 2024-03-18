@@ -288,6 +288,7 @@ class RacksDBWebApp(Flask):
         if self.args.cors:
             try:
                 from flask_cors import CORS
+
                 CORS(self)
             except ImportError:
                 logger.warning("Unable to load CORS module, CORS is disabled.")
