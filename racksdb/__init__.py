@@ -10,11 +10,8 @@ from typing import Union
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBDict, DBList, DBSplittedFilesLoader
 from .generic.errors import DBSchemaError, DBFormatError
+from .errors import RacksDBFormatError, RacksDBSchemaError
 from . import bases
-
-# Export main errors to facilitate import from other software which use RacksDB
-# as external library.
-__all__ = [DBSchemaError, DBFormatError]
 
 
 class RacksDB(GenericDB):
@@ -70,10 +67,16 @@ class RacksDB(GenericDB):
             db = Path(cls.DEFAULT_DB)
         elif isinstance(db, str):
             db = Path(db)
-        _schema = Schema(
-            SchemaFileLoader(schema, ext),
-            SchemaDefinedTypeLoader(cls.DEFINED_TYPES_MODULE),
-        )
-        _db = cls(_schema, DBSplittedFilesLoader(db))
-        super(cls, _db).load(_db._loader)
+        try:
+            _schema = Schema(
+                SchemaFileLoader(schema, ext),
+                SchemaDefinedTypeLoader(cls.DEFINED_TYPES_MODULE),
+            )
+        except DBSchemaError as err:
+            raise RacksDBSchemaError(str(err)) from err
+        try:
+            _db = cls(_schema, DBSplittedFilesLoader(db))
+            super(cls, _db).load(_db._loader)
+        except DBFormatError as err:
+            raise RacksDBFormatError(str(err)) from err
         return _db

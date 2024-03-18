@@ -13,8 +13,8 @@ and this project adheres to
   - Add advanced `tags` property and `_filter()` method specializations on
     `RacksDBStorageEquipment`, `RacksDBNetworkEquipment` and
     `RacksDBSMiscEquipment` classes, similarly to `RacksDBNode`.
-  - Export `DBSchemaError` and `DBFormatError` in main module in order to
-    facilitate their import from other software that use RacksDB as an external
+  - Introduce `RacksDBSchemaError` and `RacksDBFormatError` in order to easily
+    catch these errors from other software that use RacksDB as an external
     library.
   - Add optional `path` property to `DBLoader` class.
 - cli: Add `-c, --coordinates` and `--coordinates-format` arguments on
