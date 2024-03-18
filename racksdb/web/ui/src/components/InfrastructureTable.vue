@@ -89,6 +89,13 @@ const rackFilteredEquipment = computed(() => {
         }
       }
 
+      if (input.value !== '') {
+        const filteredName = equipment.name.toLocaleLowerCase().includes(input.value.toLocaleLowerCase())
+        if (filteredName === false) {
+          return false
+        }
+      }
+
       return true
     })
   })
