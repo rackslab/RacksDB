@@ -370,8 +370,8 @@ onMounted(() => {
                           :key="equipmentCategory"
                         >
                           <input
-                            id="equipment-category"
-                            name="equipment-category"
+                            :id="`category-${equipmentCategory}`"
+                            :name="`category-${equipmentCategory}`"
                             type="checkbox"
                             :value="equipmentCategory"
                             v-model="selectedCategories"
@@ -450,8 +450,8 @@ onMounted(() => {
                         <label for="tags" class="text-lg pb-3">Tags</label>
                         <div v-for="tag in tags" :key="tag">
                           <input
-                            id="tags"
-                            name="tags"
+                            :id="tag"
+                            :name="tag"
                             type="checkbox"
                             :value="tag"
                             v-model="selectedTags"
