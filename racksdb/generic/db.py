@@ -363,13 +363,13 @@ class GenericDB(DBObject):
             return self.load_defined_type(literal, schema_type)
         elif isinstance(schema_type, SchemaExpandable):
             if not isinstance(literal, str):
-                DBFormatError(
+                raise DBFormatError(
                     f"token {token} of {schema_type} is not a valid expandable str"
                 )
             return self.load_expandable(literal)
         elif isinstance(schema_type, SchemaRangeId):
             if not isinstance(literal, int):
-                DBFormatError(
+                raise DBFormatError(
                     f"token {token} of {schema_type} is not a valid rangeid integer"
                 )
             return self.load_rangeid(literal)
