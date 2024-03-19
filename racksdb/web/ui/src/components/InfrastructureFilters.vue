@@ -18,18 +18,18 @@ import {
 import type { Ref } from 'vue'
 import { ref } from 'vue'
 
-const equipmentCategories: Ref<Array<string>> = ref([])
 const selectedRacks: Ref<Array<string>> = ref([])
-const racks: Ref<Array<string>> = ref([])
 const selectedCategories: Ref<Array<string>> = ref([])
 const selectedEquipmentTypes: Ref<Array<string>> = ref([])
-const equipmentTypes: Ref<Array<string>> = ref([])
-const tags: Ref<Array<string>> = ref([])
 const selectedTags: Ref<Array<string>> = ref([])
 const input = ref('')
 
-defineProps({
-  showSlider: Boolean
+const props = defineProps({
+  showSlider: Boolean,
+  racks: Array<string>,
+  equipmentCategories: Array<string>,
+  equipmentTypes: Array<string>,
+  tags: Array<string>
 })
 </script>
 
@@ -111,7 +111,7 @@ defineProps({
                           class="w-96 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                         >
                           <ComboboxOption
-                            v-for="rack in racks"
+                            v-for="rack in props.racks"
                             :key="rack"
                             :value="rack"
                             v-slot="{ active, selected }"
@@ -149,7 +149,7 @@ defineProps({
                         >Equipment category</label
                       >
                       <div
-                        v-for="equipmentCategory in equipmentCategories"
+                        v-for="equipmentCategory in props.equipmentCategories"
                         :key="equipmentCategory"
                       >
                         <input
@@ -193,7 +193,7 @@ defineProps({
                           class="w-96 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                         >
                           <ComboboxOption
-                            v-for="equipment in equipmentTypes"
+                            v-for="equipment in props.equipmentTypes"
                             :key="equipment"
                             :value="equipment"
                             v-slot="{ active, selected }"
@@ -228,7 +228,7 @@ defineProps({
                     <!-- Tags -->
                     <div class="px-4 pt-6 flex flex-col">
                       <label for="tags" class="text-xl pb-3">Tags</label>
-                      <div v-for="tag in tags" :key="tag">
+                      <div v-for="tag in props.tags" :key="tag">
                         <input
                           :id="tag"
                           :name="tag"

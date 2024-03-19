@@ -240,7 +240,14 @@ onMounted(() => {
   </div>
 
   <!-- Slider -->
-  <InfrastructureFilters :showSlider="showSlider" @toggle-slider="toggleSlider" />
+  <InfrastructureFilters
+    @toggle-slider="toggleSlider"
+    :showSlider="showSlider"
+    :racks="racks"
+    :equipmentCategories="equipmentCategories"
+    :equipmentTypes="equipmentTypes"
+    :tags="tags"
+  />
 
   <div class="flex justify-center mrackFilteredEquipmenty-auto mx-auto pt-5">
     <table class="min-w-[60vw] text-center text-gray-500 dark:text-gray-400 table-fixed">
