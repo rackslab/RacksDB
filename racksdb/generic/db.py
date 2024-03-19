@@ -206,8 +206,8 @@ class DBDict(dict):
 
         for key, value in self.items():
             if isinstance(value, DBExpandableObject):
-                for _expanded_value in value.objects():
-                    add_match(key, _expanded_value)
+                for idx, _expanded_value in enumerate(value.objects()):
+                    add_match(key.rangeset[idx], _expanded_value)
             else:
                 add_match(key, value)
         return result
