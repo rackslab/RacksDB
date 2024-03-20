@@ -48,15 +48,6 @@ onMounted(() => {
   getInfrastructureImg()
 })
 
-// Using watch to trigger getDatacenter() when the value of props.name change
-watch(
-  () => props.name,
-  () => {
-    getInfrastructures()
-    getInfrastructureImg()
-  }
-)
-
 const props = defineProps({
   name: {
     type: String,
