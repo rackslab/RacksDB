@@ -15,21 +15,55 @@ import {
   ComboboxLabel,
   ComboboxButton
 } from '@headlessui/vue'
-import type { Ref } from 'vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-const selectedRacks: Ref<Array<string>> = ref([])
-const selectedCategories: Ref<Array<string>> = ref([])
-const selectedEquipmentTypes: Ref<Array<string>> = ref([])
-const selectedTags: Ref<Array<string>> = ref([])
-const input = ref('')
+defineEmits(['toggleSlider'])
+const selectedRacks = defineModel<Array<string>>('selectedRacks')
+const selectedEquipmentTypes = defineModel<Array<string>>('selectedEquipmentTypes')
+const selectedCategories = defineModel<Array<string>>('selectedCategories')
+const selectedTags = defineModel<Array<string>>('selectedTags')
+const inputEquipmentName = defineModel<string>('inputEquipmentName')
+const queryRacks = ref('')
+const queryEquipmentTypes = ref('')
+const filteredRacks = computed(() =>
+  queryRacks.value === ''
+    ? props.racks
+    : props.racks.filter((rack) =>
+        rack
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(queryRacks.value.toLowerCase().replace(/\s+/g, ''))
+      )
+)
+const filteredEquipmentTypes = computed(() =>
+  queryEquipmentTypes.value === ''
+    ? props.equipmentTypes
+    : props.equipmentTypes.filter((equipmentType) =>
+        equipmentType
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(queryEquipmentTypes.value.toLowerCase().replace(/\s+/g, ''))
+      )
+)
 
 const props = defineProps({
   showSlider: Boolean,
-  racks: Array<string>,
-  equipmentCategories: Array<string>,
-  equipmentTypes: Array<string>,
-  tags: Array<string>
+  racks: {
+    type: Array<string>,
+    required: true
+  },
+  equipmentCategories: {
+    type: Array<string>,
+    required: true
+  },
+  equipmentTypes: {
+    type: Array<string>,
+    required: true
+  },
+  tags: {
+    type: Array<string>,
+    required: true
+  }
 })
 </script>
 
@@ -93,7 +127,8 @@ const props = defineProps({
                       >
                         <ComboboxInput
                           class="w-96 capitalize focus:border-purple-700 focus:outline-none border-2 border-solid rounded-md bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
-                          :value="selectedRacks"
+                          :placeholder="selectedRacks"
+                          @change="queryRacks = $event.target.value"
                         />
                         <ComboboxButton class="pt-3 absolute inset-y-0 right-0 flex items-center">
                           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -111,7 +146,7 @@ const props = defineProps({
                           class="w-96 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                         >
                           <ComboboxOption
-                            v-for="rack in props.racks"
+                            v-for="rack in filteredRacks"
                             :key="rack"
                             :value="rack"
                             v-slot="{ active, selected }"
@@ -175,7 +210,8 @@ const props = defineProps({
                       >
                         <ComboboxInput
                           class="w-96 capitalize focus:border-purple-700 focus:outline-none border-2 border-solid rounded-md bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-purple-600 sm:text-sm sm:leading-6"
-                          :value="selectedEquipmentTypes"
+                          :placeholder="selectedEquipmentTypes"
+                          @change="queryEquipmentTypes = $event.target.value"
                         />
                         <ComboboxButton class="pt-3 absolute inset-y-0 right-0 flex items-center">
                           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -193,7 +229,7 @@ const props = defineProps({
                           class="w-96 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                         >
                           <ComboboxOption
-                            v-for="equipment in props.equipmentTypes"
+                            v-for="equipment in filteredEquipmentTypes"
                             :key="equipment"
                             :value="equipment"
                             v-slot="{ active, selected }"
@@ -246,7 +282,7 @@ const props = defineProps({
                       <label for="equipment-name" class="text-xl pb-3">Equipment name</label>
                       <input
                         type="text"
-                        v-model="input"
+                        v-model="inputEquipmentName"
                         class="w-96 rounded-md focus:border-purple-700 focus:outline-none border-2 border-solid bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
                         placeholder="Filter by equipment name"
                         required

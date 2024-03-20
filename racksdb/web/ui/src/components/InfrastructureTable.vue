@@ -35,7 +35,7 @@ var modalContent: Ref<
 const alphabeticalOrder = ref(true)
 const displayRacks: Ref<Record<string, boolean>> = ref({})
 const showSlider = ref(false)
-const input = ref('')
+const inputEquipmentName: Ref<string> = ref('')
 const selectedRacks: Ref<Array<string>> = ref([])
 const selectedCategories: Ref<Array<string>> = ref([])
 const selectedEquipmentTypes: Ref<Array<string>> = ref([])
@@ -78,10 +78,10 @@ const rackFilteredEquipment = computed(() => {
         }
       }
 
-      if (input.value !== '') {
+      if (inputEquipmentName.value !== '') {
         const filteredName = equipment.name
           .toLocaleLowerCase()
-          .includes(input.value.toLocaleLowerCase())
+          .includes(inputEquipmentName.value.toLocaleLowerCase())
         if (filteredName === false) {
           return false
         }
@@ -247,6 +247,11 @@ onMounted(() => {
     :equipmentCategories="equipmentCategories"
     :equipmentTypes="equipmentTypes"
     :tags="tags"
+    v-model:selected-racks="selectedRacks"
+    v-model:selected-equipment-types="selectedEquipmentTypes"
+    v-model:selected-categories="selectedCategories"
+    v-model:selected-tags="selectedTags"
+    v-model:input-equipment-name="inputEquipmentName"
   />
 
   <div class="flex justify-center mrackFilteredEquipmenty-auto mx-auto pt-5">
