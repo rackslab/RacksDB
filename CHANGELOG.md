@@ -145,6 +145,8 @@ and this project adheres to
     overriden by specialized classes.
   - Fix folded equipment name filtering (#73).
   - Add missing raise instructions in some DB format error cases.
+  - Avoid reporting duplicated tags when defined on both parent part and
+    equipment (#77).
 - web:
   - Send HTTP/400 status code when JSON error instead of crashing with
     exception in case of error when drawing an infrastructure or a room.

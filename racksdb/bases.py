@@ -66,7 +66,10 @@ class RacksDBGenericEquipment:
         # RacksDB{Node,StorageEquipment,NetworkEquipment,MiscEquipment} loaded tags are
         # renamed with loaded prefix to avoid conflict with this property.
         for tag in getattr(self, f"{self.LOADED_PREFIX}tags", []):
-            result.append(tag)
+            # Avoid duplicate tags that could be defined on both parent part and
+            # equipment.
+            if tag not in result:
+                result.append(tag)
         return result
 
     @cached_property
