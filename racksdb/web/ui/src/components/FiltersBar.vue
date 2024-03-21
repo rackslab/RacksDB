@@ -1,54 +1,79 @@
 <script lang="ts" setup>
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 import { computed } from 'vue'
 
+const selectedRacks = defineModel<Array<string>>('selectedRacks', { required: true })
+const selectedEquipmentTypes = defineModel<Array<string>>('selectedEquipmentTypes', {
+  required: true
+})
+const selectedCategories = defineModel<Array<string>>('selectedCategories', { required: true })
+const selectedTags = defineModel<Array<string>>('selectedTags', { required: true })
+const inputEquipmentName = defineModel<string>('inputEquipmentName', { required: true })
 const activeFilters = computed(() => {
   const filters: Array<{ key: string; value: string }> = []
 
-  if (props.selectedRacks) {
-    props.selectedRacks.forEach((rack) => {
+  if (props.filteredRacks) {
+    props.filteredRacks.forEach((rack) => {
       filters.push({ key: 'rack', value: rack })
     })
   }
 
-  if (props.selectedCategories) {
-    props.selectedCategories.forEach((category) => {
+  if (props.filteredCategories) {
+    props.filteredCategories.forEach((category) => {
       filters.push({ key: 'category', value: category })
     })
   }
 
-  if (props.selectedEquipmentTypes) {
-    props.selectedEquipmentTypes.forEach((equipmentType) => {
+  if (props.filteredEquipmentTypes) {
+    props.filteredEquipmentTypes.forEach((equipmentType) => {
       filters.push({ key: 'equipmentType', value: equipmentType })
     })
   }
 
-  if (props.selectedTags) {
-    props.selectedTags.forEach((tag) => {
+  if (props.filteredTags) {
+    props.filteredTags.forEach((tag) => {
       filters.push({ key: 'tag', value: tag })
     })
   }
 
-  if (props.inputEquipmentName) {
-    filters.push({ key: 'equipmentName', value: props.inputEquipmentName })
+  if (props.filteredinputEquipmentName) {
+    filters.push({ key: 'equipmentName', value: props.filteredinputEquipmentName })
   }
 
   return filters
 })
 
+function removeFilter(key: string, filter: string) {
+  if (key == 'rack') {
+    selectedRacks.value = selectedRacks.value.filter((rack) => rack !== filter)
+  } else if (key == 'category') {
+    selectedCategories.value = selectedCategories.value.filter((category) => category !== filter)
+  } else if (key == 'equipmentType') {
+    selectedEquipmentTypes.value = selectedEquipmentTypes.value.filter(
+      (equipmentType) => equipmentType !== filter
+    )
+  } else if (key == 'tag') {
+    selectedTags.value = selectedTags.value.filter((tag) => tag !== filter)
+  } else {
+    inputEquipmentName.value = ''
+  }
+}
+
 const props = defineProps({
-  selectedRacks: {
+  filteredRacks: {
+    type: Array<string>,
+    required: true
+  },
+  filteredCategories: {
     type: Array<string>
   },
-  selectedCategories: {
+  filteredEquipmentTypes: {
     type: Array<string>
   },
-  selectedEquipmentTypes: {
+  filteredTags: {
     type: Array<string>
   },
-  selectedTags: {
-    type: Array<string>
-  },
-  inputEquipmentName: {
+  filteredinputEquipmentName: {
     type: String
   }
 })
@@ -74,12 +99,10 @@ const props = defineProps({
             <span>{{ activeFilter.value }}</span>
             <button
               type="button"
-              class="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
+              class="ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
+              @click="removeFilter(activeFilter.key, activeFilter.value)"
             >
-              <span class="sr-only">Remove filter for {{ activeFilter.value }}</span>
-              <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-                <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
-              </svg>
+              <XMarkIcon />
             </button>
           </span>
         </div>
