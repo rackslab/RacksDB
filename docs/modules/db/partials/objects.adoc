@@ -66,6 +66,35 @@ Library class type: `RacksDBDatacenter`
 
 |{symbol-seq}{nbsp}str
 |[.grey]#-#
+
+|location
+|The GPS coordinates of the datacenter.
+
+|xref:#obj-datacenterlocation[{symbol-obj}{nbsp}DatacenterLocation]
+|[.grey]#-#
+|===
+
+[#obj-datacenterlocation]
+=== DatacenterLocation
+
+Library class type: `RacksDBDatacenterLocation`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|longitude
+|GPS longitude of the datacenter.
+
+|float
+|[.green]#icon:check[]#
+
+|latitude
+|GPS latitude of the datacenter.
+
+|float
+|[.green]#icon:check[]#
 |===
 
 [#obj-datacenterroom]
