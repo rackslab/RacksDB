@@ -270,6 +270,9 @@ components:
       type: object
     RacksDBDatacenter:
       properties:
+        location:
+          $ref: '#/components/schemas/RacksDBDatacenterLocation'
+          description: The GPS coordinates of the datacenter.
         name:
           description: Unique name of the datacenter.
           example: north
@@ -284,6 +287,15 @@ components:
           items:
             type: string
           type: array
+      type: object
+    RacksDBDatacenterLocation:
+      properties:
+        latitude:
+          description: GPS latitude of the datacenter.
+          type: number
+        longitude:
+          description: GPS longitude of the datacenter.
+          type: number
       type: object
     RacksDBDatacenterRoom:
       properties:
