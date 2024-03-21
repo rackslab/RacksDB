@@ -26,6 +26,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import EquipmentTypeModal from '@/components/EquipmentTypeModal.vue'
 import InfrastructureFilters from '@/components/InfrastructureFilters.vue'
+import FiltersBar from '@/components/FiltersBar.vue'
 import { FunnelIcon } from '@heroicons/vue/24/solid'
 
 var showModal = ref(false)
@@ -239,6 +240,14 @@ onMounted(() => {
     </div>
   </div>
 
+  <FiltersBar
+    :selectedRacks="selectedRacks"
+    :selectedCategories="selectedCategories"
+    :selectedEquipmentTypes="selectedEquipmentTypes"
+    :selectedTags="selectedTags"
+    :inputEquipmentName="inputEquipmentName"
+  />
+
   <!-- Slider -->
   <InfrastructureFilters
     @toggle-slider="toggleSlider"
@@ -254,7 +263,7 @@ onMounted(() => {
     v-model:input-equipment-name="inputEquipmentName"
   />
 
-  <div class="flex justify-center mrackFilteredEquipmenty-auto mx-auto pt-5">
+  <div class="flex justify-center my-auto mx-auto pt-3">
     <table class="min-w-[60vw] text-center text-gray-500 dark:text-gray-400 table-fixed">
       <thead
         class="border-b text-lg text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400 h-24"
