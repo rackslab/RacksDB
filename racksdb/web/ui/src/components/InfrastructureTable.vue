@@ -241,11 +241,16 @@ onMounted(() => {
   </div>
 
   <FiltersBar
-    :selectedRacks="selectedRacks"
-    :selectedCategories="selectedCategories"
-    :selectedEquipmentTypes="selectedEquipmentTypes"
-    :selectedTags="selectedTags"
-    :inputEquipmentName="inputEquipmentName"
+    :filteredRacks="selectedRacks"
+    :filteredCategories="selectedCategories"
+    :filteredEquipmentTypes="selectedEquipmentTypes"
+    :filteredTags="selectedTags"
+    :filteredinputEquipmentName="inputEquipmentName"
+    v-model:selected-racks="selectedRacks"
+    v-model:selected-equipment-types="selectedEquipmentTypes"
+    v-model:selected-categories="selectedCategories"
+    v-model:selected-tags="selectedTags"
+    v-model:input-equipment-name="inputEquipmentName"
   />
 
   <!-- Slider -->
