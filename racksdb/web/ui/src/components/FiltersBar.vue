@@ -80,7 +80,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="bg-gray-100 flex justify-center w-[60vw] mt-3 mx-auto">
+  <div class="bg-gray-100 flex justify-center w-[60vw] mt-3 mx-auto h-14">
     <div class="min-w-[60vw] px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
       <h3 class="text-sm font-medium text-gray-500">
         Filters
