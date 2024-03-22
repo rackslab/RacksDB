@@ -269,7 +269,7 @@ onMounted(() => {
   />
 
   <div class="flex justify-center my-auto mx-auto pt-3">
-    <table class="min-w-[60vw] text-center text-gray-500 dark:text-gray-400 table-fixed">
+    <table class="w-[60vw] text-center text-gray-500 dark:text-gray-400 table-fixed">
       <thead
         class="border-b text-lg text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400 h-24"
       >
