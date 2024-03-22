@@ -241,6 +241,13 @@ onMounted(() => {
   </div>
 
   <FiltersBar
+    v-if="
+      selectedRacks.length > 0 ||
+      selectedCategories.length > 0 ||
+      selectedEquipmentTypes.length > 0 ||
+      selectedTags.length > 0 ||
+      inputEquipmentName.length > 0
+    "
     :filteredRacks="selectedRacks"
     :filteredCategories="selectedCategories"
     :filteredEquipmentTypes="selectedEquipmentTypes"
