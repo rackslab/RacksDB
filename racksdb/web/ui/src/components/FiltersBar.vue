@@ -94,12 +94,38 @@ const props = defineProps({
           <span
             v-for="activeFilter in activeFilters"
             :key="activeFilter.key"
-            class="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
+            :class="[
+              'm-1 inline-flex items-center rounded-full border border-gray-200 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-600',
+              activeFilter.key === 'rack'
+                ? 'bg-orange-100'
+                : activeFilter.key === 'category'
+                ? 'bg-green-100'
+                : activeFilter.key === 'equipmentType'
+                ? 'bg-yellow-100'
+                : activeFilter.key === 'tag'
+                ? 'bg-zinc-100'
+                : activeFilter.key === 'equipmentName'
+                ? 'bg-violet-100'
+                : 'bg-gray-200'
+            ]"
           >
             <span>{{ activeFilter.value }}</span>
             <button
               type="button"
-              class="ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
+              :class="[
+                'ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-gray-400',
+                activeFilter.key === 'rack'
+                  ? 'hover:bg-orange-200 hover:text-orange-500'
+                  : activeFilter.key === 'category'
+                  ? 'hover:bg-green-200 hover:text-green-500'
+                  : activeFilter.key === 'equipmentType'
+                  ? 'hover:bg-yellow-200 hover:text-yellow-500'
+                  : activeFilter.key === 'tag'
+                  ? 'hover:bg-zinc-200 hover:text-zinc-500'
+                  : activeFilter.key === 'equipmentName'
+                  ? 'hover:bg-violet-200 hover:text-violet-500'
+                  : 'hover:bg-gray-200 hover:text-gray-500'
+              ]"
               @click="removeFilter(activeFilter.key, activeFilter.value)"
             >
               <XMarkIcon />
