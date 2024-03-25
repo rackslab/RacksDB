@@ -73,17 +73,17 @@ const racksFilteredEquipment = computed(() => {
       }
 
       if (selectedTags.value.length > 0) {
-        const filteredTags = equipment.tags.filter((tag) => selectedTags.value.includes(tag))
-        if (filteredTags.length === 0) {
+        if (equipment.tags.filter((tag) => selectedTags.value.includes(tag)).length === 0) {
           return false
         }
       }
 
       if (inputEquipmentName.value !== '') {
-        const filteredName = equipment.name
-          .toLocaleLowerCase()
-          .includes(inputEquipmentName.value.toLocaleLowerCase())
-        if (filteredName === false) {
+        if (
+          equipment.name
+            .toLocaleLowerCase()
+            .includes(inputEquipmentName.value.toLocaleLowerCase()) === false
+        ) {
           return false
         }
       }
