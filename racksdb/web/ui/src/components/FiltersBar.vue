@@ -44,18 +44,24 @@ const activeFilters = computed(() => {
 })
 
 function removeFilter(key: string, filter: string) {
-  if (key == 'rack') {
-    selectedRacks.value = selectedRacks.value.filter((rack) => rack !== filter)
-  } else if (key == 'category') {
-    selectedCategories.value = selectedCategories.value.filter((category) => category !== filter)
-  } else if (key == 'equipmentType') {
-    selectedEquipmentTypes.value = selectedEquipmentTypes.value.filter(
-      (equipmentType) => equipmentType !== filter
-    )
-  } else if (key == 'tag') {
-    selectedTags.value = selectedTags.value.filter((tag) => tag !== filter)
-  } else {
-    inputEquipmentName.value = ''
+  switch (key) {
+    case 'rack':
+      selectedRacks.value = selectedRacks.value.filter((rack) => rack !== filter)
+      break
+    case 'category':
+      selectedCategories.value = selectedCategories.value.filter((category) => category !== filter)
+      break
+    case 'equipmentType':
+      selectedEquipmentTypes.value = selectedEquipmentTypes.value.filter(
+        (equipmentType) => equipmentType !== filter
+      )
+      break
+    case 'tag':
+      selectedTags.value = selectedTags.value.filter((tag) => tag !== filter)
+      break
+    case 'equipmentName':
+      inputEquipmentName.value = ''
+      break
   }
 }
 </script>
