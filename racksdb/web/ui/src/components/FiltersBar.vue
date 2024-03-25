@@ -12,32 +12,32 @@ const inputEquipmentName = defineModel<string>('inputEquipmentName', { required:
 const activeFilters = computed(() => {
   const filters: Array<{ key: string; value: string }> = []
 
-  if (props.filteredRacks) {
-    props.filteredRacks.forEach((rack) => {
+  if (selectedRacks.value) {
+    selectedRacks.value.forEach((rack) => {
       filters.push({ key: 'rack', value: rack })
     })
   }
 
-  if (props.filteredCategories) {
-    props.filteredCategories.forEach((category) => {
+  if (selectedCategories.value) {
+    selectedCategories.value.forEach((category) => {
       filters.push({ key: 'category', value: category })
     })
   }
 
-  if (props.filteredEquipmentTypes) {
-    props.filteredEquipmentTypes.forEach((equipmentType) => {
+  if (selectedEquipmentTypes.value) {
+    selectedEquipmentTypes.value.forEach((equipmentType) => {
       filters.push({ key: 'equipmentType', value: equipmentType })
     })
   }
 
-  if (props.filteredTags) {
-    props.filteredTags.forEach((tag) => {
+  if (selectedTags.value) {
+    selectedTags.value.forEach((tag) => {
       filters.push({ key: 'tag', value: tag })
     })
   }
 
-  if (props.filteredinputEquipmentName) {
-    filters.push({ key: 'equipmentName', value: props.filteredinputEquipmentName })
+  if (inputEquipmentName.value) {
+    filters.push({ key: 'equipmentName', value: inputEquipmentName.value })
   }
 
   return filters
@@ -58,25 +58,6 @@ function removeFilter(key: string, filter: string) {
     inputEquipmentName.value = ''
   }
 }
-
-const props = defineProps({
-  filteredRacks: {
-    type: Array<string>,
-    required: true
-  },
-  filteredCategories: {
-    type: Array<string>
-  },
-  filteredEquipmentTypes: {
-    type: Array<string>
-  },
-  filteredTags: {
-    type: Array<string>
-  },
-  filteredinputEquipmentName: {
-    type: String
-  }
-})
 </script>
 
 <template>

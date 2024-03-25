@@ -248,11 +248,6 @@ onMounted(() => {
       selectedTags.length > 0 ||
       inputEquipmentName.length > 0
     "
-    :filteredRacks="selectedRacks"
-    :filteredCategories="selectedCategories"
-    :filteredEquipmentTypes="selectedEquipmentTypes"
-    :filteredTags="selectedTags"
-    :filteredinputEquipmentName="inputEquipmentName"
     v-model:selected-racks="selectedRacks"
     v-model:selected-equipment-types="selectedEquipmentTypes"
     v-model:selected-categories="selectedCategories"
