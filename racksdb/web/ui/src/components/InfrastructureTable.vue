@@ -46,14 +46,14 @@ let racks: Array<string> = []
 let equipmentTypes: Array<string> = []
 let tags: Array<string> = []
 const infrastructureRacks: Ref<Array<string>> = ref([])
-const equipments: Record<string, Array<Node | Storage | Misc | Network>> = {}
-const rackFilteredEquipment = computed(() => {
+const racksEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
+const racksFilteredEquipment = computed(() => {
   let filteredEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
 
   props.infrastructureDetails.layout.forEach((part) => {
     const rackName = part.rack
 
-    filteredEquipment[rackName] = equipments[rackName].filter((equipment) => {
+    filteredEquipment[rackName] = racksEquipment[rackName].filter((equipment) => {
       if (selectedRacks.value.length > 0 && !selectedRacks.value.includes(equipment.rack)) {
         return false
       }
@@ -201,8 +201,8 @@ onMounted(() => {
   props.infrastructureDetails.layout.forEach((part) => {
     displayRacks.value[part.rack] = true
     infrastructureRacks.value.push(part.rack)
-    equipments[part.rack] = getRackEquipments(part.rack)
-    equipments[part.rack].forEach((equipment) => {
+    racksEquipment[part.rack] = getRackEquipments(part.rack)
+    racksEquipment[part.rack].forEach((equipment) => {
       racks.push(equipment.rack)
       equipmentCategories.push(equipment.equipmentType)
       equipmentTypes.push(equipment.type.id)
@@ -241,7 +241,7 @@ onMounted(() => {
   </div>
 
   <FiltersBar
-    v-if="
+    v-show="
       selectedRacks.length > 0 ||
       selectedCategories.length > 0 ||
       selectedEquipmentTypes.length > 0 ||
@@ -299,14 +299,16 @@ onMounted(() => {
                 <div v-else><ChevronUpIcon class="h-7 w-7 text-purple-700" /></div>
                 <p class="ml-2">
                   {{ rack }}
-                  <span class="text-sm font-light">({{ rackFilteredEquipment[rack].length }})</span>
+                  <span class="text-sm font-light"
+                    >({{ racksFilteredEquipment[rack].length }})</span
+                  >
                 </p>
               </div>
             </th>
           </tr>
           <template v-if="displayState">
             <tr
-              v-for="equipment in rackFilteredEquipment[rack]"
+              v-for="equipment in racksFilteredEquipment[rack]"
               :key="equipment.name"
               class="border-b border-t dark:bg-gray-800 h-14 align-middle"
             >
