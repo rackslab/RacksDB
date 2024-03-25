@@ -10,34 +10,59 @@ const selectedCategories = defineModel<Array<string>>('selectedCategories', { re
 const selectedTags = defineModel<Array<string>>('selectedTags', { required: true })
 const inputEquipmentName = defineModel<string>('inputEquipmentName', { required: true })
 const activeFilters = computed(() => {
-  const filters: Array<{ key: string; value: string }> = []
+  const filters: Array<{ key: string; value: string; class: string; buttonClass: string }> = []
 
   if (selectedRacks.value) {
     selectedRacks.value.forEach((rack) => {
-      filters.push({ key: 'rack', value: rack })
+      filters.push({
+        key: 'rack',
+        value: rack,
+        class: 'bg-orange-100',
+        buttonClass: 'hover:bg-orange-200 hover:text-orange-500'
+      })
     })
   }
 
   if (selectedCategories.value) {
     selectedCategories.value.forEach((category) => {
-      filters.push({ key: 'category', value: category })
+      filters.push({
+        key: 'category',
+        value: category,
+        class: 'bg-green-100',
+        buttonClass: 'hover:bg-green-200 hover:text-green-500'
+      })
     })
   }
 
   if (selectedEquipmentTypes.value) {
     selectedEquipmentTypes.value.forEach((equipmentType) => {
-      filters.push({ key: 'equipmentType', value: equipmentType })
+      filters.push({
+        key: 'equipmentType',
+        value: equipmentType,
+        class: 'bg-yellow-100',
+        buttonClass: 'hover:bg-yellow-200 hover:text-yellow-500'
+      })
     })
   }
 
   if (selectedTags.value) {
     selectedTags.value.forEach((tag) => {
-      filters.push({ key: 'tag', value: tag })
+      filters.push({
+        key: 'tag',
+        value: tag,
+        class: 'bg-zinc-100',
+        buttonClass: 'hover:bg-zinc-200 hover:text-zinc-500'
+      })
     })
   }
 
   if (inputEquipmentName.value) {
-    filters.push({ key: 'equipmentName', value: inputEquipmentName.value })
+    filters.push({
+      key: 'equipmentName',
+      value: inputEquipmentName.value,
+      class: 'bg-violet-100',
+      buttonClass: 'hover:bg-violet-200 hover:text-violet-500'
+    })
   }
 
   return filters
@@ -83,17 +108,7 @@ function removeFilter(key: string, filter: string) {
             :key="activeFilter.key"
             :class="[
               'm-1 inline-flex items-center rounded-full border border-gray-200 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-600',
-              activeFilter.key === 'rack'
-                ? 'bg-orange-100'
-                : activeFilter.key === 'category'
-                ? 'bg-green-100'
-                : activeFilter.key === 'equipmentType'
-                ? 'bg-yellow-100'
-                : activeFilter.key === 'tag'
-                ? 'bg-zinc-100'
-                : activeFilter.key === 'equipmentName'
-                ? 'bg-violet-100'
-                : 'bg-gray-200'
+              activeFilter.class
             ]"
           >
             <span>{{ activeFilter.value }}</span>
@@ -101,17 +116,7 @@ function removeFilter(key: string, filter: string) {
               type="button"
               :class="[
                 'ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-gray-400',
-                activeFilter.key === 'rack'
-                  ? 'hover:bg-orange-200 hover:text-orange-500'
-                  : activeFilter.key === 'category'
-                  ? 'hover:bg-green-200 hover:text-green-500'
-                  : activeFilter.key === 'equipmentType'
-                  ? 'hover:bg-yellow-200 hover:text-yellow-500'
-                  : activeFilter.key === 'tag'
-                  ? 'hover:bg-zinc-200 hover:text-zinc-500'
-                  : activeFilter.key === 'equipmentName'
-                  ? 'hover:bg-violet-200 hover:text-violet-500'
-                  : 'hover:bg-gray-200 hover:text-gray-500'
+                activeFilter.buttonClass
               ]"
               @click="removeFilter(activeFilter.key, activeFilter.value)"
             >
