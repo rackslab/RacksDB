@@ -169,6 +169,25 @@ function getRackEquipments(rackName: string) {
     )
   })
 
+  equipments.forEach((equipment) => {
+    if (!racks.includes(equipment.rack)) {
+      racks.push(equipment.rack)
+    }
+    if (!equipmentCategories.includes(equipment.equipmentType)) {
+      equipmentCategories.push(equipment.equipmentType)
+    }
+
+    if (!equipmentTypes.includes(equipment.type.id)) {
+      equipmentTypes.push(equipment.type.id)
+    }
+
+    equipment.tags.forEach((tag) => {
+      if (!tags.includes(tag)) {
+        tags.push(tag)
+      }
+    })
+  })
+
   /*
    * Sort equipment by slot in descending order, or in width descending orders
    * when in the same slot.
@@ -202,20 +221,7 @@ onMounted(() => {
     displayRacks.value[part.rack] = true
     infrastructureRacks.value.push(part.rack)
     racksEquipment[part.rack] = getRackEquipments(part.rack)
-    racksEquipment[part.rack].forEach((equipment) => {
-      racks.push(equipment.rack)
-      equipmentCategories.push(equipment.equipmentType)
-      equipmentTypes.push(equipment.type.id)
-      equipment.tags.forEach((tag) => {
-        tags.push(tag)
-      })
-    })
   })
-
-  equipmentTypes = equipmentTypes.filter((x, i) => equipmentTypes.indexOf(x) === i)
-  equipmentCategories = equipmentCategories.filter((x, i) => equipmentCategories.indexOf(x) === i)
-  tags = tags.filter((x, i) => tags.indexOf(x) === i)
-  racks = racks.filter((x, i) => racks.indexOf(x) === i)
 })
 </script>
 
