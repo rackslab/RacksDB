@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { XMarkIcon } from '@heroicons/vue/24/solid'
 import { computed } from 'vue'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 
 const selectedRacks = defineModel<Array<string>>('selectedRacks', { required: true })
 const selectedEquipmentTypes = defineModel<Array<string>>('selectedEquipmentTypes', {

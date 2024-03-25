@@ -5,6 +5,10 @@ This file is part of RacksDB.
 SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import EquipmentTypeModal from '@/components/EquipmentTypeModal.vue'
+import InfrastructureFilters from '@/components/InfrastructureFilters.vue'
+import FiltersBar from '@/components/FiltersBar.vue'
 import type { Ref, PropType } from 'vue'
 import type {
   Infrastructure,
@@ -17,16 +21,12 @@ import type {
   StorageEquipmentType,
   MiscEquipmentType
 } from '@/composables/RacksDBAPI'
-import { ref, onMounted, computed } from 'vue'
 import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
   ChevronDownIcon,
   ChevronUpIcon
 } from '@heroicons/vue/24/outline'
-import EquipmentTypeModal from '@/components/EquipmentTypeModal.vue'
-import InfrastructureFilters from '@/components/InfrastructureFilters.vue'
-import FiltersBar from '@/components/FiltersBar.vue'
 import { FunnelIcon } from '@heroicons/vue/24/solid'
 
 var showModal = ref(false)

@@ -5,17 +5,20 @@ This file is part of RacksDB.
 SPDX-License-Identifier: GPL-3.0-or-later -->
 
 <script setup lang="ts">
-import { XMarkIcon, ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
-import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import {
   Combobox,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
   ComboboxLabel,
-  ComboboxButton
+  ComboboxButton,
+  Dialog,
+  DialogPanel,
+  TransitionChild,
+  TransitionRoot
 } from '@headlessui/vue'
 import { ref, computed } from 'vue'
+import { XMarkIcon, ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 defineEmits(['toggleSlider'])
 const selectedRacks = defineModel<Array<string>>('selectedRacks')
