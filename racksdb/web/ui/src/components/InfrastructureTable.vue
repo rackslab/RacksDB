@@ -50,8 +50,8 @@ const racksEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {
 const racksFilteredEquipment = computed(() => {
   let filteredEquipment: Record<string, Array<Node | Storage | Misc | Network>> = {}
 
-  props.infrastructureDetails.layout.forEach((part) => {
-    const rackName = part.rack
+  Object.keys(racksEquipment).forEach((part) => {
+    const rackName = part
 
     filteredEquipment[rackName] = racksEquipment[rackName].filter((equipment) => {
       if (selectedRacks.value.length > 0 && !selectedRacks.value.includes(equipment.rack)) {
