@@ -1,0 +1,71 @@
+= Web UI
+
+This section describes all features available in Web UI pages.
+
+== Home
+
+image::shadowed/home.webp[UI Homeview,800,xref=image$raw/home.png]
+
+The *Home* page provides an overview of what's inside RacksDB in card form.
+Users can navigate to different sections, such as _datacenters_, _datacenter
+details_, _datacenter room_, _infrastructures_, _infrastructure details,_
+either through the navigation bar or by clicking on the items in the cards.
+
+== Datacenters
+
+image::shadowed/datacenters.webp[UI Datacenters,800,xref=image$raw/datacenters.png]
+
+In *Datacenters* page, users can select a datacenter in the list. The
+datacenters can be filtered by typing portion of their name in the *search bar*.
+The datacenters can also be selected in *the map* by clicking on the markers.
+
+== Datacenter Details
+
+image::shadowed/rooms.webp[UI Datacenter Details,800,xref=image$raw/rooms.png]
+
+The *Datacenter Details* page displays details about the selected datacenter.
+Users can filter the list of rooms by typing portion of their names in the text
+input field in top right corner. The order of rooms can be inverted with *sort
+rooms* button. Users can *click on a room* to access the room details page.
+
+== Room Details
+
+image::shadowed/racks.webp[UI Datacenter Room,800,xref=image$raw/racks.png]
+
+In *Room Details* page, a thumbnail of the room map is displayed at the top.
+Users can *click on this thumbnail* to display a larger image.
+
+Below this image, a table contains the list of racks in the room with their
+_names_, _fill rates_ and _infrastructures_ using them. Infrastructures can be
+clicked to access infrastructure details.
+
+Racks can be filtered using the *filter bar*. The list can be inverted with
+*sort racks* button. Empty racks can be also hidden using the *toggle button*.
+
+== Infrastructures
+
+image::shadowed/infrastructures.webp[UI Infrastructures,800,xref=image$raw/infrastructures.png]
+
+In *Infrastructures* page, users can select an infrastructure in the list. The
+list can be filtered by typing portion of their name in the *search bar*.
+
+== Infrastructure Details
+
+image::shadowed/infrastructure.webp[UI Infrastructure Details,800,xref=image$raw/infrastructure.png]
+
+In *Infrastructure Details* page, a graphical representation of the
+infrastructure is displayed at the top. Users can *click on this thumbnail* to
+display a larger image.
+
+The page contains a table of all infrastructure equipment grouped by rack,
+including their _name_, _category_, _model_ and _tags_.
+
+Users can *show or hide racks* by clicking on racks name. Users can also click
+on equipment model name to *open a modal* with more details about this model.
+
+Filters are available to help users find specific equipment in infrastructures.
+Lists allow _selection of racks_ and _equipment types_, *checkboxes* for
+_equipment categories_ and _tags_ and a *search bar* to find specific equipment
+by name:
+
+image::shadowed/infrastructure_filters.webp[UI Infrastructure Filters,800,xref=image$infrastructure_filters.png]

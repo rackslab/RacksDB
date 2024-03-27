@@ -213,6 +213,7 @@ and this project adheres to
     drawing parameters schema in OpenAPI specification and structure reference
     documentation.
   - Add new datacenter and infrastructures in example database.
+  - Add web UI user guide page (#44).
 
 ### Changed
 - Database schema is moved from `/usr/share/racksdb/schema.yml` to
