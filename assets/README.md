@@ -1,14 +1,18 @@
 # RacksDB assets
 
-All assets are generated based on the content of `branding.svg` by running this
-command:
+All assets are generated based on the content of `branding.svg` and
+`screenshots/raw/` by running this command:
 
 ```sh
-$ ./update-branding
+$ ./update-assets
 ```
 
-This automatically generates the SVG files in `scalables/` folder, PNG files (in
-various sizes) and favicon in `bitmaps/` folder.
+This automatically generates:
+
+- Scalable SVG files of the logo in `scalables/` folder,
+- Bitmaps PNG files (in various sizes) of the logo in `bitmaps/` folder,
+- Favicon in `bitmaps/` folder,
+- Shadowed and Webp compressed versions of raw PNG screenshots.
 
 The script has some requirements:
 
@@ -22,6 +26,7 @@ The script has some requirements:
 * [Inkscape](https://inkscape.org/)
 * [RFL build package](https://github.com/rackslab/RFL/tree/main/src/build)
 * [Scour Python package](https://github.com/scour-project/scour/tree/master)
+* [ImageMagick](https://imagemagick.org/index.php)
 
 All the generated files are commited and pushed in Git repository to allow
 direct usage by documentation site, main `README.md` file, etc…

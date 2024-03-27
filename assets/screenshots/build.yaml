@@ -1,0 +1,10 @@
+---
+# List raw screenshots for which versions with dropped shadow must be generated.
+shadowed:
+- home.png
+- datacenters.png
+- rooms.png
+- racks.png
+- infrastructures.png
+- infrastructure.png
+- infrastructure_filters.png
