@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import type { Ref } from 'vue'
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 
 const selectedRacks = defineModel<Array<string>>('selectedRacks', { required: true })
@@ -9,64 +9,44 @@ const selectedEquipmentTypes = defineModel<Array<string>>('selectedEquipmentType
 const selectedCategories = defineModel<Array<string>>('selectedCategories', { required: true })
 const selectedTags = defineModel<Array<string>>('selectedTags', { required: true })
 const inputEquipmentName = defineModel<string>('inputEquipmentName', { required: true })
-const activeFilters = computed(() => {
-  const filters: Array<{ key: string; value: string; class: string; buttonClass: string }> = []
 
-  if (selectedRacks.value) {
-    selectedRacks.value.forEach((rack) => {
-      filters.push({
-        key: 'rack',
-        value: rack,
-        class: 'bg-orange-100',
-        buttonClass: 'hover:bg-orange-200 hover:text-orange-500'
-      })
-    })
+const activeFiltersCategories: Array<{
+  filters: Ref<string[] | string>
+  key: string
+  badgeClass: string
+  buttonClass: string
+}> = [
+  {
+    filters: selectedRacks,
+    key: 'rack',
+    badgeClass: 'bg-orange-100',
+    buttonClass: 'hover:bg-orange-200 hover:text-orange-500'
+  },
+  {
+    filters: selectedCategories,
+    key: 'category',
+    badgeClass: 'bg-green-100',
+    buttonClass: 'hover:bg-green-200 hover:text-green-500'
+  },
+  {
+    filters: selectedEquipmentTypes,
+    key: 'equipmentType',
+    badgeClass: 'bg-yellow-100',
+    buttonClass: 'hover:bg-yellow-200 hover:text-yellow-500'
+  },
+  {
+    filters: selectedTags,
+    key: 'tag',
+    badgeClass: 'bg-zinc-100',
+    buttonClass: 'hover:bg-zinc-200 hover:text-zinc-500'
+  },
+  {
+    filters: inputEquipmentName,
+    key: 'equipmentName',
+    badgeClass: 'bg-violet-100',
+    buttonClass: 'hover:bg-violet-200 hover:text-violet-500'
   }
-
-  if (selectedCategories.value) {
-    selectedCategories.value.forEach((category) => {
-      filters.push({
-        key: 'category',
-        value: category,
-        class: 'bg-green-100',
-        buttonClass: 'hover:bg-green-200 hover:text-green-500'
-      })
-    })
-  }
-
-  if (selectedEquipmentTypes.value) {
-    selectedEquipmentTypes.value.forEach((equipmentType) => {
-      filters.push({
-        key: 'equipmentType',
-        value: equipmentType,
-        class: 'bg-yellow-100',
-        buttonClass: 'hover:bg-yellow-200 hover:text-yellow-500'
-      })
-    })
-  }
-
-  if (selectedTags.value) {
-    selectedTags.value.forEach((tag) => {
-      filters.push({
-        key: 'tag',
-        value: tag,
-        class: 'bg-zinc-100',
-        buttonClass: 'hover:bg-zinc-200 hover:text-zinc-500'
-      })
-    })
-  }
-
-  if (inputEquipmentName.value) {
-    filters.push({
-      key: 'equipmentName',
-      value: inputEquipmentName.value,
-      class: 'bg-violet-100',
-      buttonClass: 'hover:bg-violet-200 hover:text-violet-500'
-    })
-  }
-
-  return filters
-})
+]
 
 function removeFilter(key: string, filter: string) {
   switch (key) {
@@ -89,6 +69,11 @@ function removeFilter(key: string, filter: string) {
       break
   }
 }
+
+// type guard to check for array of strings
+function isStringArray(input: string | string[]): input is string[] {
+  return Array.isArray(input)
+}
 </script>
 
 <template>
@@ -103,26 +88,33 @@ function removeFilter(key: string, filter: string) {
 
       <div class="mt-2 sm:ml-4 sm:mt-0">
         <div class="-m-1 flex flex-wrap items-center">
-          <span
-            v-for="activeFilter in activeFilters"
-            :key="activeFilter.key"
-            :class="[
-              'm-1 inline-flex items-center rounded-full border border-gray-200 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-600',
-              activeFilter.class
-            ]"
+          <template
+            v-for="activeFiltersCategory in activeFiltersCategories"
+            :key="activeFiltersCategory.key"
           >
-            <span>{{ activeFilter.value }}</span>
-            <button
-              type="button"
+            <span
+              v-for="activeFilter in isStringArray(activeFiltersCategory.filters.value)
+                ? activeFiltersCategory.filters.value
+                : [activeFiltersCategory.filters.value]"
               :class="[
-                'ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-gray-400',
-                activeFilter.buttonClass
+                'm-1 inline-flex items-center rounded-full border border-gray-200 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-600',
+                activeFiltersCategory.badgeClass
               ]"
-              @click="removeFilter(activeFilter.key, activeFilter.value)"
+              :key="activeFilter"
             >
-              <XMarkIcon />
-            </button>
-          </span>
+              <span>{{ activeFilter }}</span>
+              <button
+                type="button"
+                :class="[
+                  'ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-gray-400',
+                  activeFiltersCategory.buttonClass
+                ]"
+                @click="removeFilter(activeFiltersCategory.key, activeFilter)"
+              >
+                <XMarkIcon />
+              </button>
+            </span>
+          </template>
         </div>
       </div>
     </div>
