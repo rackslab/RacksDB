@@ -216,6 +216,7 @@ and this project adheres to
   - Add web UI user guide page (#44).
   - Commands to install web UI from source in quickstart guide.
   - Documentation to server web UI with `racksdb-web` in quickstart guide.
+  - Mention web UI feature in home page and features overview.
 
 ### Changed
 - Database schema is moved from `/usr/share/racksdb/schema.yml` to

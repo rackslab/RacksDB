@@ -50,19 +50,23 @@ The main characteristics of *RacksDB* are the following:
 
 == Interfaces
 
-image::overview:racksdb_interfaces.svg[RacksDB Interfaces,400]
+image::overview:racksdb_interfaces.svg[RacksDB Interfaces,750]
 
 Once the database is defined, data can be searched and extracted using the
-xref:usage:racksdb.adoc[`racksdb` CLI].
+xref:usage:racksdb.adoc[`racksdb` CLI]. A xref:usage:ui.adoc[Web UI] is also
+available to explore its content.
 
-For full integration with your software, a xref:usage:lib.adoc[Python library
-] and a xref:usage:rest.adoc[REST API] can also be used to stay continuously
+image::overview:racksdb_web_ui.jpg[RacksDB Web UI,width=400]
+
+For full integration with your software, a xref:usage:lib.adoc[Python library]
+and a xref:usage:rest.adoc[REST API] can also be used to stay continuously
 synchronized with database content.
 
 [sidebar]
 --
 .More links
 * xref:usage:racksdb.adoc[`racksdb` command manual]
+* xref:usage:ui.adoc[Web UI user guide] with screenshots and features list
 * xref:usage:lib.adoc[Python Library reference] documentation with examples
 * xref:usage:rest.adoc[REST API reference] documentation with examples
 --

@@ -20,4 +20,7 @@ Advanced detailed informations are available:
 * icon:terminal[] xref:usage:racksdb.adoc[`racksdb` command manpage]
 * icon:code[] xref:usage:lib.adoc[Python Library] and
   xref:usage:rest.adoc[REST API] reference documentations
+* icon:mouse-pointer[] xref:usage:ui.adoc[Web UI user guide]
 * icon:maximize[] xref:db:ext.adoc[Schema extension howto]
+
+image::overview:racksdb_web_ui.jpg[RacksDB Web UI]
