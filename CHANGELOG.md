@@ -83,6 +83,7 @@ and this project adheres to
   - Mention optional alpha channel in documentation of drawing parameters
     `~hexcolor` defined type.
   - Mention concept of computed property with the corresponding attribute.
+  - Mention new `--with-ui` option in `racksdb-web` manpage.
 
 ### Changed
 - draw:

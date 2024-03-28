@@ -56,6 +56,11 @@ endif::[]
 [.cli-opt]#*--openapi*#::
   Enable OpenAPI endpoint to retrieve REST API specifications.
 
+[.cli-opt]#*--with-ui*#[.cli-optval]##[=_PATH_]##::
+  Enable web UI. The web UI is disabled by default. When the option is used
+  without value, default UI path [.path]#`/usr/share/racksdb/frontend`# is used.
+  When a path is provided, `racksdb-web` loads UI files from this path.
+
 == Exit status
 
 *0*::
