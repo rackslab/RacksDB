@@ -6,7 +6,7 @@ xref:install:quickstart.adoc[Quickstart].
 
 == Homeview
 
-image::usage:ui_homeview_screenshot.png[UI Homeview,400,xref=image$ui_homeview_screenshot.png]
+image::usage:ui_homeview_screenshot.jpg[UI Homeview,800,xref=image$ui_homeview_screenshot.jpg]
 
 The Homeview provides an overview of what's inside RacksDB in card form. 
 Users can navigate to different sections, such as datacenters, 
@@ -15,7 +15,7 @@ either through the navbar or by clicking on the information in the cards.
 
 == Datacenters
 
-image::usage:ui_datacenters_screenshot.png[UI Datacenters,400,xref=image$ui_datacenters_screenshot.png]
+image::usage:ui_datacenters_screenshot.jpg[UI Datacenters,800,xref=image$ui_datacenters_screenshot.jpg]
 
 Users can select a datacenter by typing its name in the search bar to filter the 
 list of datacenters or by using the map by clicking on the marker to access the 
@@ -23,7 +23,7 @@ datacenter details.
 
 == Datacenter Details
 
-image::usage:ui_datacenter_details_screenshot.png[UI Datacenter Details,400,xref=image$ui_datacenter_details_screenshot.png]
+image::usage:ui_datacenter_details_screenshot.jpg[UI Datacenter Details,800,xref=image$ui_datacenter_details_screenshot.jpg]
 
 This view displays details about the selected datacenter. Users can refine the 
 display using the filter bar to find a specific room or sort rooms using the 
@@ -32,7 +32,7 @@ view.
 
 == Datacenter Room
 
-image::usage:ui_datacenter_room_screenshot_small.png[UI Datacenter Room,800,xref=image$ui_datacenter_room_screenshot.png]
+image::usage:ui_datacenter_room_screenshot_small.jpg[UI Datacenter Room,800,xref=image$ui_datacenter_room_screenshot.jpg]
 
 Datacenter Room view contains all room information, including rack names, fill 
 rates and infrastructure(s) that contains the racks with clickable access to 
@@ -43,14 +43,14 @@ can be hidden using the toggle button.
 
 == Infrastructures
 
-image::usage:ui_infrastructures_screenshot.png[UI Infrastructures,400,xref=image$ui_infrastructures_screenshot.png]
+image::usage:ui_infrastructures_screenshot.jpg[UI Infrastructures,800,xref=image$ui_infrastructures_screenshot.jpg]
 
 Users can select an infrastructure by typing its name in the search bar to 
 filter the list of infrastructures.
 
 == Infrastructure Details
 
-image::usage:ui_infrastruture_details_screenshot.png[UI Infrastructure Details,400,xref=image$ui_infrastruture_details_screenshot.png]
+image::usage:ui_infrastruture_details_screenshot.jpg[UI Infrastructure Details,800,xref=image$ui_infrastruture_details_screenshot.jpg]
 
 There is a representation of the infrastructure that the users can enlarge by 
 clicking on it.
@@ -61,7 +61,7 @@ get more details about the equipment.
 
 == Infrastructure Filters
 
-image::usage:ui_infrastructure_filters_screenshot.png[UI Infrastructure Filters,400,xref=image$ui_infrastruture_filters_screenshot.png]
+image::usage:ui_infrastructure_filters_screenshot.jpg[UI Infrastructure Filters,800,xref=image$ui_infrastruture_filters_screenshot.jpg]
 
 Filters are available to help users refine their search. Comboboxes allow 
 selection of racks and equipment types, checboxes for equipment categories and 
