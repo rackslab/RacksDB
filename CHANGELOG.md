@@ -214,6 +214,8 @@ and this project adheres to
     documentation.
   - Add new datacenter and infrastructures in example database.
   - Add web UI user guide page (#44).
+  - Commands to install web UI from source in quickstart guide.
+  - Documentation to server web UI with `racksdb-web` in quickstart guide.
 
 ### Changed
 - Database schema is moved from `/usr/share/racksdb/schema.yml` to
