@@ -303,6 +303,17 @@ To install RacksDB from sources, run this command in the source tree directory:
 $ pip install .
 ----
 
+To install Web-UI from sources, run this command in rackdsdb/web/ui to install 
+all the dependencies:
+[source,console]
+----
+$ npm install
+----
+
+NOTE: Please refer to the 
+https://github.com/rackslab/RacksDB/blob/main/racksdb/web/ui/README.md[README] 
+for more details.
+
 [#examples]
 == Bootstrap database
 
@@ -404,11 +415,25 @@ $ curl http://localhost:5000/{api-version}/infrastructures?list
 ["mercury"]
 ----
 
+[#webui]
+=== Web-UI
+
+Web-UI is included in `racksdb-web`. Users can launch the UI by running the
+command:
+
+[source,console]
+----
+$ racksdb-web --with-ui
+----
+
+NOTE: UI is accessible through localhost/5000
+
 [sidebar]
 --
 .More links
 * xref:usage:racksdb-web.adoc[`racksdb-web`(1) command manpage]
 * xref:usage:rest.adoc[REST API reference documentation]
+* xref:usage:ui.adoc[Web-UI reference documentation]
 --
 
 == Define real database
