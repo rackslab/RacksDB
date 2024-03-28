@@ -1,47 +1,68 @@
 = Web-UI
 
-This section explains all available user interface features supported by screenshots and description. For installation instruction, please refer to the xref:install:quickstart.adoc[Quickstart].
+This section explains all available user interface features supported by 
+screenshots and descriptions. For installation instruction, please refer to the 
+xref:install:quickstart.adoc[Quickstart].
 
 == Homeview
 
 image::usage:ui_homeview_screenshot.png[UI Homeview,400,xref=image$ui_homeview_screenshot.png]
 
-The Homeview provides an overview of what's inside RacksDB in card form. Users can navigate to different sections, such as datacenters, datacenter details, datacenter room, infrastructures, infrastructure details, either through the navbar or by clicking on the information in the cards.
+The Homeview provides an overview of what's inside RacksDB in card form. 
+Users can navigate to different sections, such as datacenters, 
+datacenter details, datacenter room, infrastructures, infrastructure details, 
+either through the navbar or by clicking on the information in the cards.
 
 == Datacenters
 
 image::usage:ui_datacenters_screenshot.png[UI Datacenters,400,xref=image$ui_datacenters_screenshot.png]
 
-User can select a datacenter by typing its name in the search bar to filter the list of datacenters or by using the map by clicking on the marker to access the datacenter details.
+Users can select a datacenter by typing its name in the search bar to filter the 
+list of datacenters or by using the map by clicking on the marker to access the 
+datacenter details.
 
 == Datacenter Details
 
 image::usage:ui_datacenter_details_screenshot.png[UI Datacenter Details,400,xref=image$ui_datacenter_details_screenshot.png]
 
-This view displays details about the selected datacenter. User can refine the display using the filter bar to find a specific room or sort rooms using the sort rooms button. Clicking on a room provides access to detailed room information.
+This view displays details about the selected datacenter. Users can refine the 
+display using the filter bar to find a specific room or sort rooms using the 
+sort rooms button. Clicking on a room provides access to detailed room 
+view.
 
 == Datacenter Room
 
-image::usage:ui_datacenter_room_screenshot.png[UI Datacenter Room,400,xref=image$ui_datacenter_room_screenshot.png]
+image::usage:ui_datacenter_room_screenshot_small.png[UI Datacenter Room,800,xref=image$ui_datacenter_room_screenshot.png]
 
-Datacenter Room view contains all room information, including rack names, fill rates and infrastructure(s) that contains the racks with clickable access to infastructure details.
-User can enlarge the room representation by clicking on it. Data can be filtered using the filter bar, sorted using sort racks button and empty racks can be hidden using the toggle button.
+Datacenter Room view contains all room information, including rack names, fill 
+rates and infrastructure(s) that contains the racks with clickable access to 
+infastructure details.
+Users can enlarge the room representation by clicking on it. Data can be 
+filtered using the filter bar, sorted using sort racks button and empty racks 
+can be hidden using the toggle button.
 
 == Infrastructures
 
 image::usage:ui_infrastructures_screenshot.png[UI Infrastructures,400,xref=image$ui_infrastructures_screenshot.png]
 
-User can select an infrastructure by typing its name in the search bar to filter the list of infrastructures.
+Users can select an infrastructure by typing its name in the search bar to 
+filter the list of infrastructures.
 
 == Infrastructure Details
 
 image::usage:ui_infrastruture_details_screenshot.png[UI Infrastructure Details,400,xref=image$ui_infrastruture_details_screenshot.png]
 
-There is a representation of the infrastructure that the user can enlarge by clicking on it.
-This view displays all infrastructures information in a table, including name, category, equipment, and racks contained. User can show or hide racks by clicking on the racks and can open a modal by clicking on the equipment id to get more details about the equipment.
+There is a representation of the infrastructure that the users can enlarge by 
+clicking on it.
+This view displays all infrastructures information in a table, including name, 
+category, equipment, and racks contained. Users can show or hide racks by 
+clicking on the racks and can open a modal by clicking on the equipment id to 
+get more details about the equipment.
 
 == Infrastructure Filters
 
 image::usage:ui_infrastructure_filters_screenshot.png[UI Infrastructure Filters,400,xref=image$ui_infrastruture_filters_screenshot.png]
 
-Filters are available to help the user refine their search. Comboboxes allow selection of racks and equipment types, checboxes for equipment categories and tags and a search bar for specific equipment names.
+Filters are available to help users refine their search. Comboboxes allow 
+selection of racks and equipment types, checboxes for equipment categories and 
+tags and a search bar for specific equipment names.
