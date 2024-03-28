@@ -19,6 +19,7 @@ class RacksDB(GenericDB):
     DEFAULT_DB = "/var/lib/racksdb"
     DEFAULT_SCHEMA = "/usr/share/racksdb/schemas/racksdb.yml"
     DEFAULT_EXT = "/etc/racksdb/extensions.yml"
+    DEFAULT_UI = "/usr/share/racksdb/frontend"
     PREFIX = "RacksDB"
     DEFINED_TYPES_MODULE = "racksdb.dtypes"
 

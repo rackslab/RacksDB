@@ -27,6 +27,7 @@ and this project adheres to
     multipart response (#56).
   - Optional default drawing parameters in arguments of `RacksDBWebBlueprint`
     used for all requests to `draw` endpoint unless overriden in request body.
+  - Add `--with-ui` option to enabled web UI in `racksdb-web`.
 - draw:
   - Add general `pixel_perfect` boolean drawing parameter, disabled by default.
     When enabled, RacksDB properly align graphical representation with pixels

@@ -271,6 +271,14 @@ class RacksDBWebApp(Flask):
             action="store_true",
             help="Enable OpenAPI route",
         )
+        parser.add_argument(
+            "--with-ui",
+            help="Enable UI with optional path (default path: %(const)s)",
+            nargs="?",
+            metavar="PATH",
+            const=RacksDB.DEFAULT_UI,
+            type=Path,
+        )
 
         self.args = parser.parse_args()
         self.register_blueprint(
@@ -282,6 +290,30 @@ class RacksDBWebApp(Flask):
                 openapi=self.args.openapi,
             )
         )
+
+        if self.args.with_ui:
+            self.add_url_rule("/config.json", view_func=self._ui_config)
+            self.static_folder = self.args.with_ui
+            self.add_url_rule("/", view_func=self._ui_files)
+            self.add_url_rule("/<path:name>", view_func=self._ui_files)
+
+    def _ui_config(self):
+        return jsonify(
+            {
+                "API_SERVER": (f"http://{self.args.host}:{self.args.port}/"),
+                "API_VERSION": f"v{get_version()}",
+            }
+        )
+
+    def _ui_files(self, name="index.html"):
+        if (
+            name in ["favicon.ico"]
+            or name.startswith("assets/")
+            or name.startswith("logo/")
+        ):
+            return self.send_static_file(name)
+        else:
+            return self.send_static_file("index.html")
 
     def serve(self):
         logger.info("Running RacksDB web application")
