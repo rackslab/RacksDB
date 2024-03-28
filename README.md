@@ -59,7 +59,15 @@ RacksDB provides multiple interfaces to request the database with its
 [CLI tool](https://docs.rackslab.io/racksdb/usage/racksdb.html), a
 [Python library](https://docs.rackslab.io/racksdb/usage/lib.html), a
 [REST API](https://docs.rackslab.io/racksdb/usage/rest.html) and a
-[Web UI](racksdb/web/ui/README.md) (in _beta_).
+[Web UI](https://docs.rackslab.io/racksdb/usage/ui.html).
+
+<p align="center">
+<img
+  src="assets/racksdb_web_ui.jpg"
+  alt="RacksDB Web-UI"
+  width="600px"
+  style="margin: 0 auto;">
+<p>
 
 For more details, read the
 [full description](https://docs.rackslab.io/racksdb/overview/overview.html)
