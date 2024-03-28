@@ -61,6 +61,12 @@ RacksDB provides multiple interfaces to request the database with its
 [REST API](https://docs.rackslab.io/racksdb/usage/rest.html) and a
 [Web UI](https://docs.rackslab.io/racksdb/usage/ui.html).
 
+<img
+  src="assets/racksdb_web_ui.jpg"
+  alt="RacksDB Web-UI"
+  width="200px"
+  style="margin: 20px;">
+
 For more details, read the
 [full description](https://docs.rackslab.io/racksdb/overview/overview.html)
 of RacksDB.
