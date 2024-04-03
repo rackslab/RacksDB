@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+
+import sys
+import yaml
+from pathlib import Path
+
+from rfl.build.ninja import NinjaBuilder
+
+# Sizes names and associated DPI
+SVG_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 128, "xlarge": 192}
+DOCS_DIR = Path(__file__).parent
+TARGETS = ["all", "png", "clean"]
+
+
+def main():
+
+    targets = sys.argv[1:]
+
+    if any([target not in TARGETS for target in targets]):
+        print(f"Supported targets are: {TARGETS}")
+        sys.exit(1)
+
+    if not (len(targets)):
+        targets = ["all"]
+
+    builder = NinjaBuilder()
+
+    with open(DOCS_DIR / "utils/build.yaml") as fh:
+        rules = yaml.safe_load(fh.read())
+
+    # clean target
+    if "clean" in targets:
+        generated_pngs = [
+            (DOCS_DIR / svg_s).with_suffix(".png") for svg_s in rules["diagrams"].keys()
+        ]
+        for generated_png in generated_pngs:
+            print(f"Removing generated PNG image {generated_png}")
+            generated_png.unlink()
+
+    for size, dpi in SVG_SIZES.items():
+        builder.rule(
+            name=f"png-{size}",
+            command=(
+                f"inkscape $in --export-type=png --export-overwrite --export-dpi={dpi} "
+                "--export-filename=$out"
+            ),
+        )
+
+    if "png" in targets or "all" in targets:
+        svg_rules = rules["diagrams"]
+        for svg_s, size in svg_rules.items():
+            svg = DOCS_DIR / svg_s
+            # png = svg.parent / f"{svg.stem}.png"
+            png = svg.with_suffix(".png")
+            builder.build(outputs=[png], rule=f"png-{size}", inputs=[svg])
+
+    builder.run()
+
+
+if __name__ == "__main__":
+    main()
