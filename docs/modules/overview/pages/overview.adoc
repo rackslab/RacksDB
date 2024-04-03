@@ -8,7 +8,7 @@ the equipments in your datacenters, with tools and library to request this
 database. This database can be used as *reference source* for many purposes in
 IT management.
 
-image::overview:racksdb_overview.svg[RacksDB Overview,750]
+image::overview:racksdb_overview.png[RacksDB Overview]
 
 * **Inventory**: Get permanent reference list of equipments charactistics and
   enable conformity testing.
@@ -50,7 +50,7 @@ The main characteristics of *RacksDB* are the following:
 
 == Interfaces
 
-image::overview:racksdb_interfaces.svg[RacksDB Interfaces,750]
+image::overview:racksdb_interfaces.png[RacksDB Interfaces]
 
 Once the database is defined, data can be searched and extracted using the
 xref:usage:racksdb.adoc[`racksdb` CLI]. A xref:usage:ui.adoc[Web UI] is also
