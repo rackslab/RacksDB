@@ -5,7 +5,7 @@
 To generate the manpage, run this command:
 
 ```sh
-$ make man
+$ ./update-materials man
 ```
 
 ## Generate objects reference documentation
@@ -14,7 +14,7 @@ To generate the schema objects partial of database structure reference
 documentation, run this command:
 
 ```sh
-make ref
+$ ./update-materials schema-ref
 ```
 
 ## Generate objects reference documentation
@@ -23,7 +23,7 @@ To generate the schema objects partial of drawing parameters reference
 documentation, run this command:
 
 ```sh
-make drawing-ref
+$ ./update-materials drawing-ref
 ```
 
 ## Update OpenAPI description
@@ -31,22 +31,13 @@ make drawing-ref
 To update reference OpenAPI description of RacksDB REST API, run this command:
 
 ```sh
-make openapi
+$ ./update-materials openapi
 ```
 
-## Optimize SVG images
+## Update PNG exports of SVG diagrams
 
-To optimize the SVG images in documentation, run this command:
-
-```sh
-$ make optim
-```
-
-This will significantly reduce files size and load time in browser.
-
-This requires Python 3 [scour](https://pypi.org/project/scour/) library. On
-Ubuntu/Debian, install it with:
+To update PNG bitmaps exports of SVG diagrams, run this command:
 
 ```sh
-$ sudo apt install python3-scour
+$ ./update-materials png
 ```
