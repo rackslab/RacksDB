@@ -2,12 +2,7 @@ BIN ?= asciidoctor
 MAN_OPTS ?= --backend manpage
 REVNUMBER := $(shell python3 -c "import tomli; content = tomli.load(open('../pyproject.toml', 'rb')); print(content['project']['version'])")
 
-all: ref drawing-ref openapi
-
-ref: modules/db/partials/objects.adoc
-
-modules/db/partials/objects.adoc: ../schemas/racksdb.yml
-	python3 utils/schema-objs.py > $@
+all: drawing-ref openapi
 
 drawing-ref: modules/usage/partials/drawing-objects.adoc
 

@@ -16,7 +16,7 @@ from rfl.build.projectversion import project_version
 # Sizes names and associated DPI
 SVG_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 128, "xlarge": 192}
 DOCS_DIR = Path(__file__).parent
-TARGETS = ["all", "man", "png", "clean"]
+TARGETS = ["all", "man", "schema-ref", "png", "clean"]
 MANPAGE_SOURCE = f"RacksDB {project_version()}"
 
 
@@ -48,6 +48,9 @@ def main():
         for generated_png in generated_pngs:
             print(f"Removing generated PNG image {generated_png}")
             generated_png.unlink()
+        schema_ref = DOCS_DIR / "modules/db/partials/objects.adoc"
+        print(f"Removing RacksDB schema reference documentation {schema_ref}")
+        schema_ref.unlink()
 
     for size, dpi in SVG_SIZES.items():
         builder.rule(
@@ -66,6 +69,8 @@ def main():
         ),
     )
 
+    builder.rule(name="schema-ref", command="python3 utils/schema-objs.py > $out")
+
     if "man" in targets or "all" in targets:
         manpages = (DOCS_DIR / "man").glob("*.adoc")
         for manpage in manpages:
@@ -74,6 +79,11 @@ def main():
             builder.build(
                 outputs=[target], rule="manpage", inputs=[manpage], implicit=[implicit]
             )
+
+    if "schema-ref" in targets or "all" in targets:
+        schema = DOCS_DIR.parent / "schemas/racksdb.yml"
+        target = DOCS_DIR / "modules/db/partials/objects.adoc"
+        builder.build(outputs=[target], rule="schema-ref", implicit=[schema])
 
     if "png" in targets or "all" in targets:
         svg_rules = rules["diagrams"]
