@@ -15,9 +15,14 @@ from rfl.build.projectversion import project_version
 
 # Sizes names and associated DPI
 SVG_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 128, "xlarge": 192}
-DOCS_DIR = Path(__file__).parent
 TARGETS = ["all", "man", "schema-ref", "drawing-ref", "openapi", "png", "clean"]
 MANPAGE_SOURCE = f"RacksDB {project_version()}"
+DOCS_DIR = Path(__file__).parent
+RACKSDB_SCHEMA = DOCS_DIR.parent / "schemas/racksdb.yml"
+RACKSDB_REF = DOCS_DIR / "modules/db/partials/objects.adoc"
+DRAWINGS_SCHEMA = DOCS_DIR.parent / "schemas/drawings.yml"
+DRAWINGS_REF = DOCS_DIR / "modules/usage/partials/drawing-objects.adoc"
+OPENAPI = DOCS_DIR / "modules/usage/attachments/openapi.yml"
 
 
 def main():
@@ -48,15 +53,12 @@ def main():
         for generated_png in generated_pngs:
             print(f"Removing generated PNG image {generated_png}")
             generated_png.unlink()
-        schema_ref = DOCS_DIR / "modules/db/partials/objects.adoc"
-        print(f"Removing RacksDB schema reference documentation {schema_ref}")
-        schema_ref.unlink()
-        drawing_ref = DOCS_DIR / "modules/usage/partials/drawing-objects.adoc"
-        print(f"Removing RacksDB drawing schema reference documentation {drawing_ref}")
-        drawing_ref.unlink()
-        openapi = DOCS_DIR / "modules/usage/attachments/openapi.yml"
-        print(f"Removing OpenAPI description {openapi}")
-        openapi.unlink()
+        print(f"Removing RacksDB schema reference documentation {RACKSDB_REF}")
+        RACKSDB_REF.unlink()
+        print(f"Removing RacksDB drawing schema reference documentation {DRAWINGS_REF}")
+        DRAWINGS_REF.unlink()
+        print(f"Removing OpenAPI description {OPENAPI}")
+        OPENAPI.unlink()
 
     for size, dpi in SVG_SIZES.items():
         builder.rule(
@@ -92,22 +94,21 @@ def main():
             )
 
     if "schema-ref" in targets or "all" in targets:
-        schema = DOCS_DIR.parent / "schemas/racksdb.yml"
-        target = DOCS_DIR / "modules/db/partials/objects.adoc"
-        builder.build(outputs=[target], rule="schema-ref", implicit=[schema])
+        builder.build(
+            outputs=[RACKSDB_REF], rule="schema-ref", implicit=[RACKSDB_SCHEMA]
+        )
 
     if "drawing-ref" in targets or "all" in targets:
-        schema = DOCS_DIR.parent / "schemas/drawings.yml"
-        target = DOCS_DIR / "modules/usage/partials/drawing-objects.adoc"
-        builder.build(outputs=[target], rule="drawing-ref", implicit=[schema])
+        builder.build(
+            outputs=[DRAWINGS_REF], rule="drawing-ref", implicit=[DRAWINGS_SCHEMA]
+        )
 
     if "openapi" in targets or "all" in targets:
-        schemas = [
-            DOCS_DIR.parent / "schemas/racksdb.yml",
-            DOCS_DIR.parent / "schemas/drawings.yml",
-        ]
-        target = DOCS_DIR / "modules/usage/attachments/openapi.yml"
-        builder.build(outputs=[target], rule="openapi", implicit=schemas)
+        builder.build(
+            outputs=[OPENAPI],
+            rule="openapi",
+            implicit=[RACKSDB_SCHEMA, DRAWINGS_SCHEMA],
+        )
 
     if "png" in targets or "all" in targets:
         svg_rules = rules["diagrams"]
