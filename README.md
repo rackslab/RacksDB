@@ -27,9 +27,8 @@ source** for many purposes in IT management.
 
 <p align="center">
   <img
-    src="docs/modules/overview/images/racksdb_overview.svg"
+    src="docs/modules/overview/images/racksdb_overview.png"
     alt="RacksDB Overview"
-    width="600px"
     style="margin: 0 auto;">
 </p>
 
