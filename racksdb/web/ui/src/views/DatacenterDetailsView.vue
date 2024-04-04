@@ -57,14 +57,6 @@ onMounted(() => {
   getDatacenters()
 })
 
-// Using watch to trigger getDatacenter() when the value of props.name change
-watch(
-  () => props.name,
-  () => {
-    getDatacenters()
-  }
-)
-
 const props = defineProps({
   name: String
 })
