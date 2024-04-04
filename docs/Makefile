@@ -2,13 +2,6 @@ BIN ?= asciidoctor
 MAN_OPTS ?= --backend manpage
 REVNUMBER := $(shell python3 -c "import tomli; content = tomli.load(open('../pyproject.toml', 'rb')); print(content['project']['version'])")
 
-all: openapi
-
-openapi: modules/usage/attachments/openapi.yml
-
-modules/usage/attachments/openapi.yml: ../schemas/racksdb.yml ../schemas/drawings.yml
-	python3 utils/gen-openapi.py > $@
-
 SVGS := $(shell find . -name '*.svg')
 
 .PHONY: optim

@@ -16,7 +16,7 @@ from rfl.build.projectversion import project_version
 # Sizes names and associated DPI
 SVG_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 128, "xlarge": 192}
 DOCS_DIR = Path(__file__).parent
-TARGETS = ["all", "man", "schema-ref", "drawing-ref", "png", "clean"]
+TARGETS = ["all", "man", "schema-ref", "drawing-ref", "openapi", "png", "clean"]
 MANPAGE_SOURCE = f"RacksDB {project_version()}"
 
 
@@ -54,6 +54,9 @@ def main():
         drawing_ref = DOCS_DIR / "modules/usage/partials/drawing-objects.adoc"
         print(f"Removing RacksDB drawing schema reference documentation {drawing_ref}")
         drawing_ref.unlink()
+        openapi = DOCS_DIR / "modules/usage/attachments/openapi.yml"
+        print(f"Removing OpenAPI description {openapi}")
+        openapi.unlink()
 
     for size, dpi in SVG_SIZES.items():
         builder.rule(
@@ -77,6 +80,7 @@ def main():
     builder.rule(
         name="drawing-ref", command="python3 utils/drawings-schema-objs.py > $out"
     )
+    builder.rule(name="openapi", command="python3 utils/gen-openapi.py > $out")
 
     if "man" in targets or "all" in targets:
         manpages = (DOCS_DIR / "man").glob("*.adoc")
@@ -96,6 +100,14 @@ def main():
         schema = DOCS_DIR.parent / "schemas/drawings.yml"
         target = DOCS_DIR / "modules/usage/partials/drawing-objects.adoc"
         builder.build(outputs=[target], rule="drawing-ref", implicit=[schema])
+
+    if "openapi" in targets or "all" in targets:
+        schemas = [
+            DOCS_DIR.parent / "schemas/racksdb.yml",
+            DOCS_DIR.parent / "schemas/drawings.yml",
+        ]
+        target = DOCS_DIR / "modules/usage/attachments/openapi.yml"
+        builder.build(outputs=[target], rule="openapi", implicit=schemas)
 
     if "png" in targets or "all" in targets:
         svg_rules = rules["diagrams"]
