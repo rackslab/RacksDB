@@ -2,12 +2,7 @@ BIN ?= asciidoctor
 MAN_OPTS ?= --backend manpage
 REVNUMBER := $(shell python3 -c "import tomli; content = tomli.load(open('../pyproject.toml', 'rb')); print(content['project']['version'])")
 
-all: man ref drawing-ref openapi
-
-man: man/racksdb.1 man/racksdb-web.1
-
-man/%.1: man/%.adoc modules/usage/pages/%.adoc
-	$(BIN) $(MAN_OPTS) --attribute mansource="RacksDB v$(REVNUMBER)" $<
+all: ref drawing-ref openapi
 
 ref: modules/db/partials/objects.adoc
 

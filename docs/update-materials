@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
+#
+# Copyright (c) 2024 Rackslab
+#
+# This file is part of RacksDB.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
 import yaml
 from pathlib import Path
 
 from rfl.build.ninja import NinjaBuilder
+from rfl.build.projectversion import project_version
 
 # Sizes names and associated DPI
 SVG_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 128, "xlarge": 192}
 DOCS_DIR = Path(__file__).parent
-TARGETS = ["all", "png", "clean"]
+TARGETS = ["all", "man", "png", "clean"]
+MANPAGE_SOURCE = f"RacksDB {project_version()}"
 
 
 def main():
@@ -30,6 +38,10 @@ def main():
 
     # clean target
     if "clean" in targets:
+        manpages = (DOCS_DIR / "man").glob("*.1")
+        for manpage in manpages:
+            print(f"Removing manpage {manpage}")
+            manpage.unlink()
         generated_pngs = [
             (DOCS_DIR / svg_s).with_suffix(".png") for svg_s in rules["diagrams"].keys()
         ]
@@ -46,11 +58,27 @@ def main():
             ),
         )
 
+    builder.rule(
+        name="manpage",
+        command=(
+            f"asciidoctor --backend manpage --attribute mansource='{MANPAGE_SOURCE}' "
+            "$in"
+        ),
+    )
+
+    if "man" in targets or "all" in targets:
+        manpages = (DOCS_DIR / "man").glob("*.adoc")
+        for manpage in manpages:
+            implicit = DOCS_DIR / "modules/usage/pages" / manpage.name
+            target = (DOCS_DIR / "man" / manpage.stem).with_suffix(".1")
+            builder.build(
+                outputs=[target], rule="manpage", inputs=[manpage], implicit=[implicit]
+            )
+
     if "png" in targets or "all" in targets:
         svg_rules = rules["diagrams"]
         for svg_s, size in svg_rules.items():
             svg = DOCS_DIR / svg_s
-            # png = svg.parent / f"{svg.stem}.png"
             png = svg.with_suffix(".png")
             builder.build(outputs=[png], rule=f"png-{size}", inputs=[svg])
 
