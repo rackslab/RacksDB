@@ -44,18 +44,10 @@ racksdb-web = "racksdb.web.app:RacksDBWebApp.run"
 
 [tool.setuptools.packages.find]
 include = ["racksdb*"]
-exclude = ["racksdb.web.ui*"]
 
 [project.urls]
 "Homepage" = "https://github.com/rackslab/RacksDB"
 "Bug Tracker" = "https://github.com/rackslab/RacksDB/issues"
-
-# Do not automatically install all files in package tree as data files. This is
-# especially required for files under UI folder that could be could considered
-# data files even though they are explicitely excluded from packages search
-# paths.
-[tool.setuptools]
-include-package-data = false
 
 [tool.black]
 target-version = ['py36']
