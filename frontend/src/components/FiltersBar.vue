@@ -20,7 +20,7 @@ const activeFiltersCategories: Array<{
     filters: selectedRacks,
     key: 'rack',
     badgeClass: 'bg-orange-700',
-    buttonClass: 'hover:bg-orange-500 hover:text-orange-500'
+    buttonClass: 'hover:bg-orange-200 hover:text-orange-500'
   },
   {
     filters: selectedCategories,
@@ -38,7 +38,7 @@ const activeFiltersCategories: Array<{
     filters: selectedTags,
     key: 'tag',
     badgeClass: 'bg-purple-700',
-    buttonClass: 'hover:bg-purple-500 hover:text-purple-500'
+    buttonClass: 'hover:bg-purple-200 hover:text-purple-500'
   },
   {
     filters: inputEquipmentName,
