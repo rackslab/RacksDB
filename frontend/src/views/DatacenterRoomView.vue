@@ -108,9 +108,13 @@ async function getInfrastructures() {
   infrastructures = await racksDBAPI.infrastructures()
 }
 
-onMounted(() => {
+onMounted(async () => {
+  /*
+   * First wait for infrastructures so that data is initialized for
+   * listInfrastructures() before its first call.
+   */
+  await getInfrastructures()
   getRacks()
-  getInfrastructures()
   getInfrastructureImg()
 })
 
