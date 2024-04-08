@@ -71,20 +71,6 @@ Architectures: amd64
 Signed-By: /usr/share/keyrings/rackslab.gpg
 ----
 ====
-
-Ubuntu 22.04 LTS _« jammy »_::
-+
-====
-[source]
-----
-Types: deb
-URIs: https://pkgs.rackslab.io/deb
-Suites: ubuntu22.04
-Components: main
-Architectures: amd64
-Signed-By: /usr/share/keyrings/rackslab.gpg
-----
-====
 ======
 
 Update packages sources metadata:
@@ -114,10 +100,10 @@ xref:#restapi[REST API]:
 
 [NOTE]
 ====
-On RHEL8, CentOS 8 and Rocky Linux 8 some dependencies are missing in
-standard distribution repositories. You must enable
-https://docs.fedoraproject.org/en-US/epel/[EPEL] _el8_ repositories to get all
-requirements on these distributions:
+On RHEL, CentOS and Rocky Linux versions 8 and 9 some dependencies are missing
+in standard distribution repositories. You must enable
+https://docs.fedoraproject.org/en-US/epel/[EPEL] _el8_ or _el9_ repositories to
+get all requirements on these distributions:
 
 [source,shell]
 ----
@@ -149,6 +135,26 @@ https://almalinux.org/[AlmaLinux OS 8].
 [rackslab]
 name=Rackslab
 baseurl=https://pkgs.rackslab.io/rpm/el8/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+====
+
+RHEL9::
++
+====
+
+NOTE: These packages are also compatible with https://www.centos.org/[CentOS 9],
+https://rockylinux.org/[Rocky Linux 9] and
+https://almalinux.org/[AlmaLinux OS 9].
+
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/el9/main/$basearch/
 gpgcheck=1
 enabled=1
 countme=1

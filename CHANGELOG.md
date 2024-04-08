@@ -143,8 +143,8 @@ and this project adheres to
 - schema: Declare all computed properties in schema.
 - pkg: Move Flask-Cors python dependency in _dev_ variant package.
 - docs:
-  - Update supported Linux distributions in quickstart guide (add fedora 39
-    and drop fedora 37).
+  - Update supported Linux distributions in quickstart guide (add fedora 39 and
+    RHEL9, drop fedora 37 and Ubuntu 22.04 LTS).
   - Update OpenAPI description for REST API documentation.
   - Update drawing parameters reference doc.
 
