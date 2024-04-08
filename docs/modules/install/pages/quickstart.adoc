@@ -303,8 +303,8 @@ To install RacksDB from sources, run this command in the source tree directory:
 $ pip install .
 ----
 
-To install Web UI from sources, run this command in `racksdb/web/ui` to install
-all the dependencies:
+To install frontend Web UI from sources, run this command in `frontend/` folder
+to install all the dependencies:
 
 [source,console]
 ----
@@ -312,8 +312,8 @@ $ npm install
 ----
 
 NOTE: Please refer to the
-https://github.com/rackslab/RacksDB/blob/main/racksdb/web/ui/README.md[README]
-for more details.
+https://github.com/rackslab/RacksDB/blob/main/frontend/README.md[frontend Web UI
+README] for more details.
 
 [#examples]
 == Bootstrap database
