@@ -5,6 +5,7 @@ datacenter rooms and infrastructures racks. This REST API is served by
 xref:racksdb-web.adoc[`racksdb-web` command]. This page contains the reference
 documentation of this API.
 
+[subs=attributes]
 ++++
 <style>
 /*
@@ -14,7 +15,7 @@ documentation of this API.
 article.doc { max-width: 100% !important;}
 </style>
 <rapi-doc
-  spec-url = "/racksdb/usage/_attachments/openapi.yml"
+  spec-url = "/racksdb/{page-version}/usage/_attachments/openapi.yml"
   show-header = "false"
   show-info = "false"
   allow-try = "false"
