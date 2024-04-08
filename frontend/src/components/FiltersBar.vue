@@ -92,28 +92,32 @@ function isStringArray(input: string | string[]): input is string[] {
             v-for="activeFiltersCategory in activeFiltersCategories"
             :key="activeFiltersCategory.key"
           >
-            <span
+            <template
               v-for="activeFilter in isStringArray(activeFiltersCategory.filters.value)
                 ? activeFiltersCategory.filters.value
                 : [activeFiltersCategory.filters.value]"
-              :class="[
-                'm-1 inline-flex items-center rounded-full border border-gray-200 py-1.5 pl-3 pr-2 text-sm font-medium text-white',
-                activeFiltersCategory.badgeClass
-              ]"
               :key="activeFilter"
             >
-              <span>{{ activeFilter }}</span>
-              <button
-                type="button"
+              <span
+                v-if="activeFilter.length"
                 :class="[
-                  'ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-white',
-                  activeFiltersCategory.buttonClass
+                  'm-1 inline-flex items-center rounded-full border border-gray-200 py-1.5 pl-3 pr-2 text-sm font-medium text-white',
+                  activeFiltersCategory.badgeClass
                 ]"
-                @click="removeFilter(activeFiltersCategory.key, activeFilter)"
               >
-                <XMarkIcon />
-              </button>
-            </span>
+                <span>{{ activeFilter }}</span>
+                <button
+                  type="button"
+                  :class="[
+                    'ml-1 inline-flex h-5 w-5 flex-shrink-0 rounded-full p-1 text-white',
+                    activeFiltersCategory.buttonClass
+                  ]"
+                  @click="removeFilter(activeFiltersCategory.key, activeFilter)"
+                >
+                  <XMarkIcon />
+                </button>
+              </span>
+            </template>
           </template>
         </div>
       </div>
