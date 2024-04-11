@@ -1,4 +1,4 @@
-<!--Copyright (c) 2022-2023 Rackslab
+<!--Copyright (c) 2022-2024 Rackslab
 
 This file is part of RacksDB.
 
@@ -17,7 +17,7 @@ import BreadCrumbs from '@/components/BreadCrumbs.vue'
     </div>
   </section>
 
-  <div class="flex justify-around pt-32 px-32">
+  <div class="flex justify-around px-32">
     <HomeViewCards />
   </div>
 </template>
