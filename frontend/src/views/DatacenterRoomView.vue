@@ -145,7 +145,7 @@ const props = defineProps({
       v-if="blobURL"
       @click="toggleImageModal()"
       :src="blobURL"
-      class="h-96 max-w-500 mx-auto p-10 border-2 border-black transition-transform transform duration-150 hover:scale-105 hover:border-violet-700 cursor-pointer"
+      class="h-96 max-w-500 mx-auto p-10 border-2 border-gray-100 border-opacity-10 transition-transform transform duration-300 hover:scale-105 hover:border-purple-50 cursor-pointer shadow-2xl"
       :alt="`Small image of the room ${datacenterRoom} in ${datacenterName} datacenter`"
     />
   </div>
