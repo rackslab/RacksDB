@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import type { Ref } from 'vue'
 import type { Datacenter, DatacenterRoom } from '@/composables/RacksDBAPI'
 import BreadCrumbs from '@/components/BreadCrumbs.vue'
