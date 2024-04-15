@@ -1,7 +1,6 @@
 name: racksdb
 title: RacksDB
 version: v0.4
-prerelease: devel
 start_page: overview:start.adoc
 asciidoc:
   attributes:

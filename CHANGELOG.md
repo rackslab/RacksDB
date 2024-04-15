@@ -8,6 +8,8 @@ and this project adheres to
 
 ## Unreleased
 
+## [0.4.0] - 2024-04-15
+
 ### Added
 - lib:
   - Add advanced `tags` property and `_filter()` method specializations on
@@ -357,3 +359,4 @@ and this project adheres to
 [0.1.0~beta]: https://github.com/rackslab/racksdb/releases/tag/v0.1.0-beta
 [0.2.0]: https://github.com/rackslab/racksdb/releases/tag/v0.2.0
 [0.3.0]: https://github.com/rackslab/racksdb/releases/tag/v0.3.0
+[0.4.0]: https://github.com/rackslab/racksdb/releases/tag/v0.4.0
