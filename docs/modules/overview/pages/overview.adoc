@@ -56,7 +56,7 @@ Once the database is defined, data can be searched and extracted using the
 xref:usage:racksdb.adoc[`racksdb` CLI]. A xref:usage:ui.adoc[Web UI] is also
 available to explore its content.
 
-image::overview:racksdb_web_ui.jpg[RacksDB Web UI,width=400]
+image::overview:racksdb_web_ui_screenshots.webp[RacksDB Web UI,width=600]
 
 For full integration with your software, a xref:usage:lib.adoc[Python library]
 and a xref:usage:rest.adoc[REST API] can also be used to stay continuously

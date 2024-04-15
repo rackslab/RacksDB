@@ -25,6 +25,7 @@ BITMAPS_DIR = "bitmaps"
 SCALABLES_DIR = "scalables"
 SCREENSHOTS_DIR = "screenshots"
 RAW_DIR = "raw"
+ASSEMBLIES_DIR = "assemblies"
 SHADOWED_DIR = "shadowed"
 FAVICON_SIZES = [256, 64, 48, 32, 16]
 
@@ -49,8 +50,10 @@ def main():
         builder.build(outputs=[svg], rule=f"svg-plain-{output}", inputs=[branding])
     builder.run()
 
-    # Then generate bitmaps and favicon
+    # Generate bitmaps and favicon
     builder = NinjaBuilder()
+
+    # Rules for bitmaps
     for size, dpi in DPI_SIZES.items():
         builder.rule(
             name=f"png-{size}",
@@ -83,6 +86,7 @@ def main():
     ico = branding.parent / BITMAPS_DIR / "favicon.ico"
     builder.build(outputs=[ico], rule="favicon", inputs=[branding])
 
+    # Load assemblies and bitmaps generation rules
     with open(Path(SCREENSHOTS_DIR) / "build.yaml") as fh:
         rules = yaml.safe_load(fh.read())
 
@@ -98,6 +102,11 @@ def main():
         ),
     )
 
+    builder.rule(
+        name="convert",
+        command=("convert $in $out"),
+    )
+
     raws = rules["shadowed"]
     for raw_s in raws:
         raw = Path(SCREENSHOTS_DIR) / RAW_DIR / raw_s
@@ -105,6 +114,16 @@ def main():
             ".webp"
         )
         builder.build(outputs=[shadowed], rule="shadow", inputs=[raw])
+
+    # Generate bitmaps versions of assemblies
+    assemblies = rules["assemblies"]
+    for assembly_s, sizes in assemblies.items():
+        assembly = Path(SCREENSHOTS_DIR) / ASSEMBLIES_DIR / assembly_s
+        for size in sizes:
+            png = assembly.parent / BITMAPS_DIR / f"{assembly.stem}-{size}.png"
+            webp = png.with_suffix(".webp")
+            builder.build(outputs=[png], rule=f"png-{size}", inputs=[assembly])
+            builder.build(outputs=[webp], rule="convert", inputs=[png])
 
     builder.run()
 

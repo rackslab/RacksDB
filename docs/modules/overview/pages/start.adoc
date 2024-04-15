@@ -23,4 +23,4 @@ Advanced detailed informations are available:
 * icon:mouse-pointer[] xref:usage:ui.adoc[Web UI user guide]
 * icon:maximize[] xref:db:ext.adoc[Schema extension howto]
 
-image::overview:racksdb_web_ui.jpg[RacksDB Web UI]
+image::overview:racksdb_web_ui_screenshots.webp[RacksDB Web UI]

@@ -62,8 +62,8 @@ RacksDB provides multiple interfaces to request the database with its
 
 <p align="center">
 <img
-  src="assets/racksdb_web_ui.jpg"
-  alt="RacksDB Web-UI"
+  src="assets/screenshots/assemblies/bitmaps/screenshots-small.webp"
+  alt="RacksDB web UI"
   width="600px"
   style="margin: 0 auto;">
 <p>

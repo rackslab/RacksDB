@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="297.54196mm"
+   height="169.51685mm"
+   viewBox="0 0 297.54196 169.51685"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="screenshots.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.5554293"
+     inkscape:cx="496.00455"
+     inkscape:cy="356.81468"
+     inkscape:window-width="2865"
+     inkscape:window-height="1385"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1732"
+       x="-0.072496389"
+       y="-0.10330735"
+       width="1.1449928"
+       height="1.2066147">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="10.933361"
+         id="feGaussianBlur1734" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1736"
+       x="-0.072496389"
+       y="-0.10330735"
+       width="1.1449928"
+       height="1.2066147">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="10.933361"
+         id="feGaussianBlur1738" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1740"
+       x="-0.072496389"
+       y="-0.10330735"
+       width="1.1449928"
+       height="1.2066147">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="10.933361"
+         id="feGaussianBlur1742" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(322.71407,139.45332)">
+    <g
+       id="g1766"
+       transform="matrix(0.33540043,0,0,0.33540043,-214.47563,-92.68062)">
+      <rect
+         style="opacity:0.6;fill:#585858;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;filter:url(#filter1732)"
+         id="rect1278"
+         width="361.94998"
+         height="254"
+         x="-296.474"
+         y="-113.21326" />
+      <image
+         width="361.95001"
+         height="254"
+         preserveAspectRatio="none"
+         xlink:href="../raw/infrastructure.png"
+         id="image992"
+         x="-298.59067"
+         y="-115.32991" />
+    </g>
+    <g
+       id="g1770"
+       transform="matrix(0.33540043,0,0,0.33540043,-214.47563,-92.68062)">
+      <rect
+         style="opacity:0.6;fill:#585858;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;filter:url(#filter1740)"
+         id="rect1280"
+         width="361.94998"
+         height="254"
+         x="176.22047"
+         y="-113.00552" />
+      <image
+         width="361.95001"
+         height="254"
+         preserveAspectRatio="none"
+         xlink:href="../raw/home.png"
+         id="image1048"
+         x="174.10381"
+         y="-115.12218" />
+    </g>
+    <g
+       id="g1774"
+       transform="matrix(0.33540043,0,0,0.33540043,-211.29419,-92.68062)">
+      <rect
+         style="opacity:0.6;fill:#585858;fill-opacity:1;stroke:none;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;filter:url(#filter1736)"
+         id="rect1196"
+         width="361.94998"
+         height="254"
+         x="-69.612274"
+         y="85.7229" />
+      <image
+         width="361.95001"
+         height="254"
+         preserveAspectRatio="none"
+         xlink:href="../raw/datacenters.png"
+         id="image1170"
+         x="-71.728951"
+         y="83.606232" />
+    </g>
+  </g>
+</svg>

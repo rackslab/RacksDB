@@ -1,4 +1,9 @@
 ---
+# Define DPI/sizes for which PNG bitmaps version of assemblies must be
+# generated.
+assemblies:
+  screenshots.svg:
+  - small
 # List raw screenshots for which versions with dropped shadow must be generated.
 shadowed:
 - home.png
