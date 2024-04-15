@@ -3,8 +3,8 @@
 import os
 from pathlib import Path
 
+from rfl.build.projectversion import project_version
 from racksdb import RacksDB
-from racksdb.version import get_version
 from racksdb.views import RacksDBViews
 from racksdb.generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from racksdb.generic.openapi import OpenAPIGenerator
@@ -28,7 +28,7 @@ def main():
     views = RacksDBViews()
     openapi = OpenAPIGenerator(
         "RacksDB",
-        get_version(),
+        project_version(),
         {"RacksDB": racksdb_schema, "Drawings": drawing_schema},
         views,
     )
