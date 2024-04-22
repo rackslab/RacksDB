@@ -8,6 +8,9 @@ and this project adheres to
 
 ## Unreleased
 
+### Fixed
+- docs: wrong APT sources file extension in quickstart guide.
+
 ## [0.4.0] - 2024-04-15
 
 ### Added

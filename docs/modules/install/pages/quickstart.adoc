@@ -25,8 +25,7 @@ First download packages repository signing key:
 # curl -sS https://pkgs.rackslab.io/keyring.asc | gpg --dearmor | tee /usr/share/keyrings/rackslab.gpg > /dev/null
 ----
 
-Create `/etc/apt/sources.list.d/rackslab.list` with this content:
-
+Create `/etc/apt/sources.list.d/rackslab.sources` with this content:
 
 [tabs]
 ======
