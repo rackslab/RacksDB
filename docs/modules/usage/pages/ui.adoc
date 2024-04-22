@@ -68,4 +68,4 @@ Lists allow _selection of racks_ and _equipment types_, *checkboxes* for
 _equipment categories_ and _tags_ and a *search bar* to find specific equipment
 by name:
 
-image::shadowed/infrastructure_filters.webp[UI Infrastructure Filters,800,xref=image$infrastructure_filters.png]
+image::shadowed/infrastructure_filters.webp[UI Infrastructure Filters,800,xref=image$raw/infrastructure_filters.png]
