@@ -70,6 +70,20 @@ Architectures: amd64
 Signed-By: /usr/share/keyrings/rackslab.gpg
 ----
 ====
+
+Ubuntu 24.04 LTS::
++
+====
+[source]
+----
+Types: deb
+URIs: https://pkgs.rackslab.io/deb
+Suites: noble
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/rackslab.gpg
+----
+====
 ======
 
 Update packages sources metadata:
@@ -161,21 +175,6 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
 ====
 
-Fedora 38::
-+
-====
-[source]
-----
-[rackslab]
-name=Rackslab
-baseurl=https://pkgs.rackslab.io/rpm/fc38/main/$basearch/
-gpgcheck=1
-enabled=1
-countme=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
-----
-====
-
 Fedora 39::
 +
 ====
@@ -184,6 +183,21 @@ Fedora 39::
 [rackslab]
 name=Rackslab
 baseurl=https://pkgs.rackslab.io/rpm/fc39/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+====
+
+Fedora 40::
++
+====
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/fc40/main/$basearch/
 gpgcheck=1
 enabled=1
 countme=1
