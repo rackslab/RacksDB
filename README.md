@@ -1,13 +1,12 @@
+# RacksDB
+
+## Overview
+
 <img
   src="assets/bitmaps/logo_full_white_medium.png"
   alt="RacksDB Overview"
   align="right"
-  width="200px"
-  style="margin: 20px;">
-
-# RacksDB
-
-## Overview
+  width="200px">
 
 **RacksDB** is an _open source_ solution to modelize your datacenters
 infrastructures. It provides a simple database schema to store information about
