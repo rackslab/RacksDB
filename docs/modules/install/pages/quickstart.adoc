@@ -339,7 +339,7 @@ README] for more details.
 
 RacksDB provides several fully working examples of databases. When RacksDB is
 installed with system packages, these examples are available in
-`/usr/share/doc/rackslab/examples`.
+`/usr/share/doc/python3-racksdb/examples/`.
 
 It is recommended to use these examples as a starting point to define your own
 database.
@@ -348,7 +348,7 @@ Run this command to copy a complete example database:
 
 [source,console]
 ----
-$ sudo cp -r /usr/share/doc/racksdb/examples/db/* /var/lib/racksdb/
+$ sudo cp -r /usr/share/doc/python3-racksdb/examples/db/* /var/lib/racksdb/
 ----
 
 == Explore content

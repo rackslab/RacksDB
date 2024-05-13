@@ -13,7 +13,9 @@ and this project adheres to
   Fedora 40 and dropped support on Fedora 38.
 
 ### Fixed
-- docs: wrong APT sources file extension in quickstart guide.
+- docs:
+  - Wrong APT sources file extension in quickstart guide.
+  - Path of system packages examples directory in quickstart guide.
 
 ## [0.4.0] - 2024-04-15
 
