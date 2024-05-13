@@ -25,7 +25,7 @@ First download packages repository signing key:
 # curl -sS https://pkgs.rackslab.io/keyring.asc | gpg --dearmor | tee /usr/share/keyrings/rackslab.gpg > /dev/null
 ----
 
-Create `/etc/apt/sources.list.d/rackslab.sources` with this content:
+Create [.path]#`/etc/apt/sources.list.d/rackslab.sources`# with this content:
 
 [tabs]
 ======
@@ -131,7 +131,7 @@ Download and save RPM repository kerying:
 # curl https://pkgs.rackslab.io/keyring.asc --output /etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
 
-Create DNF repository file `/etc/yum.repos.d/rackslab.repo`:
+Create DNF repository file [.path]#`/etc/yum.repos.d/rackslab.repo`#:
 
 [tabs]
 ======
@@ -339,7 +339,7 @@ README] for more details.
 
 RacksDB provides several fully working examples of databases. When RacksDB is
 installed with system packages, these examples are available in
-`/usr/share/doc/python3-racksdb/examples/`.
+[.path]#`/usr/share/doc/python3-racksdb/examples/`#.
 
 It is recommended to use these examples as a starting point to define your own
 database.

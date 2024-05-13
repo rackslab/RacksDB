@@ -9,8 +9,10 @@ and this project adheres to
 ## [Unreleased]
 
 ### Changed
-- docs: update quickstart guide to mention added support on Ubuntu 24.04 LTS and
-  Fedora 40 and dropped support on Fedora 38.
+- docs:
+  - Update quickstart guide to mention added support on Ubuntu 24.04 LTS and
+    Fedora 40 and dropped support on Fedora 38.
+  - Format files and directories paths with specific style in quickstart guide.
 
 ### Fixed
 - docs:
