@@ -18,6 +18,9 @@ and this project adheres to
 - docs:
   - Wrong APT sources file extension in quickstart guide.
   - Path of system packages examples directory in quickstart guide.
+- ui: Update bundled dependencies to fix security issues CVE-2024-39338 (axios),
+  CVE-2024-4068 (braces), CVE-2024-31207 (vite), CVE-2024-6783
+  (vue-template-compiler) and CVE-2024-37890 (ws).
 
 ## [0.4.0] - 2024-04-15
 
