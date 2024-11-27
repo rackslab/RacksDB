@@ -10,8 +10,7 @@ and this project adheres to
 
 ### Changed
 - docs:
-  - Update quickstart guide to mention added support on Ubuntu 24.04 LTS and
-    Fedora 40 and dropped support on Fedora 38.
+  - Mention support on Ubuntu 24.04 LTS, Fedora 40 and 41.
   - Format files and directories paths with specific style in quickstart guide.
 
 ### Fixed
@@ -21,6 +20,9 @@ and this project adheres to
 - ui: Update bundled dependencies to fix security issues CVE-2024-39338 (axios),
   CVE-2024-4068 (braces), CVE-2024-31207 (vite), CVE-2024-6783
   (vue-template-compiler) and CVE-2024-37890 (ws).
+
+### Removed
+- docs: Remove mention of support on Fedora 39 and 38.
 
 ## [0.4.0] - 2024-04-15
 
