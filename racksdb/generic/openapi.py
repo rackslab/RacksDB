@@ -81,9 +81,9 @@ class OpenAPIGenerator:
             for _type in list(self.schemas[schema].objects.values()) + [
                 self.schemas[schema].content
             ]:
-                result["components"]["schemas"][
-                    f"{schema}{_type.name}"
-                ] = self._object_schema(schema, _type)
+                result["components"]["schemas"][f"{schema}{_type.name}"] = (
+                    self._object_schema(schema, _type)
+                )
 
         # add error component
         result["components"]["schemas"].update(self._error_component())

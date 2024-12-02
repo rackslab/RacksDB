@@ -17,9 +17,9 @@ class SchemaDefinedTypeBytes(SchemaDefinedType):
         quantity = float(match.group(1))
         unit = match.group(3)
         if unit == "MB":
-            quantity *= 1024 ** 2
+            quantity *= 1024**2
         elif unit == "GB":
-            quantity *= 1024 ** 3
+            quantity *= 1024**3
         elif unit == "TB":
-            quantity *= 1024 ** 4
+            quantity *= 1024**4
         return int(quantity)

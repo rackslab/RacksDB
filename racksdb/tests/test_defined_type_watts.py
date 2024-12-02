@@ -14,8 +14,8 @@ class TestDefinedTypeWatts(unittest.TestCase):
     def test_defined_type_watts(self):
         defined_type = SchemaDefinedTypeWatts()
         self.assertEqual(defined_type.parse("15W"), 15)
-        self.assertEqual(defined_type.parse("100.4kW"), 100.4 * 10 ** 3)
-        self.assertEqual(defined_type.parse("3.4MW"), 3.4 * 10 ** 6)
+        self.assertEqual(defined_type.parse("100.4kW"), 100.4 * 10**3)
+        self.assertEqual(defined_type.parse("3.4MW"), 3.4 * 10**6)
         self.assertEqual(defined_type.parse("1.1W"), 1)  # rounded to integer below
 
     def test_defined_type_watts_invalid_values(self):

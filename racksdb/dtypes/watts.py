@@ -17,7 +17,7 @@ class SchemaDefinedTypeWatts(SchemaDefinedType):
         quantity = float(match.group(1))
         unit = match.group(3)
         if unit == "kW":
-            quantity *= 10 ** 3
+            quantity *= 10**3
         elif unit == "MW":
-            quantity *= 10 ** 6
+            quantity *= 10**6
         return int(quantity)
