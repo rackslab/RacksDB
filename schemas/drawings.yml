@@ -107,6 +107,10 @@ _objects:
         default: 30
   Rack:
     properties:
+      labels:
+        type: bool
+        description: Control if racks are labelled with their names in infrastructures graphical representations
+        default: true
       label_offset:
         type: int
         description: Vertical space between row labels and racks labels in infrastructures graphical representations
@@ -133,6 +137,10 @@ _objects:
         default: 50
   Row:
     properties:
+      labels:
+        type: bool
+        description: Control if rows are labelled with their names in infrastructures graphical representations
+        default: true
       label_offset:
         type: int
         description: Space above row labels in infrastructure graphical representations

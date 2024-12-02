@@ -134,6 +134,15 @@ class InfrastructureDrawer(Drawer):
 
         return total
 
+    def _rack_row_spacing_height(self) -> int:
+        """Return height of spacing above row of racks, in mm."""
+        result = self.parameters.rack.offset
+        if self.parameters.row.labels:
+            result += self.parameters.row.label_offset
+        if self.parameters.rack.labels:
+            result += self.parameters.rack.label_offset
+        return result
+
     def _rack_row_height(self, row) -> int:
         """Return rack row height, ie. the maximum rack height among the represented
         racks in the row, in mm."""
@@ -205,12 +214,7 @@ class InfrastructureDrawer(Drawer):
         for _row in self.rack_rows:
             if _row is row:
                 break
-            pos_y += (
-                int(_row.height * self.ratio)
-                + self.parameters.row.label_offset
-                + self.parameters.rack.label_offset
-                + self.parameters.rack.offset
-            )
+            pos_y += int(_row.height * self.ratio) + self._rack_row_spacing_height()
         pos_y += int(row.height * self.ratio)
         return ImagePoint(self.parameters.margin.left, pos_y)
 
@@ -232,7 +236,9 @@ class InfrastructureDrawer(Drawer):
                         int(row_rack.type.width * self.ratio)
                         + self.parameters.rack.spacing
                     )
-        dl.y += self.parameters.rack.label_offset + self.parameters.rack.offset
+        if self.parameters.rack.labels:
+            dl.y += self.parameters.rack.label_offset
+        dl.y += self.parameters.rack.offset
         return dl
 
     def _equipment_tl(self, equipment) -> ImagePoint:
@@ -422,10 +428,11 @@ class InfrastructureDrawer(Drawer):
         rack_width = self._rack_width(rack)
         rack_height = self._rack_height(rack)
 
-        # write rack name
-        self.ctx.move_to(dl.x, dl.y - rack_height - self.parameters.rack.offset)
-        self.ctx.set_source_rgba(0, 0, 0, 1)  # black
-        self._print_text(f"rack {rack.name}", max_width=self._rack_width(rack))
+        # write rack name if rack labels are enabled
+        if self.parameters.rack.labels:
+            self.ctx.move_to(dl.x, dl.y - rack_height - self.parameters.rack.offset)
+            self.ctx.set_source_rgba(0, 0, 0, 1)  # black
+            self._print_text(f"rack {rack.name}", max_width=self._rack_width(rack))
 
         colorset = self._find_rack_colorset(rack)
 
@@ -485,14 +492,15 @@ class InfrastructureDrawer(Drawer):
 
         dl = self._rack_row_dl(row)
 
-        # write row name
-        self.ctx.set_source_rgba(0, 0, 0, 1)  # black
-        self.ctx.select_font_face(
-            "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
-        )
-        self.ctx.set_font_size(14)
-        self.ctx.move_to(dl.x, dl.y - int(row.height * self.ratio))
-        self._print_text(f"row {row.name}")
+        # write row name if row labels are enabled
+        if self.parameters.row.labels:
+            self.ctx.set_source_rgba(0, 0, 0, 1)  # black
+            self.ctx.select_font_face(
+                "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD
+            )
+            self.ctx.set_font_size(14)
+            self.ctx.move_to(dl.x, dl.y - int(row.height * self.ratio))
+            self._print_text(f"row {row.name}")
 
         # iterate over the racks to draw racks in row
         for rack in self.racks:
@@ -553,10 +561,9 @@ class InfrastructureDrawer(Drawer):
             self.parameters.margin.left * 2
             + self.parameters.rack.spacing * (max_row_racks - 1)
         )
-        height_whitespace = 2 * self.parameters.margin.top + len(self.rack_rows) * (
-            self.parameters.row.label_offset
-            + self.parameters.rack.label_offset
-            + self.parameters.rack.offset
+        height_whitespace = (
+            2 * self.parameters.margin.top
+            + len(self.rack_rows) * self._rack_row_spacing_height()
         )
 
         # Deduce available space to draw in width and height
