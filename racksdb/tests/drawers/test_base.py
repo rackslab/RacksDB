@@ -4,13 +4,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import os
 import unittest
-from pathlib import Path
 
 from racksdb.drawers.base import Drawer, DefaultEquipmentColorSet, DefaultRackColorSet
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
+
+from ..lib.common import drawing_schema_path
 
 
 class FakeEquipmentType:
@@ -39,21 +39,10 @@ class FakeRack:
 
 class TestDrawer(unittest.TestCase):
     def setUp(self):
-        # Try relative path and system paths sequentially for both the schema
-        # and example database. If none of these paths exist, gently skip the
-        # test with meaningful message.
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        drawings_schema_paths = [
-            Path(current_dir).joinpath("../../schemas/drawings.yml"),
-            Path("/usr/share/racksdb/schemas/drawings.yml"),
-        ]
-        self.drawings_schema_path = None
-        for drawings_schema_path in drawings_schema_paths:
-            if drawings_schema_path.exists():
-                self.drawings_schema_path = drawings_schema_path
-                break
-        if self.drawings_schema_path is None:
-            self.skipTest("Unable to find drawings schema file to run test")
+        try:
+            self.drawings_schema_path = drawing_schema_path()
+        except FileNotFoundError as err:
+            self.skipTest(err)
         parameters_raw = {
             "colors": {
                 "equipments": [

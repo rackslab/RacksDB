@@ -4,41 +4,20 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import os
-from pathlib import Path
 import unittest
 
 from racksdb import RacksDB
 
+from ..lib.common import schema_path, db_path
+
 
 class TestDBLoad(unittest.TestCase):
     def setUp(self):
-        # Try relative path and system paths sequentially for both the schema
-        # and example database. If none of these paths exist, gently skip the
-        # test with meaningful message.
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        schema_paths = [
-            Path(current_dir).joinpath("../../schemas/racksdb.yml"),
-            Path("/usr/share/racksdb/schemas/racksdb.yml"),
-        ]
-        self.schema_path = None
-        for schema_path in schema_paths:
-            if schema_path.exists():
-                self.schema_path = schema_path
-                break
-        if self.schema_path is None:
-            self.skipTest("Unable to find schema file to run test")
-        db_paths = [
-            Path(current_dir).joinpath("../../examples/db"),
-            Path("/usr/share/doc/racksdb/examples/db"),
-        ]
-        self.db_path = None
-        for db_path in db_paths:
-            if db_path.exists():
-                self.db_path = db_path
-                break
-        if self.db_path is None:
-            self.skipTest("Unable to find db file to run test")
+        try:
+            self.schema_path = schema_path()
+            self.db_path = db_path()
+        except FileNotFoundError as err:
+            self.skipTest(err)
 
     def test_load(self):
         RacksDB.load(schema=self.schema_path, db=self.db_path)
