@@ -37,6 +37,11 @@ web = [
     "Flask",
     "requests-toolbelt",
 ]
+tests = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+]
 
 [project.scripts]
 racksdb = "racksdb.exec:RacksDBExec.run"

@@ -12,6 +12,8 @@ and this project adheres to
 - docs:
   - Mention support on Ubuntu 24.04 LTS, Fedora 40 and 41.
   - Format files and directories paths with specific style in quickstart guide.
+- pkg: Add _tests_ extra packages with all dependencies required to run unit
+  tests.
 
 ### Fixed
 - docs:
