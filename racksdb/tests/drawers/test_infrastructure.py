@@ -141,3 +141,18 @@ class TestInfrastructureDrawer(unittest.TestCase):
             drawer.draw()
             drawer._print_text.assert_called()
             drawer._print_text.reset_mock()
+
+    def test_draw_no_rack_error(self):
+        self.parameters.infrastructure.equipment_tags = "fail"
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = Path(tmpdir) / "output.png"
+            drawer = InfrastructureDrawer(
+                self.db, "mercury", filename, "png", self.parameters, None, "yaml"
+            )
+            with self.assertRaisesRegex(
+                RacksDBDrawingError,
+                "^Unable to find racks to draw with filters provided in drawing "
+                "parameters$",
+            ):
+                drawer.draw()
+            self.assertFalse(filename.exists())
