@@ -12,7 +12,7 @@ import logging
 import cairo
 
 from .base import Drawer, ImagePoint
-from ..errors import RacksDBError
+from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,9 @@ class InfrastructureDrawer(Drawer):
             if infrastructure.name == name:
                 self.infrastructure = infrastructure
         if self.infrastructure is None:
-            raise RacksDBError(f"Unable to find infrastructure {name} in database")
+            raise RacksDBDrawingError(
+                f"Unable to find infrastructure {name} in database"
+            )
         # List of rack rows used by the infrastructure
         self.rack_rows = []
         # List of racks used by the insfrastructure

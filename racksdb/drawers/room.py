@@ -10,7 +10,7 @@ import math
 import cairo
 
 from .base import Drawer, ImagePoint
-from ..errors import RacksDBError
+from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ class RoomDrawer(Drawer):
                 if room.name == name:
                     self.room = room
         if self.room is None:
-            raise RacksDBError(f"Unable to find room {name} in database")
+            raise RacksDBDrawingError(f"Unable to find room {name} in database")
         # Calculated at draw time based on dimensions
         self.ratio = 0
 

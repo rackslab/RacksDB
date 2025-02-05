@@ -18,3 +18,7 @@ class RacksDBFormatError(DBFormatError):
 
 class RacksDBSchemaError(DBSchemaError):
     pass
+
+
+class RacksDBDrawingError(RacksDBError):
+    pass
