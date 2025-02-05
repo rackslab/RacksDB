@@ -17,6 +17,7 @@ dependencies = [
     "ClusterShell",
     "pycairo",
     "PyGObject",
+    "setuptools",
 ]
 readme = "README.md"
 classifiers = [

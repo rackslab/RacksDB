@@ -30,6 +30,7 @@ and this project adheres to
   CVE-2024-4068 (braces), CVE-2024-31207, CVE-2024-45812, CVE-2024-45811 (vite),
   CVE-2024-6783 (vue-template-compiler), CVE-2024-37890 (ws), CVE-2024-21538
   (cross-spawn), CVE-2024-4067 (micromatch), CVE-2024-47068 (rollup).
+- pkg: Add missing dependency on _setuptools_ for `pkg_resources` module.
 
 ### Removed
 - docs: Remove mention of support on Fedora 39 and 38.
