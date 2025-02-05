@@ -23,6 +23,8 @@ and this project adheres to
   tests.
 
 ### Fixed
+- draw: Detect when unable to find racks to draw in infrastructure and raise
+  specific exception instead of crashing with `ZeroDivisionError` (#97→#100).
 - docs:
   - Wrong APT sources file extension in quickstart guide.
   - Path of system packages examples directory in quickstart guide.

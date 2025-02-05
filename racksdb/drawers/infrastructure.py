@@ -541,6 +541,12 @@ class InfrastructureDrawer(Drawer):
             if part.rack.row not in self.rack_rows:
                 self.rack_rows.append(part.rack.row)
 
+        if not self.racks:
+            raise RacksDBDrawingError(
+                "Unable to find racks to draw with filters provided in drawing "
+                "parameters"
+            )
+
         # Search maximum racks row width and sum all rows maximum rack height in mm
         max_row_width = 0
         max_row_racks = 0
