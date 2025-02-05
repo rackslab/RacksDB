@@ -13,7 +13,7 @@ from racksdb import RacksDB
 from racksdb.drawers.infrastructure import InfrastructureDrawer
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
-from racksdb.errors import RacksDBError
+from racksdb.errors import RacksDBDrawingError
 
 from ..lib.common import drawing_schema_path, schema_path, db_path
 
@@ -62,7 +62,7 @@ class TestInfrastructureDrawer(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             filename = Path(tmpdir) / "output.png"
             with self.assertRaisesRegex(
-                RacksDBError, "^Unable to find infrastructure fail in database$"
+                RacksDBDrawingError, "^Unable to find infrastructure fail in database$"
             ):
                 InfrastructureDrawer(
                     self.db, "fail", filename, "png", self.parameters, None, "yaml"
