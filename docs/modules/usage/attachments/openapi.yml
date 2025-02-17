@@ -35,7 +35,8 @@ components:
           - 0.6
           - 0.6
           - 1.0
-          items: number
+          items:
+            type: number
           type: array
         border:
           description: The border color of the equipments.
@@ -44,7 +45,8 @@ components:
           - 0.2
           - 0.2
           - 1.0
-          items: number
+          items:
+            type: number
           type: array
         chassis:
           description: The color of the equipment chassis.
@@ -53,7 +55,8 @@ components:
           - 0.24705882352941178
           - 0.24705882352941178
           - 1.0
-          items: number
+          items:
+            type: number
           type: array
         ghost:
           description: The color of ghosted equipment.
@@ -62,7 +65,8 @@ components:
           - 0.45098039215686275
           - 0.45098039215686275
           - 1.0
-          items: number
+          items:
+            type: number
           type: array
         tags:
           description: List of tags equipments must have to be associated to the coloring
@@ -169,7 +173,8 @@ components:
           - 0.2
           - 0.2
           - 1.0
-          items: number
+          items:
+            type: number
           type: array
         pane:
           description: The color of the racks pane.
@@ -178,7 +183,8 @@ components:
           - 0.0
           - 0.0
           - 1.0
-          items: number
+          items:
+            type: number
           type: array
         tags:
           description: List of tags racks must have to be associated to the coloring
