@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from itertools import chain
-from typing import Tuple, Any
 
 from .schema import (
     SchemaObject,
@@ -181,7 +180,7 @@ class OpenAPIGenerator:
                 }
             }
         else:
-            return {response.mimetype: {"schema": {"type": "string"}}}
+            return {response.mimetype: {"schema": self._native_schema(response.schema)}}
 
     def _object_schema(self, schema, _type):
         """Return the OpenAPI schema corresponding to an object."""
@@ -242,7 +241,12 @@ class OpenAPIGenerator:
             return {"type": self._native_type(property_type)}
         except DBOpenAPIGeneratorError:
             pass
-        if isinstance(property_type, type(Tuple[Any, ...])):
+        try:
+            property_type_name = property_type._name
+        except AttributeError:
+            # For Python 3.6
+            property_type_name = property_type.__name__
+        if property_type_name in ["List", "Tuple"]:
             return {
                 "type": "array",
                 "items": {"type": self._native_type(property_type.__args__[0])},
