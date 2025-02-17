@@ -38,10 +38,10 @@ class RacksDBWebBlueprint(Blueprint):
 
     def __init__(
         self,
-        schema=RacksDB.DEFAULT_SCHEMA,
-        ext=RacksDB.DEFAULT_EXT,
-        db=RacksDB.DEFAULT_DB,
-        drawings_schema=DrawingParameters.DEFAULT_SCHEMA,
+        schema=Path(RacksDB.DEFAULT_SCHEMA),
+        ext=Path(RacksDB.DEFAULT_EXT),
+        db=Path(RacksDB.DEFAULT_DB),
+        drawings_schema=Path(DrawingParameters.DEFAULT_SCHEMA),
         default_drawing_parameters={},
         openapi=False,
     ):
