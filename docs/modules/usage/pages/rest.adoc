@@ -15,10 +15,10 @@ documentation of this API.
 article.doc { max-width: 100% !important;}
 </style>
 <rapi-doc
-ifeval::[{page-version} == {page-component-latest-version}]
+ifdef::page-component-version-is-latest[]
   spec-url = "/racksdb/usage/_attachments/openapi.yml"
 endif::[]
-ifeval::[{page-version} != {page-component-latest-version}]
+ifndef::page-component-version-is-latest[]
   spec-url = "/racksdb/{page-version}/usage/_attachments/openapi.yml"
 endif::[]
   show-header = "false"
