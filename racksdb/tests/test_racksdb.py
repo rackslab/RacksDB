@@ -55,8 +55,8 @@ class TestDB(unittest.TestCase):
         # fewer than the number of nodes. The number of potentially expanded
         # objects is reported correctly by len(). However, it must be much lower
         # than the actual number of keys/values in the dictionnary.
-        self.assertEqual(len(self.db.nodes.keys()), 6)
-        self.assertEqual(len(self.db.nodes), 129)
+        self.assertEqual(len(self.db.nodes.keys()), 7)
+        self.assertEqual(len(self.db.nodes), 130)
 
     def test_racks(self):
         self.assertEqual(len(self.db.racks), 101)
