@@ -245,7 +245,7 @@ class OpenAPIGenerator:
         if isinstance(property_type, type(Tuple[Any, ...])):
             return {
                 "type": "array",
-                "items": self._native_type(property_type.__args__[0]),
+                "items": {"type": self._native_type(property_type.__args__[0])},
             }
         raise DBOpenAPIGeneratorError(
             f"Unsupported schema conversion for property native type '{property_type}'"
