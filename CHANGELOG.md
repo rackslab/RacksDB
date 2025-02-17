@@ -21,6 +21,7 @@ and this project adheres to
   - Format files and directories paths with specific style in quickstart guide.
   - Update OpenAPI description for REST API documentation.
   - Update drawing parameters reference doc.
+  - Add some data in example database.
 - pkg: Add _tests_ extra packages with all dependencies required to run unit
   tests.
 
