@@ -136,6 +136,11 @@ components:
             graphical representations
           example: 20
           type: integer
+        labels:
+          description: Control if racks are labelled with their names in infrastructures
+            graphical representations
+          example: true
+          type: boolean
         offset:
           description: Vertical space between racks labels and racks in infrastructures
             graphical representations
@@ -198,6 +203,11 @@ components:
           description: Space above row labels in infrastructure graphical representations
           example: 20
           type: integer
+        labels:
+          description: Control if rows are labelled with their names in infrastructures
+            graphical representations
+          example: true
+          type: boolean
       type: object
     Drawings_content:
       properties:
@@ -238,6 +248,7 @@ components:
           example:
             door_depth: 50
             label_offset: 20
+            labels: true
             offset: 20
             pane_width: 40
             spacing: 3
@@ -252,6 +263,7 @@ components:
           description: Rack row graphical representation settings
           example:
             label_offset: 20
+            labels: true
       type: object
     Error:
       properties:
