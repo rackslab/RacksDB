@@ -77,10 +77,11 @@ class DBActionParameter:
 
 
 class DBActionResponse:
-    def __init__(self, mimetype, binary=False, object_name=None):
+    def __init__(self, mimetype, binary=False, object_name=None, schema=str):
         self.mimetype = mimetype
         self.binary = binary
         self.object = object_name
+        self.schema = schema
 
 
 class DBActionError:
