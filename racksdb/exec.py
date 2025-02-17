@@ -8,6 +8,7 @@ import argparse
 import sys
 import logging
 from itertools import chain
+import typing as t
 
 from pathlib import Path
 
@@ -35,7 +36,7 @@ class RacksDBExec:
     def run(cls):
         cls()
 
-    def __init__(self):
+    def __init__(self, cmd_args: t.Optional[t.List[str]] = None):
         parser = argparse.ArgumentParser(description="Do something with RacksDB.")
         parser.add_argument(
             "-v",
@@ -133,7 +134,7 @@ class RacksDBExec:
                 subparser.add_argument(*args, **kwargs)
                 subparser.set_defaults(func=getattr(self, f"_run_{action.name}"))
 
-        self.args = parser.parse_args()
+        self.args = parser.parse_args(args=cmd_args)
 
         self._setup_logger()
 
