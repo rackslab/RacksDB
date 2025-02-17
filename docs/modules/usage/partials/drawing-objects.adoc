@@ -91,6 +91,7 @@ top: 30
 ----
 door_depth: 50
 label_offset: 20
+labels: true
 offset: 20
 pane_width: 40
 spacing: 3
@@ -107,6 +108,7 @@ u_height: 44.45
 [source,yaml]
 ----
 label_offset: 20
+labels: true
 ----
 |xref:#obj-row[{symbol-obj}{nbsp}Row]
 |[.grey]#-#
@@ -327,6 +329,13 @@ Library class type: `DrawingsRack`
 |===
 |Property|Description|Type|Required
 
+|labels
+|Control if racks are labelled with their names in infrastructures graphical representations
+
+*Default value:* `True`
+|bool
+|[.grey]#-#
+
 |label_offset
 |Vertical space between row labels and racks labels in infrastructures graphical representations
 
@@ -434,6 +443,13 @@ Library class type: `DrawingsRow`
 [cols="{tbl-obj-props-cols-specs}"]
 |===
 |Property|Description|Type|Required
+
+|labels
+|Control if rows are labelled with their names in infrastructures graphical representations
+
+*Default value:* `True`
+|bool
+|[.grey]#-#
 
 |label_offset
 |Space above row labels in infrastructure graphical representations
