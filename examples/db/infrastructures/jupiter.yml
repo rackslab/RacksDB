@@ -36,6 +36,10 @@ layout:
   - name: jukvm01
     type: kvm
     slot: 18
+  nodes:
+  - name: jusrv1
+    type: dellr550
+    slot: 19
   network:
   - name: jusw03
     type: cisco3650
