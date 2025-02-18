@@ -526,9 +526,71 @@ Get the name of the first rack:
 ====
 --
 
+==== Methods
+
+The `RacksDB` objects provide 1 method:
+
+* `tags()` method returns a list of tags associated to objects. This method
+  accepts 5 arguments:
++
+--
+* `node` (default: _None_): An optional name of node . When not _None_, return
+   the list of tags associated to this node.
+* `infrastructure` (default: _None_): An optional name of infrastructure. When
+   not _None_, return the list of tags associated to this infrastructure. If
+   `on_nodes` argument is _True_, returns all tags associated to nodes in this
+   infrastructure instead.
+* `datacenter` (default: _None_): An optional name of datacenter. When not
+  _None_, return the list of tags associated to this datacenter. If `on_racks`
+  argument is _True_, returns all tags associated to racks in this datacenter
+  instead.
+* `on_nodes` (default: _False_). When _True_ with an infrastructure name,
+  return tags on nodes of this infrastructure.
+* `on_racks` (default: _False_). When _True_ with a datacenter name, return
+  tags on racks of this datacenter.
+
+The method raises `RacksDBRequestError` when called with _None_ value for all
+three `node`, `infrastructure` and `datacenter` arguments. It raises
+`RacksDBNotFoundError` if either the node, infrastructure or datacenter cannot
+be found with the provided name.
+--
 
 [#spec-racksdbdatacenter]
 === `RacksDBDatacenter`
+
+==== Attributes
+
+The `RacksDBDatacenter` class provides the following specialized attribute:
+
+* `racks`: xref:#list[`DBList` object] of all racks in the datacenter.
++
+--
+.Example
+====
+Get the name of the first rack in _paris_ datacenter:
+
+[source,python]
+----
+>>> db.datacenters['paris'].racks[0].name
+'R1-A01'
+----
+====
+--
+* `racks_tags`: xref:#list[`DBList` object] of all tags associated to racks in
+  the datacenter.
++
+--
+.Example
+====
+Get tags associated to racks in _paris_ datacenter:
+
+[source,python]
+----
+>>> db.datacenters['paris'].racks_tags
+['first', 'last']
+----
+====
+--
 
 ==== Filtering
 
@@ -579,6 +641,21 @@ Count the total number of nodes in the _tiger_ infrastructure:
 ----
 >>> len(db.infrastructures['tiger'].nodes)
 75
+----
+====
+--
+* `nodes_tags`: xref:#list[`DBList` object] of all tags associated to nodes in
+  the infrastructure.
++
+--
+.Example
+====
+Get tags associated to nodes in the _mercury_ infrastructure:
+
+[source,python]
+----
+>>> db.infrastructures['mercury'].nodes_tags
+['compute', 'servers', 'ia', 'gpu']
 ----
 ====
 --

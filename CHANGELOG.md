@@ -24,7 +24,13 @@ and this project adheres to
     labels in infrastructure graphical representations, true by default (#90).
 - cli: Add `tags` command to retrieve tags associated to objects (#102).
 - web: Add `tags` endpoint to retrieve tags associated to objects.
-- docs: Mention `tags` command in `racksdb` manpage.
+- docs:
+  - Mention `tags` command in `racksdb` manpage.
+  - Mention `RacksDB.tags()` method in library reference documentation.
+  - Mention `RacksDBDatacenter.{racks,racks_tags}` attributes in library
+    reference documentation.
+  - Mention `RacksDBInfrastructure.nodes_tags` attribute in library reference
+    documentation.
 
 ### Changed
 - docs:
