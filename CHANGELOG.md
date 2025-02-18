@@ -13,6 +13,10 @@ and this project adheres to
   - Add `racks` and `racks_tags` properties on `RacksDBDatacenter`
     specialization class.
   - Add `nodes_tags` property on `RacksDBInfrastructure` specialization class.
+  - Introduce `RacksDBRequestError` and `RacksDBNotFoundError` errors as
+    children of generic `RacksDBError`.
+  - Add `tags()` method to `RacksDB` class to search for tags associated to
+    either infrastructures, nodes, datacenters or racks.
 - draw:
   - Add rack `labels` boolean drawing parameter to control presence of rack
     labels in infrastructure graphical representations, true by default (#89).

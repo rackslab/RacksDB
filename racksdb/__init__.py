@@ -5,12 +5,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from pathlib import Path
-from typing import Union
+import typing as t
 
 from .generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from .generic.db import GenericDB, DBDict, DBList, DBSplittedFilesLoader
 from .generic.errors import DBSchemaError, DBFormatError
-from .errors import RacksDBFormatError, RacksDBSchemaError
+from .errors import (
+    RacksDBFormatError,
+    RacksDBSchemaError,
+    RacksDBRequestError,
+    RacksDBNotFoundError,
+)
 from . import bases
 
 
@@ -44,12 +49,48 @@ class RacksDB(GenericDB):
                         result.append(rack)
         return result
 
+    def tags(
+        self,
+        node: t.Optional[str] = None,
+        infrastructure: t.Optional[str] = None,
+        datacenter: t.Optional[str] = None,
+        on_nodes: bool = False,
+        on_racks: bool = False,
+    ) -> DBList:
+        if not node and not infrastructure and not datacenter:
+            raise RacksDBRequestError(
+                "Either node, infrastructure or datacenter parameter must be defined "
+                "to retrieve tags"
+            )
+
+        if node:
+            nodes = self.nodes.filter(name=node)
+            if node not in nodes:
+                raise RacksDBNotFoundError(f"Unable to find node {node}")
+            return nodes[node].tags
+        elif infrastructure:
+            if infrastructure not in self.infrastructures:
+                raise RacksDBNotFoundError(
+                    f"Unable to find infrastructure {infrastructure}"
+                )
+            if on_nodes:
+                return self.infrastructures[infrastructure].nodes_tags
+            else:
+                return self.infrastructures[infrastructure].tags
+        elif datacenter:
+            if datacenter not in self.datacenters:
+                raise RacksDBNotFoundError(f"Unable to find datacenter {datacenter}")
+            if on_racks:
+                return self.datacenters[datacenter].racks_tags
+            else:
+                return self.datacenters[datacenter].tags
+
     @classmethod
     def load(
         cls,
-        schema: Union[str, Path, None] = None,
-        ext: Union[str, Path, None] = None,
-        db: Union[str, Path, None] = None,
+        schema: t.Union[str, Path, None] = None,
+        ext: t.Union[str, Path, None] = None,
+        db: t.Union[str, Path, None] = None,
     ):
         # Unfortunately, default values to arguments cannot be used as they are
         # class attributes and the class is not defined yet at this stage at
