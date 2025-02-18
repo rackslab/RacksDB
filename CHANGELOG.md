@@ -56,6 +56,8 @@ and this project adheres to
   - Fix Path type of RacksDBWebBlueprint arguments default values.
   - Setup colored logger from `RFL.log` library and honor `--debug` command line
     option of `racksdb-web`.
+  - Log critical error instead of crashing when `racksdb-web` is unable to load
+    schema or database (#110).
 - ui: Update bundled dependencies to fix security issues CVE-2024-39338 (axios),
   CVE-2024-4068 (braces), CVE-2024-31207, CVE-2024-45812, CVE-2024-45811,
   CVE-2025-24010 (vite), CVE-2024-6783 (vue-template-compiler), CVE-2024-37890
