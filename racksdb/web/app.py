@@ -7,6 +7,7 @@
 import argparse
 from pathlib import Path
 import io
+import sys
 import logging
 
 from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
@@ -309,15 +310,22 @@ class RacksDBWebApp(Flask):
             debug_flags="ALL",
         )
 
-        self.register_blueprint(
-            RacksDBWebBlueprint(
-                self.args.schema,
-                self.args.ext,
-                self.args.db,
-                self.args.drawings_schema,
-                openapi=self.args.openapi,
+        try:
+            self.register_blueprint(
+                RacksDBWebBlueprint(
+                    self.args.schema,
+                    self.args.ext,
+                    self.args.db,
+                    self.args.drawings_schema,
+                    openapi=self.args.openapi,
+                )
             )
-        )
+        except DBSchemaError as err:
+            logger.critical("Error while loading schema: %s", err)
+            sys.exit(1)
+        except DBFormatError as err:
+            logger.critical("Error while loading db: %s", err)
+            sys.exit(1)
 
         if self.args.with_ui:
             self.add_url_rule("/config.json", view_func=self._ui_config)
