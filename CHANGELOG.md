@@ -31,6 +31,7 @@ and this project adheres to
     reference documentation.
   - Mention `RacksDBInfrastructure.nodes_tags` attribute in library reference
     documentation.
+- pkgs: Add dependency on `RFL.log` external library.
 
 ### Changed
 - docs:
@@ -39,6 +40,7 @@ and this project adheres to
   - Update OpenAPI description for REST API documentation.
   - Update drawing parameters reference doc.
   - Add some data in example database.
+- cli: Adopt colored logger from `RFL.log` library (#103).
 - pkg: Add _tests_ extra packages with all dependencies required to run unit
   tests.
 
