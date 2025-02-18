@@ -12,6 +12,14 @@ class RacksDBError(Exception):
     pass
 
 
+class RacksDBRequestError(RacksDBError):
+    pass
+
+
+class RacksDBNotFoundError(RacksDBError):
+    pass
+
+
 class RacksDBFormatError(DBFormatError):
     pass
 
