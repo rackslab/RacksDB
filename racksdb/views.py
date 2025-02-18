@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import typing as t
 from pathlib import Path
 
 from .drawers.parameters import DrawingParameters
@@ -189,5 +190,48 @@ class RacksDBViews(DBViewSet):
                 DBActionError(415, "Unsupported drawing parameters format."),
                 DBActionError(500, "Unable to load drawing parameters schema."),
             ],
-        )
+        ),
+        DBAction(
+            name="tags",
+            path="/tags",
+            description="Get tags associated to infrastructure and equipment",
+            parameters=[
+                DBActionParameter(
+                    "infrastructure",
+                    description="Infrastructure name",
+                ),
+                DBActionParameter(
+                    "on-nodes",
+                    nargs=0,
+                    description="Get tags on nodes of an infrastructure",
+                ),
+                DBActionParameter(
+                    "node",
+                    description="Node name",
+                ),
+                DBActionParameter(
+                    "datacenter",
+                    description="Datacenter name",
+                ),
+                DBActionParameter(
+                    "on-racks",
+                    nargs=0,
+                    description="Get tags of racks in a datacenter",
+                ),
+            ],
+            responses=[
+                DBActionResponse("application/json", schema=t.List[str]),
+                DBActionResponse("application/x-yaml", schema=t.List[str]),
+            ],
+            errors=[
+                DBActionError(
+                    400,
+                    "Missing request parameter.",
+                ),
+                DBActionError(
+                    404,
+                    "Requested objects not found in database.",
+                ),
+            ],
+        ),
     ]

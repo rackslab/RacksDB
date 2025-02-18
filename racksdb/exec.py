@@ -189,6 +189,32 @@ class RacksDBExec:
     def _run_infrastructures(self):
         self._dump_view()
 
+    def _run_tags(self):
+        tags = None
+        if (
+            not self.args.node
+            and not self.args.infrastructure
+            and not self.args.datacenter
+        ):
+            logger.critical(
+                "Either --node, --infrastructure or --datacenter is required"
+            )
+            sys.exit(1)
+
+        try:
+            tags = self.db.tags(
+                self.args.node,
+                self.args.infrastructure,
+                self.args.datacenter,
+                self.args.on_nodes,
+                self.args.on_racks,
+            )
+        except RacksDBError as err:
+            logger.critical(err)
+            sys.exit(1)
+        if tags:
+            print("\n".join(tags))
+
     def _dump_view(self):
         data = getattr(self.db, self.args.action)
         view = self.views[self.args.action]

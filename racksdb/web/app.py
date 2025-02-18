@@ -13,7 +13,7 @@ from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
 from requests_toolbelt import MultipartEncoder
 
 from .. import RacksDB
-from ..errors import RacksDBError
+from ..errors import RacksDBError, RacksDBRequestError, RacksDBNotFoundError
 from ..version import get_version
 from ..views import RacksDBViews
 from ..generic.db import DBDictsLoader, DBStringLoader
@@ -88,6 +88,25 @@ class RacksDBWebBlueprint(Blueprint):
         return Response(
             response=DBDumperFactory.get("yaml")().dump(self.db._loader.content),
             mimetype=self.MIMETYPES["yaml"],
+        )
+
+    def _tags(self):
+        try:
+            tags = self.db.tags(
+                request.args.get("node"),
+                request.args.get("infrastructure"),
+                request.args.get("datacenter"),
+                "on_nodes" in request.args,
+                "on_racks" in request.args,
+            )
+        except RacksDBRequestError as err:
+            abort(400, str(err))
+        except RacksDBNotFoundError as err:
+            abort(404, str(err))
+        dump_format = request.args.get("format", "json")
+        dumper = DBDumperFactory.get(dump_format)()
+        return Response(
+            response=dumper.dump(tags), mimetype=self.MIMETYPES[dump_format]
         )
 
     def _dump_view(self, content):

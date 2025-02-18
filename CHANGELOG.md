@@ -22,6 +22,8 @@ and this project adheres to
     labels in infrastructure graphical representations, true by default (#89).
   - Add row `labels` boolean drawing parameter to control presence of row
     labels in infrastructure graphical representations, true by default (#90).
+- cli: Add `tags` command to retrieve tags associated to objects (#102).
+- web: Add `tags` endpoint to retrieve tags associated to objects.
 
 ### Changed
 - docs:
