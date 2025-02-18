@@ -59,6 +59,12 @@ jobs:
           pip install PyYAML==5.4.1
           echo "::notice::Installing PyGObject (old version)"
           pip install "PyGObject<3.43.0"
+          echo "::notice::Installing Werkzeug (old version)"
+          pip install "Werkzeug<0.13"
+          echo "::notice::Installing Flask (old version)"
+          pip install "flask<1.0"
+          echo "::notice::Installing requests-toolbelt (old version)"
+          pip install requests-toolbelt==0.9.1
 
           cp -v ${Python3_ROOT_DIR}/lib/python3.6/site-packages/rfl/build/scripts/setup setup.py
           python3 setup.py install
