@@ -11,6 +11,7 @@ import logging
 
 from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
 from requests_toolbelt import MultipartEncoder
+from rfl.log import setup_logger
 
 from .. import RacksDB
 from ..errors import RacksDBError, RacksDBRequestError, RacksDBNotFoundError
@@ -300,6 +301,14 @@ class RacksDBWebApp(Flask):
         )
 
         self.args = parser.parse_args()
+
+        # Setup logger with RFL.log
+        setup_logger(
+            debug=self.args.debug,
+            log_flags="ALL",
+            debug_flags="ALL",
+        )
+
         self.register_blueprint(
             RacksDBWebBlueprint(
                 self.args.schema,
