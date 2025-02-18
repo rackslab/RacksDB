@@ -30,7 +30,7 @@ def drawing_schema_path():
 def schema_path():
     return _first_path(
         [
-            Path(CURRENT_DIR).joinpath("../../schemas/racksdb.yml"),
+            Path(CURRENT_DIR).joinpath("../../../schemas/racksdb.yml"),
             Path("/usr/share/racksdb/schemas/racksdb.yml"),
         ],
         "Unable to find schema to run tests",
