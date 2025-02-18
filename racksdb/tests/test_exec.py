@@ -419,6 +419,69 @@ class TestRacksDBExec(unittest.TestCase):
             self.assertGreater(len(unfolded), len(folded))
 
     #
+    # tags
+    #
+
+    def test_tags_node(self):
+        with mock.patch("sys.stdout", new=io.StringIO()) as output:
+            RacksDBExec(CMD_BASE_ARGS + ["tags", "--node", "mecn0001"])
+            tags = output.getvalue().strip().split("\n")
+            self.assertCountEqual(tags, ["compute"])
+
+    def test_tags_node_not_found(self):
+        with mock.patch("sys.stderr", new=io.StringIO()) as errors:
+            with self.assertRaisesRegex(SystemExit, "1"):
+                RacksDBExec(CMD_BASE_ARGS + ["tags", "--node", "fail"])
+            self.assertIn("Unable to find node fail", errors.getvalue())
+
+    def test_tags_infrastructure(self):
+        with mock.patch("sys.stdout", new=io.StringIO()) as output:
+            RacksDBExec(CMD_BASE_ARGS + ["tags", "--infrastructure", "mercury"])
+            tags = output.getvalue().strip().split("\n")
+            self.assertCountEqual(tags, ["hpc", "cluster"])
+
+    def test_tags_infrastructure_on_nodes(self):
+        with mock.patch("sys.stdout", new=io.StringIO()) as output:
+            RacksDBExec(
+                CMD_BASE_ARGS + ["tags", "--infrastructure", "mercury", "--on-nodes"]
+            )
+            tags = output.getvalue().strip().split("\n")
+            self.assertCountEqual(tags, ["compute", "servers", "ia", "gpu"])
+
+    def test_tags_infrastructure_not_found(self):
+        with mock.patch("sys.stderr", new=io.StringIO()) as errors:
+            with self.assertRaisesRegex(SystemExit, "1"):
+                RacksDBExec(CMD_BASE_ARGS + ["tags", "--infrastructure", "fail"])
+            self.assertIn("Unable to find infrastructure fail", errors.getvalue())
+
+    def test_tags_datacenter(self):
+        with mock.patch("sys.stdout", new=io.StringIO()) as output:
+            RacksDBExec(CMD_BASE_ARGS + ["tags", "--datacenter", "paris"])
+            tags = output.getvalue().strip().split("\n")
+            self.assertCountEqual(tags, ["freecooling", "tier2"])
+
+    def test_tags_datacenter_on_racks(self):
+        with mock.patch("sys.stdout", new=io.StringIO()) as output:
+            RacksDBExec(CMD_BASE_ARGS + ["tags", "--datacenter", "paris", "--on-racks"])
+            tags = output.getvalue().strip().split("\n")
+            self.assertCountEqual(tags, ["first", "last"])
+
+    def test_tags_datacenter_not_found(self):
+        with mock.patch("sys.stderr", new=io.StringIO()) as errors:
+            with self.assertRaisesRegex(SystemExit, "1"):
+                RacksDBExec(CMD_BASE_ARGS + ["tags", "--datacenter", "fail"])
+            self.assertIn("Unable to find datacenter fail", errors.getvalue())
+
+    def test_tags_missing_option(self):
+        with mock.patch("sys.stderr", new=io.StringIO()) as errors:
+            with self.assertRaisesRegex(SystemExit, "1"):
+                RacksDBExec(CMD_BASE_ARGS + ["tags"])
+            self.assertIn(
+                "Either --node, --infrastructure or --datacenter is required",
+                errors.getvalue(),
+            )
+
+    #
     # draw
     #
     def test_draw_room(self):
