@@ -99,6 +99,7 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
                 f"/v{get_version()}/infrastructures",
                 f"/v{get_version()}/nodes",
                 f"/v{get_version()}/racks",
+                f"/v{get_version()}/tags",
             ],
         )
         self.assertIsInstance(content["components"]["schemas"], dict)
@@ -524,3 +525,107 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
         nb_racks_folded = len(response.json)
         # FIXME: nb_nodes_unfolded should be greater than nb_nodes_folded
         self.assertEqual(nb_racks_unfolded, nb_racks_folded)
+
+    #
+    # tags
+    #
+
+    def test_tags_node(self):
+        response = self.client.get(f"/v{get_version()}/tags?node=mecn0010")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertIsInstance(response.json, list)
+        self.assertCountEqual(response.json, ["compute"])
+
+    def test_tags_node_yaml(self):
+        response = self.client.get(f"/v{get_version()}/tags?node=mecn0010&format=yaml")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/x-yaml")
+        content = yaml.safe_load(response.text)
+        self.assertIsInstance(content, list)
+        self.assertCountEqual(content, ["compute"])
+
+    def test_tags_node_not_found(self):
+        response = self.client.get(f"/v{get_version()}/tags?node=fail")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 404,
+                "description": "Unable to find node fail",
+                "name": "Not Found",
+            },
+        )
+
+    def test_tags_infrastructure(self):
+        response = self.client.get(f"/v{get_version()}/tags?infrastructure=mercury")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertIsInstance(response.json, list)
+        self.assertCountEqual(response.json, ["hpc", "cluster"])
+
+    def test_tags_infrastructure_on_nodes(self):
+        response = self.client.get(
+            f"/v{get_version()}/tags?infrastructure=mercury&on_nodes"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertIsInstance(response.json, list)
+        self.assertCountEqual(response.json, ["servers", "compute", "ia", "gpu"])
+
+    def test_tags_infrastructure_not_found(self):
+        response = self.client.get(f"/v{get_version()}/tags?infrastructure=fail")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 404,
+                "description": "Unable to find infrastructure fail",
+                "name": "Not Found",
+            },
+        )
+
+    def test_tags_datacenter(self):
+        response = self.client.get(f"/v{get_version()}/tags?datacenter=paris")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertIsInstance(response.json, list)
+        self.assertCountEqual(response.json, ["freecooling", "tier2"])
+
+    def test_tags_datacenter_on_racks(self):
+        response = self.client.get(f"/v{get_version()}/tags?datacenter=paris&on_racks")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertIsInstance(response.json, list)
+        self.assertCountEqual(response.json, ["first", "last"])
+
+    def test_tags_datacenter_not_found(self):
+        response = self.client.get(f"/v{get_version()}/tags?datacenter=fail")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 404,
+                "description": "Unable to find datacenter fail",
+                "name": "Not Found",
+            },
+        )
+
+    def test_tags_missing_parameter(self):
+        response = self.client.get(f"/v{get_version()}/tags")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": (
+                    "Either node, infrastructure or datacenter parameter must be "
+                    "defined to retrieve tags"
+                ),
+                "name": "Bad Request",
+            },
+        )
