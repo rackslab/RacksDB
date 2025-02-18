@@ -1306,3 +1306,63 @@ paths:
                   $ref: '#/components/schemas/RacksDBRack'
                 type: array
           description: successful operation
+  /v0.5.0.dev1/tags:
+    get:
+      description: Get tags associated to infrastructure and equipment
+      parameters:
+      - description: Infrastructure name
+        in: query
+        name: infrastructure
+        required: false
+        schema:
+          type: string
+      - allowEmptyValue: true
+        description: Get tags on nodes of an infrastructure
+        in: query
+        name: on-nodes
+        required: false
+        schema: {}
+      - description: Node name
+        in: query
+        name: node
+        required: false
+        schema:
+          type: string
+      - description: Datacenter name
+        in: query
+        name: datacenter
+        required: false
+        schema:
+          type: string
+      - allowEmptyValue: true
+        description: Get tags of racks in a datacenter
+        in: query
+        name: on-racks
+        required: false
+        schema: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+            application/x-yaml:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Missing request parameter.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested objects not found in database.
