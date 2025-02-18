@@ -4,8 +4,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import pkg_resources
+try:
+    from importlib import metadata
+except ImportError:
+    # On Python < 3.8, use external backport library importlib-metadata.
+    import importlib_metadata as metadata
 
 
 def get_version():
-    return pkg_resources.get_distribution("racksdb").version
+    return metadata.version("racksdb")

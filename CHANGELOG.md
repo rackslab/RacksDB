@@ -57,7 +57,8 @@ and this project adheres to
   CVE-2025-24010 (vite), CVE-2024-6783 (vue-template-compiler), CVE-2024-37890
   (ws), CVE-2024-21538 (cross-spawn), CVE-2024-4067 (micromatch), CVE-2024-47068
   (rollup), CVE-2024-55565 (nanoid).
-- pkg: Add missing dependency on _setuptools_ for `pkg_resources` module.
+- pkg: Fix `pkg_resources` API deprecation error by using importlib module and
+  `importlib_metadata` external backport library for Python < 3.8 (#104).
 
 ### Removed
 - docs: Remove mention of support on Fedora 39 and 38.
