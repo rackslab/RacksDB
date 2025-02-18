@@ -9,8 +9,9 @@ import sys
 import logging
 from itertools import chain
 import typing as t
-
 from pathlib import Path
+
+from rfl.log import setup_logger
 
 from .version import get_version
 from .generic.errors import DBFormatError, DBSchemaError
@@ -158,18 +159,12 @@ class RacksDBExec:
             sys.exit(1)
 
     def _setup_logger(self):
-        if self.args.debug:
-            logging_level = logging.DEBUG
-        else:
-            logging_level = logging.INFO
-
-        root_logger = logging.getLogger()
-        root_logger.setLevel(logging_level)
-        handler = logging.StreamHandler()
-        handler.setLevel(logging_level)
-        formatter = logging.Formatter("[%(levelname)s] %(name)s: %(message)s")
-        handler.setFormatter(formatter)
-        root_logger.addHandler(handler)
+        # Setup logger with RFL.log
+        setup_logger(
+            debug=self.args.debug,
+            log_flags="ALL",
+            debug_flags="ALL",
+        )
 
     def _run_schema(self):
         print(SchemaDumperFactory.get("yaml")().dump(self.db._schema))
