@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Rackslab
+# Copyright (c) 2025 Rackslab
 #
 # This file is part of RacksDB.
 #
@@ -7,6 +7,7 @@
 import unittest
 
 from racksdb import RacksDB
+from racksdb.errors import RacksDBRequestError, RacksDBNotFoundError
 
 from .lib.common import schema_path, db_path
 
@@ -69,3 +70,64 @@ class TestDB(unittest.TestCase):
             .objects()[0]
             .name,
         )
+
+    def test_tags_missing_param(self):
+        msg = (
+            "^Either node, infrastructure or datacenter parameter must be defined to "
+            "retrieve tags$"
+        )
+        with self.assertRaisesRegex(RacksDBRequestError, msg):
+            self.db.tags()
+        with self.assertRaisesRegex(RacksDBRequestError, msg):
+            self.db.tags(None, None, None)
+        with self.assertRaisesRegex(RacksDBRequestError, msg):
+            self.db.tags(node=None, infrastructure=None, datacenter=None)
+
+    def test_tags_node(self):
+        self.assertCountEqual(self.db.tags(node="megpu0001"), ["gpu", "ia"])
+        self.assertCountEqual(self.db.tags(node="mecn0001"), ["compute"])
+
+    def test_tags_node_not_found(self):
+        with self.assertRaisesRegex(RacksDBNotFoundError, "^Unable to find node fail$"):
+            self.db.tags(node="fail")
+
+    def test_tags_infrastructure(self):
+        self.assertCountEqual(
+            self.db.tags(infrastructure="mercury"), ["hpc", "cluster"]
+        )
+        self.assertCountEqual(
+            self.db.tags(infrastructure="jupiter"), ["data", "cluster"]
+        )
+
+    def test_tags_infrastructure_on_nodes(self):
+        self.assertCountEqual(
+            self.db.tags(infrastructure="mercury", on_nodes=True),
+            ["compute", "servers", "ia", "gpu"],
+        )
+        self.assertCountEqual(self.db.tags(infrastructure="jupiter", on_nodes=True), [])
+
+    def test_tags_infrastructure_not_found(self):
+        with self.assertRaisesRegex(
+            RacksDBNotFoundError, "^Unable to find infrastructure fail$"
+        ):
+            self.db.tags(infrastructure="fail")
+
+    def test_tags_datacenter(self):
+        self.assertCountEqual(
+            self.db.tags(datacenter="paris"), ["freecooling", "tier2"]
+        )
+        self.assertCountEqual(
+            self.db.tags(datacenter="london"), ["freecooling", "tier3"]
+        )
+
+    def test_tags_datacenter_on_racks(self):
+        self.assertCountEqual(
+            self.db.tags(datacenter="paris", on_racks=True), ["first", "last"]
+        )
+        self.assertCountEqual(self.db.tags(datacenter="london", on_racks=True), [])
+
+    def test_tags_datacenter_not_found(self):
+        with self.assertRaisesRegex(
+            RacksDBNotFoundError, "^Unable to find datacenter fail$"
+        ):
+            self.db.tags(datacenter="fail")
