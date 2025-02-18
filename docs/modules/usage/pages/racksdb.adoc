@@ -141,6 +141,35 @@ This command accepts the following options:
   Name of the rack to search.
 --
 
+[.cli-opt]#*tags*#::
+
+  Get associated to object in database.
++
+--
+This command accepts the following options:
+
+*[.cli-opt]#--node*=#[.cli-optval]##_NODE_##::
+  Get tags associated to a specific node.
+
+*[.cli-opt]#--infrastructure*=#[.cli-optval]##_INFRASTRUCTURE_##::
+  Get tags associated to a specific infrastructure. With [.cli-opt]#*--on-nodes*#,
+  get the tags associated to nodes in this infrastructure.
+
+*[.cli-opt]#--datacenter*=#[.cli-optval]##_DATACENTER_##::
+  Get tags associated to a specific datacenter. With [.cli-opt]#*--on-racks*#,
+  get the tags associated to racks in this datacenter.
+
+*[.cli-opt]#--on-nodes*#::
+  With *[.cli-opt]#--infrastructure*#, get tags associated to nodes in an
+  infrastructure.
+
+*[.cli-opt]#--on-racks*#::
+  With [.cli-opt]#--datacenter#, get tags associated to racks in a datacenter.
+
+Either [.cli-opt]#*--node*#, [.cli-opt]#*--infrastructure*# or
+[.cli-opt]#*--datacenter*# argument is required.
+--
+
 .Examples
 ====
 [source,console]
@@ -212,6 +241,36 @@ $ racksdb racks --name R7-06 --fold
 
 [.cli-example-desc]
 Dump information about rack _R7-A06_ with folded node range.
+
+[source,console]
+$ racksdb tags --node cn001
+
+[.cli-example-desc]
+Get all tags associated to node _cn001_.
+
+[source,console]
+$ racksdb tags --infrastructure tiger
+
+[.cli-example-desc]
+Get all tags associated to infrastructure _tiger_.
+
+[source,console]
+$ racksdb tags --infrastructure tiger --on-nodes
+
+[.cli-example-desc]
+Get all tags associated to nodes in infrastructure _tiger_.
+
+[source,console]
+$ racksdb tags --datacenter paris
+
+[.cli-example-desc]
+Get all tags associated to datacenter _paris_.
+
+[source,console]
+$ racksdb tags --datacenter paris --on-racks
+
+[.cli-example-desc]
+Get all tags associated to racks in datacenter _paris_.
 ====
 
 [#draw]
