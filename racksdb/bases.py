@@ -33,6 +33,23 @@ class RacksDBDatacenterBase:
                     return False
         return True
 
+    @property
+    def racks(self):
+        result = DBList()
+        for room in self.rooms:
+            for row in room.rows:
+                result.extend(row.racks)
+        return result
+
+    @property
+    def racks_tags(self):
+        result = DBList()
+        for rack in self.racks:
+            for tag in getattr(rack, "tags", []):
+                if tag not in result:
+                    result.append(tag)
+        return result
+
 
 class RacksDBInfrastructureBase:
     @property
@@ -43,6 +60,15 @@ class RacksDBInfrastructureBase:
             # avoid triggering expansion of expandable objects at this stage.
             for key in part.nodes.keys():
                 result[key] = part.nodes[key]
+        return result
+
+    @property
+    def nodes_tags(self):
+        result = DBList()
+        for node in self.nodes:
+            for tag in node.tags:
+                if tag not in result:
+                    result.append(tag)
         return result
 
     def _filter(self, name=None, tags=None):
