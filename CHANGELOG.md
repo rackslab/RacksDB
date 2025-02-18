@@ -9,6 +9,10 @@ and this project adheres to
 ## [Unreleased]
 
 ### Added
+- lib:
+  - Add `racks` and `racks_tags` properties on `RacksDBDatacenter`
+    specialization class.
+  - Add `nodes_tags` property on `RacksDBInfrastructure` specialization class.
 - draw:
   - Add rack `labels` boolean drawing parameter to control presence of rack
     labels in infrastructure graphical representations, true by default (#89).
