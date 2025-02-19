@@ -125,7 +125,7 @@ class TestSchema(unittest.TestCase):
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
-            DBSchemaError, "Definition of object \w+ not found in schema"
+            DBSchemaError, r"Definition of object \w+ not found in schema"
         ):
             Schema(schema_loader, types_loader)
 
@@ -165,8 +165,8 @@ class TestSchema(unittest.TestCase):
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
             DBSchemaError,
-            "Expandable object SchemaAppleCrate\+ must be in a list, it cannot "
-            "be member of object such as _content",
+            r"Expandable object SchemaAppleCrate\+ must be in a list, it cannot be "
+            "member of object such as _content",
         ):
             Schema(schema_loader, types_loader)
 
@@ -179,8 +179,8 @@ class TestSchema(unittest.TestCase):
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
             DBSchemaError,
-            "Expandable object AppleCrate cannot contain more than one "
-            "expandable property",
+            "Expandable object AppleCrate cannot contain more than one expandable "
+            "property",
         ):
             Schema(schema_loader, types_loader)
 
@@ -206,6 +206,6 @@ class TestSchema(unittest.TestCase):
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
             DBSchemaError,
-            "Reference \$Apple.unknown to undefined SchemaApple object " "property",
+            r"Reference \$Apple.unknown to undefined SchemaApple object property",
         ):
             Schema(schema_loader, types_loader)
