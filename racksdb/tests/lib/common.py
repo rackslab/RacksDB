@@ -54,4 +54,7 @@ def db_one_file_path():
 def ui_path():
     # This path does not contain the full UI application but enough files to
     # test.
-    return Path(CURRENT_DIR).joinpath("../../../frontend/public")
+    return _first_path(
+        [Path(CURRENT_DIR).joinpath("../../../frontend/public")],
+        "Unable to find UI public directory to run tests",
+    )

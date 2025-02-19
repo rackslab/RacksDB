@@ -59,7 +59,10 @@ class TestRacksDBWebApp(unittest.TestCase):
 class TestRacksDBWebAppEndpoints(unittest.TestCase):
 
     def setUp(self):
-        self.app = RacksDBWebApp(CMD_BASE_ARGS + ["--with-ui", str(ui_path())])
+        try:
+            self.app = RacksDBWebApp(CMD_BASE_ARGS + ["--with-ui", str(ui_path())])
+        except FileNotFoundError as err:
+            self.skipTest(err)
         self.app.config.update(
             {
                 "TESTING": True,
