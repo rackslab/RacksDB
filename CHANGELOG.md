@@ -31,6 +31,7 @@ and this project adheres to
     reference documentation.
   - Mention `RacksDBInfrastructure.nodes_tags` attribute in library reference
     documentation.
+  - Add _Integrations_ page with ClusterShell integration howto (#92).
 - pkgs: Add dependency on `RFL.log` external library.
 
 ### Changed
