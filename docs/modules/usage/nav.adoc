@@ -5,3 +5,4 @@
 * xref:lib.adoc[]
 * xref:rest.adoc[]
 * xref:ui.adoc[]
+* xref:integrations.adoc[]

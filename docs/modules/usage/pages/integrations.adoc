@@ -1,0 +1,123 @@
+= Integrations
+
+== Clustershell
+
+https://clustershell.readthedocs.io/en/latest/index.html[ClusterShell] is a
+scalable cluster administration Python framework, designed to execute commands
+on many cluster nodes in parallel. ClusterShell supports the possibility to
+define groups of nodes. These groups can be extracted from external sources.
+
+This section illustrates how to make ClusterShell extracts groups from RacksDB
+and tags associated to nodes with a simple example. In this example, let's
+consider a cluster infrastructure named _atlas_.
+
+Create file [.path]#`/etc/clustershell/groups.conf.d/racksdb.conf`# with this content:
+
+[source,ini]
+----
+[racksdb]
+map:     racksdb nodes --infrastructure atlas --tags $GROUP --list
+all:     racksdb nodes --infrastructure atlas --list
+list:    racksdb tags --infrastructure atlas --on-nodes
+reverse: racksdb tags --node $NODE
+----
+
+With this simple configuration, ClusterShell can extract groups and nodes from
+RacksDB. For example, with `nodeset` command:
+
+* Get the list of groups:
++
+--
+[source,console]
+----
+$ nodeset -s racksdb -l
+@racksdb:admin
+@racksdb:compute
+@racksdb:login
+----
+--
+
+* Get all nodes in _compute_ group (ie. associated to _compute_ tag in
+  database):
++
+--
+[source,console]
+----
+$ nodeset -f @racksdb:compute
+atcn[1-2]
+----
+--
+
+* Get all nodes in this cluster:
++
+--
+[source,console]
+----
+$ nodeset -f -s racksdb -a
+atadmin,atcn[1-2],atlogin
+----
+--
+
+ClusterShell can execute commands on nodes from these groups with `clush`:
+
+[source,console]
+----
+# clush -bw @racksdb:compute uname
+---------------
+atcn[1-2] (2)
+---------------
+Linux
+----
+
+This way, ClusterShell groups are always synchronized with tags and content of
+RacksDB database. when RacksDB database is updated, changes are automatically
+reflected in ClusterShell.
+
+.More than one infrastructure?
+****
+If you need to extract groups from multiple infrastructures in RacksDB, a simple
+approach if to use ClusterShell
+https://clustershell.readthedocs.io/en/latest/config.html#multiple-sources-section[multiple sources sections]
+feature and `$GROUP` variable. For example, in
+[.path]#`/etc/clustershell/groups.conf.d/racksdb.conf`#:
+
+[source,ini]
+----
+[trinity,atlas]
+map:     racksdb nodes --infrastructure $SOURCE --tags $GROUP --list
+all:     racksdb nodes --infrastructure $SOURCE --list
+list:    racksdb tags --infrastructure $SOURCE --on-nodes
+reverse: racksdb tags --node $NODE
+----
+
+This way, RacksDB commands are executed for multiple infrastructures:
+
+[source,console]
+----
+$ nodeset -f @trinity:compute
+tricn[1-4]
+$ nodeset -f @atlas:compute
+atcn[1-2]
+----
+
+Another yet more generic approach to split the group source with shell:
+
+[source,ini]
+----
+[racksdb]
+map:     GRP=$GROUP; racksdb nodes --infrastructure ${GRP%:*} --tags ${GRP#*:} --list
+all:     racksdb nodes --list
+reverse: racksdb tags --node $NODE
+----
+
+This way, infrastructures names are not mentioned in ClusterShell configuration
+file and all infrastructures defined in RacksDB can be requested:
+
+[source,console]
+----
+$ nodeset -f @racksdb:trinity:compute
+tricn[1-4]
+$ nodeset -f @racksdb:atlas:compute
+atcn[1-2]
+----
+****
