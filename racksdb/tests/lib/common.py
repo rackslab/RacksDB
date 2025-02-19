@@ -47,6 +47,10 @@ def db_path():
     )
 
 
+def db_one_file_path():
+    return Path(CURRENT_DIR).joinpath("../../../examples/simple/racksdb.yml")
+
+
 def ui_path():
     # This path does not contain the full UI application but enough files to
     # test.
