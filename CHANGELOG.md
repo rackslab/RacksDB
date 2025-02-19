@@ -46,6 +46,7 @@ and this project adheres to
 
 ### Fixed
 - Support database files with both `.yml` and `.yaml` extensions (#101).
+- lib: Support infrastructure without tags in infrastructures `filter()` method.
 - draw: Detect when unable to find racks to draw in infrastructure and raise
   specific exception instead of crashing with `ZeroDivisionError` (#97→#100).
 - docs:

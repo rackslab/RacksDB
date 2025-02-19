@@ -76,7 +76,7 @@ class RacksDB(GenericDB):
             if on_nodes:
                 return self.infrastructures[infrastructure].nodes_tags
             else:
-                return self.infrastructures[infrastructure].tags
+                return getattr(self.infrastructures[infrastructure], "tags", [])
         elif datacenter:
             if datacenter not in self.datacenters:
                 raise RacksDBNotFoundError(f"Unable to find datacenter {datacenter}")
