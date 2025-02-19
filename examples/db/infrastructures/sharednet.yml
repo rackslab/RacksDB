@@ -1,7 +1,4 @@
 description: Central network infrastructure
-tags:
-- network
-- shared
 layout:
 - rack: R2-A02
   network:
