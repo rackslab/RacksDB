@@ -273,8 +273,14 @@ class DBSplittedFilesLoader(DBLoader):
         if not path.exists():
             raise DBFormatError(f"DB path {path} does not exist")
         elif path.is_file():
-            if not path.name.endswith(".yml"):
-                raise DBFormatError(f"DB contains file {path} without .yml extension")
+            valid_extensions = {".yml", ".yaml"}
+            if not any(
+                [path.name.endswith(extension) for extension in valid_extensions]
+            ):
+                raise DBFormatError(
+                    f"DB contains file {path} without valid extensions: "
+                    f"{', '.join(valid_extensions)}"
+                )
             logger.debug("Loading DB file %s", path)
             self.content = DBFileLoader(path).content
         elif path.suffix == ".l":
