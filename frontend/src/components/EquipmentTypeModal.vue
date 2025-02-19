@@ -14,6 +14,12 @@ import type {
 } from '@/composables/RacksDBAPI'
 import { Dialog, DialogPanel } from '@headlessui/vue'
 
+function strTruncateLimit(str: string, limit: number): string {
+  if (str.length < limit) return str
+  const edge_limit = limit / 2
+  return str.slice(0, edge_limit) + '...' + str.slice(-edge_limit)
+}
+
 defineProps({
   showModal: Boolean,
   modalContent: {
@@ -61,8 +67,8 @@ defineProps({
               ><a
                 :href="modalContent.specs"
                 target="_blank"
-                class="font-bold hover:text-purple-700 capitalize"
-                >{{ modalContent.specs }}</a
+                class="font-bold hover:text-purple-700"
+                >{{ strTruncateLimit(modalContent.specs, 50) }}</a
               ></span
             >
           </p>
@@ -82,8 +88,8 @@ defineProps({
               ><a
                 :href="modalContent.cpu.specs"
                 target="_blank"
-                class="font-bold hover:text-purple-700 capitalize"
-                >{{ modalContent.cpu.specs }}</a
+                class="font-bold hover:text-purple-700"
+                >{{ strTruncateLimit(modalContent.specs, 50) }}</a
               ></span
             >
           </p>
