@@ -160,11 +160,11 @@ This command accepts the following options:
   get the tags associated to racks in this datacenter.
 
 *[.cli-opt]#--on-nodes*#::
-  With *[.cli-opt]#--infrastructure*#, get tags associated to nodes in an
+  With [.cli-opt]#*--infrastructure*#, get tags associated to nodes in an
   infrastructure.
 
 *[.cli-opt]#--on-racks*#::
-  With [.cli-opt]#--datacenter#, get tags associated to racks in a datacenter.
+  With [.cli-opt]#*--datacenter*#, get tags associated to racks in a datacenter.
 
 Either [.cli-opt]#*--node*#, [.cli-opt]#*--infrastructure*# or
 [.cli-opt]#*--datacenter*# argument is required.
