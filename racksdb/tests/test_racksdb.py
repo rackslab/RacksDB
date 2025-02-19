@@ -5,14 +5,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import unittest
+import tempfile
+import shutil
+from pathlib import Path
 
 from racksdb import RacksDB
-from racksdb.errors import RacksDBRequestError, RacksDBNotFoundError
+from racksdb.errors import RacksDBRequestError, RacksDBNotFoundError, RacksDBFormatError
 
-from .lib.common import schema_path, db_path
+from .lib.common import schema_path, db_path, db_one_file_path
 
 
-class TestDB(unittest.TestCase):
+class TestRacksDB(unittest.TestCase):
     def setUp(self):
         try:
             self.schema_path = schema_path()
@@ -131,3 +134,28 @@ class TestDB(unittest.TestCase):
             RacksDBNotFoundError, "^Unable to find datacenter fail$"
         ):
             self.db.tags(datacenter="fail")
+
+
+class TestRacksDBAlternatePaths(unittest.TestCase):
+
+    def test_db_ext_yml(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            new_db_path = Path(tmpdir) / "db.yml"
+            shutil.copyfile(db_one_file_path(), new_db_path)
+            self.db = RacksDB.load(schema=schema_path(), db=new_db_path)
+
+    def test_db_ext_yaml(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            new_db_path = Path(tmpdir) / "db.yaml"
+            shutil.copyfile(db_one_file_path(), new_db_path)
+            self.db = RacksDB.load(schema=schema_path(), db=new_db_path)
+
+    def test_db_ext_fail(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            new_db_path = Path(tmpdir) / "db.fail"
+            shutil.copyfile(db_one_file_path(), new_db_path)
+            with self.assertRaisesRegex(
+                RacksDBFormatError,
+                r"^DB contains file \/.*\/db\.fail without valid extensions: .*$",
+            ):
+                RacksDB.load(schema=schema_path(), db=new_db_path)
