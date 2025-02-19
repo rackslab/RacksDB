@@ -78,7 +78,7 @@ class RacksDBInfrastructureBase:
         # filter by tags
         if tags is not None:
             for tag in tags:
-                if tag not in self.tags:
+                if tag not in getattr(self, "tags", []):
                     return False
         return True
 
