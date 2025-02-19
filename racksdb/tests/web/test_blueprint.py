@@ -6,16 +6,16 @@
 
 import unittest
 import tempfile
-import json
 
-import flask
 import werkzeug
 import yaml
+import flask
 
 from racksdb.web.app import RacksDBWebBlueprint
 from racksdb import RacksDB
 from racksdb.version import get_version
 
+from ..lib.web import RacksDBCustomTestResponse
 from ..lib.common import schema_path, db_path, drawing_schema_path
 
 # Expected values from example DB.
@@ -33,21 +33,6 @@ class FakeRacksDBWebApp(flask.Flask):
             openapi=openapi,
         )
         self.register_blueprint(self.blueprint)
-
-
-class RacksDBCustomTestResponse(flask.Response):
-    """Custom flask Response class to backport text property of
-    werkzeug.test.TestResponse class on werkzeug < 0.15."""
-
-    @property
-    def text(self):
-        return self.get_data(as_text=True)
-
-    @property
-    def json(self):
-        if self.mimetype != "application/json":
-            return None
-        return json.loads(self.text)
 
 
 class TestRacksDBWebBlueprint(unittest.TestCase):

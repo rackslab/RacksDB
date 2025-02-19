@@ -45,3 +45,9 @@ def db_path():
         ],
         "Unable to find database to run tests",
     )
+
+
+def ui_path():
+    # This path does not contain the full UI application but enough files to
+    # test.
+    return Path(CURRENT_DIR).joinpath("../../../frontend/public")
