@@ -101,6 +101,7 @@ class TestRacksDB(unittest.TestCase):
         self.assertCountEqual(
             self.db.tags(infrastructure="jupiter"), ["data", "cluster"]
         )
+        self.assertCountEqual(self.db.tags(infrastructure="sharednet"), [])
 
     def test_tags_infrastructure_on_nodes(self):
         self.assertCountEqual(
