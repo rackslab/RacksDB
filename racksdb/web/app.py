@@ -8,6 +8,7 @@ import argparse
 from pathlib import Path
 import io
 import sys
+import typing as t
 import logging
 
 from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
@@ -227,7 +228,7 @@ class RacksDBWebBlueprint(Blueprint):
 
 
 class RacksDBWebApp(Flask):
-    def __init__(self):
+    def __init__(self, cmd_args: t.Optional[t.List[str]] = None):
         super().__init__("RacksDB web application")
         parser = argparse.ArgumentParser(description="RacksDB web application")
         parser.add_argument(
@@ -301,7 +302,7 @@ class RacksDBWebApp(Flask):
             type=Path,
         )
 
-        self.args = parser.parse_args()
+        self.args = parser.parse_args(cmd_args)
 
         # Setup logger with RFL.log
         setup_logger(
