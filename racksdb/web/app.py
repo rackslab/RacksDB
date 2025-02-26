@@ -187,9 +187,9 @@ class RacksDBWebBlueprint(Blueprint):
                     coordinates_fh,
                     coordinates_format,
                 )
+            drawer.draw()
         except RacksDBError as err:
             abort(400, str(err))
-        drawer.draw()
         file.seek(0)
 
         if with_coordinates:
