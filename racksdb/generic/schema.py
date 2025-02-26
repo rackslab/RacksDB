@@ -215,10 +215,10 @@ class SchemaProperty:
         self.computed = computed
 
     def __str__(self):
-        if self.required:
+        if self.computed:
+            result = "computed "
+        elif self.required:
             result = "required "
-        elif self.computed:
-            result = "computed"
         else:
             result = "optional "
         if self.key:
