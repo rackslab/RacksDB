@@ -187,6 +187,8 @@ class RacksDBWebBlueprint(Blueprint):
                     coordinates_fh,
                     coordinates_format,
                 )
+            else:
+                abort(400, f"Unable to draw entity {entity}")
             drawer.draw()
         except RacksDBError as err:
             abort(400, str(err))
