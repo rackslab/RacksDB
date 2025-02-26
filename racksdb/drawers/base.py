@@ -11,6 +11,7 @@ import cairo
 import gi
 
 from .coordinates import CoordinateDumperFactory
+from ..errors import RacksDBDrawingError
 
 gi.require_version("Pango", "1.0")
 gi.require_version("PangoCairo", "1.0")
@@ -63,6 +64,8 @@ class Drawer:
             self.surface = cairo.SVGSurface(self.file, width, height)
         elif self.output_format == "pdf":
             self.surface = cairo.PDFSurface(self.file, width, height)
+        else:
+            raise RacksDBDrawingError(f"Unsupported image format {self.output_format}")
         self.ctx = cairo.Context(self.surface)
 
     def write(self):

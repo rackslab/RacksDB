@@ -52,8 +52,11 @@ and this project adheres to
   - String representation of computed property.
   - Add current schema object in set of loaded classes to fix resolution of
     references in some corner cases.
-- draw: Detect when unable to find racks to draw in infrastructure and raise
-  specific exception instead of crashing with `ZeroDivisionError` (#97→#100).
+- draw:
+  - Detect when unable to find racks to draw in infrastructure and raise
+    specific exception instead of crashing with `ZeroDivisionError` (#97→#100).
+  - Raise `RacksDBDrawingError` when drawer is called with an unsupported
+    output image format.
 - docs:
   - Wrong APT sources file extension in quickstart guide.
   - Path of system packages examples directory in quickstart guide.
