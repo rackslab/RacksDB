@@ -482,7 +482,9 @@ class GenericDB(DBObject):
         if schema_object.name not in self._indexes:
             self._indexes[schema_object.name] = []
         self._indexes[schema_object.name].append(obj)
-        self._loaded_classes |= schema_object.subobjs
+        self._loaded_classes |= schema_object.subobjs | {
+            schema_object,
+        }
         logger.debug("Loaded classes: %s", [cls.name for cls in self._loaded_classes])
         return obj
 
