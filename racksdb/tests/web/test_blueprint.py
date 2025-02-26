@@ -132,10 +132,12 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
             [datacenter["name"] for datacenter in content], EXAMPLE_DATACENTERS
         )
         self.assertIsInstance(content[0], dict)
-        self.assertCountEqual(
-            content[0].keys(),
-            ["name", "rooms", "tags", "location"],
-        )
+        # tags key is optional, it may not be present in selected datacenter.
+        for key in ["name", "rooms", "location"]:
+            self.assertIn(
+                key,
+                content[0],
+            )
 
     def test_datacenters(self):
         response = self.client.get(f"/v{get_version()}/datacenters")
@@ -221,10 +223,12 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
             EXAMPLE_INFRASTRUCTURES,
         )
         self.assertIsInstance(content[0], dict)
-        self.assertCountEqual(
-            content[0].keys(),
-            ["name", "description", "layout", "tags"],
-        )
+        # tags key is optional, it may not be present in selected infrastructure.
+        for key in ["name", "description", "layout"]:
+            self.assertIn(
+                key,
+                content[0],
+            )
 
     def test_infrastructures(self):
         response = self.client.get(f"/v{get_version()}/infrastructures")
