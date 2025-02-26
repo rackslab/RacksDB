@@ -6,10 +6,12 @@
 
 import unittest
 import tempfile
+import json
 
 import werkzeug
 import yaml
 import flask
+from requests_toolbelt import MultipartDecoder
 
 from racksdb.web.app import RacksDBWebBlueprint
 from racksdb import RacksDB
@@ -514,6 +516,288 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
         nb_racks_folded = len(response.json)
         # FIXME: nb_nodes_unfolded should be greater than nb_nodes_folded
         self.assertEqual(nb_racks_unfolded, nb_racks_folded)
+
+    #
+    # draw
+    #
+    def test_draw_room_png(self):
+        response = self.client.post(f"/v{get_version()}/draw/room/noisy.png")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
+    def test_draw_room_svg(self):
+        response = self.client.post(f"/v{get_version()}/draw/room/noisy.svg")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/svg+xml")
+
+    def test_draw_room_pdf(self):
+        response = self.client.post(f"/v{get_version()}/draw/room/noisy.pdf")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/pdf")
+
+    def test_draw_room_invalid(self):
+        response = self.client.post(f"/v{get_version()}/draw/room/fail.png")
+        self.assertEqual(response.status_code, 400)  # FIXME: should be HTTP/404
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Unable to find room fail in database",
+                "name": "Bad Request",
+            },
+        )
+
+    def test_draw_room_coordinates(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png?coordinates"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "multipart/form-data")
+        decoder = MultipartDecoder(response.get_data(), response.content_type)
+        (image_part, coordinates_part) = decoder.parts
+        self.assertEqual(image_part.headers.get(b"Content-Type").decode(), "image/png")
+        self.assertEqual(
+            coordinates_part.headers.get(b"Content-Type").decode(), "application/json"
+        )
+        coordinates = json.loads(coordinates_part.text)
+        self.assertEqual(coordinates, {})  # FIXME: room coordinates are empty
+
+    def test_draw_room_coordinates_yaml(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png?coordinates&coordinates_format=yaml"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "multipart/form-data")
+        decoder = MultipartDecoder(response.get_data(), response.content_type)
+        (image_part, coordinates_part) = decoder.parts
+        self.assertEqual(image_part.headers.get(b"Content-Type").decode(), "image/png")
+        self.assertEqual(
+            coordinates_part.headers.get(b"Content-Type").decode(), "application/x-yaml"
+        )
+        coordinates = yaml.safe_load(coordinates_part.text)
+        self.assertEqual(coordinates, {})  # FIXME: room coordinates are empty
+
+    def test_draw_room_parameters(self):
+        drawing_parameters = {"margin": {"left": 10, "top": 10}}
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png",
+            data=json.dumps(drawing_parameters),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
+    def test_draw_room_parameters_yaml(self):
+        drawing_parameters = {"margin": {"left": 10, "top": 10}}
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png",
+            data=yaml.dump(drawing_parameters),
+            content_type="application/x-yaml",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
+    def test_draw_room_invalid_parameters(self):
+        drawing_parameters = {"fail": True}
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png",
+            data=json.dumps(drawing_parameters),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": (
+                    "Unable to load drawing parameters: Property fail is not defined "
+                    "in schema for object Schema_content"
+                ),
+                "name": "Bad Request",
+            },
+        )
+
+    def test_draw_room_parameters_invalid_format(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png",
+            data="fail",
+            content_type="text/html",
+        )
+        self.assertEqual(response.status_code, 415)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 415,
+                "description": "Unsupported request body format",
+                "name": "Unsupported Media Type",
+            },
+        )
+
+    def test_draw_infrastructure_png(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
+    def test_draw_infrastructure_svg(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.svg"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/svg+xml")
+
+    def test_draw_infrastructure_pdf(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.pdf"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/pdf")
+
+    def test_draw_infrastructure_invalid(self):
+        response = self.client.post(f"/v{get_version()}/draw/infrastructure/fail.png")
+        self.assertEqual(response.status_code, 400)  # FIXME: should be HTTP/404
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Unable to find infrastructure fail in database",
+                "name": "Bad Request",
+            },
+        )
+
+    def test_draw_infrastructure_coordinates(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png?coordinates"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "multipart/form-data")
+        decoder = MultipartDecoder(response.get_data(), response.content_type)
+        (image_part, coordinates_part) = decoder.parts
+        self.assertEqual(image_part.headers.get(b"Content-Type").decode(), "image/png")
+        self.assertEqual(
+            coordinates_part.headers.get(b"Content-Type").decode(), "application/json"
+        )
+        coordinates = json.loads(coordinates_part.text)
+        self.assertIn("mecn0001", coordinates)
+
+    def test_draw_infrastructure_coordinates_yaml(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png?coordinates&"
+            "coordinates_format=yaml"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "multipart/form-data")
+        decoder = MultipartDecoder(response.get_data(), response.content_type)
+        (image_part, coordinates_part) = decoder.parts
+        self.assertEqual(image_part.headers.get(b"Content-Type").decode(), "image/png")
+        self.assertEqual(
+            coordinates_part.headers.get(b"Content-Type").decode(), "application/x-yaml"
+        )
+        coordinates = yaml.safe_load(coordinates_part.text)
+        self.assertIn("mecn0001", coordinates)
+
+    def test_draw_infrastructure_parameters(self):
+        drawing_parameters = {"margin": {"left": 10, "top": 10}}
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png",
+            data=json.dumps(drawing_parameters),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
+    def test_draw_infrastructure_parameters_yaml(self):
+        drawing_parameters = {"margin": {"left": 10, "top": 10}}
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png",
+            data=yaml.dump(drawing_parameters),
+            content_type="application/x-yaml",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
+    def test_draw_infrastructure_invalid_parameters(self):
+        drawing_parameters = {"fail": True}
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png",
+            data=json.dumps(drawing_parameters),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": (
+                    "Unable to load drawing parameters: Property fail is not defined "
+                    "in schema for object Schema_content"
+                ),
+                "name": "Bad Request",
+            },
+        )
+
+    def test_draw_infrastructure_parameters_invalid_format(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png",
+            data="fail",
+            content_type="text/html",
+        )
+        self.assertEqual(response.status_code, 415)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 415,
+                "description": "Unsupported request body format",
+                "name": "Unsupported Media Type",
+            },
+        )
+
+    def test_draw_invalid_entity(self):
+        response = self.client.post(f"/v{get_version()}/draw/fail/noisy.png")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Unable to draw entity fail",
+                "name": "Bad Request",
+            },
+        )
+
+    def test_draw_invalid_format(self):
+        response = self.client.post(f"/v{get_version()}/draw/room/noisy.fail")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Unsupported image format fail",
+                "name": "Bad Request",
+            },
+        )
+
+    def test_draw_coordinates_invalid_format(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/room/noisy.png?coordinates&coordinates_format=fail"
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Unsupported coordinates format",
+                "name": "Bad Request",
+            },
+        )
 
     #
     # tags
