@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Rackslab
+# Copyright (c) 2022-2025 Rackslab
 #
 # This file is part of RacksDB.
 #
@@ -8,84 +8,15 @@ import unittest
 import copy
 
 from racksdb.generic.schema import Schema
-from racksdb.generic.definedtype import SchemaDefinedType
 from racksdb.generic.errors import DBSchemaError
 
-
-class FakeSchemaLoader:
-    def __init__(self, content):
-        self.content = content
-
-
-class FakeTypesLoader:
-    def __init__(self, content):
-        self.content = content
-
-
-VALID_SCHEMA = {
-    "_version": "1",
-    "_content": {
-        "properties": {
-            "apples": {"type": "list[:Apple]"},
-            "pear": {"type": ":Pear"},
-            "bananas": {"type": "list[:Banana]", "optional": True},
-            "stock": {
-                "type": "list[:AppleCrate]",
-            },
-        }
-    },
-    "_objects": {
-        "Apple": {
-            "properties": {
-                "color": {
-                    "type": "str",
-                },
-                "weight": {"type": "~weight"},
-                "variety": {
-                    "type": "str",
-                },
-            }
-        },
-        "Pear": {
-            "properties": {
-                "color": {
-                    "type": "str",
-                },
-                "weight": {
-                    "type": "~weight",
-                },
-                "variety": {
-                    "type": "str",
-                },
-            }
-        },
-        "Banana": {
-            "properties": {
-                "origin": {
-                    "type": "str",
-                }
-            }
-        },
-        "AppleCrate": {
-            "properties": {
-                "name": {
-                    "type": "expandable",
-                },
-                "id": {
-                    "type": "rangeid",
-                },
-                "variety": {
-                    "type": "$Apple.variety",
-                },
-                "quantity": {
-                    "type": "int",
-                },
-            }
-        },
-    },
-}
-
-VALID_DEFINED_TYPES = {"weight": SchemaDefinedType()}
+from .lib.common import (
+    FakeSchemaLoader,
+    FakeTypesLoader,
+    VALID_SCHEMA,
+    VALID_DEFINED_TYPES,
+    valid_schema,
+)
 
 
 class TestSchema(unittest.TestCase):
@@ -112,9 +43,7 @@ class TestSchema(unittest.TestCase):
         self.assertEqual(len(schema.content.properties), 0)
 
     def test_valid_schema(self):
-        schema_loader = FakeSchemaLoader(VALID_SCHEMA)
-        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
-        schema = Schema(schema_loader, types_loader)
+        schema = valid_schema()
         self.assertEqual(schema.version, "1")
         self.assertEqual(len(schema.types), 1)
         self.assertEqual(len(schema.content.properties), 4)
@@ -158,6 +87,18 @@ class TestSchema(unittest.TestCase):
         with self.assertRaisesRegex(DBSchemaError, "Unable to parse value type 'fail'"):
             Schema(schema_loader, types_loader)
 
+    def test_multiple_keys(self):
+        schema_content = copy.deepcopy(VALID_SCHEMA)
+        # BananaSpecies.name is already a key, try setting another property as key as
+        # well.
+        schema_content["_objects"]["Banana"]["properties"]["color"]["key"] = True
+        schema_loader = FakeSchemaLoader(schema_content)
+        types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
+        with self.assertRaisesRegex(
+            DBSchemaError, "Object Banana cannot contain more than one key"
+        ):
+            Schema(schema_loader, types_loader)
+
     def test_expandable_not_in_list(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
         schema_content["_content"]["properties"]["stock"]["type"] = ":AppleCrate"
@@ -186,7 +127,7 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_object(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["properties"]["variety"][
+        schema_content["_objects"]["AppleCrate"]["properties"]["species"][
             "type"
         ] = "$Unknown.object"
         schema_loader = FakeSchemaLoader(schema_content)
@@ -199,7 +140,7 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_property(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["properties"]["variety"][
+        schema_content["_objects"]["AppleCrate"]["properties"]["species"][
             "type"
         ] = "$Apple.unknown"
         schema_loader = FakeSchemaLoader(schema_content)
@@ -209,3 +150,33 @@ class TestSchema(unittest.TestCase):
             r"Reference \$Apple.unknown to undefined SchemaApple object property",
         ):
             Schema(schema_loader, types_loader)
+
+    def test_str_properties(self):
+        schema = valid_schema()
+
+        def get_object_property(obj, prop):
+            if obj == "_content":
+                _obj = schema.content
+            else:
+                _obj = schema.objects[obj]
+            for _prop in _obj.properties:
+                if _prop.name == prop:
+                    return _prop
+
+        # basic test
+        self.assertEqual(str(get_object_property("Apple", "color")), "required str")
+        # test key
+        self.assertEqual(str(get_object_property("Banana", "name")), "required key str")
+        # test default value
+        self.assertEqual(
+            str(get_object_property("Pear", "color")), "optional str (yellow)"
+        )
+        # test computed
+        self.assertEqual(
+            str(get_object_property("AppleStock", "total")), "computed int"
+        )
+        # test optional (without default value)
+        self.assertEqual(
+            str(get_object_property("_content", "bananas")),
+            "optional list[SchemaBananaOrigin]",
+        )
