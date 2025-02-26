@@ -70,6 +70,7 @@ and this project adheres to
     schema or database (#110).
   - Return HTTP/400 error when draw endpoint is called with unsupported image
     format.
+  - Return HTTP/400 error when draw endpoint is called with unsupported entity.
 - ui:
   - Limit specs links size in equipment type modal (#76).
   - Update bundled dependencies to fix security issues CVE-2024-39338 (axios),
