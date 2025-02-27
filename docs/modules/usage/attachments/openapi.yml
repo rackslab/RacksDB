@@ -1113,8 +1113,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: Unable to load drawing parameters, unsupported coordinates
-            formator unable to load requested entity in database.
+          description: Unsupported entity, unable to load drawing parameters, unsupported
+            image format, unsupported coordinates formator unable to load requested
+            entity in database.
         '415':
           content:
             application/json:
