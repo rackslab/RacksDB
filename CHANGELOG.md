@@ -42,6 +42,8 @@ and this project adheres to
   - Update drawing parameters reference doc.
   - Add some data in example database.
 - cli: Adopt colored logger from `RFL.log` library (#103).
+- web: Update description of HTTP/400 error on `draw` REST API endpoint in
+  OpenAPI description to mention all new cases.
 - pkg: Add _tests_ extra packages with all dependencies required to run unit
   tests.
 
