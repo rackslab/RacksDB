@@ -36,10 +36,12 @@ class DBActionParameter:
         const: Constant value used in CLI. This attribute has no effect on REST API.
         _type: Type of the value after parsing on CLI. This attribute does not have any
           effect on REST API.
-        body: When defined, this parameter is declared as the body content of the action
-          request in OpenAPI description. The value of the attribute is the name of the
-          component accepted as value for the parameter. This attribute has no effect on
-          CLI.
+        schema: Name reference to database schema provided to OpenAPI generator. The
+          objects and attributes defined in this schema are expanded to request
+          parameters, except for POST method when in_body is True. This attribute has no
+          effect on CLI.
+        in_body: When True, the reference schema is the body content of the action
+          request in OpenAPI description. This attribute has no effect on CLI.
         specific: Define if this parameter is either specific to REST API or CLI.
           Possible values are "web" (ie. REST API specific) and "cli" (ie. CLI
           specific).
@@ -58,7 +60,8 @@ class DBActionParameter:
         default_in_help: bool = True,
         const: Any = None,
         _type: Any = None,
-        body: Optional[str] = None,
+        schema: Optional[str] = None,
+        in_body: bool = False,
         specific: Optional[str] = None,
     ):
         self.name = name
@@ -72,7 +75,8 @@ class DBActionParameter:
         self.default_in_help = default_in_help
         self.const = const
         self.type = _type
-        self.body = body
+        self.schema = schema
+        self.in_body = in_body
         self.specific = specific
 
 
@@ -96,7 +100,7 @@ class DBAction:
         name,
         path,
         description,
-        method="get",
+        methods=["GET"],
         parameters=[],
         responses=[],
         errors=[],
@@ -104,7 +108,7 @@ class DBAction:
         self.name = name
         self.path = path
         self.description = description
-        self.method = method
+        self.methods = methods
         self.parameters = parameters
         self.responses = responses
         self.errors = errors

@@ -5,9 +5,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from itertools import chain
+import typing as t
 
 from .schema import (
     SchemaObject,
+    SchemaProperty,
     SchemaContainerList,
     SchemaBackReference,
     SchemaExpandable,
@@ -37,42 +39,12 @@ class OpenAPIGenerator:
         # actions including views
         for action in chain(self.views.views_actions(), self.views.actions()):
             path = f"/v{self.version}{action.path}"
-            result["paths"][path] = {action.method: {"description": action.description}}
-            action_schema = result["paths"][path][action.method]
-            if len(action.parameters):
-                action_schema["parameters"] = []
-            for parameter in action.parameters:
-                if parameter.specific is not None and parameter.specific != "web":
-                    continue
-                if parameter.body:
-                    action_schema["requestBody"] = {
-                        "description": parameter.description,
-                        "content": {
-                            mimetype: {
-                                "schema": {
-                                    "$ref": f"#/components/schemas/{parameter.body}",
-                                }
-                            }
-                            for mimetype in [
-                                "application/json",
-                                "application/x-yaml",
-                            ]
-                        },
-                    }
-                else:
-                    action_schema["parameters"].append(
-                        self._action_argument_description(action, parameter)
-                    )
-            action_schema["responses"] = {
-                "200": {"description": "successful operation", "content": {}}
-            }
-            for response in action.responses:
-                action_schema["responses"]["200"]["content"].update(
-                    self._action_reponse_description(response)
+            result["paths"][path] = {}
+            for method in action.methods:
+                method = method.lower()
+                result["paths"][path][method] = self._action_method_description(
+                    action, method
                 )
-            # add actions errors reponses
-            for error in action.errors:
-                action_schema["responses"].update(self._error_response(error))
 
         # components
         result["components"] = {"schemas": {}}
@@ -129,6 +101,56 @@ class OpenAPIGenerator:
             }
         }
 
+    def _action_method_description(self, action, method):
+        result = {"description": action.description}
+        if len(action.parameters):
+            result["parameters"] = []
+        for parameter in action.parameters:
+            if parameter.specific is not None and parameter.specific != "web":
+                continue
+
+            if parameter.schema:
+                if method == "post" and parameter.in_body:
+                    result["requestBody"] = {
+                        "description": parameter.description,
+                        "content": {
+                            mimetype: {
+                                "schema": {
+                                    "$ref": (
+                                        "#/components/schemas/"
+                                        f"{parameter.schema}_content"
+                                    ),
+                                }
+                            }
+                            for mimetype in [
+                                "application/json",
+                                "application/x-yaml",
+                            ]
+                        },
+                    }
+                else:
+                    result["parameters"].extend(
+                        self._schema_action_argument_description(
+                            parameter.name, parameter.schema
+                        )
+                    )
+            else:
+                result["parameters"].append(
+                    self._action_argument_description(action, parameter)
+                )
+        result["responses"] = {
+            "200": {"description": "successful operation", "content": {}}
+        }
+        for response in action.responses:
+            result["responses"]["200"]["content"].update(
+                self._action_reponse_description(response)
+            )
+        # add actions errors reponses
+        for error in action.errors:
+            result["responses"].update(self._error_response(error))
+
+        return result
+
     def _action_argument_description(self, action, parameter):
         """Return the OpenAPI description of a DBActionParameter."""
         result = {
@@ -162,6 +184,35 @@ class OpenAPIGenerator:
             result["schema"].update({"default": parameter.default})
         if parameter.choices is not None:
             result["schema"].update({"enum": parameter.choices})
+        return result
+
+    def _schema_action_argument_description(self, prefix: str, schema: str):
+        return self._schema_properties_action_argument_description(
+            prefix, schema, self.schemas[schema].content.properties
+        )
+
+    def _schema_properties_action_argument_description(
+        self, prefix: str, schema: str, properties: t.List[SchemaProperty]
+    ):
+        result = []
+        for prop in properties:
+            if isinstance(prop.type, SchemaObject):
+                result.extend(
+                    self._schema_properties_action_argument_description(
+                        f"{prefix}.{prop.name}", schema, prop.type.properties
+                    )
+                )
+            else:
+                argument = {
+                    "name": f"{prefix}.{prop.name}",
+                    "in": "query",
+                    "description": prop.description,
+                    "required": prop.required,
+                }
+                argument["schema"] = self._property_schema(schema, prop)
+                if prop.default is not None:
+                    argument["schema"].update({"default": prop.default})
+                result.append(argument)
         return result
 
     def _action_reponse_description(self, response):
