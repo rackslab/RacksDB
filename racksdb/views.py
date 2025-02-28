@@ -117,7 +117,7 @@ class RacksDBViews(DBViewSet):
             name="draw",
             path="/draw/<entity>/<name>.<format>",
             description="Draw an entity",
-            method="post",
+            methods=["POST", "GET"],
             parameters=[
                 DBActionParameter(
                     "entity",
@@ -135,7 +135,8 @@ class RacksDBViews(DBViewSet):
                 DBActionParameter(
                     "parameters",
                     description="Drawing parameters",
-                    body="Drawings_content",
+                    schema="Drawings",
+                    in_body=True,
                 ),
                 DBActionParameter(
                     "drawings_schema",

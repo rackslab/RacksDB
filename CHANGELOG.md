@@ -23,7 +23,10 @@ and this project adheres to
   - Add row `labels` boolean drawing parameter to control presence of row
     labels in infrastructure graphical representations, true by default (#90).
 - cli: Add `tags` command to retrieve tags associated to objects (#102).
-- web: Add `tags` endpoint to retrieve tags associated to objects.
+- web:
+  - Add `tags` endpoint to retrieve tags associated to objects.
+  - Support GET method on `draw endpoint with drawing parameters as optional
+    request arguments (#66→#122).
 - docs:
   - Mention `tags` command in `racksdb` manpage.
   - Mention `RacksDB.tags()` method in library reference documentation.
