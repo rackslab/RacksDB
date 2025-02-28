@@ -10,7 +10,7 @@ import io
 
 import werkzeug
 
-from racksdb.web.app import RacksDBWebApp
+from racksdb.web.app import RacksDBWebApp, merge_args_parameters
 
 from ..lib.web import RacksDBCustomTestResponse
 from ..lib.common import schema_path, db_path, ui_path
@@ -91,3 +91,66 @@ class TestRacksDBWebAppEndpoints(unittest.TestCase):
         response = self.client.get("/favicon.ico")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/vnd.microsoft.icon")
+
+
+class TestMergeArgsParameters(unittest.TestCase):
+    def test_merge(self):
+        content = {"key1": "value1"}
+        args = {"parameters.key2": "value2"}
+        merge_args_parameters(content, args)
+        self.assertEqual(content, {"key1": "value1", "key2": "value2"})
+
+    def test_merge_overwrite(self):
+        content = {"key1": "value1"}
+        args = {"parameters.key1": "value2"}
+        merge_args_parameters(content, args)
+        self.assertEqual(content, {"key1": "value2"})
+
+    def test_merge_ignored(self):
+        content = {"key1": "value1"}
+        args = {"ignored.key2": "value2"}
+        merge_args_parameters(content, args)
+        self.assertEqual(content, {"key1": "value1"})
+
+    def test_merge_subs(self):
+        content = {
+            "key1": {
+                "key1sub1": "value1",
+                "key1sub2": "value2",
+            }
+        }
+        args = {
+            "parameters.key1.key1sub1": "value1.2",
+            "parameters.key1.key1sub3": "value3",
+            "parameters.key2.key2sub1": "value4",
+        }
+        merge_args_parameters(content, args)
+        self.assertEqual(
+            content,
+            {
+                "key1": {
+                    "key1sub1": "value1.2",
+                    "key1sub2": "value2",
+                    "key1sub3": "value3",
+                },
+                "key2": {"key2sub1": "value4"},
+            },
+        )
+
+    def test_merge_int(self):
+        content = {"key1": 0}
+        args = {"parameters.key1": "1"}
+        merge_args_parameters(content, args)
+        self.assertEqual(content, {"key1": 1})
+
+    def test_merge_bool_true(self):
+        content = {"key1": False}
+        args = {"parameters.key1": "true"}
+        merge_args_parameters(content, args)
+        self.assertEqual(content, {"key1": True})
+
+    def test_merge_list(self):
+        content = {"key1": []}
+        args = {"parameters.key1": "value1,value2"}
+        merge_args_parameters(content, args)
+        self.assertEqual(content, {"key1": ["value1", "value2"]})
