@@ -9,6 +9,7 @@ from pathlib import Path
 import io
 import sys
 import typing as t
+import copy
 import logging
 
 from flask import Flask, Blueprint, Response, request, send_file, abort, jsonify
@@ -28,6 +29,67 @@ from ..drawers import InfrastructureDrawer, RoomDrawer
 from ..drawers.parameters import DrawingParameters
 
 logger = logging.getLogger(__name__)
+
+
+def merge_args_parameters(content: t.Dict[str, t.Any], args: t.Dict[str, str]):
+    """Merge args dict into content dict. The keys in args dict can be in the form
+    'a.b.c'. This is converted to ['a']['b']['c'] in content dict. Numeric values in
+    args are converted to int, 'true' and 'false' strings are converted to respective
+    boolean values. For example:
+
+        content = {
+          'key1': {
+            'sub1': 'value1',
+            'sub2': 0,
+          },
+        }
+
+        args = {
+            'key1.sub2': '1',
+            'key2': 'value2'
+            'key3.sub3': 'false'
+        }
+
+        Results in:
+
+        content = {
+          'key1': {
+            'sub1': 'value1',
+            'sub2': 1,
+          },
+          'key2': 'value2',
+          'key3': {
+            'sub3': False
+          },
+        }
+
+    """
+
+    def convert(value):
+        if value.isnumeric():
+            return int(value)
+        elif value == "true":
+            return True
+        elif value == "false":
+            return False
+        return value
+
+    for param, value in args.items():
+        if not param.startswith("parameters."):
+            continue
+        current = content
+        parts = param.split(".")[1:]
+        for index, key in enumerate(parts):
+            if index < len(parts) - 1:
+                if key not in current:
+                    current[key] = dict()
+                current = current[key]
+            else:
+                if "," in value:
+                    value = [convert(_value) for _value in value.split(",")]
+                else:
+                    value = convert(value)
+                current[key] = value
 
 
 class RacksDBWebBlueprint(Blueprint):
@@ -70,7 +132,7 @@ class RacksDBWebBlueprint(Blueprint):
             self.add_url_rule(
                 f"/v{get_version()}{action.path}",
                 view_func=getattr(self, f"_{action.name}"),
-                methods=[action.method.upper()],
+                methods=action.methods,
             )
         for error in [400, 404, 415, 500]:
             self.register_error_handler(error, self._handle_bad_request)
@@ -137,18 +199,26 @@ class RacksDBWebBlueprint(Blueprint):
         )
 
     def _draw(self, entity, name, format):
-        if not len(request.data):
-            db_loader = DBDictsLoader(self.default_drawing_parameters)
-        elif request.is_json:
-            db_loader = DBDictsLoader(
-                self.default_drawing_parameters, request.get_json()
-            )
-        elif request.content_type == "application/x-yaml":
-            db_loader = DBStringLoader(
-                request.data.decode(), initial=self.default_drawing_parameters
-            )
+        # Manage drawing parameters
+        if request.method == "GET":
+            content = copy.deepcopy(self.default_drawing_parameters)
+            merge_args_parameters(content, request.args)
+            db_loader = DBDictsLoader(content)
+            # Build drawing parameters db with request parameters.
+            pass
         else:
-            abort(415, "Unsupported request body format")
+            if not len(request.data):
+                db_loader = DBDictsLoader(self.default_drawing_parameters)
+            elif request.is_json:
+                db_loader = DBDictsLoader(
+                    self.default_drawing_parameters, request.get_json()
+                )
+            elif request.content_type == "application/x-yaml":
+                db_loader = DBStringLoader(
+                    request.data.decode(), initial=self.default_drawing_parameters
+                )
+            else:
+                abort(415, "Unsupported request body format")
         try:
             parameters = DrawingParameters.load(db_loader, self.drawings_schema)
         except DBSchemaError as err:
