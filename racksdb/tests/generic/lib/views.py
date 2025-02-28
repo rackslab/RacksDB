@@ -45,6 +45,7 @@ class TestDBViews(DBViewSet):
             name="sell",
             path="/sell",
             description="Sell fruits",
+            methods=["GET", "POST"],
             parameters=[
                 DBActionParameter(
                     "type", description="Type of fruits", default="apple"
@@ -62,7 +63,8 @@ class TestDBViews(DBViewSet):
                 DBActionParameter(
                     "parameters",
                     description="Sales parameters",
-                    body="Sales_parameters",
+                    schema="Test",
+                    in_body=True,
                 ),
             ],
             responses=[
