@@ -1034,6 +1034,318 @@ paths:
                 type: array
           description: successful operation
   /v0.5.0.dev1/draw/<entity>/<name>.<format>:
+    get:
+      description: Draw an entity
+      parameters:
+      - description: Type of entity to draw
+        in: path
+        name: entity
+        required: true
+        schema:
+          enum:
+          - infrastructure
+          - room
+          type: string
+      - description: Name of entity
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Format of the generated image
+        in: path
+        name: format
+        required: true
+        schema:
+          default: png
+          enum:
+          - png
+          - svg
+          - pdf
+          type: string
+      - description: Control if entities are represented perfectly aligned on pixels
+          with concession on relative dimensions correctess.
+        in: query
+        name: parameters.general.pixel_perfect
+        required: false
+        schema:
+          default: false
+          description: Control if entities are represented perfectly aligned on pixels
+            with concession on relative dimensions correctess.
+          example: false
+          type: boolean
+      - description: Control if racks are labelled with their names
+        in: query
+        name: parameters.room.racks_labels
+        required: false
+        schema:
+          default: true
+          description: Control if racks are labelled with their names
+          example: true
+          type: boolean
+      - description: Control if equipment are labelled with their names
+        in: query
+        name: parameters.infrastructure.equipment_labels
+        required: false
+        schema:
+          default: true
+          description: Control if equipment are labelled with their names
+          example: true
+          type: boolean
+      - description: Draw only the equipment matching at least one of the tags.
+        in: query
+        name: parameters.infrastructure.equipment_tags
+        required: false
+        schema:
+          description: Draw only the equipment matching at least one of the tags.
+          example:
+          - compute
+          - switch
+          items:
+            type: string
+          type: array
+      - description: Control if unselected equipment are represented as ghosts in
+          racks. When the value is true, infrastructure equipment that is not selected
+          for the diagram is represented without details nor label just to mark its
+          presence. When the value is false, this equipment is simply discarded.
+        in: query
+        name: parameters.infrastructure.ghost_unselected
+        required: false
+        schema:
+          default: false
+          description: Control if unselected equipment are represented as ghosts in
+            racks. When the value is true, infrastructure equipment that is not selected
+            for the diagram is represented without details nor label just to mark
+            its presence. When the value is false, this equipment is simply discarded.
+          example: false
+          type: boolean
+      - description: Control if racks used by infrastructure that contain only unselected
+          equipment are represented.
+        in: query
+        name: parameters.infrastructure.discard_empty_racks
+        required: false
+        schema:
+          default: true
+          description: Control if racks used by infrastructure that contain only unselected
+            equipment are represented.
+          example: true
+          type: boolean
+      - description: Control if racks present in the rows but not used by the infrastructure
+          are represented in infrastructure diagrams.
+        in: query
+        name: parameters.infrastructure.other_racks
+        required: false
+        schema:
+          default: false
+          description: Control if racks present in the rows but not used by the infrastructure
+            are represented in infrastructure diagrams.
+          example: false
+          type: boolean
+      - description: Maximum height of image in pixels
+        in: query
+        name: parameters.dimensions.height
+        required: false
+        schema:
+          default: 1200
+          description: Maximum height of image in pixels
+          example: 1200
+          type: integer
+      - description: Maximum width of image in pixels
+        in: query
+        name: parameters.dimensions.width
+        required: false
+        schema:
+          default: 1200
+          description: Maximum width of image in pixels
+          example: 1200
+          type: integer
+      - description: Margin at the top of graphical representations.
+        in: query
+        name: parameters.margin.top
+        required: false
+        schema:
+          default: 30
+          description: Margin at the top of graphical representations.
+          example: 30
+          type: integer
+      - description: Margin on the left of graphical representations.
+        in: query
+        name: parameters.margin.left
+        required: false
+        schema:
+          default: 30
+          description: Margin on the left of graphical representations.
+          example: 30
+          type: integer
+      - description: Control if racks are labelled with their names in infrastructures
+          graphical representations
+        in: query
+        name: parameters.rack.labels
+        required: false
+        schema:
+          default: true
+          description: Control if racks are labelled with their names in infrastructures
+            graphical representations
+          example: true
+          type: boolean
+      - description: Vertical space between row labels and racks labels in infrastructures
+          graphical representations
+        in: query
+        name: parameters.rack.label_offset
+        required: false
+        schema:
+          default: 20
+          description: Vertical space between row labels and racks labels in infrastructures
+            graphical representations
+          example: 20
+          type: integer
+      - description: Vertical space between racks labels and racks in infrastructures
+          graphical representations
+        in: query
+        name: parameters.rack.offset
+        required: false
+        schema:
+          default: 20
+          description: Vertical space between racks labels and racks in infrastructures
+            graphical representations
+          example: 20
+          type: integer
+      - description: The height of a rack unit in millimeters
+        in: query
+        name: parameters.rack.u_height
+        required: false
+        schema:
+          default: 44.45
+          description: The height of a rack unit in millimeters
+          example: 44.45
+          type: number
+      - description: Width of racks pane in millimeters in infrastructures graphical
+          representations
+        in: query
+        name: parameters.rack.pane_width
+        required: false
+        schema:
+          default: 40
+          description: Width of racks pane in millimeters in infrastructures graphical
+            representations
+          example: 40
+          type: integer
+      - description: Space between racks in infrastructures graphical representations
+        in: query
+        name: parameters.rack.spacing
+        required: false
+        schema:
+          default: 3
+          description: Space between racks in infrastructures graphical representations
+          example: 3
+          type: integer
+      - description: The depth of a door in millimeters in rooms graphical representations
+        in: query
+        name: parameters.rack.door_depth
+        required: false
+        schema:
+          default: 50
+          description: The depth of a door in millimeters in rooms graphical representations
+          example: 50
+          type: integer
+      - description: Control if rows are labelled with their names in infrastructures
+          graphical representations
+        in: query
+        name: parameters.row.labels
+        required: false
+        schema:
+          default: true
+          description: Control if rows are labelled with their names in infrastructures
+            graphical representations
+          example: true
+          type: boolean
+      - description: Space above row labels in infrastructure graphical representations
+        in: query
+        name: parameters.row.label_offset
+        required: false
+        schema:
+          default: 20
+          description: Space above row labels in infrastructure graphical representations
+          example: 20
+          type: integer
+      - description: List of equipments coloring rules.
+        in: query
+        name: parameters.colors.equipments
+        required: false
+        schema:
+          default: []
+          description: List of equipments coloring rules.
+          example: []
+          items:
+            $ref: '#/components/schemas/DrawingsEquipmentColoringRule'
+          type: array
+      - description: List of racks coloring rules.
+        in: query
+        name: parameters.colors.racks
+        required: false
+        schema:
+          default: []
+          description: List of racks coloring rules.
+          example: []
+          items:
+            $ref: '#/components/schemas/DrawingsRackColoringRule'
+          type: array
+      - allowEmptyValue: true
+        description: Dump equipments and racks coordinates in diagrams. When this
+          parameter is set, the mimetype of the response is `multipart/form-data`.
+        in: query
+        name: coordinates
+        required: false
+        schema: {}
+      - description: Format of coordinates
+        in: query
+        name: coordinates_format
+        required: false
+        schema:
+          default: json
+          enum:
+          - json
+          - yaml
+          type: string
+      responses:
+        '200':
+          content:
+            application/pdf:
+              schema:
+                format: binary
+                type: string
+            image/png:
+              schema:
+                format: binary
+                type: string
+            image/svg+xml:
+              schema:
+                type: string
+            multipart/form-data:
+              schema:
+                format: binary
+                type: string
+          description: successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unsupported entity, unable to load drawing parameters, unsupported
+            image format, unsupported coordinates formator unable to load requested
+            entity in database.
+        '415':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unsupported drawing parameters format.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unable to load drawing parameters schema.
     post:
       description: Draw an entity
       parameters:
