@@ -39,9 +39,10 @@ web = [
     "requests-toolbelt",
 ]
 tests = [
+    "coverage",
+    "parameterized",
     "pytest",
     "pytest-cov",
-    "coverage",
 ]
 
 [project.scripts]
