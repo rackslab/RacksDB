@@ -65,6 +65,8 @@ jobs:
           pip install "flask<1.0"
           echo "::notice::Installing requests-toolbelt (old version)"
           pip install requests-toolbelt==0.9.1
+          echo "::notice::Installing parameterized"
+          pip install parameterized
 
           cp -v ${Python3_ROOT_DIR}/lib/python3.6/site-packages/rfl/build/scripts/setup setup.py
           python3 setup.py install
