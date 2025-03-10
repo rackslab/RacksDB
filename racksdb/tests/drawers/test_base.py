@@ -6,7 +6,11 @@
 
 import unittest
 
-from racksdb.drawers.base import Drawer, DefaultEquipmentColorSet, DefaultRackColorSet
+from racksdb.drawers.base import (
+    Drawer,
+    default_equipment_colorset,
+    default_rack_colorset,
+)
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
 
@@ -62,10 +66,12 @@ class TestDrawer(unittest.TestCase):
             }
         }
         loader = DBDictsLoader(parameters_raw)
-        parameters = DrawingParameters.load(loader, self.drawings_schema_path)
-        self.drawer = Drawer({}, "output", "format", parameters, None, "yaml")
+        self.parameters = DrawingParameters.load(loader, self.drawings_schema_path)
+        self.drawer = Drawer({}, "output", "format", self.parameters, None, "yaml")
 
     def test_matching_equipment_coloring_rule(self):
+        # Load defaults equipment colorset
+        defaults = default_equipment_colorset(self.parameters)
         # Equipment with type type1 must match 1st coloring rule.
         self.assertEqual(
             self.drawer._find_equipment_colorset(FakeEquipment("type1", [])).background,
@@ -75,7 +81,7 @@ class TestDrawer(unittest.TestCase):
         # and fallback to default.
         self.assertEqual(
             self.drawer._find_equipment_colorset(FakeEquipment("type2", [])).background,
-            DefaultEquipmentColorSet.background,
+            defaults.background,
         )
         # Equipment with type != type1 and all tag1 and tag2 must match 2nd coloring
         # rule.
@@ -91,13 +97,13 @@ class TestDrawer(unittest.TestCase):
             self.drawer._find_equipment_colorset(
                 FakeEquipment("type2", ["tag1"])
             ).background,
-            DefaultEquipmentColorSet.background,
+            defaults.background,
         )
         self.assertEqual(
             self.drawer._find_equipment_colorset(
                 FakeEquipment("type2", ["tag2"])
             ).background,
-            DefaultEquipmentColorSet.background,
+            defaults.background,
         )
         # Equipment with type != type1 and no tags must not match any defined coloring
         # rule and fallback to default.
@@ -105,10 +111,12 @@ class TestDrawer(unittest.TestCase):
             self.drawer._find_equipment_colorset(
                 FakeEquipment("type2", None)
             ).background,
-            DefaultEquipmentColorSet.background,
+            defaults.background,
         )
 
     def test_matching_rack_coloring_rule(self):
+        # Load defaults equipment colorset
+        defaults = default_rack_colorset(self.parameters)
         # Rack with type type1 must match 1st coloring rule.
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type1", [])).frame,
@@ -118,7 +126,7 @@ class TestDrawer(unittest.TestCase):
         # to default.
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type2", [])).frame,
-            DefaultRackColorSet.frame,
+            defaults.frame,
         )
         # Rack with type != type1 and all tag1 and tag2 must match 2nd coloring rule.
         self.assertEqual(
@@ -129,15 +137,15 @@ class TestDrawer(unittest.TestCase):
         # any defined coloring rule and fallback to default.
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type2", ["tag1"])).pane,
-            DefaultRackColorSet.pane,
+            defaults.pane,
         )
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type2", ["tag2"])).pane,
-            DefaultRackColorSet.pane,
+            defaults.pane,
         )
         # Rack with type != type1 and no tags must not match any defined coloring rule
         # and fallback to default.
         self.assertEqual(
             self.drawer._find_rack_colorset(FakeRack("type2", None)).pane,
-            DefaultRackColorSet.pane,
+            defaults.pane,
         )
