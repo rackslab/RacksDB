@@ -12,6 +12,7 @@ import gi
 
 from .coordinates import CoordinateDumperFactory
 from ..errors import RacksDBDrawingError
+from ..generic.db import GenericDB
 
 gi.require_version("Pango", "1.0")
 gi.require_version("PangoCairo", "1.0")
@@ -25,16 +26,18 @@ from gi.repository import Pango, PangoCairo  # noqa: E402
 logger = logging.getLogger(__name__)
 
 
-class DefaultRackColorSet:
-    frame = (0.2, 0.2, 0.2, 1)  # aka. #333333 (dark gray)
-    pane = (0, 0, 0, 1)  # aka. #000000 (black)
+def default_rack_colorset(parameters):
+    schema_object = parameters.colors._schema.prop("racks").type.content
+    return GenericDB("DefaultsColorSet", parameters.colors._schema, None).load_object(
+        "racks", schema_object.recursive_defaults(), schema_object, None
+    )
 
 
-class DefaultEquipmentColorSet:
-    background = (0.6, 0.6, 0.6, 1)  # aka. #999999 (light gray)
-    ghost = (0.45, 0.45, 0.45, 1)  # aka. #737373 (lighter gray)
-    chassis = (0.25, 0.25, 0.25, 1)  # aka. #3F3F3F (medium gray)
-    border = (0.2, 0.2, 0.2, 1)  # aka. #333333 (dark gray)
+def default_equipment_colorset(parameters):
+    schema_object = parameters.colors._schema.prop("equipments").type.content
+    return GenericDB("DefaultsColorSet", parameters.colors._schema, None).load_object(
+        "equipments", schema_object.recursive_defaults(), schema_object, None
+    )
 
 
 class ImagePoint:
@@ -103,7 +106,7 @@ class Drawer:
             ):
                 continue
             return rule
-        return DefaultRackColorSet
+        return default_rack_colorset(self.parameters)
 
     def _find_equipment_colorset(self, equipment):
         """Return the equipment matching coloring rule defined in drawing parameters or
@@ -128,7 +131,7 @@ class Drawer:
             ):
                 continue
             return rule
-        return DefaultEquipmentColorSet
+        return default_equipment_colorset(self.parameters)
 
     def _print_text(
         self,
