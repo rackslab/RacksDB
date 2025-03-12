@@ -143,6 +143,12 @@ To run the unit tests, launch this command:
 $ python3 -m unittest discover -v .
 ```
 
+Or:
+
+```
+$ pytest
+```
+
 ## License
 
 RacksDB is distributed under the terms of the GNU General Public License v3.0 or
