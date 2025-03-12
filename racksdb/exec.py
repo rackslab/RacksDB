@@ -22,7 +22,7 @@ from .generic.db import (
 )
 from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
-from .drawers import InfrastructureDrawer, RoomDrawer
+from .drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
 from .drawers.parameters import DrawingParameters
 from .errors import RacksDBError
 from .views import RacksDBViews
@@ -270,7 +270,11 @@ class RacksDBExec:
             logger.critical("Unable to load drawing parameters: %s", str(err))
             sys.exit(1)
         if self.args.entity == "infrastructure":
-            drawer = InfrastructureDrawer(
+            if parameters.axonometric.enabled:
+                draw_infra_class = AxonometricInfrastructureDrawer
+            else:
+                draw_infra_class = InfrastructureDrawer
+            drawer = draw_infra_class(
                 self.db,
                 self.args.name,
                 file,
