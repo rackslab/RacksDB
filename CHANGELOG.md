@@ -39,7 +39,7 @@ and this project adheres to
     documentation.
   - Add _Integrations_ page with ClusterShell integration howto (#92).
   - Mention axonometric graphical representations in diagrams section of
-    overview page.
+    overview page and README.
 - pkgs:
   - Add dependency on `RFL.log` external library.
   - Add test dependency on `parameterized` external library.
