@@ -700,3 +700,27 @@ class TestRacksDBExec(unittest.TestCase):
                 self.assertTrue(coordinates.exists())
         finally:
             os.chdir(cwd)
+
+    def test_draw_infrastructure_axonometric(self):
+        cwd = os.getcwd()
+        try:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                drawing = Path(tmpdir) / "mercury.png"
+                params = Path(tmpdir) / "params.yml"
+                with open(params, "w+") as fh:
+                    fh.write(yaml.dump({"axonometric": {"enabled": True}}))
+                os.chdir(tmpdir)
+                RacksDBExec(
+                    CMD_BASE_ARGS
+                    + CMD_DRAW_BASE_ARGS
+                    + [
+                        "infrastructure",
+                        "--name",
+                        "mercury",
+                        "--parameters",
+                        str(params),
+                    ]
+                )
+                self.assertTrue(drawing.exists())
+        finally:
+            os.chdir(cwd)
