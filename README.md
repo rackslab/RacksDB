@@ -53,7 +53,7 @@ solutions are the following:
 * **Extensibility.** In addition to RacksDB simple format, custom schema
   extensions can be defined to store specific data.
 
-RacksDB provides multiple interfaces to request the database with its
+RacksDB provides multiple interfaces with its
 [CLI tool](https://docs.rackslab.io/racksdb/usage/racksdb.html), a
 [Python library](https://docs.rackslab.io/racksdb/usage/lib.html), a
 [REST API](https://docs.rackslab.io/racksdb/usage/rest.html) and a
@@ -61,11 +61,31 @@ RacksDB provides multiple interfaces to request the database with its
 
 <p align="center">
 <img
+  src="docs/modules/overview/images/racksdb_interfaces.png"
+  alt="RacksDB web UI">
+<p>
+
+<p align="center">
+<img
   src="assets/screenshots/assemblies/bitmaps/screenshots-small.webp"
   alt="RacksDB web UI"
-  width="600px"
-  style="margin: 0 auto;">
+  width="600px">
 <p>
+
+RacksDB can generate graphical representations of your datacenter rooms and your
+infrastructures with their racks and equipment, including axonometric views for
+3D representations:
+
+<p align="center">
+<img
+  src="docs/modules/overview/images/racksdb_diagrams.png"
+  alt="RacksDB graphical representations"
+  width="500px">
+<p>
+
+These graphical representations can be generated in various formats (PNG, SVG,
+PDF) and can be customized with many
+[drawing parameters](https://docs.rackslab.io/racksdb/usage/drawparams.html).
 
 For more details, read the
 [full description](https://docs.rackslab.io/racksdb/overview/overview.html)
