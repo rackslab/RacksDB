@@ -25,7 +25,7 @@ from ..generic.openapi import OpenAPIGenerator
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from ..generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from ..generic.errors import DBSchemaError, DBFormatError
-from ..drawers import InfrastructureDrawer, RoomDrawer
+from ..drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
 from ..drawers.parameters import DrawingParameters
 
 logger = logging.getLogger(__name__)
@@ -238,7 +238,11 @@ class RacksDBWebBlueprint(Blueprint):
 
         try:
             if entity == "infrastructure":
-                drawer = InfrastructureDrawer(
+                if parameters.axonometric.enabled:
+                    draw_infra_class = AxonometricInfrastructureDrawer
+                else:
+                    draw_infra_class = InfrastructureDrawer
+                drawer = draw_infra_class(
                     self.db,
                     name,
                     file,
