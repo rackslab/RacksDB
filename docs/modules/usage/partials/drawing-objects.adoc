@@ -125,10 +125,81 @@ racks: []
 ----
 |xref:#obj-coloringrules[{symbol-obj}{nbsp}ColoringRules]
 |[.grey]#-#
+
+|axonometric
+|Axonometric representation rules
+
+*Default value:*
+
+[source,yaml]
+----
+angles:
+  x: 30
+  z: 30
+enabled: false
+----
+|xref:#obj-axonometricrules[{symbol-obj}{nbsp}AxonometricRules]
+|[.grey]#-#
 |===
 
 [#objects]
 == Objects
+
+[#obj-axonometricangles]
+=== AxonometricAngles
+
+Library class type: `DrawingsAxonometricAngles`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|x
+|X-angle in degrees
+
+*Default value:* `30`
+|int
+|[.grey]#-#
+
+|z
+|Z-angle in degrees
+
+*Default value:* `30`
+|int
+|[.grey]#-#
+|===
+
+[#obj-axonometricrules]
+=== AxonometricRules
+
+Library class type: `DrawingsAxonometricRules`
+
+.Properties
+[cols="{tbl-obj-props-cols-specs}"]
+|===
+|Property|Description|Type|Required
+
+|enabled
+|Axonometric graphical representation enabled?
+
+*Default value:* `False`
+|bool
+|[.grey]#-#
+
+|angles
+|Angles of axonometric grid
+
+*Default value:*
+
+[source,yaml]
+----
+x: 30
+z: 30
+----
+|xref:#obj-axonometricangles[{symbol-obj}{nbsp}AxonometricAngles]
+|[.grey]#-#
+|===
 
 [#obj-coloringrules]
 === ColoringRules
@@ -229,6 +300,20 @@ Library class type: `DrawingsEquipmentColoringRule`
 *Default value:* `#737373`
 |xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
 |[.grey]#-#
+
+|top_side
+|Color of equipment top side in axonometric representations.
+
+*Default value:* `#BBBBBB`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+
+|left_side
+|Color of equipment left side in axonometric representations.
+
+*Default value:* `#AAAAAA`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
 |===
 
 [#obj-general]
@@ -242,7 +327,7 @@ Library class type: `DrawingsGeneral`
 |Property|Description|Type|Required
 
 |pixel_perfect
-|Control if entities are represented perfectly aligned on pixels with concession on relative dimensions correctess.
+|Control if entities are represented perfectly aligned on pixels with concession on relative dimensions correctess. This parameter has no effect in axonometric graphical representations.
 
 *Default value:* `False`
 |bool
@@ -365,7 +450,7 @@ Library class type: `DrawingsRack`
 |[.grey]#-#
 
 |spacing
-|Space between racks in infrastructures graphical representations
+|Horizontal space between racks in infrastructures graphical representations
 
 *Default value:* `3`
 |int
@@ -411,7 +496,35 @@ Library class type: `DrawingsRackColoringRule`
 |pane
 |The color of the racks pane.
 
+*Default value:* `#262626`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+
+|right_side
+|Inside color of racks right side in axonometric representations.
+
 *Default value:* `#000000`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+
+|left_side
+|Outside color of racks left side in axonometric representations.
+
+*Default value:* `#444444`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+
+|top_side
+|Outside color of racks top side in axonometric representations.
+
+*Default value:* `#3C3C3C`
+|xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
+|[.grey]#-#
+
+|bottom_side
+|Inside color of racks bottom side in axonometric representations.
+
+*Default value:* `#3C3C3C`
 |xref:#deftype-hexcolor[{symbol-deftype}{nbsp}~hexcolor]
 |[.grey]#-#
 |===
