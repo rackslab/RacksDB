@@ -22,6 +22,8 @@ and this project adheres to
     labels in infrastructure graphical representations, true by default (#89).
   - Add row `labels` boolean drawing parameter to control presence of row
     labels in infrastructure graphical representations, true by default (#90).
+  - Add many drawings parameters to tune infrastructure axonometric graphical
+    representations.
 - cli: Add `tags` command to retrieve tags associated to objects (#102).
 - web:
   - Add `tags` endpoint to retrieve tags associated to objects.
@@ -49,6 +51,8 @@ and this project adheres to
 - cli: Adopt colored logger from `RFL.log` library (#103).
 - web: Update description of HTTP/400 error on `draw` REST API endpoint in
   OpenAPI description to mention all new cases.
+- draw: change rack pane default color from #000000 (black) to #262626 (dark
+  grey).
 - pkg: Add _tests_ extra packages with all dependencies required to run unit
   tests.
 
