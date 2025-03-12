@@ -1,6 +1,6 @@
 # RacksDB drawing parameters schema
 
-_version: 0.4.0
+_version: 0.5.0
 
 _content:
   properties:
@@ -36,6 +36,10 @@ _content:
       type: :ColoringRules
       description: Drawing coloring rules
       default: :recursive
+    axonometric:
+      type: :AxonometricRules
+      description: Axonometric representation rules
+      default: :recursive
 
 _objects:
   General:
@@ -45,7 +49,8 @@ _objects:
         default: False
         description: >-
           Control if entities are represented perfectly aligned on pixels with
-          concession on relative dimensions correctess.
+          concession on relative dimensions correctess. This parameter has no
+          effect in axonometric graphical representations.
   Dimensions:
     properties:
       height:
@@ -129,7 +134,7 @@ _objects:
         default: 40
       spacing:
         type: int
-        description: Space between racks in infrastructures graphical representations
+        description: Horizontal space between racks in infrastructures graphical representations
         default: 3
       door_depth:
         type: int
@@ -155,6 +160,26 @@ _objects:
         type: list[:RackColoringRule]
         description: List of racks coloring rules.
         default: []
+  AxonometricRules:
+    properties:
+      enabled:
+        type: bool
+        description: Axonometric graphical representation enabled?
+        default: false
+      angles:
+        type: :AxonometricAngles
+        description: Angles of axonometric grid
+        default: :recursive
+  AxonometricAngles:
+    properties:
+      x:
+        type: int
+        description: X-angle in degrees
+        default: 30
+      z:
+        type: int
+        description: Z-angle in degrees
+        default: 30
   EquipmentColoringRule:
     properties:
       type:
@@ -184,6 +209,14 @@ _objects:
         type: ~hexcolor
         description: The color of ghosted equipment.
         default: "#737373"
+      top_side:
+        type: ~hexcolor
+        description: Color of equipment top side in axonometric representations.
+        default: "#BBBBBB"
+      left_side:
+        type: ~hexcolor
+        description: Color of equipment left side in axonometric representations.
+        default: "#AAAAAA"
   RackColoringRule:
     properties:
       type:
@@ -204,4 +237,20 @@ _objects:
       pane:
         type: ~hexcolor
         description: The color of the racks pane.
+        default: "#262626"
+      right_side:
+        type: ~hexcolor
+        description: Inside color of racks right side in axonometric representations.
         default: "#000000"
+      left_side:
+        type: ~hexcolor
+        description: Outside color of racks left side in axonometric representations.
+        default: "#444444"
+      top_side:
+        type: ~hexcolor
+        description: Outside color of racks top side in axonometric representations.
+        default: "#3C3C3C"
+      bottom_side:
+        type: ~hexcolor
+        description: Inside color of racks bottom side in axonometric representations.
+        default: "#3C3C3C"
