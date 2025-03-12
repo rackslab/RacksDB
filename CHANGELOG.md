@@ -38,22 +38,24 @@ and this project adheres to
   - Mention `RacksDBInfrastructure.nodes_tags` attribute in library reference
     documentation.
   - Add _Integrations_ page with ClusterShell integration howto (#92).
+  - Mention axonometric graphical representations in diagrams section of
+    overview page.
 - pkgs:
   - Add dependency on `RFL.log` external library.
   - Add test dependency on `parameterized` external library.
 
 ### Changed
+- cli: Adopt colored logger from `RFL.log` library (#103).
+- web: Update description of HTTP/400 error on `draw` REST API endpoint in
+  OpenAPI description to mention all new cases.
+- draw: change rack pane default color from #000000 (black) to #262626 (dark
+  grey).
 - docs:
   - Mention support on Ubuntu 24.04 LTS, Fedora 40 and 41.
   - Format files and directories paths with specific style in quickstart guide.
   - Update OpenAPI description for REST API documentation.
   - Update drawing parameters reference doc.
   - Add some data in example database.
-- cli: Adopt colored logger from `RFL.log` library (#103).
-- web: Update description of HTTP/400 error on `draw` REST API endpoint in
-  OpenAPI description to mention all new cases.
-- draw: change rack pane default color from #000000 (black) to #262626 (dark
-  grey).
 - pkg: Add _tests_ extra packages with all dependencies required to run unit
   tests.
 

@@ -74,10 +74,12 @@ synchronized with database content.
 == Diagrams
 
 RacksDB can be used to generate diagrams of your datacenter rooms and the racks
-with all their equipments. The diagrams can be customized with many
-xref:usage:drawparams.adoc[drawing parameters].
+with all their equipments, including _axonometric views_ for 3D representations.
 
-image::overview:racksdb_diagrams.png[RacksDB Diagrams,400,xref=image$racksdb_diagrams.svg]
+image::overview:racksdb_diagrams.png[RacksDB Diagrams,xref=image$racksdb_diagrams.svg]
+
+These diagrams can be generated in various formats (PNG, SVG, PDF) and be
+customized with many xref:usage:drawparams.adoc[drawing parameters].
 
 [sidebar]
 --
