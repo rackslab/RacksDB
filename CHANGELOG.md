@@ -24,6 +24,7 @@ and this project adheres to
     labels in infrastructure graphical representations, true by default (#90).
   - Add many drawings parameters to tune infrastructure axonometric graphical
     representations.
+  - Support axonometric graphical representation of infrastructures (#91→#123).
 - cli: Add `tags` command to retrieve tags associated to objects (#102).
 - web:
   - Add `tags` endpoint to retrieve tags associated to objects.

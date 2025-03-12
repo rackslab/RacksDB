@@ -6,5 +6,6 @@
 
 from .room import RoomDrawer
 from .infrastructure import InfrastructureDrawer
+from .axonometric_infrastructure import AxonometricInfrastructureDrawer
 
-__all__ = ["RoomDrawer", "InfrastructureDrawer"]
+__all__ = ["RoomDrawer", "InfrastructureDrawer", "AxonometricInfrastructureDrawer"]
