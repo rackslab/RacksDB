@@ -115,11 +115,11 @@ are available:
 * **Matrix Chat** [#racksdb:talk.rackslab.io](https://matrix.to/#/#racksdb:talk.rackslab.io):
   instant messaging for quick feedback and help.
 
-  > [!NOTE]
-  > A [Matrix account](https://matrix.org/docs/chat_basics/matrix-for-im/#creating-a-matrix-account)
-  > is required to access the chat room. It can be created in few steps on any
-  > Matrix network public provider such as [matrix.org](https://matrix.org) or
-  > [gitter.im](https://gitter.im/#apps).
+> [!NOTE]
+> A [Matrix account](https://matrix.org/docs/chat_basics/matrix-for-im/#creating-a-matrix-account)
+> is required to access the chat room. It can be created in few steps on any
+> Matrix network public provider such as [matrix.org](https://matrix.org) or
+> [gitter.im](https://gitter.im/#apps).
 
 * [**GitHub Discussions**](https://github.com/rackslab/RacksDB/discussions):
   send questions, ideas and suggestions.
