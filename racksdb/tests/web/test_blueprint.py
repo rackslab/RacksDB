@@ -781,6 +781,16 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/png")
 
+    def test_draw_post_infrastructure_axonometric(self):
+        drawing_parameters = {"axonometric": {"enabled": True}}
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.png",
+            data=json.dumps(drawing_parameters),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/png")
+
     def test_draw_get_infrastructure_invalid_parameters(self):
         response = self.client.get(
             f"/v{get_version()}/draw/infrastructure/mercury.png?parameters.fail=true"
