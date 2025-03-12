@@ -1,5 +1,29 @@
 components:
   schemas:
+    DrawingsAxonometricAngles:
+      properties:
+        x:
+          description: X-angle in degrees
+          example: 30
+          type: integer
+        z:
+          description: Z-angle in degrees
+          example: 30
+          type: integer
+      type: object
+    DrawingsAxonometricRules:
+      properties:
+        angles:
+          $ref: '#/components/schemas/DrawingsAxonometricAngles'
+          description: Angles of axonometric grid
+          example:
+            x: 30
+            z: 30
+        enabled:
+          description: Axonometric graphical representation enabled?
+          example: false
+          type: boolean
+      type: object
     DrawingsColoringRules:
       properties:
         equipments:
@@ -68,11 +92,31 @@ components:
           items:
             type: number
           type: array
+        left_side:
+          description: Color of equipment left side in axonometric representations.
+          example:
+          - 0.6666666666666666
+          - 0.6666666666666666
+          - 0.6666666666666666
+          - 1.0
+          items:
+            type: number
+          type: array
         tags:
           description: List of tags equipments must have to be associated to the coloring
             rule.
           items:
             type: string
+          type: array
+        top_side:
+          description: Color of equipment top side in axonometric representations.
+          example:
+          - 0.7333333333333333
+          - 0.7333333333333333
+          - 0.7333333333333333
+          - 1.0
+          items:
+            type: number
           type: array
         type:
           description: Name of type of quipments associated to the coloring rule.
@@ -82,7 +126,8 @@ components:
       properties:
         pixel_perfect:
           description: Control if entities are represented perfectly aligned on pixels
-            with concession on relative dimensions correctess.
+            with concession on relative dimensions correctess. This parameter has
+            no effect in axonometric graphical representations.
           example: false
           type: boolean
       type: object
@@ -156,7 +201,8 @@ components:
           example: 40
           type: integer
         spacing:
-          description: Space between racks in infrastructures graphical representations
+          description: Horizontal space between racks in infrastructures graphical
+            representations
           example: 3
           type: integer
         u_height:
@@ -166,6 +212,16 @@ components:
       type: object
     DrawingsRackColoringRule:
       properties:
+        bottom_side:
+          description: Inside color of racks bottom side in axonometric representations.
+          example:
+          - 0.23529411764705882
+          - 0.23529411764705882
+          - 0.23529411764705882
+          - 1.0
+          items:
+            type: number
+          type: array
         frame:
           description: The color of the racks frame.
           example:
@@ -176,8 +232,28 @@ components:
           items:
             type: number
           type: array
+        left_side:
+          description: Outside color of racks left side in axonometric representations.
+          example:
+          - 0.26666666666666666
+          - 0.26666666666666666
+          - 0.26666666666666666
+          - 1.0
+          items:
+            type: number
+          type: array
         pane:
           description: The color of the racks pane.
+          example:
+          - 0.14901960784313725
+          - 0.14901960784313725
+          - 0.14901960784313725
+          - 1.0
+          items:
+            type: number
+          type: array
+        right_side:
+          description: Inside color of racks right side in axonometric representations.
           example:
           - 0.0
           - 0.0
@@ -191,6 +267,16 @@ components:
             rule.
           items:
             type: string
+          type: array
+        top_side:
+          description: Outside color of racks top side in axonometric representations.
+          example:
+          - 0.23529411764705882
+          - 0.23529411764705882
+          - 0.23529411764705882
+          - 1.0
+          items:
+            type: number
           type: array
         type:
           description: Name of type of rack associated to the coloring rule.
@@ -217,6 +303,14 @@ components:
       type: object
     Drawings_content:
       properties:
+        axonometric:
+          $ref: '#/components/schemas/DrawingsAxonometricRules'
+          description: Axonometric representation rules
+          example:
+            angles:
+              x: 30
+              z: 30
+            enabled: false
         colors:
           $ref: '#/components/schemas/DrawingsColoringRules'
           description: Drawing coloring rules
@@ -1064,14 +1158,16 @@ paths:
           - pdf
           type: string
       - description: Control if entities are represented perfectly aligned on pixels
-          with concession on relative dimensions correctess.
+          with concession on relative dimensions correctess. This parameter has no
+          effect in axonometric graphical representations.
         in: query
         name: parameters.general.pixel_perfect
         required: false
         schema:
           default: false
           description: Control if entities are represented perfectly aligned on pixels
-            with concession on relative dimensions correctess.
+            with concession on relative dimensions correctess. This parameter has
+            no effect in axonometric graphical representations.
           example: false
           type: boolean
       - description: Control if racks are labelled with their names
@@ -1230,13 +1326,14 @@ paths:
             representations
           example: 40
           type: integer
-      - description: Space between racks in infrastructures graphical representations
+      - description: Horizontal space between racks in infrastructures graphical representations
         in: query
         name: parameters.rack.spacing
         required: false
         schema:
           default: 3
-          description: Space between racks in infrastructures graphical representations
+          description: Horizontal space between racks in infrastructures graphical
+            representations
           example: 3
           type: integer
       - description: The depth of a door in millimeters in rooms graphical representations
@@ -1290,6 +1387,33 @@ paths:
           items:
             $ref: '#/components/schemas/DrawingsRackColoringRule'
           type: array
+      - description: Axonometric graphical representation enabled?
+        in: query
+        name: parameters.axonometric.enabled
+        required: false
+        schema:
+          default: false
+          description: Axonometric graphical representation enabled?
+          example: false
+          type: boolean
+      - description: X-angle in degrees
+        in: query
+        name: parameters.axonometric.angles.x
+        required: false
+        schema:
+          default: 30
+          description: X-angle in degrees
+          example: 30
+          type: integer
+      - description: Z-angle in degrees
+        in: query
+        name: parameters.axonometric.angles.z
+        required: false
+        schema:
+          default: 30
+          description: Z-angle in degrees
+          example: 30
+          type: integer
       - allowEmptyValue: true
         description: Dump equipments and racks coordinates in diagrams. When this
           parameter is set, the mimetype of the response is `multipart/form-data`.
