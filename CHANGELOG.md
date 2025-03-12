@@ -64,6 +64,8 @@ and this project adheres to
     specific exception instead of crashing with `ZeroDivisionError` (#97→#100).
   - Raise `RacksDBDrawingError` when drawer is called with an unsupported
     output image format.
+  - Remove unnecessary rack offset at the top of infrastructure graphical
+    representation.
 - docs:
   - Wrong APT sources file extension in quickstart guide.
   - Path of system packages examples directory in quickstart guide.
