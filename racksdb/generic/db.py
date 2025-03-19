@@ -359,7 +359,7 @@ class GenericDB(DBObject):
         if isinstance(schema_type, SchemaNativeType):
             for native_type in [str, int, float, bool]:
                 if schema_type.native is native_type:
-                    if type(literal) != native_type:
+                    if not isinstance(literal, native_type):
                         raise DBFormatError(
                             f"{token} {literal} is not a valid {native_type.__name__}"
                         )
