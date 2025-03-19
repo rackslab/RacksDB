@@ -8,7 +8,6 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 
 class SchemaDefinedTypeNetifType(SchemaDefinedType):
-
     pattern = r"(ethernet|infiniband)"
     native = str
 

@@ -11,7 +11,6 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 
 class SchemaDefinedTypeHexcolor(SchemaDefinedType):
-
     pattern = r"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
     native = Tuple[float, float, float, float]
 

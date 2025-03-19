@@ -16,7 +16,6 @@ from ..lib.common import drawing_schema_path
 
 
 class TestRacksDBDrawingParameters(unittest.TestCase):
-
     def test_load(self):
         DrawingParameters.load(DBDictsLoader(), drawing_schema_path())
 

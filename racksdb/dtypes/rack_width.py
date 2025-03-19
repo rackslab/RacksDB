@@ -8,7 +8,6 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 
 class SchemaDefinedTypeRackWidth(SchemaDefinedType):
-
     pattern = r"full|(\d+)(/\d+)?"
     native = float
 

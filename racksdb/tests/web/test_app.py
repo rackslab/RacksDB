@@ -57,7 +57,6 @@ class TestRacksDBWebApp(unittest.TestCase):
 
 
 class TestRacksDBWebAppEndpoints(unittest.TestCase):
-
     def setUp(self):
         try:
             self.app = RacksDBWebApp(CMD_BASE_ARGS + ["--with-ui", str(ui_path())])

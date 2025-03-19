@@ -31,7 +31,6 @@ CMD_DRAW_BASE_ARGS = ["draw", "--drawings-schema", str(drawing_schema_path())]
 
 
 class TestRacksDBExec(unittest.TestCase):
-
     def test_version(self):
         for option in ["-v", "--version"]:
             with mock.patch("sys.stdout", new=io.StringIO()) as output:

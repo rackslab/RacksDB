@@ -25,7 +25,6 @@ class TestDBDumperFactory(unittest.TestCase):
 
 
 class TestSchemaDumperFactor(unittest.TestCase):
-
     def test_get(self):
         self.assertIs(SchemaDumperFactory.get("yaml"), SchemaDumperYAML)
 

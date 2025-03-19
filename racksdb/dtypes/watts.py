@@ -8,7 +8,6 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 
 class SchemaDefinedTypeWatts(SchemaDefinedType):
-
     pattern = r"(\d+(.\d+)?)(W|kW|MW)"
     native = int
 

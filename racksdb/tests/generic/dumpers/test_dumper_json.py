@@ -13,7 +13,6 @@ from ..lib.common import valid_db
 
 
 class TestDBDumperJSON(unittest.TestCase):
-
     def test_dump_list(self):
         db = valid_db()
         dumper = DBDumperJSON()

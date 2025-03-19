@@ -8,7 +8,6 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 
 class SchemaDefinedTypeBytes(SchemaDefinedType):
-
     pattern = r"(\d+(.\d+)?)(TB|GB|MB)"
     native = int
 

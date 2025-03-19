@@ -162,7 +162,6 @@ class RoomDrawer(Drawer):
             self._draw_rack(rack)
 
     def draw(self):
-
         logger.debug(
             "Maximum dimensions: %d %d",
             self.parameters.dimensions.width,

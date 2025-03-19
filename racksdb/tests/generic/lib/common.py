@@ -149,7 +149,6 @@ VALID_DB = {
 
 
 class SchemaDefinedTypeWeight(SchemaDefinedType):
-
     pattern = r"(\d+)g"
     native = int
 

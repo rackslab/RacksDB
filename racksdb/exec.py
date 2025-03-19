@@ -111,7 +111,7 @@ class RacksDBExec:
                 if parameter.positional:
                     args = (parameter.name,)
                 else:
-                    args = [f"--{parameter.name.replace('_','-')}"]
+                    args = [f"--{parameter.name.replace('_', '-')}"]
                     if parameter.short is not None:
                         args.insert(0, f"-{parameter.short}")
 

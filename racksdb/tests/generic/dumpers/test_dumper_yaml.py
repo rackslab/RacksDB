@@ -14,7 +14,6 @@ from ..lib.common import valid_db, valid_schema
 
 
 class TestDBDumperYAML(unittest.TestCase):
-
     def test_dump_list(self):
         db = valid_db()
         dumper = DBDumperYAML()
@@ -70,7 +69,6 @@ class TestDBDumperYAML(unittest.TestCase):
 
 
 class TestSchemaDumperYAML(unittest.TestCase):
-
     def test_dump(self):
         result = SchemaDumperYAML().dump(valid_schema())
         yaml.safe_load(result)

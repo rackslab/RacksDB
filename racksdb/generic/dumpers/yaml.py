@@ -27,7 +27,6 @@ class DBDumperYAML(MapperDumper):
         self._last_objs = collections.deque([], 8)
 
     def _represent_list(self, dumper, data):
-
         tag = "tag:yaml.org,2002:seq"
         if self.fold:
             value = [dumper.represent_data(_object) for _object in data.itervalues()]
@@ -59,7 +58,6 @@ class DBDumperYAML(MapperDumper):
         node_value.append((dumper.represent_data(prop), dumper.represent_data(value)))
 
     def _represent_dbobject(self, dumper, data):
-
         self._last_objs.append(type(data).__name__)
         node_value = []
         if self.show_types:
@@ -101,8 +99,7 @@ class DBDumperYAML(MapperDumper):
             return yaml.dump(data, Dumper=noalias_dumper).rstrip()
         except RecursionError:
             logger.error(
-                "Recursion loop detected during dump, last represented objects:"
-                "\n→ %s",
+                "Recursion loop detected during dump, last represented objects:\n→ %s",
                 "\n→ ".join(self._last_objs),
             )
             return ""

@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 
 class AxonometricInfrastructureDrawer(InfrastructureDrawer):
-
     @property
     def x_cos(self):
         return math.cos(math.radians(self.parameters.axonometric.angles.x))
@@ -196,7 +195,6 @@ class AxonometricInfrastructureDrawer(InfrastructureDrawer):
         return tl
 
     def _draw_rack_equipment(self, equipment):
-
         # If equipment_tags drawing parameters is set, check the equipment has at least
         # one matching associated tag.
         if hasattr(self.parameters.infrastructure, "equipment_tags") and not any(
@@ -467,7 +465,6 @@ class AxonometricInfrastructureDrawer(InfrastructureDrawer):
             return
 
     def _draw_rack_row(self, row):
-
         logger.debug("Drawing row %s", row.name)
 
         dl = self._rack_row_dl(row)

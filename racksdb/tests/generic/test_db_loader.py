@@ -48,7 +48,6 @@ class TestDBLoaderBase(unittest.TestCase):
 
 
 class TestDBFileLoader(TestDBLoaderBase):
-
     def write_db_file(self, content):
         self.tmp = tempfile.NamedTemporaryFile(mode="w", delete=False)
         self.tmp.write(content)
@@ -68,7 +67,6 @@ class TestDBFileLoader(TestDBLoaderBase):
 
 
 class TestDBSplittedFilesLoader(TestDBLoaderBase):
-
     def test_load(self):
         # Split VALID_DB in multiple files and load the directory.
         with tempfile.TemporaryDirectory() as _tmpdir:
@@ -114,7 +112,6 @@ class TestDBSplittedFilesLoader(TestDBLoaderBase):
 
 
 class TestDBStdinLoader(TestDBLoaderBase):
-
     def test_load(self):
         with mock.patch("sys.stdin", new=io.StringIO(yaml.dump(VALID_DB))):
             self.assertLoaderContent(DBStdinLoader())

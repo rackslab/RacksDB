@@ -12,7 +12,6 @@ from .lib.common import valid_db
 
 
 class TestDBList(unittest.TestCase):
-
     def setUp(self):
         self.db = valid_db()
         self.assertIsInstance(self.db.stock.content, DBList)

@@ -9,7 +9,6 @@ from racksdb.generic.errors import DBFormatError
 
 
 class SchemaDefinedTypeAngle(SchemaDefinedType):
-
     pattern = r"\d+"
     native = int
 
