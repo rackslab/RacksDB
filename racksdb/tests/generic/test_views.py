@@ -13,7 +13,6 @@ from .lib.views import TestDBViews
 
 
 class TestDBViewSet(unittest.TestCase):
-
     def setUp(self):
         self.views = TestDBViews()
 

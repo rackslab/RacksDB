@@ -361,8 +361,7 @@ class GenericDB(DBObject):
                 if schema_type.native is native_type:
                     if type(literal) != native_type:
                         raise DBFormatError(
-                            f"{token} {literal} is not a valid "
-                            f"{native_type.__name__}"
+                            f"{token} {literal} is not a valid {native_type.__name__}"
                         )
                     return literal
         elif isinstance(schema_type, SchemaDefinedType):
@@ -473,8 +472,7 @@ class GenericDB(DBObject):
                     for _obj in self._indexes[schema_object.name]:
                         if getattr(_obj, prop.name) == value:
                             raise DBFormatError(
-                                f"Key value {value} of {schema_object} is not "
-                                "unique."
+                                f"Key value {value} of {schema_object} is not unique."
                             )
                 setattr(obj, "_key", value)
 
@@ -489,7 +487,6 @@ class GenericDB(DBObject):
         return obj
 
     def load_object_attributes(self, obj, content, schema_object: SchemaObject):
-
         try:
             _content = content.copy()
         except AttributeError:
@@ -562,8 +559,7 @@ class GenericDB(DBObject):
         token_property = schema_object.prop(token)
         if token_property is None:
             raise DBFormatError(
-                f"Property {token} is not defined in schema for object "
-                f"{schema_object}"
+                f"Property {token} is not defined in schema for object {schema_object}"
             )
         return token_property
 

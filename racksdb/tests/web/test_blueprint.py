@@ -39,9 +39,7 @@ class FakeRacksDBWebApp(flask.Flask):
 
 
 class TestRacksDBWebBlueprint(unittest.TestCase):
-
     def setUp(self):
-
         try:
             self.schema_path = schema_path()
             self.db_path = db_path()

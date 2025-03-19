@@ -314,7 +314,6 @@ class InfrastructureDrawer(Drawer):
         self.ctx.fill()
 
     def _draw_rack_equipment(self, equipment):
-
         # If equipment_tags drawing parameters is set, check the equipment has at least
         # one matching associated tag.
         if hasattr(self.parameters.infrastructure, "equipment_tags") and not any(
@@ -500,7 +499,6 @@ class InfrastructureDrawer(Drawer):
                     self._draw_rack_equipment(equipment)
 
     def _draw_rack_row(self, row):
-
         logger.debug("Drawing row %s", row.name)
 
         dl = self._rack_row_dl(row)
@@ -528,7 +526,6 @@ class InfrastructureDrawer(Drawer):
             self._draw_rack_row(row)
 
     def draw(self):
-
         logger.debug(
             "Maximum dimensions: %d %d",
             self.parameters.dimensions.width,

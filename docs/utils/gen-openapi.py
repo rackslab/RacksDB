@@ -13,7 +13,6 @@ from racksdb.drawers.parameters import DrawingParameters
 
 
 def main():
-
     current_dir = os.path.dirname(os.path.realpath(__file__))
     racksdb_schema_path = Path(current_dir).joinpath("../../schemas/racksdb.yml")
     racksdb_schema = Schema(

@@ -12,7 +12,6 @@ from .lib.common import valid_db
 
 
 class TestDBDict(unittest.TestCase):
-
     def setUp(self):
         self.db = valid_db()
 
@@ -54,7 +53,6 @@ class TestDBDict(unittest.TestCase):
 
 
 class TestDBDictExpandable(unittest.TestCase):
-
     def setUp(self):
         self.db = valid_db()
         self.expandable_dict = DBDict()

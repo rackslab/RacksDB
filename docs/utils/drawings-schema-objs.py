@@ -24,6 +24,7 @@
   $ python3 docs/utils/drawings-schema-objs.py > \
     modules/usage/partials/drawing-objects.adoc
 """
+
 from pathlib import Path
 
 import jinja2

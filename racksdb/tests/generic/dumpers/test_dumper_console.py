@@ -12,7 +12,6 @@ from racksdb.generic.errors import DBDumperError
 
 
 class TestDBDumperConsole(unittest.TestCase):
-
     def test_dump(self):
         dumper = DBDumperConsole()
         # DBDumperConsole only support lists

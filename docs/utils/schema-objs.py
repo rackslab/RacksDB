@@ -18,11 +18,12 @@
 # along with RacksDB.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-  To generate partial of database objects reference documentation, run this
-  command:
+To generate partial of database objects reference documentation, run this
+command:
 
-  $ python3 docs/utils/schema-objs.py > docs/modules/db/partials/objects.adoc
+$ python3 docs/utils/schema-objs.py > docs/modules/db/partials/objects.adoc
 """
+
 from pathlib import Path
 
 import jinja2

@@ -20,7 +20,6 @@ from . import bases
 
 
 class RacksDB(GenericDB):
-
     DEFAULT_DB = "/var/lib/racksdb"
     DEFAULT_SCHEMA = "/usr/share/racksdb/schemas/racksdb.yml"
     DEFAULT_EXT = "/etc/racksdb/extensions.yml"

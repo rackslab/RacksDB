@@ -113,9 +113,9 @@ class TestSchema(unittest.TestCase):
 
     def test_expandable_double(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["properties"]["quantity"][
-            "type"
-        ] = "expandable"
+        schema_content["_objects"]["AppleCrate"]["properties"]["quantity"]["type"] = (
+            "expandable"
+        )
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -127,9 +127,9 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_object(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["properties"]["species"][
-            "type"
-        ] = "$Unknown.object"
+        schema_content["_objects"]["AppleCrate"]["properties"]["species"]["type"] = (
+            "$Unknown.object"
+        )
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(
@@ -140,9 +140,9 @@ class TestSchema(unittest.TestCase):
 
     def test_reference_undefined_property(self):
         schema_content = copy.deepcopy(VALID_SCHEMA)
-        schema_content["_objects"]["AppleCrate"]["properties"]["species"][
-            "type"
-        ] = "$Apple.unknown"
+        schema_content["_objects"]["AppleCrate"]["properties"]["species"]["type"] = (
+            "$Apple.unknown"
+        )
         schema_loader = FakeSchemaLoader(schema_content)
         types_loader = FakeTypesLoader(VALID_DEFINED_TYPES)
         with self.assertRaisesRegex(

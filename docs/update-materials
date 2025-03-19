@@ -26,7 +26,6 @@ OPENAPI = DOCS_DIR / "modules/usage/attachments/openapi.yml"
 
 
 def main():
-
     targets = sys.argv[1:]
 
     if any([target not in TARGETS for target in targets]):

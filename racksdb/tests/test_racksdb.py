@@ -138,7 +138,6 @@ class TestRacksDB(unittest.TestCase):
 
 
 class TestRacksDBAlternatePaths(unittest.TestCase):
-
     def test_db_ext_yml(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             new_db_path = Path(tmpdir) / "db.yml"

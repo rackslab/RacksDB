@@ -8,7 +8,6 @@ from racksdb.generic.definedtype import SchemaDefinedType
 
 
 class SchemaDefinedTypeDimension(SchemaDefinedType):
-
     pattern = r"(\d+(.\d+)?)(mm|cm|m)"
     native = int
 

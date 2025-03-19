@@ -230,7 +230,6 @@ class SchemaProperty:
 
 
 class Schema:
-
     pattern_type_obj = re.compile(r":(\w+)")
     pattern_type_defined = re.compile(r"~(\w+)")
     pattern_type_ref = re.compile(r"\$(\w+)\.(\w+)")
