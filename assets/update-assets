@@ -53,7 +53,7 @@ def main():
     # Generate bitmaps and favicon
     builder = NinjaBuilder()
 
-    # Rules for bitmaps
+    # Rules for bitmaps
     for size, dpi in DPI_SIZES.items():
         builder.rule(
             name=f"png-{size}",
