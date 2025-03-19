@@ -121,7 +121,7 @@ xref:db:structure.adoc#obj-types[Types object]:
 ----
 >>> for prop in ['nodes', 'network', 'storage', 'misc', 'racks']:
 ...   hasattr(db.types, prop)
-... 
+...
 True
 True
 True
@@ -417,7 +417,7 @@ xref:#spec-racksdb[`RacksDB` class specialization], iterations over this
 dict_keys([mecn[0001-0040], mecn0200, mecn[0041-0060], mecn[0061-0116], mesrv[0001-0004]])
 >>> for node in db.nodes:
 ...   print(node.name)
-... 
+...
 mecn0001
 mecn0002
 mecn0003
@@ -783,7 +783,7 @@ Print the height in meters of all types of racks:
 ----
 >>> for rack in db.types.racks:
 ...   print(f"{rack.id}: {rack.height/10**3}m")
-... 
+...
 standard: 1.867m
 half: 1.198m
 ----
@@ -794,7 +794,7 @@ Print the list of node types ID and models:
 ----
 >>> for nodetype in db.types.nodes:
 ...   print(f"{nodetype.id}: {nodetype.model}")
-... 
+...
 sm220bt: SuperMicro A+ Server 2124BT-HTR
 sm610u: SuperMicro Ultra SYS-610U-TNR
 hpesyn480: HPE Synergy 480 Gen10 Compute Module
@@ -810,7 +810,7 @@ network equipment type:
 ...   print(f"{equipment.model} :")
 ...   for netif in equipment.netifs:
 ...     print(f" [{netif.type.upper()}] {netif.number}x{netif.bandwidth*8/10**9}Gb/s")
-... 
+...
 Cisco Catalyst 3650 switch :
  [ETHERNET] 48x1.0Gb/s
 ----
@@ -824,7 +824,7 @@ Print the raw capacity in TB of each storage equipment type:
 ...   for disk in equipment.disks:
 ...     size += disk.size * disk.number
 ...   print(f"{equipment.model}: {size/1024**4}TB")
-... 
+...
 QNAP TS-H1277XU-RP: 48.0TB
 ----
 ====
@@ -866,7 +866,7 @@ Print the list of racks by room per datacenter:
 ...   for room in datacenter.rooms:
 ...       print(f"{datacenter.name}: {room.name}: "
 ...             f"racks: {[rack.name for row in room.rows for rack in row.racks]}")
-... 
+...
 paris: noisy: racks: ['R1-A01', 'R1-A02', 'R1-A03', … 'R7-A04', 'R7-A05', 'R7-A06']
 ----
 ====
@@ -898,7 +898,7 @@ Print the list of nodes of the _tiger_ infrastructure:
 ----
 >>> for node in db.infrastructures['tiger'].nodes:
 ...     print(node.name)
-... 
+...
 cn001
 cn002
 cn003
@@ -915,7 +915,7 @@ located:
 ----
 >>> for part in db.infrastructures['tiger'].layout:
 ...     print(f"{part.rack.name} ({part.rack.datacenter.name})")
-... 
+...
 R01 (paris)
 R02 (paris)
 ----
@@ -934,7 +934,7 @@ The name of nodes in infrastructure _tiger_ with tag _servers_:
 ----
 >>> for node in db.infrastructures['tiger'].nodes.filter(tags=['servers']):
 ...   node.name
-... 
+...
 'srv001'
 'srv002'
 ----
