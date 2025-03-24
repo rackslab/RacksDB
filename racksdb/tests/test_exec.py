@@ -4,7 +4,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import unittest
 from unittest import mock
 import io
 import tempfile
@@ -20,17 +19,19 @@ from racksdb.exec import RacksDBExec
 from racksdb.version import get_version
 
 from .lib.common import schema_path, db_path, drawing_schema_path
+from .lib.reference import (
+    TestRacksDBReferenceDB,
+    REFDB_INFRASTRUCTURES,
+    REFDB_DATACENTERS,
+    REFDB_TOTAL_NODES,
+)
 
-# Expected values from example DB.
-EXAMPLE_DATACENTERS = ["paris", "london"]
-EXAMPLE_INFRASTRUCTURES = ["mercury", "jupiter", "sharednet"]
-EXAMPLE_TOTAL_NODES = 130
 
 CMD_BASE_ARGS = ["--schema", str(schema_path()), "--db", str(db_path())]
 CMD_DRAW_BASE_ARGS = ["draw", "--drawings-schema", str(drawing_schema_path())]
 
 
-class TestRacksDBExec(unittest.TestCase):
+class TestRacksDBExec(TestRacksDBReferenceDB):
     def test_version(self):
         for option in ["-v", "--version"]:
             with mock.patch("sys.stdout", new=io.StringIO()) as output:
@@ -70,20 +71,6 @@ class TestRacksDBExec(unittest.TestCase):
     # datacenters
     #
 
-    def assertDatacentersResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 2)
-        self.assertCountEqual(
-            [datacenter["name"] for datacenter in content], EXAMPLE_DATACENTERS
-        )
-        self.assertIsInstance(content[0], dict)
-        # tags key is optional, it may not be present in selected datacenter.
-        for key in ["name", "rooms", "location"]:
-            self.assertIn(
-                key,
-                content[0],
-            )
-
     def test_datacenters(self):
         with mock.patch("sys.stdout", new=io.StringIO()) as output:
             RacksDBExec(CMD_BASE_ARGS + ["datacenters"])
@@ -111,7 +98,7 @@ class TestRacksDBExec(unittest.TestCase):
                 ]
             )
             self.assertCountEqual(
-                output.getvalue().strip().split("\n"), EXAMPLE_DATACENTERS
+                output.getvalue().strip().split("\n"), REFDB_DATACENTERS
             )
 
     def test_datacenters_not_found(self):
@@ -129,21 +116,6 @@ class TestRacksDBExec(unittest.TestCase):
     #
     # infrastructures
     #
-
-    def assertInfrastructuresResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 3)
-        self.assertCountEqual(
-            [infrastructure["name"] for infrastructure in content],
-            EXAMPLE_INFRASTRUCTURES,
-        )
-        self.assertIsInstance(content[0], dict)
-        # tags key is optional, it may not be present in selected infrastructure.
-        for key in ["name", "description", "layout"]:
-            self.assertIn(
-                key,
-                content[0],
-            )
 
     def test_infrastructures(self):
         with mock.patch("sys.stdout", new=io.StringIO()) as output:
@@ -177,7 +149,7 @@ class TestRacksDBExec(unittest.TestCase):
                 ]
             )
             self.assertCountEqual(
-                output.getvalue().strip().split("\n"), EXAMPLE_INFRASTRUCTURES
+                output.getvalue().strip().split("\n"), REFDB_INFRASTRUCTURES
             )
 
     def test_infrastructure_not_found(self):
@@ -195,15 +167,6 @@ class TestRacksDBExec(unittest.TestCase):
     #
     # nodes
     #
-
-    def assertNodesResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), EXAMPLE_TOTAL_NODES)
-        self.assertIsInstance(content[0], dict)
-        self.assertCountEqual(
-            content[0].keys(),
-            ["name", "infrastructure", "rack", "type", "slot", "tags", "position"],
-        )
 
     def test_nodes(self):
         with mock.patch("sys.stdout", new=io.StringIO()) as output:
@@ -237,7 +200,7 @@ class TestRacksDBExec(unittest.TestCase):
                 ]
             )
             self.assertEqual(
-                len(output.getvalue().strip().split("\n")), EXAMPLE_TOTAL_NODES
+                len(output.getvalue().strip().split("\n")), REFDB_TOTAL_NODES
             )
 
     def test_nodes_name(self):
@@ -279,7 +242,7 @@ class TestRacksDBExec(unittest.TestCase):
             )
             nodes = yaml.safe_load(output.getvalue())
             self.assertIsInstance(nodes, list)
-            self.assertLess(len(nodes), EXAMPLE_TOTAL_NODES)
+            self.assertLess(len(nodes), REFDB_TOTAL_NODES)
 
     def test_nodes_multiple_tags(self):
         # Check less nodes are selected with multiple tags than with only one tag.
@@ -332,26 +295,6 @@ class TestRacksDBExec(unittest.TestCase):
     #
     # racks
     #
-
-    def assertRacksResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 101)
-        self.assertIsInstance(content[0], dict)
-        # tags key is optional, it may not be present in select rack.
-        for key in [
-            "name",
-            "slot",
-            "type",
-            "datacenter",
-            "room",
-            "row",
-            "nodes",
-            "fillrate",
-        ]:
-            self.assertIn(
-                key,
-                content[0].keys(),
-            )
 
     def test_racks(self):
         with mock.patch("sys.stdout", new=io.StringIO()) as output:
