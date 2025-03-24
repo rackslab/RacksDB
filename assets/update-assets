@@ -15,7 +15,7 @@ from rfl.build.ninja import NinjaBuilder
 
 # Combination of logo and background colors available in branding reference file
 LOGOS = ["", "_full", "_full_horizontal"]
-BACKGROUNDS = ["white", "dark"]
+BACKGROUNDS = ["white", "dark", "colored"]
 # Sizes names and associated DPI
 DPI_SIZES = {"tiny": 32, "small": 64, "medium": 96, "large": 192}
 
@@ -95,9 +95,9 @@ def main():
         command=(
             "convert $in -gravity 'northwest' -background 'rgba(255,255,255,0)' "
             "-splice '10x10' "
-            '\( +clone -background black -shadow "30x3-1-1" \) +swap '
-            "-background none -mosaic +repage \( +clone "
-            '-background black -shadow "30x8+5+5" \) +swap '
+            r'\( +clone -background black -shadow "30x3-1-1" \) +swap '
+            r"-background none -mosaic +repage \( +clone "
+            r'-background black -shadow "30x8+5+5" \) +swap '
             "-background none -mosaic +repage $out"
         ),
     )
