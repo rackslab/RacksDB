@@ -4,7 +4,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import unittest
 import tempfile
 import json
 import parameterized
@@ -20,10 +19,11 @@ from racksdb.version import get_version
 
 from ..lib.web import RacksDBCustomTestResponse
 from ..lib.common import schema_path, db_path, drawing_schema_path
-
-# Expected values from example DB.
-EXAMPLE_DATACENTERS = ["paris", "london"]
-EXAMPLE_INFRASTRUCTURES = ["mercury", "jupiter", "sharednet"]
+from ..lib.reference import (
+    TestRacksDBReferenceDB,
+    REFDB_DATACENTERS,
+    REFDB_INFRASTRUCTURES,
+)
 
 
 class FakeRacksDBWebApp(flask.Flask):
@@ -38,7 +38,7 @@ class FakeRacksDBWebApp(flask.Flask):
         self.register_blueprint(self.blueprint)
 
 
-class TestRacksDBWebBlueprint(unittest.TestCase):
+class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
     def setUp(self):
         try:
             self.schema_path = schema_path()
@@ -120,25 +120,9 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
             tmp.write(response.text)
             RacksDB.load(schema=tmp.name, db=self.db_path)
 
-    # test schema
-
     #
     # datacenters
     #
-
-    def assertDatacentersResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 2)
-        self.assertCountEqual(
-            [datacenter["name"] for datacenter in content], EXAMPLE_DATACENTERS
-        )
-        self.assertIsInstance(content[0], dict)
-        # tags key is optional, it may not be present in selected datacenter.
-        for key in ["name", "rooms", "location"]:
-            self.assertIn(
-                key,
-                content[0],
-            )
 
     def test_datacenters(self):
         response = self.client.get(f"/v{get_version()}/datacenters")
@@ -157,17 +141,17 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
         self.assertIsInstance(response.json, list)
-        self.assertCountEqual(response.json, EXAMPLE_DATACENTERS)
+        self.assertCountEqual(response.json, REFDB_DATACENTERS)
 
     def test_datacenters_name(self):
         response = self.client.get(
-            f"/v{get_version()}/datacenters?name={EXAMPLE_DATACENTERS[0]}"
+            f"/v{get_version()}/datacenters?name={REFDB_DATACENTERS[0]}"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
         self.assertIsInstance(response.json, list)
         self.assertEqual(len(response.json), 1)
-        self.assertCountEqual(response.json[0]["name"], EXAMPLE_DATACENTERS[0])
+        self.assertCountEqual(response.json[0]["name"], REFDB_DATACENTERS[0])
 
     def test_datacenters_name_not_found(self):
         response = self.client.get(f"/v{get_version()}/datacenters?name=fail")
@@ -216,21 +200,6 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
     # infrastructures
     #
 
-    def assertInfrastructuresResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 3)
-        self.assertCountEqual(
-            [infrastructure["name"] for infrastructure in content],
-            EXAMPLE_INFRASTRUCTURES,
-        )
-        self.assertIsInstance(content[0], dict)
-        # tags key is optional, it may not be present in selected infrastructure.
-        for key in ["name", "description", "layout"]:
-            self.assertIn(
-                key,
-                content[0],
-            )
-
     def test_infrastructures(self):
         response = self.client.get(f"/v{get_version()}/infrastructures")
         self.assertEqual(response.status_code, 200)
@@ -248,16 +217,16 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
         self.assertIsInstance(response.json, list)
-        self.assertCountEqual(response.json, EXAMPLE_INFRASTRUCTURES)
+        self.assertCountEqual(response.json, REFDB_INFRASTRUCTURES)
 
     def test_infrastructures_name(self):
         response = self.client.get(
-            f"/v{get_version()}/infrastructures?name={EXAMPLE_INFRASTRUCTURES[0]}"
+            f"/v{get_version()}/infrastructures?name={REFDB_INFRASTRUCTURES[0]}"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
         self.assertIsInstance(response.json, list)
-        self.assertEqual(response.json[0]["name"], EXAMPLE_INFRASTRUCTURES[0])
+        self.assertEqual(response.json[0]["name"], REFDB_INFRASTRUCTURES[0])
 
     def test_infrastructures_name_not_found(self):
         response = self.client.get(f"/v{get_version()}/infrastructures?name=fail")
@@ -320,15 +289,6 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
     #
     # nodes
     #
-
-    def assertNodesResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 130)
-        self.assertIsInstance(content[0], dict)
-        self.assertCountEqual(
-            content[0].keys(),
-            ["name", "infrastructure", "rack", "type", "slot", "tags", "position"],
-        )
 
     def test_nodes(self):
         response = self.client.get(f"/v{get_version()}/nodes")
@@ -437,26 +397,6 @@ class TestRacksDBWebBlueprint(unittest.TestCase):
     #
     # racks
     #
-
-    def assertRacksResponse(self, content):
-        self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 101)
-        self.assertIsInstance(content[0], dict)
-        # tags key is optional, it may not be present in select rack.
-        for key in [
-            "name",
-            "slot",
-            "type",
-            "datacenter",
-            "room",
-            "row",
-            "nodes",
-            "fillrate",
-        ]:
-            self.assertIn(
-                key,
-                content[0].keys(),
-            )
 
     def test_racks(self):
         response = self.client.get(f"/v{get_version()}/racks")
