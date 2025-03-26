@@ -1,6 +1,6 @@
 # RacksDB drawing parameters schema
 
-_version: 0.5.0
+_version: 0.6.0
 
 _content:
   properties:
