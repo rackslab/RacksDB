@@ -28,7 +28,7 @@ and this project adheres to
 - cli: Add `tags` command to retrieve tags associated to objects (#102).
 - web:
   - Add `tags` endpoint to retrieve tags associated to objects.
-  - Support GET method on `draw endpoint with drawing parameters as optional
+  - Support GET method on `draw` endpoint with drawing parameters as optional
     request arguments (#66→#122).
 - docs:
   - Mention `tags` command in `racksdb` manpage.
