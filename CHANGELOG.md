@@ -89,11 +89,13 @@ and this project adheres to
   - Return HTTP/400 error when draw endpoint is called with unsupported entity.
 - ui:
   - Limit specs links size in equipment type modal (#76).
-  - Update bundled dependencies to fix security issues CVE-2024-39338 (axios),
+  - Update bundled dependencies to fix security issues CVE-2024-39338,
+    CVE-2025-27152 (axios),
     CVE-2024-4068 (braces), CVE-2024-31207, CVE-2024-45812, CVE-2024-45811,
-    CVE-2025-24010 (vite), CVE-2024-6783 (vue-template-compiler), CVE-2024-37890
-    (ws), CVE-2024-21538 (cross-spawn), CVE-2024-4067 (micromatch),
-    CVE-2024-47068 (rollup), CVE-2024-55565 (nanoid).
+    CVE-2025-24010, CVE-2025-30208 (vite), CVE-2024-6783
+    (vue-template-compiler), CVE-2024-37890 (ws), CVE-2024-21538 (cross-spawn),
+    CVE-2024-4067 (micromatch), CVE-2024-47068 (rollup), CVE-2024-55565
+    (nanoid), CVE-2025-24964 (vitest) and GHSA-67mh-4wv8-2f99 (esbuild).
 - pkg: Fix `pkg_resources` API deprecation error by using importlib module and
   `importlib_metadata` external backport library for Python < 3.8 (#104).
 
