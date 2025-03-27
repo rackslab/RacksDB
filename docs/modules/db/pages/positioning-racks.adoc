@@ -4,7 +4,7 @@
 :R3: pass:quotes,attributes[<span style='color: #3b7eccff;'>*R3*</span>]
 :R4: pass:quotes,attributes[<span style='color: #a24075ff;'>*R4*</span>]
 
-This document explains how-to modelize in RacksDB the datacenter rooms with
+This document explains how-to model in RacksDB the datacenter rooms with
 their empty racks at their exact position.
 
 For learning purpose, consider this example datacenter room map with this overly
@@ -13,7 +13,7 @@ uncommon racks layout:
 image:racks_rows_positioning_example_map.svg[Uncommon datacenter room map,800]
 
 First, the map indicates the room measures _10 meters_ in width and _8 meters_
-in depth. This is modelized in RacksDB database like this:
+in depth. This is modeled in RacksDB database like this:
 
 [source,yaml]
 ----
@@ -136,7 +136,7 @@ positions of your racks in datacenter rooms in RacksDB!
 
 NOTE: Please https://github.com/rackslab/racksdb/issues/new[file an issue] on
 project code tracker if you feel the layout of your datacenter rooms and racks
-cannot be modelized in RacksDB, we would be happy to consider your
+cannot be modeled in RacksDB, we would be happy to consider your
 specificities.
 
 .Show complete datacenter YAML example

@@ -2,7 +2,7 @@
 
 image::overview:racksdb_logo.png[RacksDB Overview,150,float=right]
 
-*RacksDB* is an _open source_ solution to modelize your datacenters
+*RacksDB* is an _open source_ solution for modeling your datacenters
 infrastructures in a simple database schema to store information about
 the equipments in your datacenters provided with tools and library to request
 this database.

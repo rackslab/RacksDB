@@ -2,7 +2,7 @@
 
 == Purpose
 
-*RacksDB* is an _open source_ solution to modelize your datacenters
+*RacksDB* is an _open source_ solution for modeling your datacenters
 infrastructures. It provides a simple database schema to store information about
 the equipments in your datacenters, with tools and library to request this
 database. This database can be used as *reference source* for many purposes in

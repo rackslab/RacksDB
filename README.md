@@ -8,7 +8,7 @@
   align="right"
   width="200px">
 
-**RacksDB** is an _open source_ solution to modelize your datacenters
+**RacksDB** is an _open source_ solution for modeling your datacenters
 infrastructures. It provides a simple database schema to store information about
 the equipments in your datacenters. This database can be used as **reference
 source** for many purposes in IT management.
