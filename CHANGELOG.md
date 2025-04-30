@@ -8,8 +8,14 @@ and this project adheres to
 
 ## [unreleased]
 
+### Added
+- docs: Mention support of Fedora 42.
+
 ### Changed
-- docs: reword s/modelize/modeling/.
+- docs: Reword s/modelize/modeling/.
+
+### Removed
+- docs: Drop support of Fedora 40.
 
 ## [0.5.0] - 2025-03-26
 
