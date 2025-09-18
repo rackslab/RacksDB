@@ -9,7 +9,9 @@ and this project adheres to
 ## [unreleased]
 
 ### Added
-- docs: Mention support of Fedora 42.
+- docs:
+  - Mention support of Fedora 42.
+  - Mention support of Debian 14 _« forky »_
 
 ### Changed
 - docs: Reword s/modelize/modeling/.
