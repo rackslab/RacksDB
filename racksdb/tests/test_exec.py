@@ -45,6 +45,7 @@ class TestRacksDBExec(TestRacksDBReferenceDB):
             # Check dumped DB can be loaded
             with tempfile.NamedTemporaryFile(mode="w+", suffix=".yml") as tmp:
                 tmp.write(output.getvalue())
+                tmp.flush()  # Make sure file is written to disk
                 db_dumped = RacksDB.load(schema=schema_path(), db=tmp.name)
         # Compare infrastructure in original and dumped database
         db_orig = RacksDB.load(schema=schema_path(), db=db_path())
@@ -65,6 +66,7 @@ class TestRacksDBExec(TestRacksDBReferenceDB):
             # Check DB can be loaded with schema in output
             with tempfile.NamedTemporaryFile(mode="w+", suffix=".yml") as tmp:
                 tmp.write(output.getvalue())
+                tmp.flush()  # Make sure file is written to disk
                 RacksDB.load(schema=tmp.name, db=db_path())
 
     #

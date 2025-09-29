@@ -97,6 +97,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         # Check dumped DB can be loaded
         with tempfile.NamedTemporaryFile(mode="w+", suffix=".yml") as tmp:
             tmp.write(response.text)
+            tmp.flush()  # Make sure file is written to disk
             db_dumped = RacksDB.load(schema=self.schema_path, db=tmp.name)
         # Compare infrastructure in original and dumped database
         db_orig = RacksDB.load(schema=self.schema_path, db=self.db_path)
@@ -118,6 +119,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         # Check DB can be loaded with downloaded schema
         with tempfile.NamedTemporaryFile(mode="w+", suffix=".yml") as tmp:
             tmp.write(response.text)
+            tmp.flush()  # Make sure file is written to disk
             RacksDB.load(schema=tmp.name, db=self.db_path)
 
     #
