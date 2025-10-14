@@ -668,3 +668,30 @@ class TestRacksDBExec(TestRacksDBReferenceDB):
                 self.assertTrue(drawing.exists())
         finally:
             os.chdir(cwd)
+
+    #
+    # autopaging
+    #
+
+    def test_autopager_used_in_schema(self):
+        with mock.patch("racksdb.exec.AutoPager") as autopager:
+            with mock.patch("sys.stdout", new=io.StringIO()):
+                RacksDBExec(CMD_BASE_ARGS + ["schema"])
+            autopager.assert_called_once()
+            # Ensure context manager was entered
+            autopager.return_value.__enter__.assert_called_once()
+
+    def test_autopager_used_in_dump(self):
+        with mock.patch("racksdb.exec.AutoPager") as autopager:
+            with mock.patch("sys.stdout", new=io.StringIO()):
+                RacksDBExec(CMD_BASE_ARGS + ["dump"])
+            autopager.assert_called_once()
+            autopager.return_value.__enter__.assert_called_once()
+
+    def test_autopager_used_in_views(self):
+        # Use a representative view command that goes through _dump_view
+        with mock.patch("racksdb.exec.AutoPager") as autopager:
+            with mock.patch("sys.stdout", new=io.StringIO()):
+                RacksDBExec(CMD_BASE_ARGS + ["datacenters"])
+            autopager.assert_called_once()
+            autopager.return_value.__enter__.assert_called_once()
