@@ -19,6 +19,10 @@ and this project adheres to
 - pkgs: Bump minimal requirement on `RFL.log` >= 1.6.0.
 - docs: Reword s/modelize/modeling/.
 
+### Fixed
+- docs: System dependency package name in quickstart guide when installing from
+  PyPI and from source (#131).
+
 ### Removed
 - docs: Drop support of Fedora 40.
 
