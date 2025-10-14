@@ -17,7 +17,7 @@ dependencies = [
     "ClusterShell",
     "pycairo",
     "PyGObject",
-    "RFL.log",
+    "RFL.log >= 1.6.0",
 ]
 readme = "README.md"
 classifiers = [
