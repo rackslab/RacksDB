@@ -242,10 +242,7 @@ To install RacksDB python package from https://pypi.org/[PyPI repository], you
 first need to install on your system some development libraries required by
 RacksDB external dependencies. For example, on Debian/Ubuntu:
 
-[source,console]
-----
-$ sudo apt install libcairo2-dev libgirepository1.0-dev
-----
+include::partial$pip-deps.adoc[]
 
 To install RacksDB python package from https://pypi.org/[PyPI repository], run
 the following command:
@@ -324,10 +321,7 @@ Some development libraries are required to install RacksDB external dependencies
 from https://pypi.org/[PyPI repository]. For example on Debian/Ubuntu, run this
 command to install you these development libraries:
 
-[source,console]
-----
-$ sudo apt install libcairo2-dev libgirepository1.0-dev
-----
+include::partial$pip-deps.adoc[]
 
 To install RacksDB from sources, run this command in the source tree directory:
 

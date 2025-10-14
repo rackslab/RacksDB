@@ -1,0 +1,17 @@
+[source,console]
+----
+$ sudo apt install libcairo2-dev libgirepository-2.0-dev
+----
+
+[CAUTION]
+====
+On Debian _« bookworm »_, `libgirepository-2.0-dev` package is not
+available. As a workaround, you can install `libgirepository1.0-dev` instead
+with an older version of PyGObject in your virtual environment:
+
+[source,console]
+----
+$ sudo apt install libcairo2-dev libgirepository1.0-dev
+$ pip install "PyGObject<3.43.0"
+----
+====
