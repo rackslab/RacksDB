@@ -151,5 +151,4 @@ $ pytest
 
 ## License
 
-RacksDB is distributed under the terms of the GNU General Public License v3.0 or
-later (GPLv3+).
+RacksDB is distributed under the terms of the MIT license.
