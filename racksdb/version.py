@@ -2,7 +2,7 @@
 #
 # This file is part of RacksDB.
 #
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: MIT
 
 try:
     from importlib import metadata

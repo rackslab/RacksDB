@@ -16,6 +16,7 @@ and this project adheres to
   - Mention support of Debian 14 _« forky »_
 
 ### Changed
+- Change license from GPLv3+ to MIT.
 - pkgs: Bump minimal requirement on `RFL.log` >= 1.6.0.
 - docs: Reword s/modelize/modeling/.
 
