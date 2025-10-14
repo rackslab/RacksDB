@@ -10,6 +10,7 @@ and this project adheres to
 
 ### Added
 - cli: Add auto-paging to `dump`, `schema` and all view commands (#138).
+- web: Adjust datacenters map zoom level to fit their markers locations (#78).
 - docs:
   - Mention support of Fedora 42.
   - Mention support of Debian 14 _« forky »_

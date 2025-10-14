@@ -54,9 +54,11 @@ function datacentersMapConfig() {
   // Configuration of the map
   const map = L.map(mapContainer.value).setView([averageLatitude, averageLongitude], 5)
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map)
+
+  // Prepare bounds to fit all markers
+  const bounds = L.latLngBounds([])
 
   // Add a marker on a map if the datacenter has coordinates
   datacenters.value.forEach((datacenter) => {
@@ -80,6 +82,7 @@ function datacentersMapConfig() {
     let marker = L.marker([datacenter.location.latitude, datacenter.location.longitude], {
       icon: purpleIcon
     }).addTo(map)
+    bounds.extend([datacenter.location.latitude, datacenter.location.longitude])
     marker.bindPopup(
       `<div class="text-center max-h-30">
         <a class="appearance-none" href="${datacenterRoute.fullPath}">
@@ -90,6 +93,9 @@ function datacentersMapConfig() {
       </div>`
     )
   })
+
+  // Adjust the map view to include all markers
+  map.fitBounds(bounds, { padding: [10, 10] })
 }
 
 onMounted(async () => {
