@@ -11,7 +11,7 @@ from itertools import chain
 import typing as t
 from pathlib import Path
 
-from rfl.log import setup_logger
+from rfl.log import setup_logger, AutoPager
 
 from .version import get_version
 from .generic.errors import DBFormatError, DBSchemaError
@@ -167,10 +167,18 @@ class RacksDBExec:
         )
 
     def _run_schema(self):
-        print(SchemaDumperFactory.get("yaml")().dump(self.db._schema))
+        with AutoPager():
+            try:
+                print(SchemaDumperFactory.get("yaml")().dump(self.db._schema))
+            except BrokenPipeError:
+                pass
 
     def _run_dump(self):
-        print(DBDumperFactory.get("yaml")().dump(self.db._loader.content))
+        with AutoPager():
+            try:
+                print(DBDumperFactory.get("yaml")().dump(self.db._loader.content))
+            except BrokenPipeError:
+                pass
 
     def _run_racks(self):
         self._dump_view()
@@ -233,13 +241,17 @@ class RacksDBExec:
         if self.args.format is None:
             self.args.format = self.DEFAULT_FORMAT
 
-        print(
-            DBDumperFactory.get(self.args.format)(
-                show_types=self.args.with_objects_types,
-                objects_map=view.objects_map,
-                fold=self.args.fold,
-            ).dump(data)
-        )
+        with AutoPager():
+            try:
+                print(
+                    DBDumperFactory.get(self.args.format)(
+                        show_types=self.args.with_objects_types,
+                        objects_map=view.objects_map,
+                        fold=self.args.fold,
+                    ).dump(data)
+                )
+            except BrokenPipeError:
+                pass
 
     def _run_draw(self):
         file = f"{self.args.name}.{self.args.format}"

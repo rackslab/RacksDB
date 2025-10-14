@@ -9,11 +9,13 @@ and this project adheres to
 ## [unreleased]
 
 ### Added
+- cli: Add auto-paging to `dump`, `schema` and all view commands (#138).
 - docs:
   - Mention support of Fedora 42.
   - Mention support of Debian 14 _« forky »_
 
 ### Changed
+- pkgs: Bump minimal requirement on `RFL.log` >= 1.6.0.
 - docs: Reword s/modelize/modeling/.
 
 ### Removed
