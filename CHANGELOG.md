@@ -20,6 +20,10 @@ and this project adheres to
 - docs: Reword s/modelize/modeling/.
 
 ### Fixed
+- web: Update bundled dependencies to fix security issues CVE-2025-58754
+  (axios),CVE-2025-5889 (brace-expansion), CVE-2025-7783 (form-data),
+  CVE-2025-31125, CVE-2025-32395, CVE-2025-46565, CVE-2025-31486,
+  CVE-2025-58751, CVE-2025-58752 (vite).
 - docs: System dependency package name in quickstart guide when installing from
   PyPI and from source (#131).
 
