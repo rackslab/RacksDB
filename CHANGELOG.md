@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.6.0] - 2025-10-16
 
 ### Added
 - cli: Add auto-paging to `dump`, `schema` and all view commands (#138).
@@ -474,7 +474,8 @@ and this project adheres to
 
 ## [0.1.0~beta] - 2022-11-28
 
-[unreleased]: https://github.com/rackslab/racksdb/compare/v0.5.0...HEAD
+[unreleased]: https://github.com/rackslab/racksdb/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/rackslab/racksdb/releases/tag/v0.6.0
 [0.5.0]: https://github.com/rackslab/racksdb/releases/tag/v0.5.0
 [0.4.0]: https://github.com/rackslab/racksdb/releases/tag/v0.4.0
 [0.3.0]: https://github.com/rackslab/racksdb/releases/tag/v0.3.0

@@ -1063,10 +1063,10 @@ components:
       type: object
 info:
   title: RacksDB REST API
-  version: 0.6.0.dev1
+  version: 0.6.0
 openapi: 3.0.0
 paths:
-  /v0.6.0.dev1/datacenters:
+  /v0.6.0/datacenters:
     get:
       description: Get information about datacenters
       parameters:
@@ -1127,7 +1127,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBDatacenter'
                 type: array
           description: successful operation
-  /v0.6.0.dev1/draw/<entity>/<name>.<format>:
+  /v0.6.0/draw/<entity>/<name>.<format>:
     get:
       description: Draw an entity
       parameters:
@@ -1564,7 +1564,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: Unable to load drawing parameters schema.
-  /v0.6.0.dev1/infrastructures:
+  /v0.6.0/infrastructures:
     get:
       description: Get information about infrastructures
       parameters:
@@ -1625,7 +1625,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBInfrastructure'
                 type: array
           description: successful operation
-  /v0.6.0.dev1/nodes:
+  /v0.6.0/nodes:
     get:
       description: Get information about nodes
       parameters:
@@ -1692,7 +1692,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBNode'
                 type: array
           description: successful operation
-  /v0.6.0.dev1/racks:
+  /v0.6.0/racks:
     get:
       description: Get information about racks
       parameters:
@@ -1743,7 +1743,7 @@ paths:
                   $ref: '#/components/schemas/RacksDBRack'
                 type: array
           description: successful operation
-  /v0.6.0.dev1/tags:
+  /v0.6.0/tags:
     get:
       description: Get tags associated to infrastructure and equipment
       parameters:
