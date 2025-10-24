@@ -7,6 +7,7 @@ documentation of this API.
 
 [subs=attributes]
 ++++
+<script async type="module" src="/_/js/vendor/rapidoc-min.js"></script>
 <style>
 /*
  * Overwrite parent antora article section max-width to force full width and
