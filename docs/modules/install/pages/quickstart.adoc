@@ -15,8 +15,8 @@ developers or early testers.
 
 === Distribution Packages
 
-[#deb]
-==== Deb (Debian, Ubuntu)
+[#apt]
+==== APT (Debian, Ubuntu)
 
 First download packages repository signing key:
 
@@ -122,8 +122,8 @@ xref:#restapi[REST API]:
 # apt install racksdb-web
 ----
 
-[#rpm]
-==== RPM (RHEL, CentOS, Rocky Linux, Fedora)
+[#dnf]
+==== DNF (RHEL, CentOS, Rocky Linux, Fedora)
 
 [NOTE]
 ====
@@ -233,6 +233,66 @@ xref:#restapi[REST API]:
 [source,console]
 ----
 # dnf install racksdb-web
+----
+
+[#zypper]
+==== Zypper (SLES, openSUSE)
+
+This procedure works on
+https://www.suse.com/products/server/[SUSE Linux Entreprise Server (SLES)] and
+https://www.opensuse.org/[openSUSE LEAP].
+
+Import RPM siging key:
+
+[source,console]
+----
+# rpm --import https://pkgs.rackslab.io/keyring.asc
+----
+
+Run this command to add package repositories:
+
+[tabs]
+======
+SLES 15::
++
+====
+NOTE: This package repository is also compatible with
+https://www.opensuse.org/[openSUSE Leap 15].
+
+[source,console]
+----
+# zypper addrepo --check --gpgcheck-allow-unsigned-repo --refresh \
+  https://pkgs.rackslab.io/rpm/suse15/main/x86_64 rackslab-main
+----
+====
+
+SLES 16::
++
+====
+NOTE: This package repository is also compatible with
+https://www.opensuse.org/[openSUSE Leap 16].
+
+[source,console]
+----
+# zypper addrepo --check --gpgcheck-allow-unsigned-repo --refresh \
+  https://pkgs.rackslab.io/rpm/suse16/main/x86_64 rackslab-main
+----
+====
+======
+
+Install RacksDB packages:
+
+[source,console]
+----
+# zypper install racksdb
+----
+
+Optionally, you can also install RacksDB web application to access the
+xref:#restapi[REST API]:
+
+[source,console]
+----
+# zypper install racksdb-web
 ----
 
 [#pypi]
