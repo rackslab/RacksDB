@@ -127,10 +127,10 @@ xref:#restapi[REST API]:
 
 [NOTE]
 ====
-On RHEL, CentOS and Rocky Linux versions 8 and 9 some dependencies are missing
-in standard distribution repositories. You must enable
-https://docs.fedoraproject.org/en-US/epel/[EPEL] _el8_ or _el9_ repositories to
-get all requirements on these distributions:
+On RHEL, CentOS and Rocky Linux versions 8, 9 and 10 some dependencies are
+missing in standard distribution repositories. You must enable
+https://docs.fedoraproject.org/en-US/epel/[EPEL] _el8_, _el9_ or _el10_
+repositories to get all requirements on these distributions:
 
 [source,shell]
 ----
@@ -189,14 +189,19 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
 ====
 
-Fedora 41::
+RHEL10::
 +
 ====
+
+NOTE: These packages are also compatible with https://www.centos.org/[CentOS 10],
+https://rockylinux.org/[Rocky Linux 10] and
+https://almalinux.org/[AlmaLinux OS 10].
+
 [source]
 ----
 [rackslab]
 name=Rackslab
-baseurl=https://pkgs.rackslab.io/rpm/fc41/main/$basearch/
+baseurl=https://pkgs.rackslab.io/rpm/el10/main/$basearch/
 gpgcheck=1
 enabled=1
 countme=1
@@ -212,6 +217,21 @@ Fedora 42::
 [rackslab]
 name=Rackslab
 baseurl=https://pkgs.rackslab.io/rpm/fc42/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+====
+
+Fedora 43::
++
+====
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/fc43/main/$basearch/
 gpgcheck=1
 enabled=1
 countme=1
