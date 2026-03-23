@@ -12,7 +12,10 @@ and this project adheres to
 - docs: Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16.
 
 ### Removed
-- docs: Drop support of Fedora 41.
+- docs:
+  - Drop support of Fedora 41.
+  - Add missing system dependency `libpango1.0-dev` to install from sources,
+    reported by @astappiev (#148).
 
 ## [0.6.0] - 2025-10-16
 
