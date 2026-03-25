@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+import unittest
 from unittest import mock
 import io
 import tempfile
@@ -15,6 +16,7 @@ import mimetypes
 import yaml
 
 from racksdb import RacksDB
+from racksdb.env import RacksDBEnv
 from racksdb.exec import RacksDBExec
 from racksdb.version import get_version
 
@@ -695,3 +697,78 @@ class TestRacksDBExec(TestRacksDBReferenceDB):
                 RacksDBExec(CMD_BASE_ARGS + ["datacenters"])
             autopager.assert_called_once()
             autopager.return_value.__enter__.assert_called_once()
+
+
+class TestRacksDBExecLoadArguments(unittest.TestCase):
+    """``RacksDB.load()`` receives paths from argparse defaults (env + fallbacks)."""
+
+    @staticmethod
+    def _mock_db_for_dump():
+        mdb = mock.MagicMock()
+        mdb._loader.content = {}
+        return mdb
+
+    def test_load_args_use_class_defaults_when_env_keys_empty(self):
+        with mock.patch.dict(
+            os.environ,
+            {
+                RacksDBEnv.SCHEMA: "",
+                RacksDBEnv.EXTENSIONS: "",
+                RacksDBEnv.DB: "",
+            },
+            clear=False,
+        ):
+            with mock.patch("racksdb.exec.RacksDB.load") as load_mock:
+                load_mock.return_value = self._mock_db_for_dump()
+                with mock.patch("sys.stdout", new=io.StringIO()):
+                    RacksDBExec(["dump"])
+        load_mock.assert_called_once_with(
+            Path(RacksDB.DEFAULT_SCHEMA),
+            Path(RacksDB.DEFAULT_EXT),
+            Path(RacksDB.DEFAULT_DB),
+        )
+
+    def test_load_args_use_environment_when_set(self):
+        env = {
+            RacksDBEnv.SCHEMA: "/env/schema.yml",
+            RacksDBEnv.EXTENSIONS: "/env/extensions.yml",
+            RacksDBEnv.DB: "/env/db",
+        }
+        with mock.patch.dict(os.environ, env, clear=False):
+            with mock.patch("racksdb.exec.RacksDB.load") as load_mock:
+                load_mock.return_value = self._mock_db_for_dump()
+                with mock.patch("sys.stdout", new=io.StringIO()):
+                    RacksDBExec(["dump"])
+        load_mock.assert_called_once_with(
+            Path("/env/schema.yml"),
+            Path("/env/extensions.yml"),
+            Path("/env/db"),
+        )
+
+    def test_load_args_prefer_cli_over_environment(self):
+        with mock.patch.dict(
+            os.environ,
+            {
+                RacksDBEnv.SCHEMA: "/wrong/schema.yml",
+                RacksDBEnv.EXTENSIONS: "",
+                RacksDBEnv.DB: "/wrong/db",
+            },
+            clear=False,
+        ):
+            with mock.patch("racksdb.exec.RacksDB.load") as load_mock:
+                load_mock.return_value = self._mock_db_for_dump()
+                with mock.patch("sys.stdout", new=io.StringIO()):
+                    RacksDBExec(
+                        [
+                            "--schema",
+                            "/cli/schema.yml",
+                            "--db",
+                            "/cli/db",
+                            "dump",
+                        ]
+                    )
+        load_mock.assert_called_once_with(
+            Path("/cli/schema.yml"),
+            Path(RacksDB.DEFAULT_EXT),
+            Path("/cli/db"),
+        )
