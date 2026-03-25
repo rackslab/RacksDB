@@ -13,7 +13,10 @@ and this project adheres to
   `RACKSDB_EXTENSIONS`, and to set default schema, extensions, and database
   paths when the matching `racksdb` / `racksdb-web` option is omitted (#149).
 - web: Support the same environment variables as CLI.
-- docs: Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16.
+- docs:
+  - Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16.
+  - Mention support of `RACKSDB_DB`, `RACKSDB_SCHEMA` and `RACKSDB_EXTENSIONS`
+    environment variables in `racksdb` and `racksdb-web` manpages.
 
 ### Fixed
 - docs: Add missing system dependency `libpango1.0-dev` to install from sources,

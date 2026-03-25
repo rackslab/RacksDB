@@ -28,16 +28,19 @@ endif::[]
   Path to database. Both files and directories paths are accepted. If the path
   is a directory, all YAML files in this directory are loaded, recursively. If
   the path does not exist, an error is reported. Default value is
-  [.path]#`/var/lib/racksdb/`# directory.
+  [.path]#`/var/lib/racksdb/`# directory or environment variable
+  [.cli-opt]#*RACKSDB_DB*# if set.
 
 [.cli-opt]#*-s, --schema*=#[.cli-optval]##_SCHEMA_##::
   Path to RacksDB schema YAML file. If the file does not exist, an error is
-  reported. Default value is [.path]#`/usr/share/racksdb/schemas/racksdb.yml`#.
+  reported. Default value is [.path]#`/usr/share/racksdb/schemas/racksdb.yml`#
+  or environment variable [.cli-opt]#*RACKSDB_SCHEMA*# if set.
 
 [.cli-opt]#*-e, --ext*=#[.cli-optval]##_EXT_##::
   Path to optional RacksDB schema extensions. If the file does not exist,
   it is silently ignored by RacksDB. Default value is
-  [.path]#`/etc/racksdb/extensions.yml`#.
+  [.path]#`/etc/racksdb/extensions.yml`# or environment variable
+  [.cli-opt]#*RACKSDB_EXTENSIONS*# if set.
 
 == Commands
 
@@ -372,6 +375,22 @@ $ racksdb draw room --name=noisy --coordinates=noisy-coordinates.json
 Generate graphical representation of _noisy_ datacenter room and dump
 coordinates of racks in JSON format in a file named `noisy-coordinates.json`.
 ====
+
+== Environment variables
+
+When a command-line option above is omitted, `racksdb` uses the following
+environment variables if they are set to a non-empty value:
+
+[.cli-opt]#*RACKSDB_SCHEMA*#::
+  Path to the RacksDB schema YAML file.
+
+[.cli-opt]#*RACKSDB_EXTENSIONS*#::
+  Path to optional schema extensions.
+
+[.cli-opt]#*RACKSDB_DB*#::
+  Path to the database.
+
+Command-line options always override environment variables.
 
 == Exit status
 
