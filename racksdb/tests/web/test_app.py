@@ -4,12 +4,16 @@
 #
 # SPDX-License-Identifier: MIT
 
+import os
 import unittest
 from unittest import mock
 import io
+from pathlib import Path
 
 import werkzeug
 
+from racksdb import RacksDB
+from racksdb.env import RacksDBEnv
 from racksdb.web.app import RacksDBWebApp, merge_args_parameters
 
 from ..lib.web import RacksDBCustomTestResponse
@@ -153,3 +157,72 @@ class TestMergeArgsParameters(unittest.TestCase):
         args = {"parameters.key1": "value1,value2"}
         merge_args_parameters(content, args)
         self.assertEqual(content, {"key1": ["value1", "value2"]})
+
+
+class TestRacksDBWebAppLoadArguments(unittest.TestCase):
+    """``RacksDB.load()`` arguments from ``RacksDBWebApp`` argparse defaults."""
+
+    @staticmethod
+    def _mock_db():
+        return mock.MagicMock()
+
+    def test_load_args_use_class_defaults_when_env_keys_empty(self):
+        with mock.patch.dict(
+            os.environ,
+            {
+                RacksDBEnv.SCHEMA: "",
+                RacksDBEnv.EXTENSIONS: "",
+                RacksDBEnv.DB: "",
+            },
+            clear=False,
+        ):
+            with mock.patch("racksdb.web.app.RacksDB.load") as load_mock:
+                load_mock.return_value = self._mock_db()
+                RacksDBWebApp([])
+        load_mock.assert_called_once_with(
+            schema=Path(RacksDB.DEFAULT_SCHEMA),
+            ext=Path(RacksDB.DEFAULT_EXT),
+            db=Path(RacksDB.DEFAULT_DB),
+        )
+
+    def test_load_args_use_environment_when_set(self):
+        env = {
+            RacksDBEnv.SCHEMA: "/env/schema.yml",
+            RacksDBEnv.EXTENSIONS: "/env/extensions.yml",
+            RacksDBEnv.DB: "/env/db",
+        }
+        with mock.patch.dict(os.environ, env, clear=False):
+            with mock.patch("racksdb.web.app.RacksDB.load") as load_mock:
+                load_mock.return_value = self._mock_db()
+                RacksDBWebApp([])
+        load_mock.assert_called_once_with(
+            schema=Path("/env/schema.yml"),
+            ext=Path("/env/extensions.yml"),
+            db=Path("/env/db"),
+        )
+
+    def test_load_args_prefer_cli_over_environment(self):
+        with mock.patch.dict(
+            os.environ,
+            {
+                RacksDBEnv.SCHEMA: "/wrong/schema.yml",
+                RacksDBEnv.EXTENSIONS: "",
+                RacksDBEnv.DB: "/wrong/db",
+            },
+            clear=False,
+        ):
+            with mock.patch("racksdb.web.app.RacksDB.load") as load_mock:
+                load_mock.return_value = self._mock_db()
+                RacksDBWebApp(
+                    [
+                        "--schema",
+                        "/cli/schema.yml",
+                        "--db",
+                        "/cli/db",
+                    ]
+                )
+        load_mock.assert_called_once_with(
+            schema=Path("/cli/schema.yml"),
+            ext=Path(RacksDB.DEFAULT_EXT),
+            db=Path("/cli/db"),
+        )
