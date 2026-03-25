@@ -12,6 +12,7 @@ and this project adheres to
 - cli: Environment variables `RACKSDB_DB`, `RACKSDB_SCHEMA`,
   `RACKSDB_EXTENSIONS`, and to set default schema, extensions, and database
   paths when the matching `racksdb` / `racksdb-web` option is omitted (#149).
+- web: Support the same environment variables as CLI.
 - docs: Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16.
 
 ### Fixed
