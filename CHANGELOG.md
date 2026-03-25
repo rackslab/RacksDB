@@ -9,13 +9,17 @@ and this project adheres to
 ## [unreleased]
 
 ### Added
+- cli: Environment variables `RACKSDB_DB`, `RACKSDB_SCHEMA`,
+  `RACKSDB_EXTENSIONS`, and to set default schema, extensions, and database
+  paths when the matching `racksdb` / `racksdb-web` option is omitted (#149).
 - docs: Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16.
 
+### Fixed
+- docs: Add missing system dependency `libpango1.0-dev` to install from sources,
+  reported by @astappiev (#148).
+
 ### Removed
-- docs:
-  - Drop support of Fedora 41.
-  - Add missing system dependency `libpango1.0-dev` to install from sources,
-    reported by @astappiev (#148).
+- docs: Drop support of Fedora 41.
 
 ## [0.6.0] - 2025-10-16
 

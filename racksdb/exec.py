@@ -22,6 +22,7 @@ from .generic.db import (
 )
 from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
+from .env import RacksDBEnv, env_or_default
 from .drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
 from .drawers.parameters import DrawingParameters
 from .errors import RacksDBError
@@ -57,21 +58,21 @@ class RacksDBExec:
             "-s",
             "--schema",
             help="Schema to load (default: %(default)s)",
-            default=RacksDB.DEFAULT_SCHEMA,
+            default=env_or_default(RacksDBEnv.SCHEMA, RacksDB.DEFAULT_SCHEMA),
             type=Path,
         )
         parser.add_argument(
             "-e",
             "--ext",
             help="Path to extensions of schema (default: %(default)s)",
-            default=RacksDB.DEFAULT_EXT,
+            default=env_or_default(RacksDBEnv.EXTENSIONS, RacksDB.DEFAULT_EXT),
             type=Path,
         )
         parser.add_argument(
             "-b",
             "--db",
             help="Database to load (default: %(default)s)",
-            default=RacksDB.DEFAULT_DB,
+            default=env_or_default(RacksDBEnv.DB, RacksDB.DEFAULT_DB),
             type=Path,
         )
 
