@@ -6,11 +6,9 @@
 
 import tempfile
 import json
-import parameterized
-
+import flask
 import werkzeug
 import yaml
-import flask
 from requests_toolbelt import MultipartDecoder
 
 from racksdb.web.app import RacksDBWebBlueprint
@@ -19,6 +17,7 @@ from racksdb.version import get_version
 
 from ..lib.web import RacksDBCustomTestResponse
 from ..lib.common import schema_path, db_path, drawing_schema_path
+from ..lib.params import expand_parameterized_tests, expand_params
 from ..lib.reference import (
     TestRacksDBReferenceDB,
     REFDB_DATACENTERS,
@@ -38,6 +37,7 @@ class FakeRacksDBWebApp(flask.Flask):
         self.register_blueprint(self.blueprint)
 
 
+@expand_parameterized_tests
 class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
     def setUp(self):
         try:
@@ -465,25 +465,25 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
     def client_method(self, verb):
         return self.client.get if verb == "get" else self.client.post
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_room_png(self, verb):
         response = self.client_method(verb)(f"/v{get_version()}/draw/room/noisy.png")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/png")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_room_svg(self, verb):
         response = self.client_method(verb)(f"/v{get_version()}/draw/room/noisy.svg")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/svg+xml")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_room_pdf(self, verb):
         response = self.client_method(verb)(f"/v{get_version()}/draw/room/noisy.pdf")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/pdf")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_room_invalid(self, verb):
         response = self.client_method(verb)(f"/v{get_version()}/draw/room/fail.png")
         self.assertEqual(response.status_code, 400)  # FIXME: should be HTTP/404
@@ -497,7 +497,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
             },
         )
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_room_coordinates(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/room/noisy.png?coordinates"
@@ -513,7 +513,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         coordinates = json.loads(coordinates_part.text)
         self.assertEqual(coordinates, {})  # FIXME: room coordinates are empty
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_room_coordinates_yaml(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/room/noisy.png?coordinates&coordinates_format=yaml"
@@ -620,7 +620,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
             },
         )
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_infrastructure_png(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/mercury.png"
@@ -628,7 +628,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/png")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_infrastructure_svg(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/mercury.svg"
@@ -636,7 +636,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/svg+xml")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_infrastructure_pdf(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/mercury.pdf"
@@ -644,7 +644,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/pdf")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_infrastructure_invalid(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/fail.png"
@@ -660,7 +660,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
             },
         )
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_infrastructure_coordinates(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/mercury.png?coordinates"
@@ -676,7 +676,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         coordinates = json.loads(coordinates_part.text)
         self.assertIn("mecn0001", coordinates)
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_infrastructure_coordinates_yaml(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/mercury.png?coordinates&"
@@ -794,7 +794,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "image/png")
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_invalid_entity(self, verb):
         response = self.client_method(verb)(f"/v{get_version()}/draw/fail/noisy.png")
         self.assertEqual(response.status_code, 400)
@@ -808,7 +808,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
             },
         )
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_invalid_format(self, verb):
         response = self.client_method(verb)(f"/v{get_version()}/draw/room/noisy.fail")
         self.assertEqual(response.status_code, 400)
@@ -822,7 +822,7 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
             },
         )
 
-    @parameterized.parameterized.expand([("get"), ("post")])
+    @expand_params(["get", "post"])
     def test_draw_coordinates_invalid_format(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/room/noisy.png?coordinates&coordinates_format=fail"
