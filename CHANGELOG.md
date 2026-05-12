@@ -22,6 +22,17 @@ and this project adheres to
 ### Fixed
 - docs: Add missing system dependency `libpango1.0-dev` to install from sources,
   reported by @astappiev (#148).
+- front: Update bundled dependencies to fix security issues CVE-2026-3449
+  (@tootallnate/once), CVE-2025-69873 (ajv), CVE-2025-62718, CVE-2026-40175,
+  CVE-2026-42041, CVE-2026-42044, CVE-2026-42040, CVE-2026-42037,
+  CVE-2026-42038, CVE-2026-42039, CVE-2026-42036, CVE-2026-42033,
+  CVE-2026-42035, CVE-2026-25639 (axios), CVE-2026-33750 (brace-expansion),
+  CVE-2026-32141, CVE-2026-33228 (flatted), GHSA-r4q5-vmmm-2653
+  (follow-redirects), CVE-2025-64718 (js-yaml), CVE-2025-13465, CVE-2026-4800,
+  CVE-2026-2950 (lodash), CVE-2026-26996, CVE-2026-27903, CVE-2026-27904
+  (minimatch), CVE-2026-33672, CVE-2026-33671 (picomatch), CVE-2026-41305
+  (postcss), CVE-2026-27606 (rollup), CVE-2025-62522, CVE-2026-39365,
+  CVE-2026-39363 (vite) and CVE-2026-33532 (yaml).
 
 ### Removed
 - docs: Drop support of Fedora 41.
