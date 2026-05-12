@@ -14,7 +14,8 @@ and this project adheres to
   paths when the matching `racksdb` / `racksdb-web` option is omitted (#149).
 - web: Support the same environment variables as CLI.
 - docs:
-  - Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16.
+  - Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16, Ubuntu
+    26.04 LTS.
   - Mention support of `RACKSDB_DB`, `RACKSDB_SCHEMA` and `RACKSDB_EXTENSIONS`
     environment variables in `racksdb` and `racksdb-web` manpages.
 
