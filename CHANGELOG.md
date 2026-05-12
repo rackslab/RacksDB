@@ -24,6 +24,7 @@ and this project adheres to
 
 ### Removed
 - docs: Drop support of Fedora 41.
+- pkgs: Drop tests dependency on `parameterized` external library (#152).
 
 ## [0.6.0] - 2025-10-16
 
