@@ -111,6 +111,7 @@ jobs:
           dnf -y install \
             cairo-devel \
             gcc \
+            gobject-introspection \
             pango \
             pkg-config \
             python3-cairo \
