@@ -76,8 +76,12 @@ jobs:
           epel: 9
           repo: crb
           rackslab-repo: el9
-        - container: fedora:42
-          rackslab-repo: fc42
+        - container: rockylinux/rockylinux:10
+          epel: 10
+          repo: crb
+          rackslab-repo: el10
+        - container: fedora:latest
+          rackslab-repo: fc44
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.envs.container }}
@@ -168,6 +172,8 @@ jobs:
           rackslab-repo: sid
         - container: ubuntu:noble
           rackslab-repo: ubuntu24.04
+        - container: ubuntu:resolute
+          rackslab-repo: ubuntu26.04
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.envs.container }}
