@@ -40,7 +40,6 @@ web = [
 ]
 tests = [
     "coverage",
-    "parameterized",
     "pytest",
     "pytest-cov",
 ]
