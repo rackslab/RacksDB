@@ -211,6 +211,7 @@ jobs:
             python3-yaml \
             python3-requests \
             python3-requests-toolbelt \
+            python3-rfl-build \
             python3-rfl-log \
             python3-venv
 
