@@ -52,6 +52,12 @@ racksdb-web = "racksdb.web.app:RacksDBWebApp.run"
 [tool.setuptools.packages.find]
 include = ["racksdb*"]
 
+[tool.setuptools.data-files]
+"share/racksdb/schemas" = [
+    "schemas/racksdb.yml",
+    "schemas/drawings.yml",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/rackslab/RacksDB"
 "Bug Tracker" = "https://github.com/rackslab/RacksDB/issues"
