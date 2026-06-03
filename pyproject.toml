@@ -42,6 +42,7 @@ tests = [
     "coverage",
     "pytest",
     "pytest-cov",
+    "RFL.build >= 1.8.0",
 ]
 
 [project.scripts]
