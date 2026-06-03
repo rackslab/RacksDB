@@ -17,6 +17,8 @@ and this project adheres to
   - Add tests dependency on `RFL.build` >= 1.8.0 for parameterized unit tests.
   - Install `schemas/racksdb.yml` and `schemas/drawings.yml` with the Python
     package (#158).
+- lib: Resolve default schema paths for pip/source installs and source checkouts
+  as a fallback for FHS distribution paths.
 - docs:
   - Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16, Ubuntu
     26.04 LTS.

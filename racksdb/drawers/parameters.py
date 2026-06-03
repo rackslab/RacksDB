@@ -9,10 +9,11 @@ from typing import Union
 
 from ..generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from ..generic.db import GenericDB
+from ..paths import schema_file
 
 
 class DrawingParameters(GenericDB):
-    DEFAULT_SCHEMA = "/usr/share/racksdb/schemas/drawings.yml"
+    DEFAULT_SCHEMA = str(schema_file("drawings.yml"))
     PREFIX = "DrawingParameters"
     DEFINED_TYPES_MODULE = "racksdb.drawers.dtypes"
 
