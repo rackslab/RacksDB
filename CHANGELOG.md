@@ -13,8 +13,10 @@ and this project adheres to
   `RACKSDB_EXTENSIONS`, and to set default schema, extensions, and database
   paths when the matching `racksdb` / `racksdb-web` option is omitted (#149).
 - web: Support the same environment variables as CLI.
-- pkgs: Add tests dependency on `RFL.build` >= 1.8.0 for parameterized unit
-  tests.
+- pkgs:
+  - Add tests dependency on `RFL.build` >= 1.8.0 for parameterized unit tests.
+  - Install `schemas/racksdb.yml` and `schemas/drawings.yml` with the Python
+    package (#158).
 - docs:
   - Mention support of RHEL 10, Fedora 43, SLES and openSUSE 15 and 16, Ubuntu
     26.04 LTS.
