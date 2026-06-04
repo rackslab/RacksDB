@@ -223,21 +223,6 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
 ----
 ====
 
-Fedora 42::
-+
-====
-[source]
-----
-[rackslab]
-name=Rackslab
-baseurl=https://pkgs.rackslab.io/rpm/fc42/main/$basearch/
-gpgcheck=1
-enabled=1
-countme=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
-----
-====
-
 Fedora 43::
 +
 ====
@@ -246,6 +231,21 @@ Fedora 43::
 [rackslab]
 name=Rackslab
 baseurl=https://pkgs.rackslab.io/rpm/fc43/main/$basearch/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rackslab
+----
+====
+
+Fedora 44::
++
+====
+[source]
+----
+[rackslab]
+name=Rackslab
+baseurl=https://pkgs.rackslab.io/rpm/fc44/main/$basearch/
 gpgcheck=1
 enabled=1
 countme=1
