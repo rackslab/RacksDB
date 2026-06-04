@@ -1,12 +1,12 @@
 name: racksdb
 title: RacksDB
-version: v0.6
+version: v0.7
 start_page: overview:start.adoc
 asciidoc:
   attributes:
     source-language: asciidoc@
     table-caption: false
-    api-version: v0.6.0
+    api-version: v0.7.0
 nav:
 - modules/overview/nav.adoc
 - modules/install/nav.adoc
