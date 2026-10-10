@@ -5,6 +5,85 @@ datacenter rooms and infrastructures racks. This REST API is served by
 xref:racksdb-web.adoc[`racksdb-web` command]. This page contains the reference
 documentation of this API.
 
+[[infrastructure-gltf-export]]
+== Infrastructure glTF export
+
+`GET` and `POST` `/v{api-version}/draw/infrastructure/<name>.gltf` return one glTF
+2.0 JSON document (`Content-Type: model/gltf+json`). The binary buffer is embedded as
+a base64 data URI on the single `buffers[0].uri` entry; the document does not reference
+an external `.bin` file. Request bodies and query drawing parameters work the same way
+as PNG draw, including blueprint default drawing parameters merged under the request.
+
+Drawing parameters that only affect 2D images are ignored for glTF:
+`dimensions`, `margin`, `axonometric`, `colors`, labels, label offsets, and
+`pixel_perfect`. Parameters that are honored include
+`infrastructure.equipment_tags`, `infrastructure.ghost_unselected`,
+`infrastructure.discard_empty_racks`, `infrastructure.other_racks`, `rack.u_height`
+(default 44.45 mm), and `rack.pane_width` (default 40 mm). `rack.door_depth` is not
+used as a geometry size.
+
+=== Coordinate system
+
+The scene uses glTF Y-up coordinates in meters (database millimeters are multiplied by
+0.001). +X is the room width axis, +Y is up, and +Z is the room depth axis (the 2D room
+diagram downward axis). Row translation is `(position.width, 0, position.depth)`. The
+database row rotation is clockwise on the floor plan; the row node Y rotation is the
+negation of `position.rotation`. Rack positions along a row follow the same slot-width
+summing as room diagrams (`RoomDrawer`), without elevation `rack.spacing`. After each
+rack node transform, local +Z is the door face (a 180° Y rotation on the rack node
+when `row.reversed` is true).
+
+When an infrastructure spans racks in more than one room, each room is a separate
+scene root with its own rectangular floor slab. Room nodes are placed side by side
+along +X in infrastructure layout order, separated by a fixed 2 m gap. Rows, racks, and
+floor tiles stay in each room's local frame and move with that room's translation.
+
+=== Shared unit cube
+
+The file defines one mesh geometry (unit cube from -0.5 to 0.5 on each axis, with
+normals and texture coordinates). Devices reference it through the `equipment` mesh.
+Scale equal to the object size in meters is set on a mesh child node; the named parent
+node carries translation, rotation, and `extras`, with scale `(1, 1, 1)`.
+
+Each rack carcass is the same cube instanced as panels: left and right side panels
+(`rack.pane_width` thick), plus top and bottom sheets. Local +Z, the door face, and
+the rear stay open. A rack that is not part of the infrastructure (`other_racks`)
+also has a front panel. Panel nodes are unnamed mesh children with `extras.category`
+`rack-part` and `extras.part` (`left`, `right`, `top`, `bottom`, or `front`). The
+rack material is a very dark gray.
+
+The room floor is a thin slab of that cube. Its material embeds
+`racksdb/drawers/assets/floor-tile-solid.png` (`images[0]`, repeat wrap) and
+`KHR_texture_transform` so the tile repeats every 0.6 m across the room. In front of
+each rack door, 0.6 m cells on that same grid use
+`racksdb/drawers/assets/floor-tile-perforated.png` (`images[1]`) on the even checker
+cells of the aisle strip outside the door face. Perforated floor nodes use
+`extras.category` `floor` and `extras.part` `perforated`.
+
+=== Node hierarchy and extras
+
+Hierarchy: `room` → floor and `row` → `rack` → panels and `equipment`. Folded equipment
+names are expanded. `GLTFLoader` copies node `extras` to `object.userData`.
+
+*Equipment* `extras`: `category` (`node`, `storage`, `network`, or `misc`), `type`,
+`tags`, `selected`, `size` `[width, height, depth]` in meters, `rack`, `slot`
+`{"u", "x"}`. Fill and border colors come from glTF materials on the equipment mesh
+children (same drawing `colors.equipments` rules as 2D elevation diagrams:
+`background` / `border` when selected, `ghost` when shown as a ghost). The solid fills
+that size, so neighboring devices touch. A line outline is drawn on the same edges so
+stacked units stay distinct without a gap.
+Depth is the rack depth minus 10 cm, removed at the rear; the front face stays on
+the door.
+
+*Rack* `extras`: `category` `rack`, `type`, `in_infrastructure`, `reversed`, `slots`,
+`size`.
+
+*Row* `extras`: `category` `row`, `reversed`, `rotation` (clockwise degrees as stored).
+
+*Room* `extras`: `category` `room`, `datacenter`, `size` `[width, 0, depth]`.
+
+Runtime state (CPU, RAM, GPU, Slurm status, and similar) is not included in the file.
+
 [subs=attributes]
 ++++
 <script async type="module" src="/_/js/vendor/rapidoc-min.js"></script>

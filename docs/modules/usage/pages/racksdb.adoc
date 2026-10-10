@@ -289,8 +289,9 @@ This command accepts the following options:
   Name of the entity to represent. This option is required.
 
 [.cli-opt]#*--format*=#[.cli-optval]##_FORMAT_##::
-  File format of the generated image file. Possible values are _png_, _svg_ and
-  _pdf_. Default value is _png_.
+  File format of the generated output. Possible values are _png_, _svg_, _pdf_,
+  and _gltf_ (infrastructure only; see xref:rest.adoc#infrastructure-gltf-export[]).
+  Default value is _png_.
 
 [.cli-opt]#*--parameters*=#[.cli-optval]##_PARAMETERS_##::
   Path to YAML xref:drawparams.adoc[drawing parameters] file. With special value

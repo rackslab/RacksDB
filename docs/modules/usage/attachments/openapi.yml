@@ -1129,7 +1129,15 @@ paths:
           description: successful operation
   /v0.7.0/draw/<entity>/<name>.<format>:
     get:
-      description: Draw an entity
+      description: 'Draw an entity. For infrastructure, format gltf returns a glTF
+        2.0 JSON scene (model/gltf+json) with a single embedded buffer, one shared
+        unit cube, rack carcass panels, a textured room floor, per-equipment fill
+        and border materials, and node extras
+        for Slurm-web and similar consumers. Honored
+        drawing parameters for gltf: infrastructure.equipment_tags, ghost_unselected,
+        discard_empty_racks, other_racks, rack.u_height, rack.pane_width. Image-only
+        parameters (dimensions, margin, axonometric, colors, labels, pixel_perfect,
+        door_depth) are ignored.'
       parameters:
       - description: Type of entity to draw
         in: path
@@ -1146,7 +1154,7 @@ paths:
         required: true
         schema:
           type: string
-      - description: Format of the generated image
+      - description: Format of the generated image or glTF scene
         in: path
         name: format
         required: true
@@ -1156,6 +1164,7 @@ paths:
           - png
           - svg
           - pdf
+          - gltf
           type: string
       - description: Control if entities are represented perfectly aligned on pixels
           with concession on relative dimensions correctess. This parameter has no
@@ -1445,6 +1454,9 @@ paths:
             image/svg+xml:
               schema:
                 type: string
+            model/gltf+json:
+              schema:
+                type: object
             multipart/form-data:
               schema:
                 format: binary
@@ -1471,7 +1483,15 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Unable to load drawing parameters schema.
     post:
-      description: Draw an entity
+      description: 'Draw an entity. For infrastructure, format gltf returns a glTF
+        2.0 JSON scene (model/gltf+json) with a single embedded buffer, one shared
+        unit cube, rack carcass panels, a textured room floor, per-equipment fill
+        and border materials, and node extras
+        for Slurm-web and similar consumers. Honored
+        drawing parameters for gltf: infrastructure.equipment_tags, ghost_unselected,
+        discard_empty_racks, other_racks, rack.u_height, rack.pane_width. Image-only
+        parameters (dimensions, margin, axonometric, colors, labels, pixel_perfect,
+        door_depth) are ignored.'
       parameters:
       - description: Type of entity to draw
         in: path
@@ -1488,7 +1508,7 @@ paths:
         required: true
         schema:
           type: string
-      - description: Format of the generated image
+      - description: Format of the generated image or glTF scene
         in: path
         name: format
         required: true
@@ -1498,6 +1518,7 @@ paths:
           - png
           - svg
           - pdf
+          - gltf
           type: string
       - allowEmptyValue: true
         description: Dump equipments and racks coordinates in diagrams. When this
@@ -1539,6 +1560,9 @@ paths:
             image/svg+xml:
               schema:
                 type: string
+            model/gltf+json:
+              schema:
+                type: object
             multipart/form-data:
               schema:
                 format: binary
