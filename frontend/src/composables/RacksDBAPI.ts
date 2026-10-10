@@ -173,6 +173,28 @@ export interface MiscEquipment {
   slot: number
 }
 
+export interface GltfEquipmentUserData {
+  category: 'node' | 'storage' | 'network' | 'misc'
+  type: string
+  tags: string[]
+  selected: boolean
+  size: [number, number, number]
+  rack: string
+  slot: { u: number; x: number }
+}
+
+export interface GltfRoot {
+  asset: { version: string }
+  scene: number
+  scenes: Array<{ nodes?: number[] }>
+  nodes: Array<Record<string, unknown>>
+  meshes?: Array<unknown>
+  materials?: Array<unknown>
+  accessors?: Array<unknown>
+  bufferViews?: Array<unknown>
+  buffers: Array<{ uri: string; byteLength: number }>
+}
+
 export function useRacksDBAPI(http: AxiosInstance) {
   async function racksDBGet(ressource: string): Promise<any> {
     try {
@@ -221,5 +243,26 @@ export function useRacksDBAPI(http: AxiosInstance) {
     })
   }
 
-  return { racksDBGet, datacenters, infrastructures, racks, infrastructureImageSvg, roomImageSvg }
+  async function infrastructureGltf(infrastructure: string): Promise<GltfRoot> {
+    try {
+      const response = await http.post(`/draw/infrastructure/${infrastructure}.gltf`, {}, {
+        responseType: 'json',
+        headers: { Accept: 'model/gltf+json' }
+      })
+      return response.data as GltfRoot
+    } catch (error: any) {
+      console.error(`Error getting glTF for ${infrastructure}`, error)
+      throw error
+    }
+  }
+
+  return {
+    racksDBGet,
+    datacenters,
+    infrastructures,
+    racks,
+    infrastructureImageSvg,
+    roomImageSvg,
+    infrastructureGltf
+  }
 }

@@ -7,18 +7,23 @@ SPDX-License-Identifier: MIT -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, defineAsyncComponent } from 'vue'
 import InfrastructureTable from '@/components/InfrastructureTable.vue'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Dialog, DialogPanel } from '@headlessui/vue'
 import BreadCrumbs from '@/components/BreadCrumbs.vue'
 
+const InfrastructureScene3D = defineAsyncComponent(
+  () => import('@/components/InfrastructureScene3D.vue')
+)
+
 const http = useHttp()
 const racksDBAPI = useRacksDBAPI(http)
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
 const blobURL = ref()
 const showImg = ref(false)
+const viewMode = ref<'2d' | '3d'>('2d')
 
 function toggleImageModal() {
   if (showImg.value) {
@@ -31,6 +36,9 @@ function toggleImageModal() {
 async function getInfrastructureImg() {
   try {
     const myBlob = await racksDBAPI.infrastructureImageSvg(props.name)
+    if (blobURL.value) {
+      URL.revokeObjectURL(blobURL.value)
+    }
     blobURL.value = URL.createObjectURL(myBlob)
   } catch (error) {
     console.error(`Error getting ${props.name}: ` + error)
@@ -48,6 +56,12 @@ onMounted(() => {
   getInfrastructureImg()
 })
 
+watch(viewMode, (mode) => {
+  if (mode === '2d' && !blobURL.value) {
+    getInfrastructureImg()
+  }
+})
+
 const props = defineProps({
   name: {
     type: String,
@@ -58,7 +72,35 @@ const props = defineProps({
 
 <template>
   <BreadCrumbs :infrastructureName="props.name" />
-  <div class="pb-10">
+
+  <div class="flex justify-center gap-2 pb-4">
+    <button
+      type="button"
+      class="rounded-lg px-4 py-2 text-sm font-medium border"
+      :class="
+        viewMode === '2d'
+          ? 'bg-purple-700 text-white border-purple-700'
+          : 'bg-white text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600'
+      "
+      @click="viewMode = '2d'"
+    >
+      Elevation (2D)
+    </button>
+    <button
+      type="button"
+      class="rounded-lg px-4 py-2 text-sm font-medium border"
+      :class="
+        viewMode === '3d'
+          ? 'bg-purple-700 text-white border-purple-700'
+          : 'bg-white text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600'
+      "
+      @click="viewMode = '3d'"
+    >
+      3D layout
+    </button>
+  </div>
+
+  <div v-if="viewMode === '2d'" class="pb-10">
     <img
       v-if="blobURL"
       @click="toggleImageModal()"
@@ -66,6 +108,10 @@ const props = defineProps({
       class="h-96 max-w-500 mx-auto p-10 border-2 border-gray-100 border-opacity-10 transition-transform transform duration-300 hover:scale-105 hover:border-purple-50 cursor-pointer shadow-2xl"
       :alt="`Small image of the infrastructure ${props.name}`"
     />
+  </div>
+
+  <div v-else class="pb-10">
+    <InfrastructureScene3D :infrastructure-name="props.name" />
   </div>
 
   <Dialog
