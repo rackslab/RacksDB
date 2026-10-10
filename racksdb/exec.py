@@ -23,7 +23,12 @@ from .generic.db import (
 from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
 from .env import RacksDBEnv, env_or_default
-from .drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
+from .drawers import (
+    InfrastructureDrawer,
+    AxonometricInfrastructureDrawer,
+    RoomDrawer,
+    GltfInfrastructureDrawer,
+)
 from .drawers.parameters import DrawingParameters
 from .errors import RacksDBError
 from .views import RacksDBViews
@@ -282,7 +287,9 @@ class RacksDBExec:
         except DBFormatError as err:
             logger.critical("Unable to load drawing parameters: %s", str(err))
             sys.exit(1)
-        if self.args.entity == "infrastructure":
+        if self.args.entity == "infrastructure" and self.args.format == "gltf":
+            GltfInfrastructureDrawer(self.db, self.args.name, file, parameters).draw()
+        elif self.args.entity == "infrastructure":
             if parameters.axonometric.enabled:
                 draw_infra_class = AxonometricInfrastructureDrawer
             else:
@@ -296,6 +303,7 @@ class RacksDBExec:
                 coordinates_fh,
                 self.args.coordinates_format,
             )
+            drawer.draw()
         elif self.args.entity == "room":
             drawer = RoomDrawer(
                 self.db,
@@ -306,7 +314,7 @@ class RacksDBExec:
                 coordinates_fh,
                 self.args.coordinates_format,
             )
-        drawer.draw()
+            drawer.draw()
         logger.info("Generated image file %s", file)
         if self.args.coordinates:
             logger.info("Generated coordinates file %s", coordinates_file)
