@@ -26,6 +26,14 @@ vi.mock('@/composables/RacksDBAPI', () => ({
   })
 }))
 
+vi.mock('@/components/InfrastructureScene3D.vue', () => ({
+  default: {
+    name: 'InfrastructureScene3D',
+    props: ['infrastructureName'],
+    template: '<div data-testid="scene-3d">3d</div>'
+  }
+}))
+
 describe('InfrastructureDetailsView', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -52,5 +60,30 @@ describe('InfrastructureDetailsView', () => {
 
     expect(infrastructuresMock).toHaveBeenCalled()
     expect(infrastructureImageSvgMock).toHaveBeenCalledWith('core')
+  })
+
+  test('shows 3D viewer when 3D layout is selected', async () => {
+    infrastructuresMock.mockResolvedValueOnce([
+      { name: 'core', layout: [], racks: [], dimensions: { width: 0, depth: 0 } }
+    ])
+    infrastructureImageSvgMock.mockResolvedValueOnce(
+      new Blob(['<svg></svg>'], { type: 'image/svg+xml' })
+    )
+
+    const wrapper = mount(InfrastructureDetailsView, {
+      props: { name: 'core' },
+      global: {
+        stubs: { BreadCrumbs: true, Dialog: true, DialogPanel: true, InfrastructureTable: true }
+      },
+      attachTo: document.body
+    })
+
+    await flushPromises()
+    const threeDButton = wrapper.findAll('button').find((button) => button.text().includes('3D'))
+    expect(threeDButton).toBeDefined()
+    await threeDButton!.trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('[data-testid="scene-3d"]').exists()).toBe(true)
   })
 })
