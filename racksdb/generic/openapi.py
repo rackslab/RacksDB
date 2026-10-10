@@ -221,6 +221,8 @@ class OpenAPIGenerator:
             return {
                 response.mimetype: {"schema": {"type": "string", "format": "binary"}}
             }
+        elif response.json_schema is not None:
+            return {response.mimetype: {"schema": response.json_schema}}
         elif response.object is not None:
             return {
                 response.mimetype: {

@@ -81,11 +81,19 @@ class DBActionParameter:
 
 
 class DBActionResponse:
-    def __init__(self, mimetype, binary=False, object_name=None, schema=str):
+    def __init__(
+        self,
+        mimetype,
+        binary=False,
+        object_name=None,
+        schema=str,
+        json_schema=None,
+    ):
         self.mimetype = mimetype
         self.binary = binary
         self.object = object_name
         self.schema = schema
+        self.json_schema = json_schema
 
 
 class DBActionError:

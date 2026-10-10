@@ -116,7 +116,17 @@ class RacksDBViews(DBViewSet):
         DBAction(
             name="draw",
             path="/draw/<entity>/<name>.<format>",
-            description="Draw an entity",
+            description=(
+                "Draw an entity. For infrastructure, format gltf returns a glTF 2.0 "
+                "JSON scene (model/gltf+json) with a single embedded buffer, "
+                "one shared unit cube, rack carcass panels, a textured room floor, "
+                "per-equipment fill and border materials, "
+                "and node extras for Slurm-web and similar consumers. "
+                "Honored drawing parameters for gltf: infrastructure.equipment_tags, "
+                "ghost_unselected, discard_empty_racks, other_racks, rack.u_height, "
+                "rack.pane_width. Image-only parameters (dimensions, margin, "
+                "axonometric, colors, labels, pixel_perfect, door_depth) are ignored."
+            ),
             methods=["POST", "GET"],
             parameters=[
                 DBActionParameter(
@@ -128,8 +138,8 @@ class RacksDBViews(DBViewSet):
                 DBActionParameter("name", description="Name of entity", required=True),
                 DBActionParameter(
                     "format",
-                    description="Format of the generated image",
-                    choices=["png", "svg", "pdf"],
+                    description="Format of the generated image or glTF scene",
+                    choices=["png", "svg", "pdf", "gltf"],
                     default="png",
                 ),
                 DBActionParameter(
@@ -181,6 +191,10 @@ class RacksDBViews(DBViewSet):
                 DBActionResponse("image/svg+xml"),
                 DBActionResponse("application/pdf", binary=True),
                 DBActionResponse("multipart/form-data", binary=True),
+                DBActionResponse(
+                    "model/gltf+json",
+                    json_schema={"type": "object"},
+                ),
             ],
             errors=[
                 DBActionError(

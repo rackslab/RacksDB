@@ -26,7 +26,12 @@ from ..generic.openapi import OpenAPIGenerator
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from ..generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from ..generic.errors import DBSchemaError, DBFormatError
-from ..drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
+from ..drawers import (
+    InfrastructureDrawer,
+    AxonometricInfrastructureDrawer,
+    RoomDrawer,
+    GltfInfrastructureDrawer,
+)
 from ..drawers.parameters import DrawingParameters
 
 logger = logging.getLogger(__name__)
@@ -100,6 +105,7 @@ class RacksDBWebBlueprint(Blueprint):
         "png": "image/png",
         "svg": "image/svg+xml",
         "pdf": "application/pdf",
+        "gltf": "model/gltf+json",
     }
 
     def __init__(
@@ -232,6 +238,14 @@ class RacksDBWebBlueprint(Blueprint):
         coordinates_format = request.args.get("coordinates_format", "json")
         if coordinates_format not in {"json", "yaml"}:
             abort(400, "Unsupported coordinates format")
+
+        if format == "gltf" and entity == "infrastructure":
+            file = io.BytesIO()
+            try:
+                GltfInfrastructureDrawer(self.db, name, file, parameters).draw()
+            except RacksDBError as err:
+                abort(400, str(err))
+            return Response(file.getvalue(), mimetype=self.MIMETYPES["gltf"])
 
         # Create volatile in-memory file handlers
         file = io.BytesIO()
