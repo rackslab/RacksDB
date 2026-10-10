@@ -28,13 +28,21 @@ http_verbs = expand(["get", "post"])
 
 
 class FakeRacksDBWebApp(flask.Flask):
-    def __init__(self, schema, db, drawing_schema, openapi):
+    def __init__(
+        self,
+        schema,
+        db,
+        drawing_schema,
+        openapi,
+        default_drawing_parameters=None,
+    ):
         super().__init__("Fake RacksDB web application")
         self.blueprint = RacksDBWebBlueprint(
             schema=schema,
             db=db,
             drawings_schema=drawing_schema,
             openapi=openapi,
+            default_drawing_parameters=default_drawing_parameters or {},
         )
         self.register_blueprint(self.blueprint)
 
@@ -837,6 +845,65 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
                 "name": "Bad Request",
             },
         )
+
+    @http_verbs
+    def test_draw_infrastructure_gltf(self, verb):
+        response = self.client_method(verb)(
+            f"/v{get_version()}/draw/infrastructure/mercury.gltf"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "model/gltf+json")
+        document = json.loads(response.get_data(as_text=True))
+        self.assertEqual(document["asset"]["version"], "2.0")
+        self.assertEqual(len(document["buffers"]), 1)
+        self.assertTrue(
+            document["buffers"][0]["uri"].startswith(
+                "data:application/octet-stream;base64,"
+            )
+        )
+
+    @http_verbs
+    def test_draw_room_gltf_unsupported(self, verb):
+        response = self.client_method(verb)(f"/v{get_version()}/draw/room/noisy.gltf")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(
+            response.json["description"],
+            "Unsupported image format gltf",
+        )
+
+    def test_draw_post_infrastructure_gltf_blueprint_defaults(self):
+        defaults = {
+            "rack": {"u_height": 50.0},
+            "infrastructure": {"equipment_tags": ["gpu"]},
+        }
+        app = FakeRacksDBWebApp(
+            self.schema_path,
+            self.db_path,
+            self.drawing_schema_path,
+            False,
+            default_drawing_parameters=defaults,
+        )
+        app.config.update({"TESTING": True})
+        app.response_class = RacksDBCustomTestResponse
+        client = app.test_client()
+        response = client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.gltf",
+            data="",
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        document = json.loads(response.get_data(as_text=True))
+        nodes = {
+            n["name"]: n for n in document["nodes"] if n.get("name") == "megpu0001"
+        }
+        self.assertIn("megpu0001", nodes)
+        self.assertNotIn(
+            "mecn0001",
+            {n.get("name") for n in document["nodes"]},
+        )
+        height = nodes["megpu0001"]["extras"]["size"][1]
+        self.assertAlmostEqual(height, 2 * 50.0 * 0.001)
 
     #
     # tags
