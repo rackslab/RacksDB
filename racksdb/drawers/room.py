@@ -10,6 +10,7 @@ import math
 import cairo
 
 from .base import Drawer, ImagePoint
+from .layout import rack_slot_offset_x
 from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
@@ -66,27 +67,7 @@ class RoomDrawer(Drawer):
     def _rack_tl(self, rack):
         # Start from top-left corner of the rack row, which is (0,0) after
         # context matrix translation.
-        tl = ImagePoint(0, 0)
-        # Sum the width of all racks in row before the current rack
-        filled_slots = {}
-        for row_rack in rack.row.racks:
-            if row_rack.slot < rack.slot:
-                tl.x += int(row_rack.type.width * self.ratio)
-                filled_slots[row_rack.slot] = row_rack
-        # filling empty slots with previous rack width
-        for slot in range(rack.slot):
-            if slot not in filled_slots:
-                logger.debug("Row %s slot %d is not filled", rack.row.name, slot)
-                last_rack_width = 0
-                reversed_slot = slot
-                for reversed_slot in range(slot, 0, -1):
-                    if reversed_slot in filled_slots:
-                        last_rack_width = filled_slots[reversed_slot].type.width
-                        break
-                if not (last_rack_width):
-                    last_rack_width = self.db.types.racks.first().width
-                tl.x += int(last_rack_width * self.ratio)
-        return tl
+        return ImagePoint(rack_slot_offset_x(self.db, rack, self.ratio), 0)
 
     def _draw_rack(self, rack):
         tl = self._rack_tl(rack)

@@ -109,29 +109,7 @@ class Drawer:
         return default_rack_colorset(self.parameters)
 
     def _find_equipment_colorset(self, equipment):
-        """Return the equipment matching coloring rule defined in drawing parameters or
-        the default equipment color set.
-
-        An equipment coloring rule can have an equipment type name and a list of
-        tags. For a coloring rule to match an equipment, the following conditions
-        must be verified:
-
-        - If the coloring rule has a type, the id of the equipment type must match.
-        - If the coloring rule has a list of tags, the equipment must have tags
-          and its tags must contain all coloring rule tags.
-
-        In other cases, the coloring rule does not match. If no coloring rule matches
-        the equipment, the default equipment color set is returned."""
-        for rule in self.parameters.colors.equipments:
-            if hasattr(rule, "type") and rule.type != equipment.type.id:
-                continue
-            if hasattr(rule, "tags") and (
-                not hasattr(equipment, "tags")
-                or not all(tag in equipment.tags for tag in rule.tags)
-            ):
-                continue
-            return rule
-        return default_equipment_colorset(self.parameters)
+        return find_equipment_colorset(self.parameters, equipment)
 
     def _print_text(
         self,
@@ -165,3 +143,17 @@ class Drawer:
         if shift_y:
             self.ctx.rel_move_to(0, -th)
         PangoCairo.show_layout(self.ctx, layout)
+
+
+def find_equipment_colorset(parameters, equipment):
+    """Return the equipment coloring rule from drawing parameters or the default set."""
+    for rule in parameters.colors.equipments:
+        if hasattr(rule, "type") and rule.type != equipment.type.id:
+            continue
+        if hasattr(rule, "tags") and (
+            not hasattr(equipment, "tags")
+            or not all(tag in equipment.tags for tag in rule.tags)
+        ):
+            continue
+        return rule
+    return default_equipment_colorset(parameters)

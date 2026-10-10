@@ -52,6 +52,9 @@ racksdb-web = "racksdb.web.app:RacksDBWebApp.run"
 [tool.setuptools.packages.find]
 include = ["racksdb*"]
 
+[tool.setuptools.package-data]
+"racksdb.drawers" = ["assets/*.png"]
+
 [tool.setuptools.data-files]
 "share/racksdb/schemas" = [
     "schemas/racksdb.yml",
