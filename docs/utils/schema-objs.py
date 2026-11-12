@@ -44,12 +44,13 @@ def main():
         db=Path("../examples/simple/racksdb.yml"),
     )
 
-    # Enrich schema object with has_backref boolean
+    # Enrich schema object with has_automatic_props boolean, true when the object
+    # has back references or computed properties
     for obj in db._schema.objects.values():
-        obj.has_backref = False
+        obj.has_automatic_props = False
         for prop in obj.properties:
-            if isinstance(prop.type, SchemaBackReference):
-                obj.has_backref = True
+            if isinstance(prop.type, SchemaBackReference) or prop.computed:
+                obj.has_automatic_props = True
 
     # Render template
     env = jinja2.Environment(loader=jinja2.FileSystemLoader("utils"))
