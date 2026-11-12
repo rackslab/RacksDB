@@ -104,7 +104,7 @@ Library class type: `{{object_prefix}}{{ obj.name }}`
 {{ obj.description }}
 {% endif %}
 {{ obj_attributes(obj) }}
-{%- if obj.has_backref -%}
+{%- if obj.has_automatic_props -%}
 {{ obj_backrefs(obj) }}
 {%- endif -%}
 {%- endfor %}
