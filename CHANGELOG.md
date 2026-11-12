@@ -16,6 +16,9 @@ and this project adheres to
   frames in room diagrams.
 - lib: Add `equipment` attribute to `RacksDBRack` objects with the list of all
   equipment of all infrastructures in the rack.
+- lib: Detect collisions between equipment in racks when drawing infrastructures
+  and emit warnings. Equipment of all infrastructures in racks are
+  considered (#9).
 - docs: Mention support of Fedora 44.
 - docs: Document `equipment` attribute of `RacksDBRack` objects in Python
   library API reference.
