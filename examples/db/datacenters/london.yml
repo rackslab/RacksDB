@@ -80,6 +80,27 @@ rooms:
       racks:
       - name: rackH[01-06]
         type: standard
+    # Racks row I overlaps rack rackH01 of row H, resulting in a collision reported
+    # when drawing the room. Comment out this row to remove the collision.
+    - name: I
+      position:
+        width: 13.3m
+        depth: 2m
+        rotation: 90
+      racks:
+      - name: rackI01
+        type: standard
+    # Racks row J is rotated by 45° and its top corner overlaps the bottom right
+    # corner of rack rackG06 of row G, resulting in a collision reported when
+    # drawing the room. Comment out this row to remove the collision.
+    - name: J
+      position:
+        width: 9.95m
+        depth: 5.55m
+        rotation: 45
+      racks:
+      - name: rackJ01
+        type: standard
 location:
   longitude: -0.075278
   latitude: 51.505554
