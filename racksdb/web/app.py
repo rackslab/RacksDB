@@ -26,7 +26,7 @@ from ..generic.openapi import OpenAPIGenerator
 from ..generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from ..generic.schema import Schema, SchemaFileLoader, SchemaDefinedTypeLoader
 from ..generic.errors import DBSchemaError, DBFormatError
-from ..drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
+from ..drawers import drawer_class
 from ..drawers.parameters import DrawingParameters
 
 logger = logging.getLogger(__name__)
@@ -100,6 +100,8 @@ class RacksDBWebBlueprint(Blueprint):
         "png": "image/png",
         "svg": "image/svg+xml",
         "pdf": "application/pdf",
+        "gltf": "model/gltf+json",
+        "glb": "model/gltf-binary",
     }
 
     def __init__(
@@ -238,32 +240,17 @@ class RacksDBWebBlueprint(Blueprint):
         coordinates_fh = io.StringIO() if with_coordinates else None
 
         try:
-            if entity == "infrastructure":
-                if parameters.axonometric.enabled:
-                    draw_infra_class = AxonometricInfrastructureDrawer
-                else:
-                    draw_infra_class = InfrastructureDrawer
-                drawer = draw_infra_class(
-                    self.db,
-                    name,
-                    file,
-                    format,
-                    parameters,
-                    coordinates_fh,
-                    coordinates_format,
-                )
-            elif entity == "room":
-                drawer = RoomDrawer(
-                    self.db,
-                    name,
-                    file,
-                    format,
-                    parameters,
-                    coordinates_fh,
-                    coordinates_format,
-                )
-            else:
-                abort(400, f"Unable to draw entity {entity}")
+            drawer = drawer_class(
+                entity, format, parameters, coordinates=with_coordinates
+            )(
+                self.db,
+                name,
+                file,
+                format,
+                parameters,
+                coordinates_fh,
+                coordinates_format,
+            )
             drawer.draw()
         except RacksDBError as err:
             abort(400, str(err))

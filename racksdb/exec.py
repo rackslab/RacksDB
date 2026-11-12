@@ -23,7 +23,7 @@ from .generic.db import (
 from .generic.dumpers import DBDumperFactory, SchemaDumperFactory
 from . import RacksDB
 from .env import RacksDBEnv, env_or_default
-from .drawers import InfrastructureDrawer, AxonometricInfrastructureDrawer, RoomDrawer
+from .drawers import drawer_class
 from .drawers.parameters import DrawingParameters
 from .errors import RacksDBError
 from .views import RacksDBViews
@@ -257,16 +257,6 @@ class RacksDBExec:
     def _run_draw(self):
         file = f"{self.args.name}.{self.args.format}"
 
-        # Handle coordinates opts
-        if self.args.coordinates is False:
-            coordinates_file = None
-        elif self.args.coordinates is True:
-            coordinates_file = f"coordinates.{self.args.coordinates_format}"
-        else:
-            coordinates_file = self.args.coordinates
-        coordinates_fh = (
-            open(coordinates_file, "w+") if coordinates_file is not None else None
-        )
         try:
             if self.args.parameters is None:
                 db_loader = DBDictsLoader()
@@ -282,30 +272,35 @@ class RacksDBExec:
         except DBFormatError as err:
             logger.critical("Unable to load drawing parameters: %s", str(err))
             sys.exit(1)
-        if self.args.entity == "infrastructure":
-            if parameters.axonometric.enabled:
-                draw_infra_class = AxonometricInfrastructureDrawer
-            else:
-                draw_infra_class = InfrastructureDrawer
-            drawer = draw_infra_class(
-                self.db,
-                self.args.name,
-                file,
-                self.args.format,
-                parameters,
-                coordinates_fh,
-                self.args.coordinates_format,
-            )
-        elif self.args.entity == "room":
-            drawer = RoomDrawer(
-                self.db,
-                self.args.name,
-                file,
-                self.args.format,
-                parameters,
-                coordinates_fh,
-                self.args.coordinates_format,
-            )
+
+        # Select drawer class before opening coordinates file, to avoid leaving an
+        # empty coordinates file when the combination is not supported.
+        draw_class = drawer_class(
+            self.args.entity,
+            self.args.format,
+            parameters,
+            coordinates=self.args.coordinates is not False,
+        )
+
+        # Handle coordinates opts
+        if self.args.coordinates is False:
+            coordinates_file = None
+        elif self.args.coordinates is True:
+            coordinates_file = f"coordinates.{self.args.coordinates_format}"
+        else:
+            coordinates_file = self.args.coordinates
+        coordinates_fh = (
+            open(coordinates_file, "w+") if coordinates_file is not None else None
+        )
+        drawer = draw_class(
+            self.db,
+            self.args.name,
+            file,
+            self.args.format,
+            parameters,
+            coordinates_fh,
+            self.args.coordinates_format,
+        )
         drawer.draw()
         logger.info("Generated image file %s", file)
         if self.args.coordinates:

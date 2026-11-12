@@ -116,7 +116,10 @@ class RacksDBViews(DBViewSet):
         DBAction(
             name="draw",
             path="/draw/<entity>/<name>.<format>",
-            description="Draw an entity",
+            description=(
+                "Draw an entity. Infrastructures can also be represented in 3D with "
+                "glTF 2.0 formats (gltf and glb)."
+            ),
             methods=["POST", "GET"],
             parameters=[
                 DBActionParameter(
@@ -128,8 +131,11 @@ class RacksDBViews(DBViewSet):
                 DBActionParameter("name", description="Name of entity", required=True),
                 DBActionParameter(
                     "format",
-                    description="Format of the generated image",
-                    choices=["png", "svg", "pdf"],
+                    description=(
+                        "Format of the generated image. Formats gltf and glb are "
+                        "supported for infrastructures only."
+                    ),
+                    choices=["png", "svg", "pdf", "gltf", "glb"],
                     default="png",
                 ),
                 DBActionParameter(
@@ -180,14 +186,17 @@ class RacksDBViews(DBViewSet):
                 DBActionResponse("image/png", binary=True),
                 DBActionResponse("image/svg+xml"),
                 DBActionResponse("application/pdf", binary=True),
+                DBActionResponse("model/gltf+json"),
+                DBActionResponse("model/gltf-binary", binary=True),
                 DBActionResponse("multipart/form-data", binary=True),
             ],
             errors=[
                 DBActionError(
                     400,
                     "Unsupported entity, unable to load drawing parameters, "
-                    "unsupported image format, unsupported coordinates format "
-                    "or unable to load requested entity in database.",
+                    "unsupported image format, unsupported coordinates format, "
+                    "coordinates requested with 3D format or unable to load "
+                    "requested entity in database.",
                 ),
                 DBActionError(415, "Unsupported drawing parameters format."),
                 DBActionError(500, "Unable to load drawing parameters schema."),
