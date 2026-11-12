@@ -28,6 +28,9 @@ and this project adheres to
     rooms on raised floors with perforated tiles in cold aisles. Nodes of the
     scene are named after database objects with metadata in their extras
     (#164).
+- cli: Support `gltf` and `glb` formats in `draw infrastructure` command (#164).
+- web: Support `gltf` and `glb` formats in infrastructures draw endpoint
+  (#164).
 - pkgs: Install floor textures of 3D representations with the Python package.
 - docs:
   - Mention support of Fedora 44.
