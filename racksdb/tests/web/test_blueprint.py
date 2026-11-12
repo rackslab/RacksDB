@@ -646,6 +646,62 @@ class TestRacksDBWebBlueprint(TestRacksDBReferenceDB):
         self.assertEqual(response.mimetype, "application/pdf")
 
     @http_verbs
+    def test_draw_infrastructure_gltf(self, verb):
+        response = self.client_method(verb)(
+            f"/v{get_version()}/draw/infrastructure/mercury.gltf"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "model/gltf+json")
+        document = json.loads(response.get_data())
+        self.assertEqual(document["asset"]["version"], "2.0")
+
+    @http_verbs
+    def test_draw_infrastructure_glb(self, verb):
+        response = self.client_method(verb)(
+            f"/v{get_version()}/draw/infrastructure/mercury.glb"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "model/gltf-binary")
+        self.assertEqual(response.get_data()[:4], b"glTF")
+
+    def test_draw_post_infrastructure_glb_parameters(self):
+        response = self.client.post(
+            f"/v{get_version()}/draw/infrastructure/mercury.glb",
+            data=json.dumps({"infrastructure": {"equipment_tags": ["compute"]}}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "model/gltf-binary")
+
+    @http_verbs
+    def test_draw_infrastructure_glb_coordinates(self, verb):
+        response = self.client_method(verb)(
+            f"/v{get_version()}/draw/infrastructure/mercury.glb?coordinates"
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Coordinates are not supported with glb format",
+                "name": "Bad Request",
+            },
+        )
+
+    @http_verbs
+    def test_draw_room_glb(self, verb):
+        response = self.client_method(verb)(f"/v{get_version()}/draw/room/noisy.glb")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json,
+            {
+                "code": 400,
+                "description": "Format glb is only supported for infrastructures",
+                "name": "Bad Request",
+            },
+        )
+
+    @http_verbs
     def test_draw_infrastructure_invalid(self, verb):
         response = self.client_method(verb)(
             f"/v{get_version()}/draw/infrastructure/fail.png"

@@ -474,6 +474,66 @@ class TestRacksDBExec(TestRacksDBReferenceDB):
     def test_draw_svg(self):
         self.drawExpectMimetype("svg", "image/svg+xml")
 
+    def test_draw_infrastructure_3d(self):
+        cwd = os.getcwd()
+        try:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                os.chdir(tmpdir)
+                for img_format in ["gltf", "glb"]:
+                    RacksDBExec(
+                        CMD_BASE_ARGS
+                        + CMD_DRAW_BASE_ARGS
+                        + [
+                            "infrastructure",
+                            "--name",
+                            "mercury",
+                            "--format",
+                            img_format,
+                        ]
+                    )
+                self.assertEqual(
+                    json.loads((Path(tmpdir) / "mercury.gltf").read_text())["asset"][
+                        "version"
+                    ],
+                    "2.0",
+                )
+                self.assertEqual(
+                    (Path(tmpdir) / "mercury.glb").read_bytes()[:4], b"glTF"
+                )
+        finally:
+            os.chdir(cwd)
+
+    def test_draw_3d_unsupported(self):
+        cwd = os.getcwd()
+        try:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                os.chdir(tmpdir)
+                # 3D formats are not supported for rooms.
+                with self.assertRaisesRegex(SystemExit, "1"):
+                    RacksDBExec(
+                        CMD_BASE_ARGS
+                        + CMD_DRAW_BASE_ARGS
+                        + ["room", "--name", "noisy", "--format", "glb"]
+                    )
+                # Coordinates are not supported with 3D formats, coordinates file
+                # must not be created.
+                with self.assertRaisesRegex(SystemExit, "1"):
+                    RacksDBExec(
+                        CMD_BASE_ARGS
+                        + CMD_DRAW_BASE_ARGS
+                        + [
+                            "infrastructure",
+                            "--name",
+                            "mercury",
+                            "--format",
+                            "glb",
+                            "--coordinates",
+                        ]
+                    )
+                self.assertEqual(list(Path(tmpdir).iterdir()), [])
+        finally:
+            os.chdir(cwd)
+
     def test_draw_unsupported_format(self):
         with self.assertRaisesRegex(SystemExit, "2"):
             RacksDBExec(
