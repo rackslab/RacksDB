@@ -331,7 +331,7 @@ class TestRacksDBExec(TestRacksDBReferenceDB):
                     "--list",
                 ]
             )
-            self.assertEqual(len(output.getvalue().strip().split("\n")), 101)
+            self.assertEqual(len(output.getvalue().strip().split("\n")), 103)
 
     def test_racks_not_found(self):
         with mock.patch("sys.stdout", new=io.StringIO()) as output:
