@@ -14,6 +14,8 @@ and this project adheres to
 - lib: Add room `collisions` boolean drawing parameter, enabled by default.
   When enabled, RacksDB highlights racks colliding with other racks with red
   frames in room diagrams.
+- lib: Add `equipment` attribute to `RacksDBRack` objects with the list of all
+  equipment of all infrastructures in the rack.
 - docs: Mention support of Fedora 44.
 
 ### Fixed
