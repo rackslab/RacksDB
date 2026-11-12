@@ -49,6 +49,7 @@ racks_labels: true
 
 [source,yaml]
 ----
+collisions: true
 discard_empty_racks: true
 equipment_labels: true
 ghost_unselected: false
@@ -376,6 +377,13 @@ Library class type: `DrawingsInfrastructure`
 |Control if racks present in the rows but not used by the infrastructure are represented in infrastructure diagrams.
 
 *Default value:* `False`
+|bool
+|[.grey]#-#
+
+|collisions
+|Control if equipment colliding with other equipment in racks are highlighted with red frames. Collisions are always reported in warnings, whatever the value of this parameter.
+
+*Default value:* `True`
 |bool
 |[.grey]#-#
 |===
