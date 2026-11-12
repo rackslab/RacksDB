@@ -1143,7 +1143,8 @@ paths:
           description: successful operation
   /v0.7.0/draw/<entity>/<name>.<format>:
     get:
-      description: Draw an entity
+      description: Draw an entity. Infrastructures can also be represented in 3D with
+        glTF 2.0 formats (gltf and glb).
       parameters:
       - description: Type of entity to draw
         in: path
@@ -1160,7 +1161,8 @@ paths:
         required: true
         schema:
           type: string
-      - description: Format of the generated image
+      - description: Format of the generated image. Formats gltf and glb are supported
+          for infrastructures only.
         in: path
         name: format
         required: true
@@ -1170,6 +1172,8 @@ paths:
           - png
           - svg
           - pdf
+          - gltf
+          - glb
           type: string
       - description: Control if entities are represented perfectly aligned on pixels
           with concession on relative dimensions correctess. This parameter has no
@@ -1485,6 +1489,13 @@ paths:
             image/svg+xml:
               schema:
                 type: string
+            model/gltf+json:
+              schema:
+                type: string
+            model/gltf-binary:
+              schema:
+                format: binary
+                type: string
             multipart/form-data:
               schema:
                 format: binary
@@ -1496,8 +1507,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: Unsupported entity, unable to load drawing parameters, unsupported
-            image format, unsupported coordinates format or unable to load requested
-            entity in database.
+            image format, unsupported coordinates format, coordinates requested with
+            3D format or unable to load requested entity in database.
         '415':
           content:
             application/json:
@@ -1511,7 +1522,8 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Unable to load drawing parameters schema.
     post:
-      description: Draw an entity
+      description: Draw an entity. Infrastructures can also be represented in 3D with
+        glTF 2.0 formats (gltf and glb).
       parameters:
       - description: Type of entity to draw
         in: path
@@ -1528,7 +1540,8 @@ paths:
         required: true
         schema:
           type: string
-      - description: Format of the generated image
+      - description: Format of the generated image. Formats gltf and glb are supported
+          for infrastructures only.
         in: path
         name: format
         required: true
@@ -1538,6 +1551,8 @@ paths:
           - png
           - svg
           - pdf
+          - gltf
+          - glb
           type: string
       - allowEmptyValue: true
         description: Dump equipments and racks coordinates in diagrams. When this
@@ -1579,6 +1594,13 @@ paths:
             image/svg+xml:
               schema:
                 type: string
+            model/gltf+json:
+              schema:
+                type: string
+            model/gltf-binary:
+              schema:
+                format: binary
+                type: string
             multipart/form-data:
               schema:
                 format: binary
@@ -1590,8 +1612,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: Unsupported entity, unable to load drawing parameters, unsupported
-            image format, unsupported coordinates format or unable to load requested
-            entity in database.
+            image format, unsupported coordinates format, coordinates requested with
+            3D format or unable to load requested entity in database.
         '415':
           content:
             application/json:
