@@ -864,6 +864,16 @@ Library class type: `RacksDBRacksRow`
 |[.grey]#-#
 |===
 
+.Automatic properties
+[cols="{tbl-obj-backrefs-cols-specs}"]
+|===
+|Property|Description|Type
+
+|{symbol-computed}{nbsp}nbracks
+|Number of racks in the row.
+|int
+|===
+
 [#obj-racksrowposition]
 === RacksRowPosition
 
