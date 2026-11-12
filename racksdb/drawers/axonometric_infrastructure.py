@@ -534,6 +534,8 @@ class AxonometricInfrastructureDrawer(InfrastructureDrawer):
                 "parameters"
             )
 
+        self._check_collisions()
+
         # Search maximum racks row width and sum all rows maximum rack height in mm
         dl = self._rack_dl_abs(self.racks[0])
         max_x = dl.x
