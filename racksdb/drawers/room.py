@@ -220,9 +220,14 @@ class RoomDrawer(Drawer):
 
         colorset = self._find_rack_colorset(rack)
 
-        # draw rack frame
-        self.ctx.set_source_rgba(*colorset.frame)
-        self.ctx.set_line_width(1)
+        # draw rack frame, in red if the rack collides with other racks and
+        # collisions highlighting is enabled in drawing parameters
+        if self.parameters.room.collisions and rack.name in self._colliding_racks:
+            self.ctx.set_source_rgba(1, 0, 0, 1)  # red
+            self.ctx.set_line_width(2)
+        else:
+            self.ctx.set_source_rgba(*colorset.frame)
+            self.ctx.set_line_width(1)
         self.ctx.rectangle(
             tl.x - 0.5,
             tl.y - 0.5,
@@ -230,6 +235,8 @@ class RoomDrawer(Drawer):
             rack_height + 1,
         )
         self.ctx.stroke()
+        self.ctx.set_source_rgba(*colorset.frame)
+        self.ctx.set_line_width(1)
 
         # draw rack front door
         if rack.row.reversed:
