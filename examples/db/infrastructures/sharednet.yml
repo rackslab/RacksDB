@@ -6,6 +6,13 @@ layout:
     type: cisco3650
     slot: 18
     tags: [network]
+  # This switch collides with mercury swnas01 storage equipment in rack R2-A02,
+  # to demonstrate collisions detection in infrastructures graphical
+  # representations.
+  - name: netmercurysw03
+    type: cisco3650
+    slot: 14
+    tags: [network]
 - rack: rackE01
   network:
   - name: netsw01
