@@ -9,22 +9,24 @@ and this project adheres to
 ## [unreleased]
 
 ### Added
-- lib: Detect collisions between racks when drawing room maps and emit
-  warnings (#8).
-- lib: Add room `collisions` boolean drawing parameter, enabled by default.
-  When enabled, RacksDB highlights racks colliding with other racks with red
-  frames in room diagrams.
-- lib: Add `equipment` attribute to `RacksDBRack` objects with the list of all
-  equipment of all infrastructures in the rack.
-- lib: Detect collisions between equipment in racks when drawing infrastructures
-  and emit warnings. Equipment of all infrastructures in racks are
-  considered (#9).
-- lib: Add infrastructure `collisions` boolean drawing parameter, enabled by
-  default. When enabled, RacksDB highlights equipment colliding with other
-  equipment with red frames in infrastructure diagrams.
-- docs: Mention support of Fedora 44.
-- docs: Document `equipment` attribute of `RacksDBRack` objects in Python
-  library API reference.
+- lib:
+  - Detect collisions between racks when drawing room maps and emit warnings
+    (#8).
+  - Add room `collisions` boolean drawing parameter, enabled by default. When
+    enabled, RacksDB highlights racks colliding with other racks with red frames
+    in room diagrams.
+  - Add `equipment` attribute to `RacksDBRack` objects with the list of all
+    equipment of all infrastructures in the rack.
+  - Detect collisions between equipment in racks when drawing infrastructures
+    and emit warnings. Equipment of all infrastructures in racks are considered
+    (#9).
+  - Add infrastructure `collisions` boolean drawing parameter, enabled by
+    default. When enabled, RacksDB highlights equipment colliding with other
+    equipment with red frames in infrastructure diagrams.
+- docs:
+  - Mention support of Fedora 44.
+  - Document `equipment` attribute of `RacksDBRack` objects in Python library
+    API reference.
 
 ### Fixed
 - lib: Load database files in directories in sorted order, instead of the
