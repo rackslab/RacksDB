@@ -436,9 +436,17 @@ class InfrastructureDrawer(Drawer):
             equipment_height,
         )
 
-        # draw equipment frame
-        self.ctx.set_source_rgba(*colorset.border)
-        self.ctx.set_line_width(1)
+        # draw equipment frame, in red if the equipment collides with other
+        # equipment and collisions highlighting is enabled in drawing parameters
+        if (
+            self.parameters.infrastructure.collisions
+            and equipment.name in self._colliding_equipment
+        ):
+            self.ctx.set_source_rgba(1, 0, 0, 1)  # red
+            self.ctx.set_line_width(2)
+        else:
+            self.ctx.set_source_rgba(*colorset.border)
+            self.ctx.set_line_width(1)
         # For the equipment on the left side of the rack slot, draw the equipment frame
         # inside the equipment surface on its left side. Else, draw the frame outside
         # the equipment surface.
@@ -469,6 +477,9 @@ class InfrastructureDrawer(Drawer):
         # Skip if equipment_label drawing parameter is disabled
         if not self.parameters.infrastructure.equipment_labels:
             return
+
+        # Write label with the equipment border color
+        self.ctx.set_source_rgba(*self._find_equipment_colorset(equipment).border)
 
         # Retrieve top-left corner and dimensions of equipment
         tl = self._equipment_tl(equipment)

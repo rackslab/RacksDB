@@ -19,6 +19,9 @@ and this project adheres to
 - lib: Detect collisions between equipment in racks when drawing infrastructures
   and emit warnings. Equipment of all infrastructures in racks are
   considered (#9).
+- lib: Add infrastructure `collisions` boolean drawing parameter, enabled by
+  default. When enabled, RacksDB highlights equipment colliding with other
+  equipment with red frames in infrastructure diagrams.
 - docs: Mention support of Fedora 44.
 - docs: Document `equipment` attribute of `RacksDBRack` objects in Python
   library API reference.
