@@ -736,6 +736,37 @@ Get all nodes of infrastructure _tiger_ with tag _compute_:
 [#spec-racksdbrack]
 === `RacksDBRack`
 
+==== Attributes
+
+The `RacksDBRack` class provides the following specialized attribute:
+
+* `equipment`: the xref:#list[`DBList` object] containing all equipment (nodes,
+  storage, network and miscellaneous equipment) of all infrastructures located
+  in the rack.
++
+--
+.Example
+====
+Print the equipment located in rack _R2-A02_ with their infrastructure:
+
+[source,python]
+----
+>>> rack = db.racks.filter(name='R2-A02')[0]
+>>> for equipment in rack.equipment:
+...   print(f"{equipment.name} ({equipment.infrastructure.name})")
+...
+swnas01 (mercury)
+mesw01 (mercury)
+mesw02 (mercury)
+mesw03 (mercury)
+mesw04 (mercury)
+netmercurysw01 (sharednet)
+netmercurysw02 (sharednet)
+netmercurysw03 (sharednet)
+----
+====
+--
+
 ==== Filtering
 
 The `RacksDBRack` class provides an implementation of the `_filter()` method,

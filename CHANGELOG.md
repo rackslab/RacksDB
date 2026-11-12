@@ -17,6 +17,8 @@ and this project adheres to
 - lib: Add `equipment` attribute to `RacksDBRack` objects with the list of all
   equipment of all infrastructures in the rack.
 - docs: Mention support of Fedora 44.
+- docs: Document `equipment` attribute of `RacksDBRack` objects in Python
+  library API reference.
 
 ### Fixed
 - lib: Load database files in directories in sorted order, instead of the
