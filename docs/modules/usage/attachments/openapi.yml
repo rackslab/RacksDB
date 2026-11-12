@@ -284,6 +284,12 @@ components:
       type: object
     DrawingsRoom:
       properties:
+        collisions:
+          description: Control if racks colliding with other racks in the room are
+            highlighted with red frames. Collisions are always reported in warnings,
+            whatever the value of this parameter.
+          example: true
+          type: boolean
         racks_labels:
           description: Control if racks are labelled with their names
           example: true
@@ -357,6 +363,7 @@ components:
           $ref: '#/components/schemas/DrawingsRoom'
           description: Rooms graphical representation settings
           example:
+            collisions: true
             racks_labels: true
         row:
           $ref: '#/components/schemas/DrawingsRow'
@@ -1177,6 +1184,19 @@ paths:
         schema:
           default: true
           description: Control if racks are labelled with their names
+          example: true
+          type: boolean
+      - description: Control if racks colliding with other racks in the room are highlighted
+          with red frames. Collisions are always reported in warnings, whatever the
+          value of this parameter.
+        in: query
+        name: parameters.room.collisions
+        required: false
+        schema:
+          default: true
+          description: Control if racks colliding with other racks in the room are
+            highlighted with red frames. Collisions are always reported in warnings,
+            whatever the value of this parameter.
           example: true
           type: boolean
       - description: Control if equipment are labelled with their names
