@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MIT
 
 import math
+from itertools import chain
 
 try:
     from functools import cached_property
@@ -149,20 +150,24 @@ class RacksDBRackBase:
         return True
 
     @property
-    def fillrate(self):
-        """Return the fill rate of the rack as a float normalized between 0 and 1."""
-        occupied = 0.0
+    def equipment(self):
+        """Return DBList of all equipment (nodes, storage, network and misc) of all
+        infrastructures located in the rack."""
+        result = DBList()
         for infrastructure in self._db.infrastructures:
             for part in infrastructure.layout:
                 if self.name == part.rack.name:
-                    for equipment in part.nodes:
-                        occupied += equipment.type.height * equipment.type.width
-                    for equipment in part.storage:
-                        occupied += equipment.type.height * equipment.type.width
-                    for equipment in part.network:
-                        occupied += equipment.type.height * equipment.type.width
-                    for equipment in part.misc:
-                        occupied += equipment.type.height * equipment.type.width
+                    result.extend(
+                        chain(part.nodes, part.storage, part.network, part.misc)
+                    )
+        return result
+
+    @property
+    def fillrate(self):
+        """Return the fill rate of the rack as a float normalized between 0 and 1."""
+        occupied = 0.0
+        for equipment in self.equipment:
+            occupied += equipment.type.height * equipment.type.width
         return occupied / self.type.slots
 
     @property
