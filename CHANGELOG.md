@@ -31,7 +31,12 @@ and this project adheres to
 - cli: Support `gltf` and `glb` formats in `draw infrastructure` command (#164).
 - web: Support `gltf` and `glb` formats in infrastructures draw endpoint
   (#164).
-- pkgs: Install floor textures of 3D representations with the Python package.
+- ui: Add 2D/3D toggle in infrastructure details page, with an interactive 3D
+  viewer of infrastructures based on three.js, with a turntable mode with the
+  camera orbiting automatically around the racks (#164).
+- pkgs:
+  - Install floor textures of 3D representations with the Python package.
+  - Add dependency on three.js in web UI.
 - docs:
   - Mention support of Fedora 44.
   - Document `equipment` attribute of `RacksDBRack` objects in Python library

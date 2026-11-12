@@ -7,8 +7,9 @@ SPDX-License-Identifier: MIT -->
 <script setup lang="ts">
 import { useHttp } from '@/plugins/http'
 import { useRacksDBAPI } from '@/composables/RacksDBAPI'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import InfrastructureTable from '@/components/InfrastructureTable.vue'
+import InfrastructureScene3D from '@/components/InfrastructureScene3D.vue'
 import type { Ref } from 'vue'
 import type { Infrastructure } from '@/composables/RacksDBAPI'
 import { Dialog, DialogPanel } from '@headlessui/vue'
@@ -19,6 +20,7 @@ const racksDBAPI = useRacksDBAPI(http)
 const infrastructureDetails: Ref<Infrastructure | undefined> = ref()
 const blobURL = ref()
 const showImg = ref(false)
+const viewMode = ref<'2d' | '3d'>('2d')
 
 function toggleImageModal() {
   if (showImg.value) {
@@ -48,6 +50,12 @@ onMounted(() => {
   getInfrastructureImg()
 })
 
+onBeforeUnmount(() => {
+  if (blobURL.value) {
+    URL.revokeObjectURL(blobURL.value)
+  }
+})
+
 const props = defineProps({
   name: {
     type: String,
@@ -58,7 +66,29 @@ const props = defineProps({
 
 <template>
   <BreadCrumbs :infrastructureName="props.name" />
-  <div class="pb-10">
+
+  <div class="flex justify-center pb-4" role="group" aria-label="Representation">
+    <button
+      v-for="mode in ['2d', '3d'] as const"
+      :key="mode"
+      type="button"
+      class="border border-purple-700 px-4 py-1.5 text-sm font-medium first:rounded-l-lg last:rounded-r-lg"
+      :class="
+        viewMode === mode
+          ? 'bg-purple-700 text-white'
+          : 'bg-white text-purple-700 hover:bg-purple-50 dark:bg-gray-800 dark:text-purple-300'
+      "
+      :aria-pressed="viewMode === mode"
+      @click="viewMode = mode"
+    >
+      {{ mode.toUpperCase() }}
+    </button>
+  </div>
+
+  <div v-if="viewMode === '3d'" class="pb-10">
+    <InfrastructureScene3D :infrastructureName="props.name" />
+  </div>
+  <div v-else class="pb-10">
     <img
       v-if="blobURL"
       @click="toggleImageModal()"

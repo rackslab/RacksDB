@@ -221,5 +221,25 @@ export function useRacksDBAPI(http: AxiosInstance) {
     })
   }
 
-  return { racksDBGet, datacenters, infrastructures, racks, infrastructureImageSvg, roomImageSvg }
+  async function infrastructureGlb(infrastructure: string): Promise<ArrayBuffer> {
+    try {
+      const response = await http.post(`/draw/infrastructure/${infrastructure}.glb`, undefined, {
+        responseType: 'arraybuffer'
+      })
+      return response.data
+    } catch (error: any) {
+      console.error(`Error getting 3D representation of ${infrastructure}`, error)
+      throw error
+    }
+  }
+
+  return {
+    racksDBGet,
+    datacenters,
+    infrastructures,
+    racks,
+    infrastructureImageSvg,
+    roomImageSvg,
+    infrastructureGlb
+  }
 }
