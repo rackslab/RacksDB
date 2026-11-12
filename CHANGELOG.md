@@ -9,6 +9,8 @@ and this project adheres to
 ## [unreleased]
 
 ### Added
+- lib: Detect collisions between racks when drawing room maps and emit
+  warnings (#8).
 - docs: Mention support of Fedora 44.
 
 ### Removed
