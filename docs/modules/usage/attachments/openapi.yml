@@ -133,6 +133,12 @@ components:
       type: object
     DrawingsInfrastructure:
       properties:
+        collisions:
+          description: Control if equipment colliding with other equipment in racks
+            are highlighted with red frames. Collisions are always reported in warnings,
+            whatever the value of this parameter.
+          example: true
+          type: boolean
         discard_empty_racks:
           description: Control if racks used by infrastructure that contain only unselected
             equipment are represented.
@@ -338,6 +344,7 @@ components:
           $ref: '#/components/schemas/DrawingsInfrastructure'
           description: Infrastructures graphical representation settings
           example:
+            collisions: true
             discard_empty_racks: true
             equipment_labels: true
             ghost_unselected: false
@@ -1256,6 +1263,19 @@ paths:
           description: Control if racks present in the rows but not used by the infrastructure
             are represented in infrastructure diagrams.
           example: false
+          type: boolean
+      - description: Control if equipment colliding with other equipment in racks
+          are highlighted with red frames. Collisions are always reported in warnings,
+          whatever the value of this parameter.
+        in: query
+        name: parameters.infrastructure.collisions
+        required: false
+        schema:
+          default: true
+          description: Control if equipment colliding with other equipment in racks
+            are highlighted with red frames. Collisions are always reported in warnings,
+            whatever the value of this parameter.
+          example: true
           type: boolean
       - description: Maximum height of image in pixels
         in: query
