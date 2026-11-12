@@ -14,6 +14,71 @@ from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
 
+# Float epsilon (in mm) used to absorb trigonometric rounding errors in
+# collision detection, so that racks sharing an edge are not reported as
+# colliding. This is not a physical tolerance.
+EPSILON = 1e-6
+
+
+def _project(polygon, axis):
+    """Project polygon points on the line passing through the origin (0, 0) in the
+    direction of the unit vector axis (x, y). Each projection is the dot product of
+    the point with axis, ie. the signed distance from the origin to the point
+    shadow on this line. Return the min and max projections, ie. the interval
+    covered by the polygon shadow on this line."""
+    values = [point[0] * axis[0] + point[1] * axis[1] for point in polygon]
+    return min(values), max(values)
+
+
+def polygons_overlap(a, b):
+    """Return True if convex polygons a and b (lists of (x, y) points) strictly
+    overlap, using the separating axis theorem. Polygons only touching on an
+    edge or a corner are not considered overlapping."""
+    # Quick check on axis-aligned bounding boxes: on each dimension (0 for x, 1 for
+    # y), if the maximum coordinate of a polygon is lower than (or equal to) the
+    # minimum coordinate of the other polygon, their bounding boxes are disjoint and
+    # the polygons cannot overlap. This avoids the more expensive check below for
+    # most pairs of distant polygons.
+    for dim in (0, 1):
+        if (
+            max(p[dim] for p in a) <= min(p[dim] for p in b) + EPSILON
+            or max(p[dim] for p in b) <= min(p[dim] for p in a) + EPSILON
+        ):
+            return False
+    # Separating axis theorem: two convex polygons do not overlap if and only if
+    # there is an axis on which their projections are disjoint, and it is enough to
+    # test the axes perpendicular to the edges of both polygons. For each edge,
+    # compute its unit normal (ie. perpendicular) vector, project all points of both
+    # polygons on this axis and compare the resulting intervals. If they are disjoint
+    # (or only touch), the axis separates the polygons and they do not overlap. If no
+    # separating axis is found, the polygons overlap.
+    for polygon in (a, b):
+        for idx, point in enumerate(polygon):
+            # Get the following point (x, y) in polygon, wrapping around to the first
+            # point after the last one, so that point -> next_point is the polygon
+            # edge that closes the shape.
+            next_point = polygon[(idx + 1) % len(polygon)]
+            # Compute the normal vector (x, y) of the edge, perpendicular to it. For an
+            # edge vector (dx, dy) = next_point - point, the normal vector is the edge
+            # vector rotated by 90°, ie. (-dy, dx).
+            axis = (point[1] - next_point[1], next_point[0] - point[0])
+            # Compute the length of the normal vector, ie. sqrt(x² + y²), equal to the
+            # length of the edge.
+            length = math.hypot(*axis)
+            # Skip degenerated zero-length edges, when two consecutive points are
+            # identical.
+            if length == 0:
+                continue
+            # Normalize the normal vector, ie. divide it by its length to get a unit
+            # vector (x, y) of length 1 in the same direction, so that projections on
+            # this axis are distances in mm comparable with EPSILON.
+            axis = (axis[0] / length, axis[1] / length)
+            min_a, max_a = _project(a, axis)
+            min_b, max_b = _project(b, axis)
+            if max_a <= min_b + EPSILON or max_b <= min_a + EPSILON:
+                return False
+    return True
+
 
 class RackCoordinate:
     def __init__(self, x, y, width, height, angle):
@@ -56,6 +121,8 @@ class RoomDrawer(Drawer):
             raise RacksDBDrawingError(f"Unable to find room {name} in database")
         # Calculated at draw time based on dimensions
         self.ratio = 0
+        # Names of racks colliding with other racks, computed at draw time
+        self._colliding_racks = set()
 
     def _racks_row_tl(self, row):
         return ImagePoint(
@@ -63,15 +130,13 @@ class RoomDrawer(Drawer):
             self.parameters.margin.top + int(row.position.depth * self.ratio),
         )
 
-    def _rack_tl(self, rack):
-        # Start from top-left corner of the rack row, which is (0,0) after
-        # context matrix translation.
-        tl = ImagePoint(0, 0)
-        # Sum the width of all racks in row before the current rack
+    def _rack_preceding_widths(self, rack):
+        """Yield the widths (in mm) of all racks and empty slots in rack row
+        before the given rack."""
         filled_slots = {}
         for row_rack in rack.row.racks:
             if row_rack.slot < rack.slot:
-                tl.x += int(row_rack.type.width * self.ratio)
+                yield row_rack.type.width
                 filled_slots[row_rack.slot] = row_rack
         # filling empty slots with previous rack width
         for slot in range(rack.slot):
@@ -85,8 +150,68 @@ class RoomDrawer(Drawer):
                         break
                 if not (last_rack_width):
                     last_rack_width = self.db.types.racks.first().width
-                tl.x += int(last_rack_width * self.ratio)
+                yield last_rack_width
+
+    def _rack_tl(self, rack):
+        # Start from top-left corner of the rack row, which is (0,0) after
+        # context matrix translation.
+        tl = ImagePoint(0, 0)
+        # Sum the width of all racks and empty slots in row before the current
+        # rack.
+        for width in self._rack_preceding_widths(rack):
+            tl.x += int(width * self.ratio)
         return tl
+
+    def _rack_footprint(self, rack):
+        """Return the list of the 4 corners (x, y) of the rack in room
+        coordinates, in mm."""
+        offset = sum(self._rack_preceding_widths(rack))
+        local = [
+            (offset, 0),
+            (offset + rack.type.width, 0),
+            (offset + rack.type.width, rack.type.depth),
+            (offset, rack.type.depth),
+        ]
+        # Rotate clockwise around row top-left corner (y axis points down),
+        # consistently with cairo context rotation, then translate to row
+        # position in room.
+        angle = rack.row.position.rotation * math.pi / 180
+        cos = math.cos(angle)
+        sin = math.sin(angle)
+        return [
+            (
+                rack.row.position.width + x * cos - y * sin,
+                rack.row.position.depth + x * sin + y * cos,
+            )
+            for x, y in local
+        ]
+
+    def _check_collisions(self):
+        """Detect collisions between racks in room, emit warnings and record
+        names of colliding racks."""
+        self._colliding_racks = set()
+        # Build a flat list of (rack, footprint) tuples for all racks in the room, where
+        # footprint is the list of the 4 corners of the rack in room coordinates (in
+        # mm).
+        footprints = [
+            (rack, self._rack_footprint(rack))
+            for row in self.room.rows
+            for rack in row.racks
+        ]
+        # Compare each rack with all racks after it in the list, so that every pair
+        # of racks is checked exactly once. For every overlapping pair, emit a warning
+        # and record both racks names.
+        for idx, (rack_a, footprint_a) in enumerate(footprints):
+            for rack_b, footprint_b in footprints[idx + 1 :]:
+                if polygons_overlap(footprint_a, footprint_b):
+                    logger.warning(
+                        "Collision detected in room %s between racks %s and %s",
+                        self.room.name,
+                        rack_a.name,
+                        rack_b.name,
+                    )
+                    self._colliding_racks.add(rack_a.name)
+                    self._colliding_racks.add(rack_b.name)
 
     def _draw_rack(self, rack):
         tl = self._rack_tl(rack)
@@ -187,6 +312,8 @@ class RoomDrawer(Drawer):
         )
 
         logger.debug("Final ratio is: %f", self.ratio)
+
+        self._check_collisions()
 
         # Compute final surface width and height
         surface_width = int(self.ratio * self.room.dimensions.width + width_whitespace)
