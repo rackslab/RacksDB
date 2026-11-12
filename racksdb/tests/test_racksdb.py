@@ -63,7 +63,7 @@ class TestRacksDB(unittest.TestCase):
         self.assertEqual(len(self.db.nodes), 130)
 
     def test_racks(self):
-        self.assertEqual(len(self.db.racks), 101)
+        self.assertEqual(len(self.db.racks), 103)
         self.assertEqual(
             self.db.racks[0].name,
             self.db.datacenters.first()

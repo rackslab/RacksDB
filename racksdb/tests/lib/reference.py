@@ -56,7 +56,7 @@ class TestRacksDBReferenceDB(unittest.TestCase):
 
     def assertRacksResponse(self, content):
         self.assertIsInstance(content, list)
-        self.assertEqual(len(content), 101)
+        self.assertEqual(len(content), 103)
         self.assertIsInstance(content[0], dict)
         # tags key is optional, it may not be present in select rack.
         for key in [
