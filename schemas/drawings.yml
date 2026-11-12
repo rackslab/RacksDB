@@ -67,6 +67,13 @@ _objects:
         type: bool
         description: Control if racks are labelled with their names
         default: true
+      collisions:
+        type: bool
+        description: >-
+          Control if racks colliding with other racks in the room are highlighted
+          with red frames. Collisions are always reported in warnings, whatever the
+          value of this parameter.
+        default: true
   Infrastructure:
     properties:
       equipment_labels:

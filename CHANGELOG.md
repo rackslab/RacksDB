@@ -11,6 +11,9 @@ and this project adheres to
 ### Added
 - lib: Detect collisions between racks when drawing room maps and emit
   warnings (#8).
+- lib: Add room `collisions` boolean drawing parameter, enabled by default.
+  When enabled, RacksDB highlights racks colliding with other racks with red
+  frames in room diagrams.
 - docs: Mention support of Fedora 44.
 
 ### Removed
