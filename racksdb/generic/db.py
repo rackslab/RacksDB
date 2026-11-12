@@ -285,12 +285,14 @@ class DBSplittedFilesLoader(DBLoader):
             self.content = DBFileLoader(path).content
         elif path.suffix == ".l":
             self.content = []
-            for item in path.iterdir():
+            # Sort directory entries to load them in a deterministic order, as the
+            # order of entries returned by iterdir() depends on the filesystem.
+            for item in sorted(path.iterdir()):
                 self.content.append(DBSplittedFilesLoader(item).content)
         else:
-            # if directory, load recursively
+            # if directory, load recursively, in a deterministic order
             self.content = {}
-            for item in path.iterdir():
+            for item in sorted(path.iterdir()):
                 logger.debug("Loading DB directory %s", path)
                 self.content[item.stem] = DBSplittedFilesLoader(item).content
 

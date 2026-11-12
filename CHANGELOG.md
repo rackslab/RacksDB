@@ -16,6 +16,11 @@ and this project adheres to
   frames in room diagrams.
 - docs: Mention support of Fedora 44.
 
+### Fixed
+- lib: Load database files in directories in sorted order, instead of the
+  arbitrary order of entries returned by the filesystem, to get the same
+  objects order on all systems.
+
 ### Removed
 - docs: Drop support of Fedora 42.
 
