@@ -10,6 +10,7 @@ import shutil
 from pathlib import Path
 
 from racksdb import RacksDB
+from racksdb.generic.db import DBList
 from racksdb.errors import RacksDBRequestError, RacksDBNotFoundError, RacksDBFormatError
 
 from .lib.common import schema_path, db_path, db_one_file_path
@@ -73,6 +74,31 @@ class TestRacksDB(unittest.TestCase):
             .objects()[0]
             .name,
         )
+
+    def test_rack_equipment(self):
+        rack = next(rack for rack in self.db.racks if rack.name == "R2-A02")
+        self.assertIsInstance(rack.equipment, DBList)
+        self.assertEqual(len(rack.equipment), 8)
+        # Equipment of all infrastructures in the rack are reported.
+        self.assertEqual(
+            [
+                (equipment.name, equipment.infrastructure.name)
+                for equipment in rack.equipment
+            ],
+            [
+                ("swnas01", "mercury"),
+                ("mesw01", "mercury"),
+                ("mesw02", "mercury"),
+                ("mesw03", "mercury"),
+                ("mesw04", "mercury"),
+                ("netmercurysw01", "sharednet"),
+                ("netmercurysw02", "sharednet"),
+                ("netmercurysw03", "sharednet"),
+            ],
+        )
+        # 7 switches 1U and 1 NAS 2U in a 24U rack.
+        self.assertEqual(rack.type.slots, 24)
+        self.assertAlmostEqual(rack.fillrate, 9 / 24)
 
     def test_tags_missing_param(self):
         msg = (
