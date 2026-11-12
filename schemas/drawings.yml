@@ -107,6 +107,13 @@ _objects:
           Control if racks present in the rows but not used by the infrastructure are
           represented in infrastructure diagrams.
         default: false
+      collisions:
+        type: bool
+        description: >-
+          Control if equipment colliding with other equipment in racks are
+          highlighted with red frames. Collisions are always reported in warnings,
+          whatever the value of this parameter.
+        default: true
   Margin:
     properties:
       top:
