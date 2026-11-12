@@ -36,6 +36,7 @@ pixel_perfect: false
 
 [source,yaml]
 ----
+collisions: true
 racks_labels: true
 ----
 |xref:#obj-room[{symbol-obj}{nbsp}Room]
@@ -541,6 +542,13 @@ Library class type: `DrawingsRoom`
 
 |racks_labels
 |Control if racks are labelled with their names
+
+*Default value:* `True`
+|bool
+|[.grey]#-#
+
+|collisions
+|Control if racks colliding with other racks in the room are highlighted with red frames. Collisions are always reported in warnings, whatever the value of this parameter.
 
 *Default value:* `True`
 |bool
