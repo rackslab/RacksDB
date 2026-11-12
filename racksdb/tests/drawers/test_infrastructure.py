@@ -8,14 +8,64 @@ import unittest
 from unittest import mock
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 from racksdb import RacksDB
-from racksdb.drawers.infrastructure import InfrastructureDrawer
+from racksdb.drawers.infrastructure import InfrastructureDrawer, equipment_overlap
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
 from racksdb.errors import RacksDBDrawingError
 
 from ..lib.common import drawing_schema_path, schema_path, db_path
+
+
+def equipment(height, size=1, width_position=0, width=1.0):
+    """Return a fake equipment located at the given height (in rack units) with the
+    given size (in rack units) and the given position in rack width for the given
+    width (fraction of rack width)."""
+    return SimpleNamespace(
+        position=SimpleNamespace(height=height, width=width_position),
+        type=SimpleNamespace(height=size, width=width),
+    )
+
+
+class TestEquipmentOverlap(unittest.TestCase):
+    def test_overlap(self):
+        self.assertTrue(equipment_overlap(equipment(0, 2), equipment(1, 2)))
+
+    def test_same_position(self):
+        self.assertTrue(equipment_overlap(equipment(3), equipment(3)))
+
+    def test_included(self):
+        self.assertTrue(equipment_overlap(equipment(0, 4), equipment(1)))
+
+    def test_disjoint(self):
+        self.assertFalse(equipment_overlap(equipment(0), equipment(5)))
+
+    def test_stacked(self):
+        self.assertFalse(equipment_overlap(equipment(0, 2), equipment(2, 2)))
+        self.assertFalse(equipment_overlap(equipment(2, 2), equipment(0, 2)))
+
+    def test_side_by_side(self):
+        self.assertFalse(
+            equipment_overlap(equipment(0, 1, 0, 0.5), equipment(0, 1, 1, 0.5))
+        )
+        # Third widths are not exactly representable with floats.
+        self.assertFalse(
+            equipment_overlap(equipment(0, 1, 1, 1 / 3), equipment(0, 1, 2, 1 / 3))
+        )
+
+    def test_partial_width(self):
+        # Full width equipment overlaps half width equipment at the same height.
+        self.assertTrue(equipment_overlap(equipment(0), equipment(0, 1, 1, 0.5)))
+        # Half width and third width equipment overlap on the left side.
+        self.assertTrue(
+            equipment_overlap(equipment(0, 1, 0, 0.5), equipment(0, 1, 1, 1 / 3))
+        )
+        # Half width on the right side and third width on the left do not overlap.
+        self.assertFalse(
+            equipment_overlap(equipment(0, 1, 1, 0.5), equipment(0, 1, 0, 1 / 3))
+        )
 
 
 class TestInfrastructureDrawer(unittest.TestCase):
@@ -156,3 +206,87 @@ class TestInfrastructureDrawer(unittest.TestCase):
             ):
                 drawer.draw()
             self.assertFalse(filename.exists())
+
+    def _equipment_definition(self, infrastructure, rack, name):
+        """Return the definition (ie. not expanded) of an equipment in database."""
+        for _infrastructure in self.db.infrastructures:
+            if _infrastructure.name != infrastructure:
+                continue
+            for part in _infrastructure.layout:
+                if part.rack.name != rack:
+                    continue
+                for equipments in (part.nodes, part.storage, part.network, part.misc):
+                    for definition in equipments.values():
+                        if str(definition.name) == name:
+                            return definition
+        raise KeyError(name)
+
+    def _draw_with_logs(self, drawer):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            drawer.file = Path(tmpdir) / "output.png"
+            with self.assertLogs("racksdb.drawers.infrastructure", "WARNING") as cm:
+                drawer.draw()
+            self.assertTrue(drawer.file.exists())
+        return cm.output
+
+    def test_no_collision(self):
+        # Move netmercurysw03 switch in a free slot to remove the collision in
+        # example database.
+        self._equipment_definition("sharednet", "R2-A02", "netmercurysw03").slot = 16
+        drawer = InfrastructureDrawer(
+            self.db, "mercury", "dontmind.png", "png", self.parameters, None, "yaml"
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            drawer.file = Path(tmpdir) / "output.png"
+            # Mock logger to check no warning is emitted, unittest assertNoLogs() is
+            # not available in Python < 3.10.
+            with mock.patch("racksdb.drawers.infrastructure.logger") as logger:
+                drawer.draw()
+        logger.warning.assert_not_called()
+        self.assertEqual(drawer._colliding_equipment, set())
+
+    def test_collision_other_infrastructure(self):
+        # In example database, netmercurysw03 switch of sharednet infrastructure
+        # collides with swnas01 storage equipment of mercury infrastructure in rack
+        # R2-A02. It must be reported when drawing both infrastructures.
+        for infrastructure in ["mercury", "sharednet"]:
+            with self.subTest(infrastructure=infrastructure):
+                drawer = InfrastructureDrawer(
+                    self.db,
+                    infrastructure,
+                    "dontmind.png",
+                    "png",
+                    self.parameters,
+                    None,
+                    "yaml",
+                )
+                output = self._draw_with_logs(drawer)
+                self.assertEqual(
+                    output,
+                    [
+                        "WARNING:racksdb.drawers.infrastructure:Collision detected in "
+                        "rack R2-A02 between equipment swnas01 (infrastructure "
+                        "mercury) and netmercurysw03 (infrastructure sharednet)"
+                    ],
+                )
+                self.assertEqual(
+                    drawer._colliding_equipment, {"netmercurysw03", "swnas01"}
+                )
+
+    def test_collision_same_infrastructure(self):
+        # Move mekvm01 one slot below, at the same height as mesrv0004 upper half.
+        self._equipment_definition("mercury", "R2-A03", "mekvm01").slot = 16
+        drawer = InfrastructureDrawer(
+            self.db, "mercury", "dontmind.png", "png", self.parameters, None, "yaml"
+        )
+        output = self._draw_with_logs(drawer)
+        self.assertIn(
+            "WARNING:racksdb.drawers.infrastructure:Collision detected in rack R2-A03 "
+            "between equipment mesrv0004 (infrastructure mercury) and mekvm01 "
+            "(infrastructure mercury)",
+            output,
+        )
+        self.assertEqual(
+            drawer._colliding_equipment,
+            {"netmercurysw03", "swnas01", "mesrv0004", "mekvm01"},
+        )
