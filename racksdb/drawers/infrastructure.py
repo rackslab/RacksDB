@@ -603,6 +603,12 @@ class InfrastructureDrawer(Drawer):
             self.parameters.dimensions.height,
         )
 
+        def add_rack(rack):
+            # Racks objects are compared by names, as the same rack can be
+            # represented by distinct objects.
+            if all(rack.name != selected.name for selected in self.racks):
+                self.racks.append(rack)
+
         # Get list of racks and rows used by the infrastructure
         for part in self.infrastructure.layout:
             # If discard_empty_racks is True, skip parts without equipment selected for
@@ -615,11 +621,10 @@ class InfrastructureDrawer(Drawer):
             # If other_racks is True, select all racks in part rack row.
             if self.parameters.infrastructure.other_racks:
                 for rack in part.rack.row.racks:
-                    if rack not in self.racks:
-                        self.racks.append(rack)
+                    add_rack(rack)
             # Else select all racks in part.
-            elif part.rack not in self.racks:
-                self.racks.append(part.rack)
+            else:
+                add_rack(part.rack)
             if part.rack.row not in self.rack_rows:
                 self.rack_rows.append(part.rack.row)
 

@@ -83,6 +83,26 @@ class TestAxonometricInfrastructureDrawer(unittest.TestCase):
                 drawer.draw()
             self.assertFalse(filename.exists())
 
+    def test_draw_other_racks(self):
+        # Mercury infrastructure has multiple racks in rows R1 and R2. With
+        # other_racks, all racks of these rows must be selected once.
+        self.parameters.infrastructure.other_racks = True
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = Path(tmpdir) / "output.png"
+            drawer = AxonometricInfrastructureDrawer(
+                self.db, "mercury", filename, "png", self.parameters, None, "yaml"
+            )
+            with self.assertLogs("racksdb.drawers.infrastructure", "WARNING") as cm:
+                drawer.draw()
+            self.assertTrue(filename.exists())
+        self.assertEqual(
+            [rack.name for rack in drawer.racks],
+            [f"R{row}-A{idx:02d}" for row in (1, 2) for idx in range(1, 11)],
+        )
+        self.assertEqual([row.name for row in drawer.rack_rows], ["R1", "R2"])
+        # Collision in rack R2-A02 is reported once.
+        self.assertEqual(len(cm.output), 1)
+
     def test_draw_collision(self):
         # In example database, netmercurysw03 switch of sharednet infrastructure
         # collides with swnas01 storage equipment of mercury infrastructure in rack
