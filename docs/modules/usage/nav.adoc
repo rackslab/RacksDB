@@ -2,6 +2,7 @@
 ** xref:racksdb.adoc[`racksdb`]
 ** xref:racksdb-web.adoc[`racksdb-web`]
 * xref:drawparams.adoc[]
+* xref:3d.adoc[]
 * xref:lib.adoc[]
 * xref:rest.adoc[]
 * xref:ui.adoc[]

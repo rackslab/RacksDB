@@ -2,8 +2,9 @@
 
 RacksDB offers the possibity to generate graphical representations of datacenter
 room and infrastructures with their racks and equipments in various images
-formats. The images are generated with various default drawing parameters that
-user are able to customize for their requirements.
+formats, and xref:3d.adoc[3D representations] of infrastructures. The images
+are generated with various default drawing parameters that user are able to
+customize for their requirements.
 
 The xref:#usage[first section] of this page describes how to specify drawing
 parameters with both RacksDB xref:racksdb.adoc[CLI] and
