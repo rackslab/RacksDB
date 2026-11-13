@@ -13,7 +13,6 @@ import cairo
 
 from .base2d import ImagePoint
 from .infrastructure import InfrastructureDrawer, EquipmentCoordinate
-from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
 
@@ -195,12 +194,8 @@ class AxonometricInfrastructureDrawer(InfrastructureDrawer):
         return tl
 
     def _draw_rack_equipment(self, equipment):
-        # If equipment_tags drawing parameters is set, check the equipment has at least
-        # one matching associated tag.
-        if hasattr(self.parameters.infrastructure, "equipment_tags") and not any(
-            equipment_tag in self.parameters.infrastructure.equipment_tags
-            for equipment_tag in equipment.tags
-        ):
+        # Check the equipment is selected with equipment_tags drawing parameter.
+        if not self._equipment_selected(equipment):
             # If ghost_unselected is true, represent this equipment ghosted.
             if self.parameters.infrastructure.ghost_unselected:
                 self._draw_equipment_ghost(equipment)
@@ -519,36 +514,10 @@ class AxonometricInfrastructureDrawer(InfrastructureDrawer):
             self.parameters.dimensions.height,
         )
 
-        def add_rack(rack):
-            # Racks objects are compared by names, as the same rack can be
-            # represented by distinct objects.
-            if all(rack.name != selected.name for selected in self.racks):
-                self.racks.append(rack)
-
         # Get list of racks and rows used by the infrastructure
-        for part in self.infrastructure.layout:
-            # If discard_empty_racks is True, skip parts without equipment selected for
-            # representation in the diagram.
-            if (
-                self.parameters.infrastructure.discard_empty_racks
-                and not self._part_contains_selected_equipment(part)
-            ):
-                continue
-            # If other_racks is True, select all racks in part rack row.
-            if self.parameters.infrastructure.other_racks:
-                for rack in part.rack.row.racks:
-                    add_rack(rack)
-            # Else select all racks in part.
-            else:
-                add_rack(part.rack)
-            if part.rack.row not in self.rack_rows:
-                self.rack_rows.append(part.rack.row)
-
-        if not self.racks:
-            raise RacksDBDrawingError(
-                "Unable to find racks to draw with filters provided in drawing "
-                "parameters"
-            )
+        self.racks, self.rack_rows = self._select_infrastructure_racks(
+            self.infrastructure
+        )
 
         self._check_collisions()
 

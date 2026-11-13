@@ -4,6 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+from itertools import chain
 import logging
 
 from ..errors import RacksDBDrawingError
@@ -42,6 +43,69 @@ class Drawer:
             if infrastructure.name == name:
                 return infrastructure
         raise RacksDBDrawingError(f"Unable to find infrastructure {name} in database")
+
+    def _equipment_selected(self, equipment) -> bool:
+        """Return True if the equipment is selected for representation with the
+        equipment_tags drawing parameter, ie. if this parameter is unset or if the
+        equipment has at least one matching tag, False otherwise."""
+        if not hasattr(self.parameters.infrastructure, "equipment_tags"):
+            return True
+        return any(
+            equipment_tag in self.parameters.infrastructure.equipment_tags
+            for equipment_tag in equipment.tags
+        )
+
+    def _part_contains_selected_equipment(self, part) -> bool:
+        """Return True if the infrastructure part contains equipment that is selected
+        for representation, False otherwise."""
+
+        # If equipment_tags is unset, all equipment is represented, then it is True.
+        if not hasattr(self.parameters.infrastructure, "equipment_tags"):
+            return True
+        # Iterate over all equipment to check if at least one has matching tag.
+        for equipment in chain(part.nodes, part.storage, part.network, part.misc):
+            if self._equipment_selected(equipment):
+                return True
+        # No matching equipment found, return False.
+        return False
+
+    def _select_infrastructure_racks(self, infrastructure):
+        """Return the tuple of lists (racks, rows) of racks and racks rows of the
+        infrastructure to represent according to drawing parameters. Raise
+        RacksDBDrawingError if no rack is selected."""
+        racks = []
+        rows = []
+
+        def add_rack(rack):
+            # Racks objects are compared by names, as the same rack can be
+            # represented by distinct objects.
+            if all(rack.name != selected.name for selected in racks):
+                racks.append(rack)
+
+        for part in infrastructure.layout:
+            # If discard_empty_racks is True, skip parts without equipment selected for
+            # representation.
+            if (
+                self.parameters.infrastructure.discard_empty_racks
+                and not self._part_contains_selected_equipment(part)
+            ):
+                continue
+            # If other_racks is True, select all racks in part rack row.
+            if self.parameters.infrastructure.other_racks:
+                for rack in part.rack.row.racks:
+                    add_rack(rack)
+            # Else select all racks in part.
+            else:
+                add_rack(part.rack)
+            if part.rack.row not in rows:
+                rows.append(part.rack.row)
+
+        if not racks:
+            raise RacksDBDrawingError(
+                "Unable to find racks to draw with filters provided in drawing "
+                "parameters"
+            )
+        return racks, rows
 
     def _find_rack_colorset(self, rack):
         """Return the rack matching coloring rule defined in drawing parameters or the
