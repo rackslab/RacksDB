@@ -280,8 +280,9 @@ Get all tags associated to racks in datacenter _paris_.
 === Draw commands
 
 The [.cli-opt]#*draw*# command is used to generate image file with graphical
-representations of database entities. This command is used in combination with a
-sub-command to indicate the type of database entity.
+representations of database entities, or 3D representations of
+infrastructures. This command is used in combination with a sub-command to
+indicate the type of database entity.
 
 This command accepts the following options:
 
@@ -289,8 +290,11 @@ This command accepts the following options:
   Name of the entity to represent. This option is required.
 
 [.cli-opt]#*--format*=#[.cli-optval]##_FORMAT_##::
-  File format of the generated image file. Possible values are _png_, _svg_ and
-  _pdf_. Default value is _png_.
+  File format of the generated image file. Possible values are _png_, _svg_,
+  _pdf_, _gltf_ and _glb_. Default value is _png_. Formats _gltf_ and _glb_
+  produce xref:3d.adoc[3D representations] in glTF 2.0 format, they are
+  supported for infrastructures only and they cannot be combined with
+  [.cli-opt]#*--coordinates*# option.
 
 [.cli-opt]#*--parameters*=#[.cli-optval]##_PARAMETERS_##::
   Path to YAML xref:drawparams.adoc[drawing parameters] file. With special value
@@ -316,7 +320,8 @@ The following sub-commands are available:
 [.cli-opt]#*infrastructure*#::
 
   Draw racks of an infrastructure, grouped by rows. The front side of the racks
-  are represented with the equipments of the infrastructure.
+  are represented with the equipments of the infrastructure. With _gltf_ and
+  _glb_ formats, the racks are represented in 3D in their datacenter rooms.
 
 [.cli-opt]#*room*#::
 
@@ -346,6 +351,13 @@ $ racksdb draw infrastructure --name=tiger --format=pdf --parameters=custom.yaml
 Generate PDF image file `tiger.pdf` with racks and equipments used in _tiger_
 infrastructure with custom xref:drawparams.adoc[drawing parameters] defined in
 `custom.yaml`.
+
+[source,console]
+$ racksdb draw infrastructure --name=tiger --format=glb
+
+[.cli-example-desc]
+Generate 3D representation of _tiger_ infrastructure in binary glTF file
+`tiger.glb`.
 
 [source,console]
 $ racksdb draw room --name=noisy --parameters=- < custom.yaml

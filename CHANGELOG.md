@@ -43,6 +43,7 @@ and this project adheres to
     API reference.
   - Add page about 3D representations of infrastructures with glTF scenes
     conventions and nodes metadata.
+  - Mention `gltf` and `glb` formats in `racksdb` manpage.
 
 ### Fixed
 - lib:
