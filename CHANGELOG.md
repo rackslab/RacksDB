@@ -23,6 +23,12 @@ and this project adheres to
   - Add infrastructure `collisions` boolean drawing parameter, enabled by
     default. When enabled, RacksDB highlights equipment colliding with other
     equipment with red frames in infrastructure diagrams.
+  - Generate 3D representations of infrastructures in glTF 2.0 JSON (`gltf`)
+    and binary (`glb`) formats, with racks and equipment in their datacenter
+    rooms on raised floors with perforated tiles in cold aisles. Nodes of the
+    scene are named after database objects with metadata in their extras
+    (#164).
+- pkgs: Install floor textures of 3D representations with the Python package.
 - docs:
   - Mention support of Fedora 44.
   - Document `equipment` attribute of `RacksDBRack` objects in Python library
