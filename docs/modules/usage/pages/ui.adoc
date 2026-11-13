@@ -57,6 +57,17 @@ In *Infrastructure Details* page, a graphical representation of the
 infrastructure is displayed at the top. Users can *click on this thumbnail* to
 display a larger image.
 
+Users can switch to the xref:3d.adoc[3D representation] of the infrastructure
+with the *2D/3D toggle* above the image. In the 3D view, users can rotate the
+camera around the racks with mouse left button, pan with right button and zoom
+with mouse wheel. The name, type and rack of equipment are displayed when the
+mouse hovers it. Buttons are available to reset the view, to switch to
+fullscreen mode and to enable the *turntable mode*. In turntable mode, the
+camera orbits automatically around the racks until users click in the 3D view,
+giving them back the control of the camera.
+
+image::shadowed/3d_fullscreen.webp[UI Infrastructure 3D View,800]
+
 The page contains a table of all infrastructure equipment grouped by rack,
 including their _name_, _category_, _model_ and _tags_.
 

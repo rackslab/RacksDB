@@ -44,6 +44,7 @@ and this project adheres to
   - Add page about 3D representations of infrastructures with glTF scenes
     conventions and nodes metadata.
   - Mention `gltf` and `glb` formats in `racksdb` manpage.
+  - Mention 3D view of infrastructures in web UI page.
 
 ### Fixed
 - lib:
