@@ -130,28 +130,6 @@ class RoomDrawer(Drawer2D):
             self.parameters.margin.top + int(row.position.depth * self.ratio),
         )
 
-    def _rack_preceding_widths(self, rack):
-        """Yield the widths (in mm) of all racks and empty slots in rack row
-        before the given rack."""
-        filled_slots = {}
-        for row_rack in rack.row.racks:
-            if row_rack.slot < rack.slot:
-                yield row_rack.type.width
-                filled_slots[row_rack.slot] = row_rack
-        # filling empty slots with previous rack width
-        for slot in range(rack.slot):
-            if slot not in filled_slots:
-                logger.debug("Row %s slot %d is not filled", rack.row.name, slot)
-                last_rack_width = 0
-                reversed_slot = slot
-                for reversed_slot in range(slot, 0, -1):
-                    if reversed_slot in filled_slots:
-                        last_rack_width = filled_slots[reversed_slot].type.width
-                        break
-                if not (last_rack_width):
-                    last_rack_width = self.db.types.racks.first().width
-                yield last_rack_width
-
     def _rack_tl(self, rack):
         # Start from top-left corner of the rack row, which is (0,0) after
         # context matrix translation.
