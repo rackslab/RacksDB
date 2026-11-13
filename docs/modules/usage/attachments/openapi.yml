@@ -1496,7 +1496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: Unsupported entity, unable to load drawing parameters, unsupported
-            image format, unsupported coordinates formator unable to load requested
+            image format, unsupported coordinates format or unable to load requested
             entity in database.
         '415':
           content:
@@ -1590,7 +1590,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: Unsupported entity, unable to load drawing parameters, unsupported
-            image format, unsupported coordinates formator unable to load requested
+            image format, unsupported coordinates format or unable to load requested
             entity in database.
         '415':
           content:
