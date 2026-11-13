@@ -74,12 +74,18 @@ synchronized with database content.
 == Diagrams
 
 RacksDB can be used to generate diagrams of your datacenter rooms and the racks
-with all their equipments, including _axonometric views_ for 3D representations.
+with all their equipments, including _axonometric views_, and
+xref:usage:3d.adoc[3D representations] of your infrastructures.
 
 image::overview:racksdb_diagrams.png[RacksDB Diagrams,xref=image$racksdb_diagrams.svg]
 
 These diagrams can be generated in various formats (PNG, SVG, PDF) and be
 customized with many xref:usage:drawparams.adoc[drawing parameters].
+
+The 3D representations of infrastructures are generated in standard glTF 2.0
+format, with your racks and equipment in their datacenter rooms. They can be
+explored interactively in the xref:usage:ui.adoc[Web UI] or imported in any
+3D software.
 
 [sidebar]
 --
@@ -87,4 +93,5 @@ customized with many xref:usage:drawparams.adoc[drawing parameters].
 * xref:usage:racksdb.adoc#draw[`racksdb` CLI drawing feature]
 * xref:usage:drawparams.adoc[Drawing parameters howto and reference
   documentation]
+* xref:usage:3d.adoc[3D representations of infrastructures]
 --
