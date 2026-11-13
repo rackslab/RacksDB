@@ -73,8 +73,8 @@ RacksDB provides multiple interfaces with its
 <p>
 
 RacksDB can generate graphical representations of your datacenter rooms and your
-infrastructures with their racks and equipment, including axonometric views for
-3D representations:
+infrastructures with their racks and equipment, including axonometric views and
+[3D representations](https://docs.rackslab.io/racksdb/usage/3d.html):
 
 <p align="center">
 <img
@@ -86,6 +86,9 @@ infrastructures with their racks and equipment, including axonometric views for
 These graphical representations can be generated in various formats (PNG, SVG,
 PDF) and can be customized with many
 [drawing parameters](https://docs.rackslab.io/racksdb/usage/drawparams.html).
+The 3D representations of infrastructures are generated in standard glTF 2.0
+format. They can be explored interactively in the web UI or imported in any 3D
+software.
 
 For more details, read the
 [full description](https://docs.rackslab.io/racksdb/overview/overview.html)
