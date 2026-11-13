@@ -11,7 +11,7 @@ import logging
 
 import cairo
 
-from .base import Drawer, ImagePoint
+from .base2d import Drawer2D, ImagePoint
 from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
@@ -63,7 +63,7 @@ class EquipmentCoordinate:
         return [self.x, self.y, self.width, self.height]
 
 
-class InfrastructureDrawer(Drawer):
+class InfrastructureDrawer(Drawer2D):
     def __init__(
         self,
         db,
