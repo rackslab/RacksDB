@@ -37,6 +37,7 @@ and this project adheres to
     `other_racks` drawing parameter is enabled and the infrastructure has
     multiple racks in the same row, instead of drawing these racks and
     reporting collisions of their equipment multiple times.
+- docs: Fix typo in OpenAPI description of draw endpoint errors.
 
 ### Removed
 - docs: Drop support of Fedora 42.
