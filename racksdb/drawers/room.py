@@ -9,7 +9,7 @@ import math
 
 import cairo
 
-from .base import Drawer, ImagePoint
+from .base2d import Drawer2D, ImagePoint
 from ..errors import RacksDBDrawingError
 
 logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ class RackCoordinate:
         return [self.x, self.y, self.width, self.height, self.angle]
 
 
-class RoomDrawer(Drawer):
+class RoomDrawer(Drawer2D):
     def __init__(
         self,
         db,

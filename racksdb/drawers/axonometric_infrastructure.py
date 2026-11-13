@@ -11,7 +11,7 @@ import logging
 
 import cairo
 
-from .base import ImagePoint
+from .base2d import ImagePoint
 from .infrastructure import InfrastructureDrawer, EquipmentCoordinate
 from ..errors import RacksDBDrawingError
 

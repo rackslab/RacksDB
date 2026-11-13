@@ -67,7 +67,7 @@ class TestDrawer(unittest.TestCase):
         }
         loader = DBDictsLoader(parameters_raw)
         self.parameters = DrawingParameters.load(loader, self.drawings_schema_path)
-        self.drawer = Drawer({}, "output", "format", self.parameters, None, "yaml")
+        self.drawer = Drawer({}, "output", "format", self.parameters)
 
     def test_matching_equipment_coloring_rule(self):
         # Load defaults equipment colorset
