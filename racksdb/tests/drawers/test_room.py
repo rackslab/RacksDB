@@ -10,7 +10,8 @@ import tempfile
 from pathlib import Path
 
 from racksdb import RacksDB
-from racksdb.drawers.room import RoomDrawer, polygons_overlap
+from racksdb.drawers.collisions import polygons_overlap
+from racksdb.drawers.room import RoomDrawer
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
 from racksdb.errors import RacksDBDrawingError

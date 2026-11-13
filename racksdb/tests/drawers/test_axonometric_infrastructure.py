@@ -92,7 +92,7 @@ class TestAxonometricInfrastructureDrawer(unittest.TestCase):
             drawer = AxonometricInfrastructureDrawer(
                 self.db, "mercury", filename, "png", self.parameters, None, "yaml"
             )
-            with self.assertLogs("racksdb.drawers.infrastructure", "WARNING") as cm:
+            with self.assertLogs("racksdb.drawers.collisions", "WARNING") as cm:
                 drawer.draw()
             self.assertTrue(filename.exists())
         self.assertEqual(
@@ -112,13 +112,13 @@ class TestAxonometricInfrastructureDrawer(unittest.TestCase):
             drawer = AxonometricInfrastructureDrawer(
                 self.db, "sharednet", filename, "png", self.parameters, None, "yaml"
             )
-            with self.assertLogs("racksdb.drawers.infrastructure", "WARNING") as cm:
+            with self.assertLogs("racksdb.drawers.collisions", "WARNING") as cm:
                 drawer.draw()
             self.assertTrue(filename.exists())
         self.assertEqual(
             cm.output,
             [
-                "WARNING:racksdb.drawers.infrastructure:Collision detected in rack "
+                "WARNING:racksdb.drawers.collisions:Collision detected in rack "
                 "R2-A02 between equipment swnas01 (infrastructure mercury) and "
                 "netmercurysw03 (infrastructure sharednet)"
             ],

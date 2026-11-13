@@ -11,7 +11,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from racksdb import RacksDB
-from racksdb.drawers.infrastructure import InfrastructureDrawer, equipment_overlap
+from racksdb.drawers.collisions import equipment_overlap
+from racksdb.drawers.infrastructure import InfrastructureDrawer
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
 from racksdb.errors import RacksDBDrawingError
@@ -216,7 +217,7 @@ class TestInfrastructureDrawer(unittest.TestCase):
             drawer = InfrastructureDrawer(
                 self.db, "mercury", filename, "png", self.parameters, None, "yaml"
             )
-            with self.assertLogs("racksdb.drawers.infrastructure", "WARNING") as cm:
+            with self.assertLogs("racksdb.drawers.collisions", "WARNING") as cm:
                 drawer.draw()
             self.assertTrue(filename.exists())
         self.assertEqual(
@@ -244,7 +245,7 @@ class TestInfrastructureDrawer(unittest.TestCase):
     def _draw_with_logs(self, drawer):
         with tempfile.TemporaryDirectory() as tmpdir:
             drawer.file = Path(tmpdir) / "output.png"
-            with self.assertLogs("racksdb.drawers.infrastructure", "WARNING") as cm:
+            with self.assertLogs("racksdb.drawers.collisions", "WARNING") as cm:
                 drawer.draw()
             self.assertTrue(drawer.file.exists())
         return cm.output
@@ -284,7 +285,7 @@ class TestInfrastructureDrawer(unittest.TestCase):
                 self.assertEqual(
                     output,
                     [
-                        "WARNING:racksdb.drawers.infrastructure:Collision detected in "
+                        "WARNING:racksdb.drawers.collisions:Collision detected in "
                         "rack R2-A02 between equipment swnas01 (infrastructure "
                         "mercury) and netmercurysw03 (infrastructure sharednet)"
                     ],
@@ -301,7 +302,7 @@ class TestInfrastructureDrawer(unittest.TestCase):
         )
         output = self._draw_with_logs(drawer)
         self.assertIn(
-            "WARNING:racksdb.drawers.infrastructure:Collision detected in rack R2-A03 "
+            "WARNING:racksdb.drawers.collisions:Collision detected in rack R2-A03 "
             "between equipment mesrv0004 (infrastructure mercury) and mekvm01 "
             "(infrastructure mercury)",
             output,
