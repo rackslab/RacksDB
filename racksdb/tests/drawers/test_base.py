@@ -6,6 +6,7 @@
 
 import unittest
 
+from racksdb import RacksDB
 from racksdb.drawers.base import (
     Drawer,
     default_equipment_colorset,
@@ -13,8 +14,9 @@ from racksdb.drawers.base import (
 )
 from racksdb.drawers.parameters import DrawingParameters
 from racksdb.generic.db import DBDictsLoader
+from racksdb.errors import RacksDBDrawingError
 
-from ..lib.common import drawing_schema_path
+from ..lib.common import drawing_schema_path, schema_path, db_path
 
 
 class FakeEquipmentType:
@@ -149,3 +151,25 @@ class TestDrawer(unittest.TestCase):
             self.drawer._find_rack_colorset(FakeRack("type2", None)).pane,
             defaults.pane,
         )
+
+
+class TestDrawerDatabase(unittest.TestCase):
+    def setUp(self):
+        try:
+            self.drawings_schema_path = drawing_schema_path()
+            self.db = RacksDB.load(schema=schema_path(), db=db_path())
+        except FileNotFoundError as err:
+            self.skipTest(err)
+        self.drawer = Drawer(
+            self.db,
+            "output",
+            "format",
+            DrawingParameters.load(DBDictsLoader({}), self.drawings_schema_path),
+        )
+
+    def test_find_infrastructure(self):
+        self.assertEqual(self.drawer._find_infrastructure("mercury").name, "mercury")
+        with self.assertRaisesRegex(
+            RacksDBDrawingError, "^Unable to find infrastructure fail in database$"
+        ):
+            self.drawer._find_infrastructure("fail")
