@@ -45,6 +45,8 @@ and this project adheres to
     conventions and nodes metadata.
   - Mention `gltf` and `glb` formats in `racksdb` manpage.
   - Mention 3D view of infrastructures in web UI page.
+  - Mention 3D representations of infrastructures in diagrams section of
+    overview page.
 
 ### Fixed
 - lib:
