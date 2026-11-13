@@ -41,14 +41,18 @@ jobs:
         run: pytest
 
   frontend_tests:
-    name: Frontend unit tests
+    name: Frontend unit tests (Node ${{ matrix.node-version }})
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["20", "22", "24", "26"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
