@@ -12,42 +12,9 @@ import logging
 import cairo
 
 from .base2d import Drawer2D, ImagePoint
+from .collisions import colliding_equipment
 
 logger = logging.getLogger(__name__)
-
-# Float epsilon used to absorb rounding errors on equipment fractional widths (eg.
-# third of rack width) in collision detection, so that equipment just next to each
-# other are not reported as colliding. This is not a physical tolerance.
-EPSILON = 1e-9
-
-
-def _equipment_extent(equipment):
-    """Return the tuple (bottom, top, left, right) of the space occupied by the
-    equipment in its rack. Bottom and top are expressed in rack units relatively to
-    the rack first slot, left and right are expressed as fractions of the rack
-    width."""
-    bottom = equipment.position.height
-    left = equipment.position.width * equipment.type.width
-    return (
-        bottom,
-        bottom + equipment.type.height,
-        left,
-        left + equipment.type.width,
-    )
-
-
-def equipment_overlap(a, b):
-    """Return True if equipment a and b, assumed to be in the same rack, strictly
-    overlap. Equipment only sharing a border (ie. stacked or side by side) are not
-    considered overlapping."""
-    a_bottom, a_top, a_left, a_right = _equipment_extent(a)
-    b_bottom, b_top, b_left, b_right = _equipment_extent(b)
-    return (
-        a_bottom < b_top - EPSILON
-        and b_bottom < a_top - EPSILON
-        and a_left < b_right - EPSILON
-        and b_left < a_right - EPSILON
-    )
 
 
 class EquipmentCoordinate:
@@ -120,27 +87,8 @@ class InfrastructureDrawer(Drawer2D):
 
     def _check_collisions(self):
         """Detect collisions between equipment in represented racks, emit warnings
-        and record names of colliding equipment. Equipment of all infrastructures
-        are considered, not only the equipment of the represented infrastructure."""
-        self._colliding_equipment = set()
-        for rack in self.racks:
-            equipments = rack.equipment
-            # Compare each equipment with all equipment after it in the list, so that
-            # every pair of equipment is checked exactly once.
-            for idx, equipment_a in enumerate(equipments):
-                for equipment_b in equipments[idx + 1 :]:
-                    if equipment_overlap(equipment_a, equipment_b):
-                        logger.warning(
-                            "Collision detected in rack %s between equipment %s "
-                            "(infrastructure %s) and %s (infrastructure %s)",
-                            rack.name,
-                            equipment_a.name,
-                            equipment_a.infrastructure.name,
-                            equipment_b.name,
-                            equipment_b.infrastructure.name,
-                        )
-                        self._colliding_equipment.add(equipment_a.name)
-                        self._colliding_equipment.add(equipment_b.name)
+        and record names of colliding equipment."""
+        self._colliding_equipment = colliding_equipment(self.racks)
 
     def _rack_row_width(self, row) -> int:
         """Return rack row width in mm"""
