@@ -77,14 +77,7 @@ class InfrastructureDrawer(Drawer2D):
         super().__init__(
             db, file, output_format, parameters, coordinates_fh, coordinates_format
         )
-        self.infrastructure = None
-        for infrastructure in self.db.infrastructures:
-            if infrastructure.name == name:
-                self.infrastructure = infrastructure
-        if self.infrastructure is None:
-            raise RacksDBDrawingError(
-                f"Unable to find infrastructure {name} in database"
-            )
+        self.infrastructure = self._find_infrastructure(name)
         # List of rack rows used by the infrastructure
         self.rack_rows = []
         # List of racks used by the insfrastructure

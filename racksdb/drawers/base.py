@@ -6,6 +6,7 @@
 
 import logging
 
+from ..errors import RacksDBDrawingError
 from ..generic.db import GenericDB
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,14 @@ class Drawer:
         self.file = file
         self.output_format = output_format
         self.parameters = parameters
+
+    def _find_infrastructure(self, name):
+        """Return the infrastructure with the given name. Raise RacksDBDrawingError if
+        not found in database."""
+        for infrastructure in self.db.infrastructures:
+            if infrastructure.name == name:
+                return infrastructure
+        raise RacksDBDrawingError(f"Unable to find infrastructure {name} in database")
 
     def _find_rack_colorset(self, rack):
         """Return the rack matching coloring rule defined in drawing parameters or the
