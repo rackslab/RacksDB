@@ -173,3 +173,31 @@ class TestDrawerDatabase(unittest.TestCase):
             RacksDBDrawingError, "^Unable to find infrastructure fail in database$"
         ):
             self.drawer._find_infrastructure("fail")
+
+    def select_racks(self, name, parameters):
+        """Return the names of racks and rows of the given infrastructure selected
+        with the given drawing parameters."""
+        self.drawer.parameters = DrawingParameters.load(
+            DBDictsLoader(parameters), self.drawings_schema_path
+        )
+        racks, rows = self.drawer._select_infrastructure_racks(
+            self.drawer._find_infrastructure(name)
+        )
+        return [rack.name for rack in racks], [row.name for row in rows]
+
+    def test_select_infrastructure_racks(self):
+        self.assertEqual(
+            self.select_racks("mercury", {}),
+            (["R1-A01", "R1-A02", "R2-A02", "R2-A03"], ["R1", "R2"]),
+        )
+
+    def test_select_infrastructure_racks_discard_empty_racks(self):
+        parameters = {"infrastructure": {"equipment_tags": ["compute"]}}
+        self.assertEqual(
+            self.select_racks("mercury", parameters), (["R1-A01", "R1-A02"], ["R1"])
+        )
+        parameters["infrastructure"]["discard_empty_racks"] = False
+        self.assertEqual(
+            self.select_racks("mercury", parameters),
+            (["R1-A01", "R1-A02", "R2-A02", "R2-A03"], ["R1", "R2"]),
+        )
