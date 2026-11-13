@@ -41,6 +41,8 @@ and this project adheres to
   - Mention support of Fedora 44.
   - Document `equipment` attribute of `RacksDBRack` objects in Python library
     API reference.
+  - Add page about 3D representations of infrastructures with glTF scenes
+    conventions and nodes metadata.
 
 ### Fixed
 - lib:
