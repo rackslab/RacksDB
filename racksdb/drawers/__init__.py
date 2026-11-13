@@ -7,5 +7,11 @@
 from .room import RoomDrawer
 from .infrastructure import InfrastructureDrawer
 from .axonometric_infrastructure import AxonometricInfrastructureDrawer
+from .gltf import GltfInfrastructureDrawer
 
-__all__ = ["RoomDrawer", "InfrastructureDrawer", "AxonometricInfrastructureDrawer"]
+__all__ = [
+    "RoomDrawer",
+    "InfrastructureDrawer",
+    "AxonometricInfrastructureDrawer",
+    "GltfInfrastructureDrawer",
+]
