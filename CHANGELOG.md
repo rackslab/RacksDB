@@ -29,9 +29,14 @@ and this project adheres to
     API reference.
 
 ### Fixed
-- lib: Load database files in directories in sorted order, instead of the
-  arbitrary order of entries returned by the filesystem, to get the same
-  objects order on all systems.
+- lib:
+  - Load database files in directories in sorted order, instead of the
+    arbitrary order of entries returned by the filesystem, to get the same
+    objects order on all systems.
+  - Select racks of rows only once in infrastructure diagrams when
+    `other_racks` drawing parameter is enabled and the infrastructure has
+    multiple racks in the same row, instead of drawing these racks and
+    reporting collisions of their equipment multiple times.
 
 ### Removed
 - docs: Drop support of Fedora 42.
