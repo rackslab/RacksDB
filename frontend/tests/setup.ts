@@ -10,21 +10,20 @@ import { vi } from 'vitest'
 import { createRouterMock, injectRouterMock } from 'vue-router-mock'
 import { RouterLinkStub } from '@vue/test-utils'
 
-// JSDOM may not provide createObjectURL; mock it to prevent console errors
-if (typeof URL.createObjectURL !== 'function') {
-  URL.createObjectURL = vi.fn(() => 'blob:mock-url')
-}
+// Mock object URLs functions, which may be missing or not mockable in JSDOM,
+// to prevent console errors and spy on calls in tests.
+URL.createObjectURL = vi.fn(() => 'blob:mock-url')
+URL.revokeObjectURL = vi.fn()
 
-if (typeof URL.revokeObjectURL !== 'function') {
-  URL.revokeObjectURL = vi.fn()
-}
-
-// Mock ResizeObserver for Headless UI components
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}))
+// Mock ResizeObserver for Headless UI components. Vitest mocks must be
+// implemented with class to be called with new keyword.
+global.ResizeObserver = vi.fn().mockImplementation(
+  class {
+    observe = vi.fn()
+    unobserve = vi.fn()
+    disconnect = vi.fn()
+  }
+)
 
 // Create router mock with Vitest spy
 const router = createRouterMock({
