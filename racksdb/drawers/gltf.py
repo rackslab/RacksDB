@@ -613,7 +613,7 @@ class GltfInfrastructureDrawer(Drawer):
 
     def _add_rack(self, parent, rack):
         width = _m(rack.type.width)
-        height = _m(rack.type.height)
+        height = self._rack_height(rack)
         depth = _m(rack.type.depth)
         offset = _m(sum(self._rack_preceding_widths(rack)))
         in_infrastructure = rack.name in self._infrastructure_racks
@@ -638,7 +638,7 @@ class GltfInfrastructureDrawer(Drawer):
         )
         pane = min(_m(self.parameters.rack.pane_width), width / 2)
         pane -= min(RACK_PANE_CLEARANCE_M, pane / 2)
-        shell = min(RACK_SHELL_THICKNESS_M, height / 2, depth / 2)
+        shell = self._rack_shell(rack)
         inner_width = width - 2 * pane
         panels = [
             ("left", (pane, height, depth), (-width / 2 + pane / 2, 0, 0)),
@@ -666,6 +666,20 @@ class GltfInfrastructureDrawer(Drawer):
                 for attribute, category in EQUIPMENT_CATEGORIES:
                     for equipment in getattr(part, attribute):
                         self._add_equipment(index, rack, equipment, category)
+
+    @staticmethod
+    def _rack_shell(rack) -> float:
+        """Return the thickness in meters of rack top and bottom sheets."""
+        return min(RACK_SHELL_THICKNESS_M, _m(rack.type.depth) / 2)
+
+    def _rack_height(self, rack) -> float:
+        """Return the represented height of the rack in meters. Rack slots are
+        stacked between rack top and bottom sheets. When rack height is not
+        sufficient to contain all its slots and both sheets, the rack is represented
+        slightly higher so equipment in top slots do not cross the rack top
+        sheet."""
+        slots = _m(rack.type.slots * self.parameters.rack.u_height)
+        return max(_m(rack.type.height), slots + 2 * self._rack_shell(rack))
 
     # Equipment
 
@@ -702,7 +716,10 @@ class GltfInfrastructureDrawer(Drawer):
                 # Equipment front face is aligned with the rack door, at +Z.
                 "translation": [
                     _m(left + width / 2 - rack_width / 2),
-                    _m(bottom + height / 2) - _m(rack.type.height) / 2,
+                    # Lowest slot is right above rack bottom sheet.
+                    self._rack_shell(rack)
+                    + _m(bottom + height / 2)
+                    - self._rack_height(rack) / 2,
                     (_m(rack.type.depth) - depth) / 2,
                 ],
                 "extras": {

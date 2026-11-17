@@ -308,7 +308,9 @@ class TestGltfInfrastructureDrawer(unittest.TestCase):
                 "type": "standard",
                 "tags": ["first"],
                 "infrastructure": True,
-                "size": [0.6, 1.867, 0.914],
+                # 1867mm high rack is represented slightly higher to contain its 42
+                # slots of 44.45mm between 8mm thick top and bottom sheets.
+                "size": [0.6, round(42 * 0.04445 + 2 * 0.008, 6), 0.914],
             },
         )
         self.assertNotIn("rotation", rack)
@@ -334,11 +336,15 @@ class TestGltfInfrastructureDrawer(unittest.TestCase):
                 "size": [0.26, 0.04445, 0.814],
             },
         )
-        # Half width node on the left side, in the lowest slot, with its front face
-        # aligned on rack door.
+        # Half width node on the left side, in the lowest slot right above rack
+        # bottom sheet, with its front face aligned on rack door.
         self.assertEqual(
             equipment["translation"],
-            [round(0.04 + 0.13 - 0.3, 6), round(0.022225 - 1.867 / 2, 6), 0.05],
+            [
+                round(0.04 + 0.13 - 0.3, 6),
+                round(0.008 + 0.022225 - (42 * 0.04445 + 2 * 0.008) / 2, 6),
+                0.05,
+            ],
         )
         self.assertEqual(
             [c["extras"]["part"] for c in self.children(document, equipment)],
@@ -346,6 +352,27 @@ class TestGltfInfrastructureDrawer(unittest.TestCase):
         )
         for category in ["storage", "network", "misc"]:
             self.assertTrue(self.nodes(document, category=category))
+
+    def test_equipment_inside_rack_carcass(self):
+        """Equipment must not cross rack top and bottom sheets, even in racks
+        where slots overall height (42 × 44.45mm) is close to rack height
+        (1867mm). Such racks are represented slightly higher instead."""
+        _, document, _ = self.draw()
+        racks = self.nodes(document, category="rack", infrastructure=True)
+        self.assertTrue(racks)
+        for rack in racks:
+            rack_height = rack["extras"]["size"][1]
+            for child in self.children(document, rack):
+                if "slot" not in child.get("extras", {}):
+                    continue
+                center = child["translation"][1]
+                half = child["extras"]["size"][1] / 2
+                self.assertLessEqual(
+                    round(center + half, 6), round(rack_height / 2 - 0.008, 6)
+                )
+                self.assertGreaterEqual(
+                    round(center - half, 6), round(-rack_height / 2 + 0.008, 6)
+                )
 
     def test_racks_positions_match_room_maps(self):
         """Racks centers in 3D scene match racks footprints in rooms maps, including
@@ -374,7 +401,9 @@ class TestGltfInfrastructureDrawer(unittest.TestCase):
                 self.assertAlmostEqual(
                     x, room_offsets[rack.room.name] + center_x, places=5
                 )
-                self.assertAlmostEqual(y, rack.type.height / 2 / 1000, places=5)
+                # Racks stand on the floor, possibly represented slightly higher
+                # than their actual height to contain all their slots.
+                self.assertAlmostEqual(y, rack_node["extras"]["size"][1] / 2, places=5)
                 self.assertAlmostEqual(z, center_z, places=5)
 
     def test_racks_footprints_match_room_drawer(self):
