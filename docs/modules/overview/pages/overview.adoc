@@ -87,6 +87,8 @@ format, with your racks and equipment in their datacenter rooms. They can be
 explored interactively in the xref:usage:ui.adoc[Web UI] or imported in any
 3D software.
 
+image::overview:racksdb_3d_video.jpg[RacksDB 3D view video (click to play),width=600,link="https://rackslab.io/images/blog/videos/RacksDB%203D%20view.mp4"]
+
 [sidebar]
 --
 .More links
