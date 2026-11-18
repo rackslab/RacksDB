@@ -90,6 +90,15 @@ The 3D representations of infrastructures are generated in standard glTF 2.0
 format. They can be explored interactively in the web UI or imported in any 3D
 software.
 
+<p align="center">
+<a href="https://rackslab.io/images/blog/videos/RacksDB%203D%20view.mp4">
+<img
+  src="docs/modules/overview/images/racksdb_3d_video.jpg"
+  alt="RacksDB 3D view video (click to play)"
+  width="600px">
+</a>
+</p>
+
 For more details, read the
 [full description](https://docs.rackslab.io/racksdb/overview/overview.html)
 of RacksDB.
